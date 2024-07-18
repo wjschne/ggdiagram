@@ -1,4 +1,4 @@
-
+library(S7)
 .onLoad <- function(...) {
   suppressMessages(S7::methods_register())
 }
