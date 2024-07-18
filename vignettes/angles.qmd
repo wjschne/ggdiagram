@@ -1,0 +1,41 @@
+---
+title: "Angles"
+knitr:
+  opts_chunk: 
+    collapse: true
+    comment: '#>'
+format: 
+  html:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{angles}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r presetup, include = FALSE}
+library(ggpathdiagramr)
+library(ggplot2)
+library(dplyr)
+library(ggtext)
+library(ggarrow)
+knitr::opts_chunk$set(dev = "svglite", fig.height = 8, fig.width = 8)
+my_font <- "Roboto Condensed"
+gdtools::register_gfont(family = my_font)
+gdtools::addGFontHtmlDependency(family = my_font)
+update_geom_defaults("richtext",
+                     list(family = my_font, 
+                          size = .8 * 16 / ggplot2::.pt))
+
+update_geom_defaults("arrow_segment", list(length_head = 1))
+```
+
+```{r setup}
+library(ggpathdiagramr)
+library(ggplot2)
+library(dplyr)
+library(ggtext)
+library(ggarrow)
+my_font <- "Roboto Condensed"
+
+```

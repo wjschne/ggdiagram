@@ -4,8 +4,8 @@ Version: 0.0.0.9000
 Authors@R: 
     person("W. Joel", "Schneider", , "w.joel.schneider@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-8393-5316"))
-Description: Makes path diagrams via S7 and ggplot2
-License: MIT + file LICENSE
+Description: The ggdiagram package creates path diagrams with an object-oriented approach and plots diagrams with ggplot2.
+License: CC0
 URL: https://github.com/wjschne/ggdiagram,
     https://wjschne.github.io/ggdiagram/
 BugReports: https://github.com/wjschne/ggdiagram/issues
@@ -35,9 +35,9 @@ Collate:
     'ggdiagram-package.R'
     'utils-pipe.R'
     'a_early.R'
-    'str.R'
     'colors.R'
     'angles.R'
+    'style.R'
     'points.R'
     'labels.R'
     'lines.R'
@@ -45,4 +45,6 @@ Collate:
     'arrows.R'
     'circles.R'
     'ellipses.R'
+    'str.R'
     'zzz.R'
+VignetteBuilder: knitr

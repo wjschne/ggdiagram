@@ -1,11 +1,4 @@
-# str ----
-#' structure
-#'
-#' @param object object
-#' @keywords internal
-str <- new_generic(
-  name = "str",
-  dispatch_args = "object")
+
 
 # from S7
 obj_type <- function(x) {

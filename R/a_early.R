@@ -22,6 +22,17 @@ shape_list <- new_class("shape_list", parent = class_list)
 xy <- new_class("xy", parent = shape, abstract = TRUE)
 
 # generics ----
+
+# str ----
+#' structure
+#'
+#' @param object object
+#' @keywords internal
+str <- new_generic(
+  name = "str",
+  dispatch_args = "object")
+
+
 #' Addition
 #'
 #' @param e1 object
