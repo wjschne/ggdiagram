@@ -12,16 +12,6 @@ My motivation in making ggdiagram was to find a way to approach the functionalit
 
 ## Installation
 
-You can install the development version of ggdiagram like so:
-
-``` r
-# FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
-```
-
-
-
-## Installation
-
 You can install the development version of ggpathdiagramr like so:
 
 ``` r
