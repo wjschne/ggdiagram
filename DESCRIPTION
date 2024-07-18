@@ -2,11 +2,24 @@ Package: ggdiagram
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+    person("W. Joel", "Schneider", , "w.joel.schneider@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-8393-5316"))
 Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2.9000
+RoxygenNote: 7.3.2
+Collate: 
+    'utils-pipe.R'
+    'a_early.R'
+    'str.R'
+    'colors.R'
+    'angles.R'
+    'points.R'
+    'labels.R'
+    'lines.R'
+    'segments.R'
+    'arrows.R'
+    'circles.R'
+    'ellipses.R'
+    'zzz.R'
