@@ -23,3 +23,5 @@ Collate:
     'circles.R'
     'ellipses.R'
     'zzz.R'
+URL: https://github.com/wjschne/ggdiagram
+BugReports: https://github.com/wjschne/ggdiagram/issues
