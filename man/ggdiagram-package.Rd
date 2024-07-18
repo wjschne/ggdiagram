@@ -6,7 +6,7 @@
 \alias{ggdiagram-package}
 \title{ggdiagram: Object-oriented diagram plots with ggplot2}
 \description{
-Makes path diagrams via S7 and ggplot2
+The ggdiagram package creates path diagrams with an object-oriented approach and plots diagrams with ggplot2.
 }
 \seealso{
 Useful links:

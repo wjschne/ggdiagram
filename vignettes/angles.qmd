@@ -41,3 +41,16 @@ my_font <- "Roboto Condensed"
 ```
 
 
+Angles have different kinds of units associated with them: degrees, radians, and turns. The `angle` class can take turns (i.e., 1 turn = one full rotation a circle), degrees (1 turn = 360 degrees), or radians (1 turn = $2\pi$ = $\tau$).
+
+I like &pi; just fine, but I agree with Michael Hartl's [Tau Manifesto](https://tauday.com/tau-manifesto) that we would have been better off if we had recognized that the number of radians to complete a full turn of a circle (&tau; = 2&pi; &asymp; 6.283185) is more fundamental than the number of radians to complete a half turn (&pi;). 
+
+Turns | Radians | Degrees |
+:----:|:-------:|:-------:|
+$\frac{1}{12}$  | $\frac{\tau}{12}=\frac{\pi}{6}$   | $30^\circ$  |
+$\frac{1}{8}$  | $\frac{\tau}{8}=\frac{\pi}{4}$     | $45^\circ$  |
+$\frac{1}{6}$  | $\frac{\tau}{6}=\frac{\pi}{3}$     | $60^\circ$  |
+$\frac{1}{4}$  | $\frac{\tau}{4}=\frac{\pi}{2}$     | $90^\circ$  |
+$\frac{1}{3}$  | $\frac{\tau}{3}=\frac{2\pi}{3}$    | $120^\circ$ |
+$\frac{1}{2}$  | $\frac{\tau}{2}=\pi$               | $180^\circ$ |
+$1$            | $\tau=2\pi$                        | $360^\circ$ |

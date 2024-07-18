@@ -1,7 +1,9 @@
 # Point----
 
-#' point class
+#' point
 #'
+#' Points are specified with x and y coordinates.# Polar class ----
+#' @export
 #' @param x Coordinate on the x-axis
 #' @param y Coordinate on the y-axis
 #' @param r Radius = Distance from the origin to the point
@@ -99,3 +101,24 @@ point <- new_class(
     new_object(S7_object(), x = d$x, y = d$y, style = d@style)
   }
 )
+
+
+# Polar Point class ----
+#' polar
+#'
+#' Polar points are ordinary points but are specified with an angle (theta) and a radial distance (r)
+#' @rdname point
+#' @export
+polar <- new_class(
+  name = "polar",
+  parent = point,
+  constructor = function(theta = class_missing,
+                         r = class_missing,
+                         style = class_missing,
+                         ...) {
+    if (length(r) == 0) r <- 0
+    if (length(theta) == 0) theta <- angle(0)
+
+    p <- point(theta = theta, r = r, style = style + style(...))
+    new_object(p)
+  })

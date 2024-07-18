@@ -47,4 +47,4 @@ Collate:
     'ellipses.R'
     'str.R'
     'zzz.R'
-VignetteBuilder: knitr
+VignetteBuilder: quarto

@@ -2,7 +2,8 @@
 % Please edit documentation in R/points.R
 \name{point}
 \alias{point}
-\title{point class}
+\alias{polar}
+\title{point}
 \usage{
 point(
   x = class_missing,
@@ -16,6 +17,8 @@ point(
   style = class_missing,
   ...
 )
+
+polar(theta = class_missing, r = class_missing, style = class_missing, ...)
 }
 \arguments{
 \item{x}{Coordinate on the x-axis}
@@ -26,10 +29,12 @@ point(
 
 \item{...}{properties passed to style}
 
-\item{r}{Radius = Distance from the origin to the point}
-
 \item{theta}{Angle of the vector from the origin to the point}
+
+\item{r}{Radius = Distance from the origin to the point}
 }
 \description{
-point class
+Points are specified with x and y coordinates.# Polar class ----
+
+Polar points are ordinary points but are specified with an angle (theta) and a radial distance (r)
 }
