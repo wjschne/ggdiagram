@@ -15,9 +15,13 @@ Imports:
     ggarrow,
     ggplot2,
     ggtext,
+    glue,
+    magrittr,
     purrr,
     rlang,
-    tibble
+    S7,
+    tibble,
+    tidyr
 Suggests: 
     knitr,
     quarto,

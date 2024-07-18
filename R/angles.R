@@ -15,18 +15,16 @@ turn2angle <- function(x, object) {
 # Angle ----
 #' angle class
 #'
-#' Creates an angle in the metric of radians, degrees, turns, and gradians.
+#' Creates an angle in the metric of radians, degrees, and turns.
 #'
-#' Angles turns can be any real number, but degrees are displayed as values between -360 and +360,
-#' radians are between -2pi and +2pi, and gradians are between -400 and +400.
-#'
+#' Angles turns can be any real number, but degrees are displayed as values between -360 and +360, and radians are between -2pi and +2pi.
+#' @param .data a real number indicating the number of turns.
 #' @param radian radians
 #' @param degree degrees
 #' @param turn proportion of full turns of a circle (1 turn = 2 * pi radians)
-#' @param gradian gradians, gons, or grads (right angle = 100 gradians)
 #' @export
 #' @examples
-#' # Trhee Different ways to make a right angle
+#' # Three Different ways to make a right angle
 #' ## A quarter turn
 #' turn(.25)
 #'
@@ -37,25 +35,22 @@ turn2angle <- function(x, object) {
 #' degree(90)
 #'
 #' # Operations
-#' angle(degree = 30) + angle(degree = 20)
-#' angle(degree = 350) + angle(degree = 20)
-#' angle(degree = 30) - angle(degree = 20)
-#' angle(degree = 30) - angle(degree = 50)
+#' degree(30) + degree(20)
+#' degree(350) + degree(20)
+#' degree(30) - degree(30)
+#' degree(30) - degree(50)
 #'
-#' 2 * angle(degree = 30)
-#' angle(degree = 30) / 3
+#' degree(30) * 2
+#' degree(30) / 3
 #'
-#' angle(degree = 30) + pi # added or subtracted numbers are radians
 #' radian(1) + 1 # added or subtracted numbers are radians
-#' degree(30) + 180 # added or subtracted numbers are degrees
+#' degree(10) + 10 # added or subtracted numbers are degrees
 #' turn(.25) + .25 # added or subtracted numbers are turns
-#' gradian(50) + 50 # added or subtracted numbers are turns
 #'
-#' Trigonometric functions work as normal
-#' x <- angle(degree = 180)
-#' sin(x)
-#' cos(x)
-#' tan(x)
+#' # Trigonometric functions work as normal
+#' sin(degree(30))
+#' cos(degree(30))
+#' tan(degree(30))
 angle <- new_class(
   name = "angle",
   parent = class_double,
