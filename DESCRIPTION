@@ -13,6 +13,7 @@ Imports:
     arrowheadr,
     dplyr,
     ggarrow,
+    ggforce,
     ggplot2,
     ggtext,
     glue,
@@ -45,6 +46,9 @@ Collate:
     'arrows.R'
     'circles.R'
     'ellipses.R'
+    'arcs.R'
+    'rectangles.R'
     'str.R'
+    'distances.R'
     'zzz.R'
 VignetteBuilder: quarto

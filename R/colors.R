@@ -37,3 +37,20 @@ class_color <- new_class(
 
 
 class_color_or_character <- new_union(class_color, class_character)
+
+
+method(str, class_color) <- function(
+    object,
+    nest.lev = 0,
+    additional = FALSE,
+    omit = omit_props(object, include = c(".data"))) {
+  str_properties(
+    object,
+    omit = omit,
+    nest.lev = nest.lev)
+}
+
+method(print, class_color) <- function(x, ...) {
+  str(x, ...)
+  invisible(x)
+}

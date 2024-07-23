@@ -42,9 +42,9 @@ str_nest <- function(object,
                      ),
                      ...
 ) {
-  names <- format(names(object))
+  pnames <- format(names(object))
   for (i in seq_along(object)) {
-    cat(indent.str, prefix, " ", names[[i]], ":", sep = "")
+    cat(indent.str, prefix, " ", pnames[[i]], ":", sep = "")
     xi <- object[[i]]
 
     if (is.function(xi)) {
@@ -82,19 +82,41 @@ str_properties <- function(
   p_names <- prop_names(object)
   cat(if (nest.lev > 0) " ")
   cat(S7:::obj_desc(object))
-  if (length(omit) > 0 && additional && nest.lev && all((omit == ".data"))) {
-    additional_text <- paste0(" Omitted props: ", paste(p_names[p_names %in% omit], collapse = ", "))
-    cat(additional_text)
-  }
+
   cat("\n")
 
   str_nest(object = props(object)[!(p_names %in% omit)],
            prefix = "@",
            nest.lev = nest.lev)
-
+  if (length(omit) > 0 && additional && nest.lev == 0) {
+    additional_text <- paste0("Other props: ", paste(p_names[p_names %in% omit], collapse = ", "),"\n")
+    cat(additional_text)
+  }
 
 }
 
+
+
+method(print, has_style) <- function(x, ...) {
+  str(x, ...)
+  invisible(x)
+}
+
+method(print, class_arrowhead) <- function(x, ...) {
+  str(x, ...)
+  invisible(x)
+}
+
+method(str, class_arrowhead) <- function(
+  object,
+  nest.lev = 0,
+  additional = TRUE,
+  omit = omit_props(object, include = c("x","y"))) {
+str_properties(object,
+               omit = omit,
+               nest.lev = nest.lev,
+              additional = additional)
+}
 
 
 

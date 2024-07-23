@@ -2,6 +2,8 @@
 # ggdiagram
 
 <!-- badges: start -->
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![CRAN status](https://www.r-pkg.org/badges/version/ggdiagram)](https://CRAN.R-project.org/package=ggdiagram)
 <!-- badges: end -->
 
 The ggdiagram package takes an object-oriented approach to making diagrams (using [S7](https://rconsortium.github.io/S7/index.html)) and plots the results using [ggplot2](https://ggplot2.tidyverse.org/).

@@ -6,8 +6,8 @@
 \title{point}
 \usage{
 point(
-  x = class_missing,
-  y = class_missing,
+  x = 0,
+  y = 0,
   alpha = class_missing,
   color = class_missing,
   fill = class_missing,
@@ -18,7 +18,17 @@ point(
   ...
 )
 
-polar(theta = class_missing, r = class_missing, style = class_missing, ...)
+polar(
+  theta = class_missing,
+  r = class_missing,
+  alpha = class_missing,
+  color = class_missing,
+  fill = class_missing,
+  shape = class_missing,
+  size = class_missing,
+  stroke = class_missing,
+  style = class_missing
+)
 }
 \arguments{
 \item{x}{Coordinate on the x-axis}
@@ -32,6 +42,8 @@ polar(theta = class_missing, r = class_missing, style = class_missing, ...)
 \item{theta}{Angle of the vector from the origin to the point}
 
 \item{r}{Radius = Distance from the origin to the point}
+
+\item{n}{the length of the point object}
 }
 \description{
 Points are specified with x and y coordinates.# Polar class ----

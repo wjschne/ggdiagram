@@ -1,0 +1,76 @@
+---
+title: "Ellipses"
+knitr:
+  opts_chunk: 
+    collapse: true
+    comment: '#>'
+format: 
+  html:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{angles}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r presetup, include = FALSE}
+library(ggdiagram)
+library(ggplot2)
+library(dplyr)
+library(ggtext)
+library(ggarrow)
+knitr::opts_chunk$set(dev = "svglite", fig.height = 8, fig.width = 8)
+my_font <- "Roboto Condensed"
+gdtools::register_gfont(family = my_font)
+gdtools::addGFontHtmlDependency(family = my_font)
+update_geom_defaults("richtext",
+                     list(family = my_font, 
+                          size = .8 * 16 / ggplot2::.pt))
+
+update_geom_defaults("arrow_segment", list(length_head = 1))
+```
+
+```{r setup}
+library(ggdiagram)
+library(ggplot2)
+library(dplyr)
+library(ggtext)
+library(ggarrow)
+my_font <- "Roboto Condensed"
+
+```
+
+
+```{r}
+my_colors <- c("blue", "red")
+
+ggplot() +
+  theme_void() +
+  coord_equal() +
+  circle(radius = c(1, 3), color = my_colors) +
+  arc(
+    radius = 4,
+    start = degree(c(0, 20)),
+    end = degree(c(10, 90)),
+    color = my_colors
+  ) +
+  ellipse(
+    center = point(),
+    a = c(2, 6),
+    b = c(3, 4),
+    m1 = c(10, 3),
+    m2 = c(10, 2),
+    angle = degree(c(0, 45)),
+    n = 360,
+    color = my_colors
+  ) +
+  line(slope = 3:4,
+       intercept = 1,
+       color = my_colors) +
+  point(3:4, 1, color = my_colors) +
+  segment(point(), point(1, 1:2), color = my_colors)
+  
+  
+
+```
+

@@ -21,7 +21,7 @@ style(
   label.padding = class_missing,
   label.r = class_missing,
   label.size = class_missing,
-  length = class_missing,
+  arrowhead_length = class_missing,
   length_head = class_missing,
   length_fins = class_missing,
   length_mid = class_missing,
@@ -80,6 +80,8 @@ style(
 \item{linetype}{type of lines}
 
 \item{n}{number of points in a polygon}
+
+\item{polar_just}{an angle, polar point, or point that alters hjust and vjust (polar polar_just not stored in style)}
 
 \item{shape}{type of shape}
 

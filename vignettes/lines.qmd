@@ -1,0 +1,225 @@
+---
+title: "Lines"
+format: 
+  html:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{points}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r presetup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  dev = "ragg_png",
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 7
+)
+library(ggdiagram)
+library(ggplot2)
+library(dplyr)
+library(ggtext)
+my_font <- "Roboto Condensed"
+gdtools::register_gfont(family = my_font)
+gdtools::addGFontHtmlDependency(family = my_font)
+```
+
+# Setup
+
+## Packages
+
+```{r setup}
+library(ggdiagram)
+library(ggplot2)
+library(dplyr)
+library(ggtext)
+
+```
+
+## Base plot
+
+To avoid repetitive code, we make a base plot:
+
+```{r baseplot}
+my_font <- "Roboto Condensed"
+my_text_size <- 20
+my_point_size <- 2.5
+update_geom_defaults(geom = "richtext", 
+                     new = list(family = my_font, 
+                                size = .8 * my_text_size / ggplot2::.pt))
+
+update_geom_defaults("point", list(size = my_point_size))
+
+
+theme_set(
+  theme_minimal(
+    base_size = my_text_size, 
+    base_family = my_font) +
+    theme(axis.title.y = element_text(angle = 0, vjust = 0.5)))
+
+
+
+
+bp <- ggplot() +
+  coord_equal() +
+  scale_x_continuous(labels = WJSmisc::signs_centered, limits = c(-4, 4)) +
+  scale_y_continuous(labels = signs::signs, limits = c(-4, 4)) +
+  theme_minimal(base_size = 16) +
+  theme(
+    axis.title.x =  element_text(face = "italic"),
+    axis.title.y = element_text(
+      face = "italic",
+      angle = 0,
+      hjust = .5,
+      vjust = .5
+    )
+  )
+```
+
+# Making Lines
+
+Lines can be constructed from a slope and an intercept:
+
+```{r construct_line}
+l <- line(slope = 2, intercept = 1, color = "royalblue3")
+l
+```
+
+```{r fig-slopeintercept}
+#| fig-cap: !expr 'paste0("A line with slope of ", l@slope, " and intercept of ", l@intercept)'
+#| code-fold: true
+
+bp +
+  l +
+  l@point_at_y(0)@label(l@equation, angle = l@angle)
+```
+
+
+Because the default slope is 0, a horizontal line can be set with just the intercept:
+
+```{r hline}
+h <- line(intercept = 2, color = "royalblue3")
+h
+```
+
+```{r fig-horitonal}
+#| fig-cap: !expr 'paste0("A horizontal line intercept of ", h@intercept)'
+#| code-fold: true
+bp + 
+  h + 
+  h@point_at_x(0)@label(h@equation)
+
+```
+
+
+A vertical line can be set with the x-intercept:
+
+```{r vline}
+v <- line(xintercept = -2, color = "royalblue3")
+v
+```
+
+```{r fig-v}
+#| fig-cap: !expr 'paste0("Vertical line at x = ", signs::signs(v@xintercept))'
+#| code-fold: true
+bp + 
+  v + 
+  v@point_at_y(0)@label(equation(v), angle = v@angle * -1)
+
+```
+
+
+
+Any line---horizontal, vertical, or sloped---can be constructed from the coefficients of the general form of a line:
+
+$$
+ax+by+c=0
+$$
+
+```{r abcline}
+l_123 <- line(a = 1, b = 2, c = 3, color = "royalblue3")
+```
+
+```{r fig-ablcline_plot}
+#| fig-cap: !expr 'paste0("Line with slope = ", signs::signs(l_123@slope), " and intercept = ", signs::signs(l_123@intercept))'
+#| code-fold: true
+bp +
+  l_123 +
+  l_123@point_at_x(
+    x = 0)@label(
+      equation(l_123, type = "general"), 
+      angle = l_123@angle)
+```
+
+With respect to the general form, the slope is equal to $-\frac{a}{b}$, the y-intercept is equal to $-\frac{c}{b}$, and the x-intercept is equal to $-\frac{c}{a}$
+
+# Methods
+
+## Projections and Distances
+
+A point can be "projected" onto a line. Imagine shining a light on the point in a direction perpendicular to the line. The point's shadow on the line would be the shortest distance between the line and the point.
+
+
+```{r projection}
+p <- point(1,-1, color = "firebrick4")
+l <- line(slope = 2, intercept = 2, color = "royalblue3")
+# Point p projected onto line l
+p_projected <- projection(p, l)
+
+# Alternately:
+l@projection(p)
+
+
+
+```
+
+
+The shortest distance from a point to a line can be calculated.
+
+```{r short}
+# distance from point p to line l
+distance(p, l)
+
+# Equivalently:
+segment(p, l@projection(p))@distance
+```
+
+```{r}
+#| fig-cap: Shortest distance between a line and point
+#| code-fold: true
+
+# This code might look hard to read,
+# but the iterative nature of the process
+# made it easy to write
+
+
+# segment from p to p_projected
+s_projected <- segment(p1 = p, 
+                       p2 = l@projection(p), 
+                       linetype = "dashed")
+
+
+bp +
+  l + # Line
+  l@point_at_x(.5)@label( # Line equation label
+    label = l@equation, 
+    angle = l@angle) + 
+  s_projected + # Segment from point to line
+  s_projected@midpoint(c(0,1) # both endpoints of segment
+    )@label(
+      polar_just = degree(s_projected@line@angle) + c(0, 180), 
+      plot_point = TRUE) + 
+  s_projected@midpoint()@label( # Distance label
+      label = "Distance = " + s_projected@distance %>% 
+        round(digits = 2) %>% 
+        as.character(),
+      angle = s_projected@line@angle, 
+      vjust = 0) 
+
+
+```
+
+
+
