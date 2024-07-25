@@ -162,16 +162,18 @@ str_properties(object,
 method(as.geom, ellipse) <- function(x, ...) {
   d <- get_tibble_defaults(x)
   make_geom_helper(
-     d = d,
-     .geom_x = ggforce::geom_ellipse,
-     user_overrides = get_non_empty_props(style(...)),
-     mappable_bare = c("m1", "m2"),
-     not_mappable = c("n"),
-     required_aes = c("x0", "y0", "a", "b", "angle", "group"),
-     omit_names = c("linejoin", "rule"),
-     inherit.aes = FALSE)
+    d = d,
+    .geom_x = ggforce::geom_ellipse,
+    user_overrides = get_non_empty_props(style(...)),
+    mappable_bare = c("m1", "m2"),
+    mappable_identity = c("linewidth", "linetype", "alpha", "color", "fill"),
+    not_mappable = c("n"),
+    required_aes = c("x0", "y0", "a", "b", "angle", "group"),
+    omit_names = c("linejoin", "rule"),
+    inherit.aes = FALSE
+  )
+}
 
- }
 
  method(get_tibble, ellipse) <- function(x) {
   x@tibble

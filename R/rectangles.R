@@ -1,5 +1,5 @@
-rectangle_sides <- new_class(
-  name = "retangle_sides",
+rectangle_side <- new_class(
+  name = "retangle_side",
   properties = list(
     east = segment,
     north = segment,
@@ -69,8 +69,8 @@ rc_props <- list(
         point(0, self@height / -2) + self@center
       }
     ),
-    sides = new_property(rectangle_sides, getter = function(self) {
-      re = rectangle_sides(
+    side = new_property(rectangle_side, getter = function(self) {
+      re = rectangle_side(
         east = segment(p1 = self@northeast, p2 = self@southeast, style = self@style),
         north = segment(p1 = self@northwest, p2 = self@northeast, style = self@style),
         west = segment(p1 = self@northwest, p2 = self@southwest, style = self@style),
@@ -91,7 +91,11 @@ rc_props <- list(
         rlang::inject(style(!!!get_non_empty_list(pr)))
       },
       setter = function(self, value) {
-        point(self@x, self@y, style = self@style + value)
+        rectangle(
+          center = self@center,
+          width = self@width, 
+          height = self@height, 
+          style = self@style + value)
       }
     ),
     tibble = new_property(getter = function(self) {
@@ -109,27 +113,16 @@ rc_props <- list(
     })
   ),
   funs = list(
-    tangent_at_theta = new_property(
-      class = class_function,
-      getter = function(self) {
-        \(theta = degree(0)) {
-          x0 <- self@center@x
-          y0 <- self@center@y
-          x1 <- cos(theta) * self@radius + self@center@x
-          y1 <- cos(theta) * self@radius + self@center@y
-          line(
-            a = x1 - x0,
-            b = y1 - y0,
-            c = x0 ^ 2 - (x1 * x0) + y0 ^ 2 - (y1 * y0) - self@radius ^ 2,
-            style = self@style
-          )
-        }
-      }
-    ),
     point_at_theta = new_property(
       class_function,
-      getter = function(self) {
-        \(theta = degree(0)) polar(theta = theta, r = self@radius, style = self@style)
+      getter = function(self) {        
+        \(theta = degree(0), ...) {
+          s <- segment(self@center, self@center + polar(theta = theta, r = distance(self@center, self@northeast)))
+          st <- self@style + style(...)
+          p <- intersection(self, s)[[1]]
+          p@style <- st
+          p
+        }
       }
     )))
 
@@ -243,16 +236,18 @@ rectangle <- new_class(
                             stop("There is not enough information to make a rectangle.")
                           }
 
-    
-    rc_style <- style +
-      style(
+
+    rc_style <- style(
         alpha = alpha,
         color = color,
         fill = fill,
         linewidth = linewidth,
         linetype = linetype
       ) +
+      style +
       style(...)
+
+
 
     non_empty_list <- get_non_empty_props(rc_style)
     d <- tibble::tibble(x = center@x, y = center@y, width = width, height = height)
@@ -263,6 +258,9 @@ rectangle <- new_class(
     }
 
     center = set_props(center, x = d$x, y = d$y)
+    center@style <- rc_style
+
+
 
 
 
@@ -279,14 +277,22 @@ rectangle <- new_class(
 
 
 method(str, rectangle) <- function(
-  object,
-  nest.lev = 0,
-  additional = FALSE,
-  omit = omit_props(object, include = c("center","width", "height"))) {
-str_properties(object,
-                   omit = omit,
-                   nest.lev = nest.lev)
+    object,
+    nest.lev = 0,
+    additional = FALSE,
+    omit = omit_props(object, include = c("center", "width", "height"))) {
+  str_properties(object,
+    omit = omit,
+    nest.lev = nest.lev
+  )
 }
+
+
+method(print, rectangle) <- function(x, ...) {
+  str(x, ...)
+  invisible(x)
+}
+
 
 method(as.geom, rectangle) <- function(x, ...) {
   d <- get_tibble_defaults(x)
@@ -295,6 +301,7 @@ method(as.geom, rectangle) <- function(x, ...) {
     .geom_x = ggplot2::geom_tile,
     user_overrides = get_non_empty_props(style(...)),
     mappable_bare = character(0),
+    mappable_identity = c("color","fill","linewidth","linetype","alpha"),
     not_mappable = character(0),
     required_aes = c("x", "y", "width", "height", "group"),
     omit_names = c("linejoin", "rule"),
@@ -321,5 +328,8 @@ method(get_tibble_defaults, rectangle) <- function(x) {
 }
 
 method(`==`, list(rectangle, rectangle)) <- function(e1, e2) {
-  e1@center@x == e2@center@x && e1@center@y == e2@center@y && e1@width == e2@width && e1@height == e2@height
+  (e1@center@x == e2@center@x) && 
+    (e1@center@y == e2@center@y) && 
+    (e1@width == e2@width) && 
+    (e1@height == e2@height)
 }

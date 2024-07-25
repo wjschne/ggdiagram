@@ -1,17 +1,19 @@
 library(S7)
 
-# geomprops
 
-props_geom <- list(
-  point = list(
-    required = c("x", "y"),
-    mappable_bare = character(),
-    mappable_identity = c("alpha", "color", "fill", "shape", "size", "stroke"),
-    not_mappable = character(),
-    omit_names = "group",
-    inherit.aes = FALSE
-  )
-)
+#' @export
+#' @importFrom S7 set_prop
+S7::prop
+
+#' @export
+#' @importFrom S7 set_props
+#' @rdname prop
+S7::set_props
+
+#' @export
+#' @importFrom S7 set_props
+#' @rdname prop
+S7::props
 
 
 # classes ----
@@ -26,57 +28,80 @@ class_unit <- new_S3_class(
     }
   },
   validator = function(self) {
-    if (!is.numeric(self)) stop("Underlying data for units must be numeric.")
-  })
+    if (!is.numeric(self))
+      stop("Underlying data for units must be numeric.")
+  }
+)
 
 class_margin <- new_class(
   name = "class_margin",
   parent = class_list,
   constructor = function(x = class_missing, units = "pt") {
-    if (S7_inherits(x, class_margin)) return(x)
-    if(length(x) > 0) {
-    if (is.numeric(x) && !grid::is.unit(x)) {
-      x <- unit(x, units = units)
-    }
-    if ("margin" %in% class(x)) {
-
-    } else if ("unit" %in% class(x)) {
-      if (length(x) == 1) {
-        x <- rep(x, 4)
-        class(x) <- c("margin", class(x))
-      } else if (length(x) == 2) {
-        x <- rep(x, 2)
-        class(x) <- c("margin", class(x))
-      } else if (length(x) == 4) {
-        class(x) <- c("margin", class(x))
-      } else {
-        stop("Margins can have 1 (all sides), 2 (horiztonal vs vertical), or 4 (top right bottom left) elements.")
+    if (S7_inherits(x, class_margin))
+      return(x)
+    if (length(x) > 0) {
+      if (is.numeric(x) && !grid::is.unit(x)) {
+        x <- unit(x, units = units)
       }
-    } else {
-      stop("Margins can be of class margin, unit, or numeric")
+      if ("margin" %in% class(x)) {
 
+      } else if ("unit" %in% class(x)) {
+        if (length(x) == 1) {
+          x <- rep(x, 4)
+          class(x) <- c("margin", class(x))
+        } else if (length(x) == 2) {
+          x <- rep(x, 2)
+          class(x) <- c("margin", class(x))
+        } else if (length(x) == 4) {
+          class(x) <- c("margin", class(x))
+        } else {
+          stop(
+            "Margins can have 1 (all sides), 2 (horiztonal vs vertical), or 4 (top right bottom left) elements."
+          )
+        }
+      } else {
+        stop("Margins can be of class margin, unit, or numeric")
+
+      }
     }
-  }
     new_object(list(x))
-    }
+  }
 )
 
-class_arrowhead <- new_class("class_arrowhead", class_list, constructor = function(x) {
+class_arrowhead <- new_class(
+  "class_arrowhead",
+  class_list,
+  constructor = function(x) {
+    if (S7_inherits(x, class_arrowhead))
+      return(x)
+    if (is.list(x))
+      return(purrr::map(x, class_arrowhead))
+    if (!(is.numeric(x) &&
+          is.matrix(x) &&
+          ncol(x) == 2))
+      stop("Arrowheads must be a 2-column matrix of numbers.")
 
-  if (S7_inherits(x, class_arrowhead)) return(x)
-  if (is.list(x)) return(purrr::map(x, class_arrowhead))
-  if (!(is.numeric(x) && is.matrix(x) && ncol(x) == 2)) stop("Arrowheads must be a 2-column matrix of numbers.")
-
-  new_object(list(x))
+    new_object(list(x))
 
 
-})
+  }
+)
 
 
-has_style <- new_class("has_style", abstract = TRUE)
-shape <- new_class("shape", parent = has_style,  abstract = TRUE)
-xy <- new_class("xy", parent = shape, abstract = TRUE)
-class_shape_list <- new_class("class_shape_list",class_list)
+has_style <- new_class(name = "has_style", abstract = TRUE)
+method(print, has_style) <- function(x, ...) {
+  str(x, ...)
+  invisible(x)
+}
+
+
+shape <- new_class(name = "shape",
+                   parent = has_style,
+                   abstract = TRUE)
+xy <- new_class(name = "xy",
+                parent = shape,
+                abstract = TRUE)
+class_shape_list <- new_class("class_shape_list", class_list)
 c_gg <- function(...) {
   sl <- rlang::list2(...)
   sl <- Filter(f = \(s) S7_inherits(s), sl)
@@ -89,37 +114,35 @@ c_gg <- function(...) {
 #' structure
 #'
 #' @param object object
+#' @export
 #' @keywords internal
-str <- new_generic(
-  name = "str",
-  dispatch_args = "object")
+str <- new_generic(name = "str", dispatch_args = "object")
 
 #' Addition
 #'
 #' @param e1 object
 #' @param e2 object
+#' @keywords internal
 #' @export
 `+` <- new_generic("+", c("e1", "e2"))
 
-method(`+`, list(class_ggplot, has_style)) <- function(e1,e2) {
+method(`+`, list(class_ggplot, has_style)) <- function(e1, e2) {
   e1 + as.geom(e2)
 }
 
-method(`+`, list(class_any, class_any)) <- function(e1,e2) {
-  .Primitive("+")(e1,e2)
+method(`+`, list(class_any, class_any)) <- function(e1, e2) {
+  .Primitive("+")(e1, e2)
 }
 
-method(`+`, list(class_character, class_character)) <- function(e1,e2) {
-  paste0(e1,e2)
+method(`+`, list(class_character, class_character)) <- function(e1, e2) {
+  paste0(e1, e2)
 }
-method(`+`, list(class_numeric, class_character)) <- function(e1,e2) {
-  paste0(e1,e2)
+method(`+`, list(class_numeric, class_character)) <- function(e1, e2) {
+  paste0(e1, e2)
 }
-method(`+`, list(class_character, class_numeric)) <- function(e1,e2) {
-  paste0(e1,e2)
+method(`+`, list(class_character, class_numeric)) <- function(e1, e2) {
+  paste0(e1, e2)
 }
-
-
 
 
 #' Get object data with styles in a tibble
@@ -131,7 +154,7 @@ method(get_tibble, class_list) <- function(x) {
   purrr::map_df(S7_data(x), get_tibble)
 }
 
-#' Get object data with styles in a tibble
+#' Combine several objects (of the same type) into one object
 #'
 #' @param x object
 #' @export
@@ -178,14 +201,6 @@ method(get_tibble_defaults, class_any) <- function(x) {
 #' Make an automatic label
 #'
 #' @param object object
-#' @param label character label
-#' @export
-#' @rdname label
-labeler <- new_generic("labeler", c("object", "label"))
-
-#' Make an automatic label
-#'
-#' @param object object
 #' @param x nudge right and left
 #' @param y nudge up and down
 #' @export
@@ -213,20 +228,21 @@ the$arrow_head <- arrowheadr::arrow_head_deltoid()
 
 #' @keywords internal
 allsameclass <- function(l, classname) {
-  allsame <- all(sapply(lapply(l, class),
-                        function(x)  classname %in% x))
+  allsame <- all(sapply(lapply(l, class), function(x)
+    classname %in% x))
   if (!allsame) {
     paste0("All items must be ", classname, ".")
   }
 }
 
 #' @keywords internal
-aes_injection <- function(bare_mapping, identity_mapping, omit_mapping = NULL) {
-  identity_mapping <- setdiff(identity_mapping, c(bare_mapping, omit_mapping))
+aes_injection <- function(bare_mapping,
+                          identity_mapping,
+                          omit_mapping = NULL) {
+  identity_mapping <- setdiff(identity_mapping,
+                              c(bare_mapping, omit_mapping))
   bare_mapping <- setdiff(bare_mapping, omit_mapping)
-  i_styles <- purrr::map(
-    rlang::syms(identity_mapping),
-    \(i) call("I", i))
+  i_styles <- purrr::map(rlang::syms(identity_mapping), \(i) call("I", i))
   names(i_styles) <- identity_mapping
   b_styles <- rlang::syms(bare_mapping)
   names(b_styles) <- bare_mapping
@@ -238,8 +254,13 @@ aes_injection <- function(bare_mapping, identity_mapping, omit_mapping = NULL) {
 
 
 #' @keywords internal
-get_tibble_defaults_helper <- function(x, default_style, required_aes = c("x", "y")) {
+get_tibble_defaults_helper <- function(
+    x,
+    default_style,
+    required_aes = c("x", "y")) {
+
   d <- get_tibble(x)
+
   for (n in setdiff(colnames(d), required_aes)) {
     d_prop <- prop(default_style, n)
     if (!(is.null(d_prop) || identical(d_prop, list()))) {
@@ -264,7 +285,8 @@ get_non_empty_props <- function(x) {
            ifelse(
              S7_inherits(s),
              length(S7_data(s)) > 0,
-             !rlang::is_function(s)),
+             !rlang::is_function(s)
+           ),
            FALSE)
 
   }, props(x))
@@ -278,8 +300,8 @@ get_non_empty_list <- function(l) {
 #' @keywords internal
 get_non_empty_tibble <- function(d) {
   d <- Filter(\(x) length(x) > 0, d)
-  d <- Filter(\(x) !is.null(x), d)
-  d <- Filter(\(x) !is.null(x), d)
+  d <- Filter(\(x) ! is.null(x), d)
+  d <- Filter(\(x) ! is.null(x), d)
   tibble::as_tibble(d)
 }
 
@@ -309,22 +331,25 @@ round_probability <- function(p,
                               max_digits = NULL,
                               remove_leading_zero = TRUE,
                               round_zero_one = TRUE) {
-  if (is.null(digits)
-  ) {
-    l <- scales::number(p,
-                        accuracy = accuracy)
+  if (is.null(digits)) {
+    l <- scales::number(p, accuracy = accuracy)
   }
   else {
     sig_digits <- abs(ceiling(log10(p + p / 1e+09)) - digits)
     pgt99 <- p > 0.99
     sig_digits[pgt99] <- abs(ceiling(log10(1 - p[pgt99])) - digits + 1)
 
-    sig_digits[ceiling(log10(p)) == log10(p) & (-log10(p) >= digits)] <-
-      sig_digits[ceiling(log10(p)) == log10(p) & (-log10(p) >= digits)] - 1
+    sig_digits[ceiling(log10(p)) == log10(p) &
+                 (-log10(p) >= digits)] <-
+      sig_digits[ceiling(log10(p)) == log10(p) &
+                   (-log10(p) >= digits)] - 1
 
     sig_digits[is.infinite(sig_digits)] <- 0
 
-    l <- purrr::map2_chr(p, sig_digits, formatC, format = "f", flag = "#")
+    l <- purrr::map2_chr(p, sig_digits,
+                         formatC,
+                         format = "f",
+                         flag = "#")
   }
   if (remove_leading_zero)
     l <- sub("^-0", "-", sub("^0", "", l))
@@ -340,9 +365,20 @@ round_probability <- function(p,
       l[round(p, digits = max_digits) == -1] <- "-1"
     }
     else {
-      l[round(p, digits = max_digits) == 0] <- paste0(".", paste0(rep("0", max_digits), collapse = ""))
-      l[round(p, digits = max_digits) == 1] <- paste0("1.", paste0(rep("0", max_digits), collapse = ""))
-      l[round(p, digits = max_digits) == -1] <- paste0("-1.", paste0(rep("0", max_digits), collapse = ""))
+      l[round(p, digits = max_digits) == 0] <- paste0(
+        ".",
+        paste0(rep("0", max_digits),
+               collapse = ""))
+
+      l[round(p, digits = max_digits) == 1] <- paste0(
+        "1.",
+        paste0(rep("0", max_digits),
+               collapse = ""))
+
+      l[round(p, digits = max_digits) == -1] <- paste0(
+        "-1.",
+        paste0(rep("0", max_digits),
+               collapse = ""))
     }
   }
   l <- sub(pattern = "-",
@@ -370,35 +406,34 @@ prop_integer_coerce <- function(name) {
   )
 }
 
-prop_props <- list(
-  point = list(required = c("x", "y"),
-               style = c("alpha",
-                         "color",
-                         "fill",
-                         "shape",
-                         "size",
-                         "stroke")),
-  label = list(required = c("p", "label"),
-               style = c("alpha",
-                         "color",
-                         "angle",
-                         "family",
-                         "fill",
-                         "fontface",
-                         "hjust",
-                         "label.color",
-                         "label.margin",
-                         "label.padding",
-                         "label.r",
-                         "label.size",
-                         "lineheight",
-                         "nudge_x",
-                         "nudge_y",
-                         "polar_just",
-                         "size",
-                         "text.color",
-                         "vjust"))
-)
+prop_props <- list(point = list(
+  required = c("x", "y"),
+  style = c("alpha", "color", "fill", "shape", "size", "stroke")
+),
+label = list(
+  required = c("p", "label"),
+  style = c(
+    "alpha",
+    "color",
+    "angle",
+    "family",
+    "fill",
+    "fontface",
+    "hjust",
+    "label.color",
+    "label.margin",
+    "label.padding",
+    "label.r",
+    "label.size",
+    "lineheight",
+    "nudge_x",
+    "nudge_y",
+    "polar_just",
+    "size",
+    "text.color",
+    "vjust"
+  )
+))
 
 get_prop_length <- function(prop) {
   if (S7_inherits(prop, has_style)) {
@@ -408,47 +443,67 @@ get_prop_length <- function(prop) {
   }
 }
 
-reclass <- c(polar = "point", point = "point", label = "label")
+reclass <- c(polar = "point",
+             point = "point",
+             label = "label")
 
 get_prop_n <- function(object) {
   check_is_S7(object)
   object_class <- S7_class(object)@name
   object_class <- reclass[object_class]
   required <- prop_props[[object_class]][["required"]]
-  required_ns <- `names<-`(purrr::map_int(required, \(pr) get_prop_length(prop(object, pr))), required)
+  required_ns <- `names<-`(
+    purrr::map_int(required,
+                   \(pr) get_prop_length(prop(object, pr))),
+    required)
   styles <- prop_props[[object_class]][["style"]]
-  styles_ns <- `names<-`(purrr::map_int(styles, \(pr) get_prop_length(prop(object, pr))), styles)
+  styles_ns <- `names<-`(
+    purrr::map_int(styles,
+                   \(pr) get_prop_length(prop(object, pr))),
+    styles)
+
   c(required_ns, styles_ns)
 
-  # Filter(x = required_ns, f = \(i) !(i %in% c(1, max(required_ns))))
-  # unique(required_ns)
 }
 
 get_shape_length <- function(object) {
   max(get_prop_n(object))
-  }
+}
 
 .simpleCap <- function(x) {
   s <- strsplit(x, " ")[[1]]
-  paste(toupper(substring(s, 1, 1)), substring(s, 2),
-        sep = "", collapse = " ")
+  paste(toupper(substring(s, 1, 1)),
+        substring(s, 2),
+        sep = "",
+        collapse = " ")
 }
 
 check_inconsistent <- function(object) {
   prop_n <- get_prop_n(object)
   max_n <- max(prop_n)
-  prop_inconsistent <- prop_n[!(prop_n %in% unique(c(0,1, max_n)))]
+  prop_inconsistent <- prop_n[!(prop_n %in% unique(c(0, 1, max_n)))]
   if (length(prop_inconsistent) > 0) {
-    msg <- tibble::enframe(prop_n[!(prop_n %in% unique(c(0,1)))]) %>%
-      dplyr::summarize(.by = value, name = paste0(name, collapse = ", ")) %>%
-      dplyr::mutate(v = paste0("Size ", value, ": Properties: ", name)) %>%
+    msg <- tibble::enframe(prop_n[!(prop_n %in% unique(c(0, 1)))]) %>%
+      dplyr::summarize(.by = value,
+                       name = paste0(name, collapse = ", ")) %>%
+      dplyr::mutate(v = paste0(
+        "Size ",
+        value,
+        ": Properties: ",
+        name)) %>%
       dplyr::pull(v) %>%
       paste0(collapse = "\n")
     object_class <- .simpleCap(S7_class(object)@name)
 
 
-    stop(paste0(object_class, " properties should have 0, 1, or consistently numbered elements.\nInconsistent elements:\n", msg))
-    }
+    stop(
+      paste0(
+        object_class,
+        " properties should have 0, 1, or consistently numbered elements.\nInconsistent elements:\n",
+        msg
+      )
+    )
+  }
 }
 
 # as.geom ----
@@ -462,39 +517,36 @@ as.geom <- new_generic("as.geom", "x")
 
 method(as.geom, class_shape_list) <- function(x, ...) {
   c(lapply(x, \(g) as.geom(g, ...)[[1]]))
-  }
+}
 
-method(`+`, list(class_ggplot, class_shape_list)) <- function(e1,e2) {
-
+method(`+`, list(class_ggplot, class_shape_list)) <- function(e1, e2) {
   e1 + as.geom(e2)
 }
 
 
 #' @keywords internal
-make_geom_helper <- function(
-    d = NULL,
-    .geom_x,
-    user_overrides,
-    not_mappable = character(),
-    required_aes = character(),
-    mappable_bare = character(),
-    mappable_identity = character(),
-    omit_names = character(),
-    ...
-) {
-  not_mappable = c("lineend", "linejoin", "arrow_head",
-                   'arrow_fins', "length","length_head",
-                   "length_fins", "length_mid", "resect",
-                   "resect_fins", "resect_head", "linemitre")
-  required_aes = c("x", "y", "xend", "yend")
-  omit_names = c("linejoin", "rule", "group")
-  mappable_bare = ""
-d <- get_tibble_defaults(resect(segment(point(), point(1,1)), unit(1,"pt")))
-
-
-
+make_geom_helper <- function(d = NULL,
+                             .geom_x,
+                             user_overrides,
+                             not_mappable = character(),
+                             required_aes = character(),
+                             mappable_bare = character(),
+                             mappable_identity = character(),
+                             omit_names = character(),
+                             ...) {
+  
+  omit_names <- unique(
+    c(omit_names, 
+      setdiff(
+        names(style@properties), 
+        unique(c(
+          mappable_bare, 
+          required_aes, 
+          not_mappable, 
+          mappable_identity)))))
+       
   # add group so that I() function will not disturb drawing order
-  if (!("group" %in% unique(c(omit_names,colnames(d))))) {
+  if (!("group" %in% unique(c(omit_names, colnames(d))))) {
     d$group <- seq(nrow(d))
   }
   # 1 row per unique combination of not mappable arguments
@@ -507,48 +559,33 @@ d <- get_tibble_defaults(resect(segment(point(), point(1,1)), unit(1,"pt")))
   d_unit_names <- names(d_isunit[d_isunit])
   d_unit_types <- purrr::map_chr(d_nested[, d_unit_names], grid::unitType)
 
-  d_nested <- mutate(d_nested, across(all_of(d_unit_names), .fns = as.numeric))
+  d_nested <- dplyr::mutate(d_nested,
+                            across(all_of(d_unit_names), .fns = as.numeric))
 
 
 
   d_all <- tidyr::nest(d_nested, .by = data, .key = "unmappable")
-  d_all %>%
-    mutate(unmapable  = purrr::map(\(.d) {
-      .d %>% mutate(across(all_of(d_unit_names), .fns = \(.sx) {
-        print(names(.sx))
-      }))}))
-
-  d_all$unmappable[[1]]
-  }))
-
-for (r in nrow(d_all)) {
-  d_all[r, "unmappable"]
-}
-d_all
-d_all$unmappable[[1]]
-
-
-
-
-
-  print(dplyr::pull(d_all, unmappable)[[1]] )
-
-
 
   # make geom for each row in d_nested
   purrr::pmap(d_all, \(data, unmappable) {
-
-
     # make list of not mapped arguments
     not_mapped <- as.list(unmappable)
 
-    not_mapped <- purrr::map2(not_mapped, names(not_mapped), \(x, name) {
-      if (name %in% c("label.margin", "label.padding")) {x <- x[[1]]}
-      x})
+    not_mapped <- purrr::map2(not_mapped,
+                              names(not_mapped), \(x, name) {
+      if (name %in% c("label.margin", "label.padding")) {
+        x <- x[[1]]
+      }
+      x
+    })
 
-
-
-
+    not_mapped <- purrr::map2(not_mapped,
+                              names(not_mapped), \(x, name) {
+      if (name %in% d_unit_names) {
+        x <- unit(x, d_unit_types[name])
+      }
+      x
+    })
 
     # get mappable names
     data_names <- colnames(data)
@@ -556,23 +593,24 @@ d_all$unmappable[[1]]
 
 
     # get names for bare mapping
-    bare_mapping <- intersect(unique(c(required_aes, mappable_bare)), data_names)
+    bare_mapping <- intersect(unique(c(required_aes, mappable_bare)),
+                              data_names)
 
     # omitted arguments
-    omit_mapping <- unique(c(omit_names, names(user_overrides), not_mapped_names))
+    omit_mapping <- unique(c(omit_names,
+                             names(user_overrides),
+                             not_mapped_names))
 
     # gename names for identity mapping
-    identity_mapping <- setdiff(data_names, unique(c(bare_mapping, omit_mapping)))
-
-
+    identity_mapping <- setdiff(
+      data_names,
+      unique(c(bare_mapping, omit_mapping)))
 
     myaes <- aes_injection(
       bare_mapping = bare_mapping,
       identity_mapping = identity_mapping,
       omit_mapping = omit_mapping
     )
-
-
 
     rlang::inject(.geom_x(
       mapping = myaes,
@@ -581,38 +619,32 @@ d_all$unmappable[[1]]
       !!!not_mapped,
       ...
     ))
-
-
-
-
   })
 }
 
 #' @keywords internal
 trimmer <- function(x) {
-  notabs <- gsub(x = x, pattern = "\\t", replacement = " ")
-  trimws(gsub(x = notabs, pattern = "\\s+", replacement = " "))
+  notabs <- gsub(x = x,
+                 pattern = "\\t",
+                 replacement = " ")
+  trimws(gsub(
+    x = notabs,
+    pattern = "\\s+",
+    replacement = " "
+  ))
 }
 
 #' @keywords internal
 rounder <- function(x, digits = 2, add = FALSE) {
   if (add) {
-    r <- paste0(ifelse(
-      x > 0,
-      " + ", "
-      \u2212 "),
-      trimws(formatC(abs(x),
-             digits = digits,
-             format = "fg")))
+    r <- paste0(ifelse(x > 0, " + ", "
+      \u2212 "), trimws(formatC(
+        abs(x), digits = digits, format = "fg"
+      )))
   } else {
-    r <- paste0(
-      ifelse(
-        x > 0,
-        "",
-        "\u2212"),
-      trimws(formatC(abs(x),
-              digits = digits,
-              format = "fg")))
+    r <- paste0(ifelse(x > 0, "", "\u2212"), trimws(formatC(
+      abs(x), digits = digits, format = "fg"
+    )))
   }
   r
 }
@@ -643,18 +675,26 @@ projection <- new_generic("projection", c("point", "object"))
 #' @param y object (can be omitted for segments and arcs)
 #' @param position numeric vector. 0 is start, 1 is end. Defaults to .5
 #' @export
-midpoint <- new_generic("midpoint", c("x", "y"), fun = function(x,y, position = .5, ...) {
-  S7::S7_dispatch()
-})
+midpoint <- new_generic(
+  "midpoint",
+  c("x", "y"),
+  fun = function(x, y, position = .5, ...) {
+    S7::S7_dispatch()
+  }
+)
 
 
 #' @keywords internal
 rotate2columnmatrix <- function(x, theta) {
-  x_rotated <- x %*%  matrix(c(cos(theta),
-                               -sin(theta),
-                               sin(theta),
-                               cos(theta)),
-                             nrow = 2, ncol = 2)
+  x_rotated <- x %*%  matrix(
+    c(cos(theta),
+      -sin(theta),
+      sin(theta),
+      cos(theta)),
+    nrow = 2,
+    ncol = 2)
   colnames(x_rotated) <- colnames(x)
   x_rotated
 }
+
+

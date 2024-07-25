@@ -2,7 +2,7 @@
 % Please edit documentation in R/a_early.R
 \name{bind_shape}
 \alias{bind_shape}
-\title{Get object data with styles in a tibble}
+\title{Combine several objects (of the same type) into one object}
 \usage{
 bind_shape(x, ...)
 }
@@ -10,5 +10,5 @@ bind_shape(x, ...)
 \item{x}{object}
 }
 \description{
-Get object data with styles in a tibble
+Combine several objects (of the same type) into one object
 }

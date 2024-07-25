@@ -161,13 +161,21 @@ method(as.geom, circle) <- function(x, ...) {
     d = d,
     .geom_x = ggforce::geom_circle,
     user_overrides = get_non_empty_props(style(...)),
-    mappable_bare = "",
+    mappable_bare = character(0),
+    mappable_identity = c(
+      "linewidth",
+      "linetype",
+      "alpha",
+      "color",
+      "fill"
+    ),
     not_mappable = c("n"),
     required_aes = c("x0", "y0", "r", "group"),
     omit_names = c("linejoin", "rule"),
-    inherit.aes = FALSE)
-
+    inherit.aes = FALSE
+  )
 }
+
 
 method(get_tibble, circle) <- function(x) {
   x@tibble

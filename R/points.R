@@ -12,7 +12,7 @@ pt_props <- list(
       },
       setter = function(self, value) {
         set_props(self, x = cos(value) * self@r, y = sin(value) * self@r)
-      }        
+      }
     ),
     r = new_property(
       getter = function(self) {
@@ -20,7 +20,7 @@ pt_props <- list(
       },
       setter = function(self, value) {
         set_props(self, x = cos(self@theta) * value, y = sin(self@theta) * value)
-      }        
+      }
     ),
     xy = new_property(
       getter = function(self) {
@@ -58,14 +58,36 @@ pt_props <- list(
   ),
   funs = list(
     label = new_property(class_function, getter = function(self) {
-      \(label = paste0(
-        "(",
-        signs::signs(round(self@x, 2)),
-        ",",
-        signs::signs(round(self@y, 2)),
-        ")"),
+      \(label = NULL,
+        accuracy = .1,
         ...
       ) {
+        if (is.null(label)) {
+          if (rlang::is_integerish(self@x)) {
+            x <- signs::signs(self@x)
+          } else {
+            x = signs::signs(self@x, accuracy = accuracy, trim_leading_zeros = TRUE)
+          }
+
+          if (rlang::is_integerish(self@y)) {
+            y <- signs::signs(self@y)
+          } else {
+            y = signs::signs(self@y, accuracy = accuracy, trim_leading_zeros = TRUE)
+          }
+
+          label <- paste0("(", x, ",", y, ")")
+
+        }
+        if (is.numeric(label) & !S7_inherits(label)) {
+          if (rlang::is_integerish(label)) {
+            label <- signs::signs(label)
+          } else {
+            label = signs::signs(label, accuracy = accuracy, trim_leading_zeros = TRUE)
+          }
+        }
+
+
+
         label(p = self, label = label, ...)
       }
 
@@ -202,6 +224,10 @@ str_properties(object,
               additional = additional)
 }
 
+method(print, point) <- function(x, ...) {
+  str(x, ...)
+    invisible(x)
+  }
 
 
 method(get_tibble, point) <- function(x) {
@@ -227,8 +253,9 @@ method(as.geom, point) <- function(x, ...) {
     d = d,
     .geom_x = ggplot2::geom_point,
     user_overrides = get_non_empty_props(style(...)),
-    mappable_bare = "",
-    not_mappable = "",
+    mappable_bare = character(0),
+    mappable_identity = c("shape", "color", "size", "fill", "alpha", "stroke"),
+    not_mappable = character(0),
     required_aes = c("x", "y"),
     omit_names = "group",
     inherit.aes = FALSE)
@@ -292,9 +319,65 @@ x + ((y - x) * position)
 # Centerpoint----
 centerpoint <- new_class(
   name = "centerpoint",
+  parent = xy,
   properties = list(center = new_property(
     class = point,
     default = point(0, 0)
-  )),
-  parent = xy
+  ))
 )
+
+method(`+`, list(centerpoint, point)) <- function(e1, e2) {
+  circle(e1@center + e2, e1@radius)
+}
+
+method(`-`, list(centerpoint, point)) <- function(e1, e2) {
+  circle(e1@center - e2, e1@radius)
+}
+
+method(`+`, list(point, centerpoint)) <- function(e1, e2) {
+  circle(e2@center + e1, e2@radius)
+}
+
+method(`-`, list(point, centerpoint)) <- function(e1, e2) {
+  circle(e1 - e2@center, e2@radius)
+}
+
+method(`%*%`, list(point, point)) <- function(x, y) {
+  x@xy[1, , drop = TRUE] %*% y@xy[1, , drop = TRUE]
+}
+
+# Perpendicular ----
+
+#' Find point perpendicular to 2 points
+#'
+#' @name perpendicular_point
+#' @param e1 first point
+#' @param e2 second point
+#' @examples
+#' x <- point(0,0)
+#' y <- point(1,1)
+#' # Find point perpendicular to x and y going vertically first
+#' x %|-% y
+#' # Find point perpendicular to x and y going horizontally first
+#' x %-|% y
+NULL
+
+#' @name perpendicular_vertical
+#' @rdname perpendicular_point
+#' @aliases %|-%
+#' @export
+`%|-%` <- new_generic("%|-%", c("e1", "e2"))
+
+method(`%|-%`, list(point, point)) <- function(e1,e2) {
+  point(e1@x, e2@y)}
+
+#' @name perpendicular_horizontal
+#' @rdname perpendicular_point
+#' @aliases %-|%
+#' @param e1 first point
+#' @param e2 second point
+#' @export
+`%-|%` <- new_generic("%-|%", c("e1", "e2"))
+
+method(`%-|%`, list(point, point)) <- function(e1,e2) {
+  point(e2@x, e1@y)}

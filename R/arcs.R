@@ -39,7 +39,9 @@ arc_props <- list(
     style = new_property(
       getter = function(self) {
         pr <- purrr::map(arc_styles,
-                         prop, object = self) %>%
+          prop,
+          object = self
+        ) %>%
           `names<-`(arc_styles)
         rlang::inject(style(!!!get_non_empty_list(pr)))
       },
@@ -55,28 +57,29 @@ arc_props <- list(
         x0 = self@center@x,
         y0 = self@center@y,
         r = self@radius,
-        start = self@start@radian,
-        end = self@end@radian,
+        start = c(self@start) * 2 * pi,
+        end = c(self@end) * 2 * pi,
         alpha = self@alpha,
-arrow_head = self@arrow_head,
-arrow_fins = self@arrow_fins,
-arrowhead_length = self@arrowhead_length,
-length_head = self@length_head,
-length_fins = self@length_fins,
-color = self@color,
-fill = self@fill,
-lineend = self@lineend,
-linejoin = self@linejoin,
-linewidth = self@linewidth,
-linewidth_fins = self@linewidth_fins,
-linewidth_head = self@linewidth_head,
-linetype = self@linetype,
-n = self@n,
-resect = self@resect,
-resect_fins = self@resect_fins,
-resect_head = self@resect_head,
-stroke_color = self@stroke_color,
-stroke_width = self@stroke_width)
+        arrow_head = self@arrow_head,
+        arrow_fins = self@arrow_fins,
+        arrowhead_length = self@arrowhead_length,
+        length_head = self@length_head,
+        length_fins = self@length_fins,
+        color = self@color,
+        fill = self@fill,
+        lineend = self@lineend,
+        linejoin = self@linejoin,
+        linewidth = self@linewidth,
+        linewidth_fins = self@linewidth_fins,
+        linewidth_head = self@linewidth_head,
+        linetype = self@linetype,
+        n = self@n,
+        resect = self@resect,
+        resect_fins = self@resect_fins,
+        resect_head = self@resect_head,
+        stroke_color = self@stroke_color,
+        stroke_width = self@stroke_width
+      )
       get_non_empty_tibble(d)
     })
   ),
@@ -93,7 +96,6 @@ stroke_width = self@stroke_width)
     }),
     midpoint = new_property(class_function, getter = function(self) {
       \(position = .5, ...) midpoint(self, position = position, ...)
-
     }),
     point_at_theta = new_property(
       class_function,
@@ -112,12 +114,15 @@ stroke_width = self@stroke_width)
           line(
             a = x1 - x0,
             b = y1 - y0,
-            c = x0 ^ 2 - (x1 * x0) + y0 ^ 2 - (y1 * y0) - self@radius ^ 2,
+            c = x0^2 - (x1 * x0) + y0^2 - (y1 * y0) - self@radius^2,
             style = self@style
           )
         }
       }
-    )))
+    )
+  )
+)
+
 
 # arc----
 
@@ -161,7 +166,7 @@ arc <- new_class(
                          fill = class_missing,
                          lineend = class_missing,
                          linejoin = class_missing,
-                         linewidth = class_missing,
+                         linewidth = .25,
                          linewidth_fins = class_missing,
                          linewidth_head = class_missing,
                          linetype = class_missing,
@@ -172,29 +177,28 @@ arc <- new_class(
                          stroke_width = class_missing,
                          style = class_missing,
                          ...) {
-
-    arc_style <- style +
+    arc_style <- center@style + style +
       style(
         alpha = alpha,
-arrow_head = arrow_head,
-arrow_fins = arrow_fins,
-arrowhead_length = arrowhead_length,
-length_head = length_head,
-length_fins = length_fins,
-color = color,
-fill = fill,
-lineend = lineend,
-linejoin = linejoin,
-linewidth = linewidth,
-linewidth_fins = linewidth_fins,
-linewidth_head = linewidth_head,
-linetype = linetype,
-n = n,
-resect = resect,
-resect_fins = resect_fins,
-resect_head = resect_head,
-stroke_color = stroke_color,
-stroke_width = stroke_width
+        arrow_head = arrow_head,
+        arrow_fins = arrow_fins,
+        arrowhead_length = arrowhead_length,
+        length_head = length_head,
+        length_fins = length_fins,
+        color = color,
+        fill = fill,
+        lineend = lineend,
+        linejoin = linejoin,
+        linewidth = linewidth,
+        linewidth_fins = linewidth_fins,
+        linewidth_head = linewidth_head,
+        linetype = linetype,
+        n = n,
+        resect = resect,
+        resect_fins = resect_fins,
+        resect_head = resect_head,
+        stroke_color = stroke_color,
+        stroke_width = stroke_width
       ) +
       style(...)
 
@@ -206,42 +210,51 @@ stroke_width = stroke_width
       end <- radian(end)
     }
 
+
+
     non_empty_list <- get_non_empty_props(arc_style)
-    d <- tibble::tibble(x0 = center@x, y0 = center@y, radius = radius, start = start@radian, end = end@radian)
+    d <- tibble::tibble(
+      x0 = center@x,
+      y0 = center@y,
+      radius = radius,
+      start = c(start) * 2 * pi,
+      end = c(end) * 2 * pi
+    )
     if (length(non_empty_list) > 0) {
-      d <- dplyr::bind_cols(
-        d,
-        tibble::tibble(!!!non_empty_list))
+      d <- dplyr::bind_cols(d, tibble::tibble(!!!non_empty_list))
     }
 
     center = set_props(center, x = d$x0, y = d$y0)
+    center@style <- arc_style
 
 
 
-     new_object(centerpoint(center = center),
-                 radius = d$radius,
-                 start = radian(d$start),
-                 end = radian(d$end),
-                alpha = d[["alpha"]] %||% alpha,
-                arrow_head = d[["arrow_head"]] %||% arrow_head,
-                arrow_fins = d[["arrow_fins"]] %||% arrow_fins,
-                arrowhead_length = d[["arrowhead_length"]] %||% arrowhead_length,
-                length_head = d[["length_head"]] %||% length_head,
-                length_fins = d[["length_fins"]] %||% length_fins,
-                color = d[["color"]] %||% color,
-                fill = d[["fill"]] %||% fill,
-                lineend = d[["lineend"]] %||% lineend,
-                linejoin = d[["linejoin"]] %||% linejoin,
-                linewidth = d[["linewidth"]] %||% linewidth,
-                linewidth_fins = d[["linewidth_fins"]] %||% linewidth_fins,
-                linewidth_head = d[["linewidth_head"]] %||% linewidth_head,
-                linetype = d[["linetype"]] %||% linetype,
-                n = d[["n"]] %||% n,
-                resect = d[["resect"]] %||% resect,
-                resect_fins = d[["resect_fins"]] %||% resect_fins,
-                resect_head = d[["resect_head"]] %||% resect_head,
-                stroke_color = d[["stroke_color"]] %||% stroke_color,
-                stroke_width = d[["stroke_width"]] %||% stroke_width)
+    new_object(
+      centerpoint(center = center),
+      radius = d$radius,
+      start = radian(d$start),
+      end = radian(d$end),
+      alpha = d[["alpha"]] %||% alpha,
+      arrow_head = d[["arrow_head"]] %||% arrow_head,
+      arrow_fins = d[["arrow_fins"]] %||% arrow_fins,
+      arrowhead_length = d[["arrowhead_length"]] %||% arrowhead_length,
+      length_head = d[["length_head"]] %||% length_head,
+      length_fins = d[["length_fins"]] %||% length_fins,
+      color = d[["color"]] %||% color,
+      fill = d[["fill"]] %||% fill,
+      lineend = d[["lineend"]] %||% lineend,
+      linejoin = d[["linejoin"]] %||% linejoin,
+      linewidth = d[["linewidth"]] %||% linewidth,
+      linewidth_fins = d[["linewidth_fins"]] %||% linewidth_fins,
+      linewidth_head = d[["linewidth_head"]] %||% linewidth_head,
+      linetype = d[["linetype"]] %||% linetype,
+      n = d[["n"]] %||% n,
+      resect = d[["resect"]] %||% resect,
+      resect_fins = d[["resect_fins"]] %||% resect_fins,
+      resect_head = d[["resect_head"]] %||% resect_head,
+      stroke_color = d[["stroke_color"]] %||% stroke_color,
+      stroke_width = d[["stroke_width"]] %||% stroke_width
+    )
   }
 )
 
@@ -266,8 +279,8 @@ method(as.geom, arc) <- function(x, ...) {
  d <- d %>%
   dplyr::mutate(group = factor(dplyr::row_number())) %>%
   dplyr::mutate(xy = purrr::pmap(list(x0, y0, r, start, end, n), \(X0, Y0, R, START, END, N) {
-    THETA <- seq(START, END, length.out = N)
-    tibble(
+    THETA <- seq(c(START), c(END), length.out = N)
+    tibble::tibble(
       x = X0 + cos(THETA) * R,
       y = Y0 + sin(THETA) * R
     )
@@ -285,12 +298,14 @@ overrides <- get_non_empty_props(style(...))
     d = d,
     .geom_x = ggarrow::geom_arrow,
     user_overrides = overrides,
-    mappable_bare = "",
-    not_mappable = c("n", "lineend", "linejoin", "arrow_head", 'arrow_fins', "length","length_head", "length_fins", "length_mid", "resect", "resect_fins", "resect_head", "linemitre"),
+    mappable_bare = character(0),
+    mappable_identity = c("color", "linewidth", "linetype", "alpha"),
+    not_mappable = c("n", "lineend", "linejoin", "arrow_head", "arrow_fins",
+                     "length","length_head", "length_fins", "length_mid",
+                     "resect", "resect_fins", "resect_head", "linemitre"),
     required_aes = c("x", "y", "group"),
     omit_names = c("linejoin", "rule", "x0", "y0", "r", "start", "end"),
     inherit.aes = FALSE)
-
 }
 
 method(get_tibble, arc) <- function(x) {

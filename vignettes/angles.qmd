@@ -1,14 +1,10 @@
 ---
 title: "Angles"
-knitr:
-  opts_chunk: 
-    collapse: true
-    comment: '#>'
 format: 
   html:
     toc: true
 vignette: >
-  %\VignetteIndexEntry{angles}
+  %\VignetteIndexEntry{points}
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 ---
@@ -19,10 +15,14 @@ library(ggplot2)
 library(dplyr)
 library(ggtext)
 library(ggarrow)
-knitr::opts_chunk$set(dev = "svglite", fig.height = 8, fig.width = 8)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  dev = "ragg_png",
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 7
+)
 my_font <- "Roboto Condensed"
-gdtools::register_gfont(family = my_font)
-gdtools::addGFontHtmlDependency(family = my_font)
 update_geom_defaults("richtext",
                      list(family = my_font, 
                           fill = "white",
@@ -30,6 +30,8 @@ update_geom_defaults("richtext",
 
 update_geom_defaults("arrow_segment", list(length_head = 5))
 ```
+
+# Setup
 
 ```{r setup}
 library(ggdiagram)
@@ -41,6 +43,7 @@ my_font <- "Roboto Condensed"
 my_arrow_head <- arrowheadr::arrow_head_deltoid()
 ```
 
+# Angles
 
 Angles have different kinds of units associated with them: degrees, radians, and turns. The `angle` class can take turns (i.e., 1 turn = one full rotation a circle), degrees (1 turn = 360 degrees), or radians (1 turn = $2\pi$ = $\tau$).
 
@@ -126,7 +129,7 @@ turn(.5)@degree
 ```
 
 
-# Characters
+# Character Printing
 
 For labeling, sometimes is convenient to convert angles to text:
 
@@ -136,7 +139,7 @@ as.character(turn(.25))
 as.character(radian(.5* pi))
 ```
 
-# Conversions
+## Angle Metric Conversions
 
 Any of the metrics can be converted to any other:
 
@@ -151,32 +154,18 @@ turn(a)
 
 # Arithmetic Operations
 
-Angles can be added, subtracted, multiplied, and divided. The result in turns can be any real number, but degrees, radians, and gradians are always recalculated to be between -1 and +1 turns (&pm;360 degrees or &pm;&tau; radians, or &pm;400 gradians).
+Angles can be added, subtracted, multiplied, and divided. The underlying value stored can be any real number (in turn units), but degrees, radians, and turns are always displayed as between &minus;1 and +1 turns, &pm;360 degrees, or &pm;2&pi; radians.
 
 $$30\unicode{xb0} + 60\unicode{xb0} = 90\unicode{xb0}$$
 
 ```{r angle_maker}
 #| code-fold: true
-make_angles <- function(a = c(30, 60), 
+make_angles <- function(a = c(80, 300), 
                         r = c(.1, .2, .3), 
                         label_adjust = c(0,0,0), 
                         multiplier = c(1.4,1.4,1.4)) {
 start_angles <- degree(c(0,a[1], 0))
-end_angles <- degree(c(a[1], sum(a), sum(a)))
-
-end_angles
-start_angles
-
-# theta1 <- a[2] - a[1]
-
-# sum_a <- degree(sum(a))
-
-# arc_diff <- arc(
-#     start = degree(start_angles),
-#     end = degree(end_angles),
-#     radius = r[3],
-#     style = style_C
-#   )
+end_angles <- degree(c(a[1], sum(a), degree(sum(a))@degree))
 
 arcs <- arc(radius = r, 
       start = start_angles, 
@@ -184,9 +173,10 @@ arcs <- arc(radius = r,
       linewidth = .25,
       length_head = 10,
       arrow_head =  arrowheadr::arrow_head_deltoid(),
-      color = c("firebrick", "royalblue", "orchid3"))
+      color = c("firebrick4", "royalblue3", "orchid4"))
 
 arc_labels <- as.character(degree(arcs@theta))
+
 
 arc_labels[3] <- arc_labels[1] + 
   " + " + arc_labels[2] + 
@@ -289,7 +279,7 @@ make_angles(c(40, -60))
 ```
 
 ```{r subtract}
-degree(10) - degree(20)
+degree(40) - degree(60)
 ```
 
 $$2\cdot20\unicode{xb0}=40\unicode{xb0}$$
@@ -305,7 +295,7 @@ $$\begin{align}2\cdot180 &= 360\unicode{xb0}\\&=0\unicode{xb0}\end{align}$$
 2 * degree(180)
 ```
 
-# Trigonometry
+## Trigonometry
 
 Angles can take the three standard trigonometric functions
 
@@ -417,27 +407,3 @@ tan(radian(pi))
 ```
 
 
-```{r}
-my_colors <- c("blue", "red")
-
-ggplot() +
-  theme_void() +
-  coord_equal() +
-  circle(radius = 1:2, color = my_colors) +
-  ellipse(
-    center = point(),
-    a = c(1, 4),
-    b = c(1, 2),
-    m1 = c(10, 2),
-    m2 = c(10, 2),
-    angle = degree(c(0, 45)),
-    ,
-    color = my_colors
-  ) +
-  line(slope = 3:4,
-       intercept = 1,
-       color = my_colors) +
-  point(3:4, 1, color = my_colors) +
-  segment(point(), point(1, 1:2), color = my_colors)
-
-```

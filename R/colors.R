@@ -16,6 +16,9 @@ class_color <- new_class(
   name = "class_color",
   parent = class_character,
   properties = list(
+    color = new_property(class_character, getter = function(self) {
+      as.character(self)
+    }),
     transparentize = new_property(class_function, getter = function(self) {
       \(alpha = .5) class_color(scales::alpha(alpha = alpha, colour = self))
     }),

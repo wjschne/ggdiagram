@@ -46,6 +46,8 @@ To avoid repetitive code, we make a base plot:
 my_font <- "Roboto Condensed"
 my_text_size <- 20
 my_point_size <- 2.5
+# my_colors <- viridis::viridis(2, begin = .25, end = .5)
+my_colors <- c("#3B528B", "#21908C")
 update_geom_defaults(geom = "richtext", 
                      new = list(family = my_font, 
                                 size = .8 * my_text_size / ggplot2::.pt))
@@ -83,7 +85,7 @@ bp <- ggplot() +
 Lines can be constructed from a slope and an intercept:
 
 ```{r construct_line}
-l <- line(slope = 2, intercept = 1, color = "royalblue3")
+l <- line(slope = 2, intercept = 1, color = my_colors[1])
 l
 ```
 
@@ -100,7 +102,7 @@ bp +
 Because the default slope is 0, a horizontal line can be set with just the intercept:
 
 ```{r hline}
-h <- line(intercept = 2, color = "royalblue3")
+h <- line(intercept = 2, color = my_colors[1])
 h
 ```
 
@@ -117,7 +119,7 @@ bp +
 A vertical line can be set with the x-intercept:
 
 ```{r vline}
-v <- line(xintercept = -2, color = "royalblue3")
+v <- line(xintercept = -2, color = my_colors[1])
 v
 ```
 
@@ -139,7 +141,7 @@ ax+by+c=0
 $$
 
 ```{r abcline}
-l_123 <- line(a = 1, b = 2, c = 3, color = "royalblue3")
+l_123 <- line(a = 1, b = 2, c = 3, color = my_colors[1])
 ```
 
 ```{r fig-ablcline_plot}
@@ -163,8 +165,8 @@ A point can be "projected" onto a line. Imagine shining a light on the point in 
 
 
 ```{r projection}
-p <- point(1,-1, color = "firebrick4")
-l <- line(slope = 2, intercept = 2, color = "royalblue3")
+p <- point(3,-2, color = my_colors[2])
+l <- line(slope = 2, intercept = 2, color = my_colors[1])
 # Point p projected onto line l
 p_projected <- projection(p, l)
 
@@ -186,7 +188,7 @@ distance(p, l)
 segment(p, l@projection(p))@distance
 ```
 
-```{r}
+```{r fig-point_line}
 #| fig-cap: Shortest distance between a line and point
 #| code-fold: true
 
@@ -215,8 +217,7 @@ bp +
       label = "Distance = " + s_projected@distance %>% 
         round(digits = 2) %>% 
         as.character(),
-      angle = s_projected@line@angle, 
-      vjust = 0) 
+      angle = s_projected@line@angle) 
 
 
 ```

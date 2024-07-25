@@ -49,8 +49,6 @@ method(distance, list(segment, class_missing)) <- function(x,y) {
   distance(x@p1, x@p2)
 }
 
-# add when circles are ready
-
 method(distance, list(circle, circle)) <- function(x,y, center = FALSE) {
   d <- (y@center - x@center)
   if (!center) {

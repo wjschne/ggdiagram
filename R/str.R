@@ -90,7 +90,7 @@ str_properties <- function(
            nest.lev = nest.lev)
   if (length(omit) > 0 && additional && nest.lev == 0) {
     additional_text <- paste0("Other props: ", paste(p_names[p_names %in% omit], collapse = ", "),"\n")
-    cat(additional_text)
+    cat(stringr::str_wrap(string = additional_text, width = 50, exdent = 13))
   }
 
 }
@@ -112,6 +112,17 @@ method(str, class_arrowhead) <- function(
   nest.lev = 0,
   additional = TRUE,
   omit = omit_props(object, include = c("x","y"))) {
+str_properties(object,
+               omit = omit,
+               nest.lev = nest.lev,
+              additional = additional)
+}
+
+method(str, class_margin) <- function(
+  object,
+  nest.lev = 0,
+  additional = TRUE,
+  omit = "") {
 str_properties(object,
                omit = omit,
                nest.lev = nest.lev,

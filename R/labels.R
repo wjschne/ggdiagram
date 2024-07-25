@@ -130,6 +130,24 @@ label <- new_class(
       vjust <- polar2just(polar_just@theta, polar_just@r, axis = "v")
       polar_just <- class_missing
     }
+    if (missing(label)) {
+      
+      label = paste0(
+        "(", 
+        ifelse(rlang::is_integerish(p@x), p@x, signs::signs(p@x, accuracy = .1)),
+        ",",
+        ifelse(rlang::is_integerish(p@y), p@y, signs::signs(p@y, accuracy = .1)),
+        ")")
+
+
+    } 
+    # label <- ifelse(
+    #   is.numeric(label) & 
+    #     !S7::S7_inherits(label, class_angle) & 
+    #     rlang::is_integerish(label),
+    #   signs::signs(label, accuracy = .1),
+    #   as.character(label))
+    
 
     d <- tibble::tibble(x = p@x, y = p@y, label = as.character(label))
     if (length(angle) > 0) {
@@ -139,8 +157,11 @@ label <- new_class(
       }
     }
 
+    p_style <- p@style
+    p_style@size <- 12
 
-    l_style <- p@style + style(size = ggtext::GeomRichText$default_aes$size * ggplot2::.pt, label.color = NA, fill = "white") + style +
+
+    l_style <- p_style + style(size = ggtext::GeomRichText$default_aes$size * ggplot2::.pt, label.color = NA, fill = "white") + style +
       style(
         alpha = alpha,
         color = as.character(color),
@@ -185,12 +206,7 @@ label <- new_class(
                             multiplier = 1.15) + style(...)
     }
 
-    if (missing(label)) {
-      label = paste0("(", signs::signs(round(p@x, 2)), ",",
-                     signs::signs(round(p@y, 2)), ")")
-    } else if (is.numeric(label)) {
-      label <- trimws(formatC(label, format = "fg", digits = 2))
-    }
+
 
     non_empty_list <- get_non_empty_props(l_style)
 
@@ -290,7 +306,8 @@ method(as.geom, label) <- function(x, ...) {
     d = d,
     .geom_x = ggtext::geom_richtext,
     user_overrides = overides,
-    mappable_bare = c("angle", "family", "fontface", "hjust", "vjust", "label.size", "lineheight"),
+    mappable_bare = c("angle", "family", "fontface", "hjust", "vjust", "lineheight"),
+    mappable_identity = c("color", "fill", "size", "alpha", "text.color", "label.color", "label.size"),
     not_mappable = c("label.margin", "label.padding", "label.r", "nudge_x", "nudge_y"),
     required_aes = c("x", "y", "label"),
     omit_names = "group",

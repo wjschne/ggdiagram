@@ -101,7 +101,7 @@ degree <- new_class(
   name = "degree", 
   parent = class_angle,
   constructor = function(degree = class_missing) {
-    if (S7_inherits(degree, class_angle)) degree = degree@degree
+    if (S7_inherits(degree, class_angle)) degree <- c(degree) * 360
     new_object(degree / 360)
   })
 
@@ -114,7 +114,7 @@ radian <- new_class(
   name = "radian", 
   parent = class_angle,
   constructor = function(radian = class_missing) {
-    if (S7_inherits(radian, class_angle)) radian = radian@radian
+    if (S7_inherits(radian, class_angle)) radian <- c(radian) * 2 * pi
     new_object(radian / (2 * pi))
   })
 
@@ -127,7 +127,7 @@ turn <- new_class(
   name = "turn", 
   parent = class_angle,
   constructor = function(turn = class_missing) {
-    if (S7_inherits(turn, class_angle)) turn = turn@turn
+    if (S7_inherits(turn, class_angle)) turn <- c(turn)
     new_object(turn)
   })
 
@@ -243,5 +243,4 @@ method(as.character, class_angle) <- function(x,
     turn = paste0(round_probability(x@turn, digits = digits)),
     class_angle = 2 * pi)
 }
-
 

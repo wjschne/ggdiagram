@@ -152,6 +152,11 @@ line <- new_class(
         dplyr::pull(ab0) %>%
         any()
       if (check_ab0) stop("If a and b are 0, c must be 0.")
+      
+
+      
+      if (length(slope) > 0 && all(slope != -b / a)) stop("Some slopes are inconsistent with a and b parameters.")
+      if (length(intercept) > 0 && all(intercept != -c / a)) stop("Some intercepts are inconsistent with b and c parameters.")
 
       # Prevent a and b from being both negative
       ab_both_negative = -2 * ((d$a <= 0) & (d$b <= 0)) + 1
@@ -245,8 +250,9 @@ v_line_helper <- function(d, ...) {
     d = d,
     .geom_x = f_geom,
     user_overrides = get_non_empty_props(style(...)),
-    mappable_bare = "",
-    not_mappable = "",
+    mappable_bare = character(0),
+    mappable_identity = c("color", "linewidth", "linetype", "alpha"),
+    not_mappable = character(0),
     required_aes = req,
     omit_names = c(omit,"group")
   )
@@ -329,4 +335,3 @@ xp <- (object@b * object@b * point@x - object@b * object@a * point@y - object@a 
 yp <- (object@a * object@a * point@y - object@a * object@b * point@x - object@b * object@c) / ab
 point(xp, yp, style = point@style, ...)
 }
-

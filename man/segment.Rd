@@ -14,7 +14,6 @@ segment(
   length_head = class_missing,
   length_fins = class_missing,
   color = class_missing,
-  fill = class_missing,
   lineend = class_missing,
   linejoin = class_missing,
   linewidth = 0.5,
@@ -26,10 +25,13 @@ segment(
   resect_head = class_missing,
   stroke_color = class_missing,
   stroke_width = class_missing,
+  style = class_missing,
   ...
 )
 }
 \arguments{
+\item{style}{a style list}
+
 \item{...}{properties passed to style}
 
 \item{b}{coefficient in general form: a * x + b * y + c = 0}
@@ -41,8 +43,6 @@ segment(
 \item{intercept}{value of y when x is 0}
 
 \item{xintercept}{value of x when y is 0}
-
-\item{style}{a style list}
 }
 \description{
 segment class

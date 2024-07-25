@@ -1,0 +1,131 @@
+---
+title: "Segments"
+format: 
+  html:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{segments}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r presetup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  dev = "ragg_png",
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 7
+)
+library(ggdiagram)
+library(ggplot2)
+library(ggtext)
+```
+
+```{r setup}
+library(ggdiagram)
+library(ggplot2)
+library(ggtext)
+```
+
+For ease of plotting, we will define a base plot:
+
+```{r}
+my_font <- "Roboto Condensed"
+update_geom_defaults("richtext", 
+                     list(family = my_font, 
+                          size = 0.8 * 20 / ggplot2::.pt))
+update_geom_defaults("line", list(linewidth = .75))
+update_geom_defaults("segment", list(linewidth = .75))
+update_geom_defaults("point", list(size = 2))
+
+bp <- ggplot() +
+  theme_minimal(base_size = 20, base_family = my_font) +
+  theme(axis.title.y = element_text(angle = 0, vjust = 0.5)) +
+  coord_equal() +
+  xlim(-4,4) +
+  ylim(-4,4)
+
+
+```
+
+
+A segment is a portion of a line between two points.
+
+
+```{r}
+p1 <- point(-3,-1)
+p2 <- point(3,3)
+s1 <- segment(p1, p2)
+```
+
+```{r}
+bp + s1 + p1 + p2
+```
+
+Styles can be specified when the segment is created.
+
+```{r}
+s2 <- segment(p1,p2, color = "red")
+bp + s2
+```
+
+Styles can be modified via the `@style` property:
+
+```{r}
+s2@style@linewidth <- 3
+bp + s2
+```
+
+The `as.geom` passes style arguments to the `geom_seqment` function without modifying the segment's style property:
+
+```{r}
+# Make s1 appear red temporarily
+bp +
+  as.geom(s1, color = "red")
+# Verify that s1's style is not red
+bp + s1
+```
+
+A "pipe-friendly" way to modify any ggdiagram object is to use S7's `set_prop` function, which has been re-exported to ggdiagram for the sake of convenience. 
+
+```{r}
+
+bp +
+  s1 %>% 
+    set_props(color = "red") 
+
+```
+
+
+
+The line that passes between both points:
+
+```{r}
+s1@line
+```
+
+
+```{r}
+s1_ends <- midpoint(s1, position = c(0,1))
+bp +
+  s1@line +
+  s1@midpoint(position = c(0,1))@label(
+    polar_just = polar(s1@line@angle + degree(90), 1.5), 
+    plot_point = TRUE) +
+  s1@label(equation(s1@line))
+```
+
+The distance between a segment's points:
+
+```{r}
+distance(s1)
+```
+
+```{r}
+bp + 
+  s1 + 
+  s1@label(distance(s1)) 
+```
+
+
