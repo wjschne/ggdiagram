@@ -23,13 +23,7 @@ knitr::opts_chunk$set(
   fig.width = 7,
   fig.height = 7
 )
-my_font <- "Roboto Condensed"
-update_geom_defaults("richtext",
-                     list(family = my_font, 
-                          fill = "white",
-                          size = .8 * 16 / ggplot2::.pt))
 
-update_geom_defaults("arrow_segment", list(length_head = 5))
 ```
 
 # Setup
@@ -40,22 +34,71 @@ library(ggplot2)
 library(dplyr)
 library(ggtext)
 library(ggarrow)
-my_font <- "Roboto Condensed"
-my_arrow_head <- arrowheadr::arrow_head_deltoid()
+
+
 ```
+
+# Base Plot
+
+
+## Base plot
+
+To avoid repetitive code, we make a base plot:
+
+```{r baseplot}
+my_font <- "Roboto Condensed"
+my_text_size <- 20
+my_point_size <- 2.5
+my_arrow_head <- arrowheadr::arrow_head_deltoid()
+# my_colors <- viridis::viridis(2, begin = .25, end = .5)
+my_colors <- c("#3B528B", "#21908C")
+update_geom_defaults(geom = "richtext", 
+                     new = list(family = my_font, 
+                                size = .8 * my_text_size / ggplot2::.pt))
+
+update_geom_defaults("point", list(size = my_point_size))
+update_geom_defaults("arrow_segment", list(length_head = 5))
+
+
+theme_set(
+  theme_minimal(
+    base_size = my_text_size, 
+    base_family = my_font) +
+    theme(axis.title.y = element_text(angle = 0, vjust = 0.5)))
+
+
+
+
+bp <- ggplot() +
+  coord_equal() +
+  scale_x_continuous(labels = WJSmisc::signs_centered, limits = c(-4, 4)) +
+  scale_y_continuous(labels = signs::signs, limits = c(-4, 4)) +
+  theme_minimal(base_size = 16) +
+  theme(
+    axis.title.x =  element_text(face = "italic"),
+    axis.title.y = element_text(
+      face = "italic",
+      angle = 0,
+      hjust = .5,
+      vjust = .5
+    )
+  )
+```
+
+# Arcs
 
 Just as a segment is part of a line between two points on the line, an arc is part of a circle between two points (on the circle). Thus, an arc has all the properties a circle, with the addition of starting and ending points. For the sake of simplicity, these starting points are specified as angles.
 
 Arc starting and points can be specified with any angle unit. If a number is used, it will be interpreted as a degree unit.
 
-```{r}
+```{r arc}
 arc(center = point(1,2), start = 20, end = 150, radius = 3)
 ```
 
 
 ```{r fig-arc}
 #| fig-cap: Arc with starting and ending angles and center point.
-
+#| code-fold: true
 bp +
   {a1 <- arc(
     center = {p1 <- point(0, 0)},
@@ -69,7 +112,7 @@ bp +
         p = a1@midpoint(0),
         polar_just = polar(ang_start + degree(-90), 1.3), 
         plot_point = TRUE) +
-  label(label = end, 
+  label(label = ang_end, 
         p = a1@midpoint(1), 
         polar_just = polar(ang_end + degree(90), 1), 
         plot_point = TRUE)
@@ -78,13 +121,10 @@ bp +
 Sometimes you do not know where the center of an arc should be. Instead, you want the arc to start or end at a specific point. For example, you might want to specify the start point or the end point.
 
 
-```{r}
-p1 <- point(0, 0) 
+```{r fig-startpoint}
 bp +
+  {p1 <- point(0, 0)} +
   arc(start = -45, end = 45, radius = 2,color = "red", start_point = p1)  +
-  arc(start = -45, end = 45, radius = 2,color = "blue", end_point = p1) + 
-  p1
- 
-
+  arc(start = -45, end = 45, radius = 2,color = "blue", end_point = p1) 
 ```
 

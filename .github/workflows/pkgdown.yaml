@@ -9,7 +9,7 @@ on:
     types: [published]
   workflow_dispatch:
 
-name: pkgdown
+name: pkgdown.yaml
 
 permissions: read-all
 
@@ -25,9 +25,6 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up Quarto
-        uses: quarto-dev/quarto-actions/setup@v2
 
       - uses: r-lib/actions/setup-pandoc@v2
 
@@ -51,5 +48,3 @@ jobs:
           clean: false
           branch: gh-pages
           folder: docs
-
-

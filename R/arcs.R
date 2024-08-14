@@ -248,7 +248,6 @@ arc <- new_class(
     if (S7_inherits(start_point, point)) {
       c1 <- circle(radius = radius)
       p1 <- c1@point_at(start)
-      print(p1)
       center <- start_point - p1
     } else if (S7_inherits(end_point, point)) {
       c1 <- circle(radius = radius)

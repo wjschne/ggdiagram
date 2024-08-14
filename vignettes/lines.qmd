@@ -22,8 +22,6 @@ library(ggplot2)
 library(dplyr)
 library(ggtext)
 my_font <- "Roboto Condensed"
-gdtools::register_gfont(family = my_font)
-gdtools::addGFontHtmlDependency(family = my_font)
 ```
 
 # Setup
@@ -201,7 +199,7 @@ bp +
       p1 = l@projection(p),
       p2 = p,
       linetype = "dashed",
-      label = "Distance = "+s_projected@distance %>%
+      label = "Distance = "+ distance(l@projection(p), p) %>%
         round(digits = 2) %>%
         as.character())} + 
   s_projected@midpoint(c(0, 1))@label(
