@@ -3,6 +3,7 @@ title: "Angles"
 format: 
   html:
     toc: true
+    html-math-method: katex
 vignette: >
   %\VignetteIndexEntry{points}
   %\VignetteEngine{quarto::html}
@@ -94,7 +95,7 @@ ggplot() +
   purrr::pmap(
     .l = list(r, theta_list, my_shades), 
     .f = \(rs, ts, ss) {
-      as.geom(circle(radius = rs - 1/8)@point_at_theta(ts)@label(ts, fill = ss, size = 16))
+      as.geom(circle(radius = rs - 1/8)@point_at(ts)@label(ts, fill = ss, size = 16))
       }) +
   point(0, y = r - 1/18)@label(angle_types, 
                                fill = my_shades, 
@@ -156,7 +157,7 @@ turn(a)
 
 Angles can be added, subtracted, multiplied, and divided. The underlying value stored can be any real number (in turn units), but degrees, radians, and turns are always displayed as between &minus;1 and +1 turns, &pm;360 degrees, or &pm;2&pi; radians.
 
-$$30\unicode{xb0} + 60\unicode{xb0} = 90\unicode{xb0}$$
+30&deg; + 60&deg; = 90&deg;
 
 ```{r angle_maker}
 #| code-fold: true
@@ -167,29 +168,30 @@ make_angles <- function(a = c(80, 300),
 start_angles <- degree(c(0,a[1], 0))
 end_angles <- degree(c(a[1], sum(a), degree(sum(a))@degree))
 
-arcs <- arc(radius = r, 
-      start = start_angles, 
-      end = end_angles,
-      linewidth = .25,
-      length_head = 10,
-      arrow_head =  arrowheadr::arrow_head_deltoid(),
-      color = c("firebrick4", "royalblue3", "orchid4"))
+arc_labels <- as.character(end_angles - start_angles)
 
-arc_labels <- as.character(degree(arcs@theta))
+mycolors <- c("firebrick4", "royalblue3", "orchid4")
 
 
 arc_labels[3] <- arc_labels[1] + 
   " + " + arc_labels[2] + 
   " = " + arc_labels[3]
 
+arcs <- arc(radius = r, 
+      start = start_angles, 
+      end = end_angles,
+      label = label(arc_labels, color = mycolors),
+      linewidth = .25,
+      length_head = 10,
+      arrow_head =  arrowheadr::arrow_head_deltoid(),
+      color = mycolors)
+
+
+
 ggplot() +
   theme_void() +
   coord_equal()  +
   arcs +
-  arcs@label(
-    label = arc_labels, 
-    distance = multiplier,
-    angle = arcs@midpoint()@theta + degree(label_adjust)) +
   segment(
     p1 = point(), 
     p2 = polar(theta = degree(c(0,a[1],sum(a))), r = 1), 
@@ -212,9 +214,7 @@ ggplot() +
 
 make_angles(a = c(30, 60), 
             r = c(.12,.24, .36), 
-            multiplier = c(1.5,1.5,1.5)) +
-  rectangle(southwest = point(0,0), 
-            northeast = point(.035, .035)) 
+            multiplier = c(1.5,1.5,1.5)) 
 
 
 ```
@@ -316,74 +316,89 @@ tan(theta)
 o <- point(0, 0)
 p <- polar(theta, 1)
 
-# col <- purrr::map2_chr(scico::scico(6, palette = "hawaii"),c(0.01,0.01,0.01,0.01,.15, .4), tinter::darken)
+# col <- purrr::map2_chr(scico::scico(6, palette = "hawaii"),
+#                        c(0.01,0.01,0.01,0.01,.15, .4), 
+#                        tinter::darken)
 
 my_colors <- c("#8C0172", "#944046", "#9B7424", 
                "#8EB63B", "#53BD91", "#6C939A")
-degree_arc <- arc(end = theta,
-                  radius = .25,
-                  linewidth = .2)
-
-seg_sin <- segment(polar(theta = 0, r = cos(theta)), 
-                   p, 
-                   color = my_colors[1], 
-                   linewidth = .5)
-seg_cos <- segment(point(0, sin(theta)), 
-                   point(cos(theta), sin(theta)), 
-                   color = my_colors[2], 
-                   linewidth = .5)
-seg_tan <- segment(p, 
-                   p + polar(theta - 90, r = tan(theta)), 
-                   color = my_colors[3], 
-                   linewidth = .5)
-
-seg_cot <- segment(p, 
-                   p + polar(theta + 90, r = 1 / tan(theta)), 
-                   color = my_colors[4], 
-                   linewidth = .5)
-
-seg_sec <- segment(o, point(1 / cos(theta)), color = my_colors[5])
-seg_csc <- segment(o, point(0, 1 / sin(theta)), color = my_colors[6])
-
-seg_theta <- segment(o, p2 = p, 
-                     resect_head = 1, 
-                     length_head = 8,
-                     arrow_head = my_arrow_head)
 
 ggplot() +
   theme_void() +
   coord_equal() +
   circle(fill = NA, color = "gray") +
+  # axes
   line(intercept = 0,
        color = "gray",
        linewidth = .25) +
   line(xintercept = 0,
        color = "gray",
        linewidth = .25) +
-  degree_arc +
-  degree_arc@label() +
-  seg_theta +
-  seg_theta@label(label = "*r* = 1") +
-  seg_sin +
-  seg_sin@label("sin(" + theta + ") = " +
-          round(sin(theta), 2)) +
-  seg_cos +
-  seg_cos@label("cos(" + theta + ") = " +
-          round(cos(theta), 2), vjust = 1) +
-  seg_tan +
-  seg_tan@label("tan(" + theta + ") = " +
-          round(tan(theta), 2)) +
-  seg_sec +
-  seg_sec@label("sec(" + theta + ") = " +
-          round(1 / cos(theta), 2),
-          vjust = 1) +
-  seg_cot +
-  seg_cot@label("cot(" + theta + ") = " +
-          round(1 / tan(theta), 2)) +
-  seg_csc +
-  seg_csc@label("csc(" + theta + ") = " +
-          round(1 / sin(theta), 2))
-
+  # degree arc
+  arc(
+    end = theta,
+    radius = .25,
+    label = theta,
+    linewidth = .2
+  ) +
+  # angle arrow
+  segment(
+    o,
+    p2 = p,
+    label = "*r* = 1",
+    resect_head = 1,
+    length_head = 8,
+    arrow_head = my_arrow_head
+  ) +
+  # sin(theta)
+  segment(
+    polar(theta = 0, r = cos(theta)),
+    p,
+    label = "sin(" + theta + ") = " + round(sin(theta), 2),
+    color = my_colors[1],
+    linewidth = .5
+  ) +
+  # cos(theta)
+  segment(
+    point(0, sin(theta)),
+    point(cos(theta), sin(theta)),
+    label = label("cos(" + theta + ") = " + round(cos(theta), 2), vjust = 1),
+    color = my_colors[2],
+    linewidth = .5
+  ) +
+  # tan(theta)
+  segment(
+    p,
+    p + polar(theta - 90, r = tan(theta)),
+    label = "tan(" + theta + ") = " + round(tan(theta), 2),
+    color = my_colors[3],
+    linewidth = .5
+  ) +
+  # sec(theta)
+  segment(
+    o,
+    point(1 / cos(theta)),
+    label = label(
+      label = "sec(" + theta + ") = " + round(1 / cos(theta), 2),
+      vjust = 1
+    ),
+    color = my_colors[5]
+  ) +
+  # cot(theta)
+  segment(
+    p + polar(theta + 90, r = 1 / tan(theta)),
+    p,
+    label = "cot(" + theta + ") = " + round(1 / tan(theta), 2),
+    color = my_colors[4],
+    linewidth = .5
+  ) +
+  # csc(theta)
+  segment(
+    o,
+    point(0, 1 / sin(theta)),
+    label = "csc(" + theta + ") = " + round(1 / sin(theta), 2),
+    color = my_colors[6]
+  ) 
    
 ```
 
@@ -405,5 +420,6 @@ By contrast, `tan(radian(pi))` rounds to 0 exactly.
 tan(radian(pi))
 
 ```
+
 
 

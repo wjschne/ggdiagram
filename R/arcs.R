@@ -24,12 +24,14 @@ arc_styles <- c(
 # cat(paste0(arc_styles, ' = ', arc_styles, collapse = ",\n"))
 
 arc_props <- list(
+  # primary ----
   primary = list(
     radius = new_property(class = class_numeric, default = 1),
     start = new_property(class = class_angle_or_numeric, default = 0),
     end = new_property(class = class_angle_or_numeric, default = 0)
   ),
   styles = style@properties[arc_styles],
+  # derived ----
   derived = list(
     length = new_property(
       getter = function(self) {
@@ -83,27 +85,37 @@ arc_props <- list(
       get_non_empty_tibble(d)
     })
   ),
+  # functions ----
   funs = list(
-    label = new_property(class_function, getter = function(self) {
+    angle_at = new_property(class_function, getter = function(self) {
+      \(point) {
+        dp <- point - self@center
+        dp@theta
+      }
+    }),
+    autolabel = new_property(class_function, getter = function(self) {
       \(label = as.character(degree(self@theta)),
         position = .5,
-        angle = (mp - self@center)@theta - degree(180),
-        distance = 1.4,
+        polar_just_angle = (self@midpoint(position) - self@center)@theta,
+        polar_just_distance = 1.4,
         ...) {
         mp <- midpoint(self, position = position)
-        label(p = mp, label = label, polar_just = polar(theta = angle, r = distance), ...)
+        label(p = mp,
+              label = label,
+              polar_just = polar(theta = polar_just_angle,
+                                 r = polar_just_distance), ...)
       }
     }),
     midpoint = new_property(class_function, getter = function(self) {
       \(position = .5, ...) midpoint(self, position = position, ...)
     }),
-    point_at_theta = new_property(
+    point_at = new_property(
       class_function,
       getter = function(self) {
         \(theta = degree(0)) polar(theta = theta, r = self@radius, style = self@style)
       }
     ),
-    tangent_at_theta = new_property(
+    tangent_at = new_property(
       class = class_function,
       getter = function(self) {
         \(theta = degree(0)) {
@@ -120,7 +132,50 @@ arc_props <- list(
         }
       }
     )
-  )
+  ),
+  # info ----
+  info = list(aesthetics = new_property(
+    getter = function(self) {
+      class_aesthetics_list(
+        geom = ggarrow::geom_arrow,
+        mappable_bare = character(0),
+        mappable_identity = c(
+          "color",
+          "linewidth",
+          "linetype",
+          "alpha"),
+        not_mappable = c(
+          "n",
+          "lineend",
+          "linejoin",
+          "arrow_head",
+          "arrow_fins",
+          "length",
+          "length_head",
+          "length_fins",
+          "length_mid",
+          "resect",
+          "resect_fins",
+          "resect_head",
+          "linemitre"
+        ),
+        required_aes = c(
+          "x",
+          "y",
+          "group"),
+        omit_names = c(
+          "linejoin",
+          "rule",
+          "x0",
+          "y0",
+          "r",
+          "start",
+          "end"),
+        inherit.aes = FALSE,
+        style = arc_styles
+      )
+    }
+  ))
 )
 
 
@@ -148,13 +203,17 @@ arc <- new_class(
       !!!arc_props$primary,
       !!!arc_props$styles,
       !!!arc_props$derived,
-      !!!arc_props$funs
+      !!!arc_props$funs,
+      !!!arc_props$info
     )
   ),
-  constructor = function(center = point(0, 0),
+  constructor = function(center = point(0,0),
                          radius = 1,
                          start = 0,
                          end = 0,
+                         label = class_missing,
+                         start_point = class_missing,
+                         end_point = class_missing,
                          n = 360,
                          alpha = class_missing,
                          arrow_head = class_missing,
@@ -177,6 +236,29 @@ arc <- new_class(
                          stroke_width = class_missing,
                          style = class_missing,
                          ...) {
+
+    if (!S7_inherits(start, class_angle)) {
+      start <- degree(start)
+    }
+
+    if (!S7_inherits(end, class_angle)) {
+      end <- degree(end)
+    }
+
+    if (S7_inherits(start_point, point)) {
+      c1 <- circle(radius = radius)
+      p1 <- c1@point_at(start)
+      print(p1)
+      center <- start_point - p1
+    } else if (S7_inherits(end_point, point)) {
+      c1 <- circle(radius = radius)
+      p2 <- c1@point_at(end)
+      center <- end_point - p2
+    }
+
+
+
+
     arc_style <- center@style + style +
       style(
         alpha = alpha,
@@ -202,12 +284,12 @@ arc <- new_class(
       ) +
       style(...)
 
-    if (!S7_inherits(start, class_angle)) {
-      start <- radian(start)
-    }
 
-    if (!S7_inherits(end, class_angle)) {
-      end <- radian(end)
+
+
+
+    if (is.character(label) || S7_inherits(label, class_angle)) {
+      label <- label(label = label)
     }
 
 
@@ -217,23 +299,59 @@ arc <- new_class(
       x0 = center@x,
       y0 = center@y,
       radius = radius,
-      start = c(start) * 2 * pi,
-      end = c(end) * 2 * pi
+      start = c(start),
+      end = c(end)
     )
     if (length(non_empty_list) > 0) {
       d <- dplyr::bind_cols(d, tibble::tibble(!!!non_empty_list))
     }
 
+    label <- centerpoint_label(label,
+                               center = center,
+                               d = d,
+                               shape_name = "arc")
+
+
+
+    if (S7_inherits(label, ggdiagram::label)) {
+      if (all(label@p@x == 0) && all(label@p@y == 0)) {
+        m <- start + ((end - start) * label@position)
+        label@p <- center + polar(theta = m, r = radius)
+        label@hjust <- polar2just(m, 1.4, axis = "h")
+        label@vjust <- polar2just(m, 1.4, axis = "v")
+
+      }
+
+    }
+
     center = set_props(center, x = d$x0, y = d$y0)
     center@style <- arc_style
+
+    if (S7_inherits(start, degree)) {
+      start <- degree(d$start * 360)
+    } else if (S7_inherits(start, radian)) {
+      start <- radian(d$start * 2 * pi)
+    } else {
+      start <- turn(d$start)
+    }
+
+    if (S7_inherits(end, degree)) {
+      end <- degree(d$end * 360)
+    } else if (S7_inherits(end, radian)) {
+      end <- radian(d$end * 2 * pi)
+    } else {
+      end <- turn(d$end)
+    }
+
+
 
 
 
     new_object(
-      centerpoint(center = center),
+      centerpoint(center = center, label = label),
       radius = d$radius,
-      start = radian(d$start),
-      end = radian(d$end),
+      start = start,
+      end = end,
       alpha = d[["alpha"]] %||% alpha,
       arrow_head = d[["arrow_head"]] %||% arrow_head,
       arrow_fins = d[["arrow_fins"]] %||% arrow_fins,
@@ -294,18 +412,16 @@ overrides <- get_non_empty_props(style(...))
   }
 
 
-  make_geom_helper(
+  gc <- make_geom_helper(
     d = d,
-    .geom_x = ggarrow::geom_arrow,
     user_overrides = overrides,
-    mappable_bare = character(0),
-    mappable_identity = c("color", "linewidth", "linetype", "alpha"),
-    not_mappable = c("n", "lineend", "linejoin", "arrow_head", "arrow_fins",
-                     "length","length_head", "length_fins", "length_mid",
-                     "resect", "resect_fins", "resect_head", "linemitre"),
-    required_aes = c("x", "y", "group"),
-    omit_names = c("linejoin", "rule", "x0", "y0", "r", "start", "end"),
-    inherit.aes = FALSE)
+    aesthetics = x@aesthetics)
+
+  if (S7_inherits(x@label, label)) {
+    gl <- as.geom(x@label)
+    gc <- list(gc, gl)
+  }
+  gc
 }
 
 method(get_tibble, arc) <- function(x) {
@@ -340,4 +456,10 @@ method(
     theta = turn(m),
     r = x@radius,
     style = x@style + style(...))
+  }
+
+method(`[`, arc) <- function(x, y) {
+  d <- as.list(x@tibble[y,])
+  rlang::inject(arc(!!!d))
 }
+

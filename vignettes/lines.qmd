@@ -192,32 +192,21 @@ segment(p, l@projection(p))@distance
 #| fig-cap: Shortest distance between a line and point
 #| code-fold: true
 
-# This code might look hard to read,
-# but the iterative nature of the process
-# made it easy to write
-
-
-# segment from p to p_projected
-s_projected <- segment(p1 = p, 
-                       p2 = l@projection(p), 
-                       linetype = "dashed")
-
-
 bp +
-  l + # Line
-  l@point_at_x(.5)@label( # Line equation label
+  l +
+  l@point_at_x(.5)@label(
     label = l@equation, 
-    angle = l@angle) + 
-  s_projected + # Segment from point to line
-  s_projected@midpoint(c(0,1) # both endpoints of segment
-    )@label(
-      polar_just = degree(s_projected@line@angle) + c(0, 180), 
-      plot_point = TRUE) + 
-  s_projected@midpoint()@label( # Distance label
-      label = "Distance = " + s_projected@distance %>% 
-        round(digits = 2) %>% 
-        as.character(),
-      angle = s_projected@line@angle) 
+    angle = l@angle) +
+  {s_projected <- segment(
+      p1 = l@projection(p),
+      p2 = p,
+      linetype = "dashed",
+      label = "Distance = "+s_projected@distance %>%
+        round(digits = 2) %>%
+        as.character())} + 
+  s_projected@midpoint(c(0, 1))@label(
+    polar_just = degree(s_projected@line@angle) + c(180, 0),
+    plot_point = TRUE)  
 
 
 ```

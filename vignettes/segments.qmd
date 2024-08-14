@@ -22,6 +22,8 @@ library(ggplot2)
 library(ggtext)
 ```
 
+# Setup
+
 ```{r setup}
 library(ggdiagram)
 library(ggplot2)
@@ -30,7 +32,7 @@ library(ggtext)
 
 For ease of plotting, we will define a base plot:
 
-```{r}
+```{r bp}
 my_font <- "Roboto Condensed"
 update_geom_defaults("richtext", 
                      list(family = my_font, 
@@ -39,93 +41,206 @@ update_geom_defaults("line", list(linewidth = .75))
 update_geom_defaults("segment", list(linewidth = .75))
 update_geom_defaults("point", list(size = 2))
 
+
+
 bp <- ggplot() +
   theme_minimal(base_size = 20, base_family = my_font) +
   theme(axis.title.y = element_text(angle = 0, vjust = 0.5)) +
-  coord_equal() +
-  xlim(-4,4) +
-  ylim(-4,4)
+  coord_equal(xlim = c(-4, 4), ylim = c(-4, 4)) +
+  scale_x_continuous(labels = WJSmisc::signs_centered, breaks = seq(-4,4)) +
+  scale_y_continuous(labels = signs::signs, breaks = seq(-4,4)) +
+  theme_minimal(base_size = 16) +
+  theme(
+    axis.title.x =  element_text(face = "italic"),
+    axis.title.y = element_text(
+      face = "italic",
+      angle = 0,
+      hjust = .5,
+      vjust = .5
+    )
+  )
 
 
 ```
 
+# Specifying a segment
 
 A segment is a portion of a line between two points.
 
 
-```{r}
+```{r s1}
 p1 <- point(-3,-1)
 p2 <- point(3,3)
 s1 <- segment(p1, p2)
 ```
 
-```{r}
+```{r fig-s1}
+#| fig-cap: Plotting a segment and its endpoints
 bp + s1 + p1 + p2
 ```
 
+# Styling a segment
+
+The primary options for styling a segment are alpha, color, linetype, and linewidth. However, it can take any style from `ggarrow::geom_arrow_segment`
+
+If you are not sure which properties can be set, you an see them in the `@aesthetics@style` slot.
+
+```{r segstyle}
+s1@aesthetics@style
+```
+
+
 Styles can be specified when the segment is created.
 
-```{r}
-s2 <- segment(p1,p2, color = "red")
+```{r segcolor}
+s2 <- segment(p1,p2, color = "green4")
 bp + s2
 ```
 
-Styles can be modified via the `@style` property:
+Styles can be modified after the segment is created:
 
-```{r}
-s2@style@linewidth <- 3
+```{r seglinewidth}
+s2@linewidth <- 3
 bp + s2
 ```
 
-The `as.geom` passes style arguments to the `geom_seqment` function without modifying the segment's style property:
+The `as.geom` function passes style arguments to the `ggarrow::geom_arrow_segment` function without modifying the segment's style property:
 
-```{r}
-# Make s1 appear red temporarily
+```{r fig-asgeom}
+#| fig-cap: Make s1 appear red temporarily using `as.geom` function
 bp +
-  as.geom(s1, color = "red")
-# Verify that s1's style is not red
+  as.geom(s1, color = "red4")
+```
+
+As an alternative, the `geom` property is a function that calls `as.geom`. 
+
+```{r fig-geom}
+#| fig-cap: Make s1 appear red temporarily via the `geom` property
+bp + s1@geom(color = "blue3")
+```
+
+To verify that s1 has not changed its color:
+
+```{r fig-verify}
+#| fig-cap: The `s1 object has not changed
 bp + s1
 ```
 
-A "pipe-friendly" way to modify any ggdiagram object is to use S7's `set_prop` function, which has been re-exported to ggdiagram for the sake of convenience. 
+A "pipe-friendly" way to modify any ggdiagram object is to use S7's `set_props` function, which has been re-exported to ggdiagram for the sake of convenience. Like `as.geom`, this function does not modify `s1`, but unlike `as.geom`, `set_props` can be used to save a new object with the specified modifications by assigning it to a new variable. That is, `as.geom` creates a ggplot2 geom, whereas `set_props` will create a modified a ggdiagram object (or any other S7 class).
 
-```{r}
-
+```{r setprops}
 bp +
   s1 %>% 
     set_props(color = "red") 
-
 ```
 
+# Features of a segment
 
+## Distance between points
 
-The line that passes between both points:
-
-```{r}
-s1@line
+```{r atdistance}
+s1@distance
 ```
 
+Alternately:
 
-```{r}
-s1_ends <- midpoint(s1, position = c(0,1))
-bp +
-  s1@line +
-  s1@midpoint(position = c(0,1))@label(
-    polar_just = polar(s1@line@angle + degree(90), 1.5), 
-    plot_point = TRUE) +
-  s1@label(equation(s1@line))
-```
-
-The distance between a segment's points:
-
-```{r}
+```{r distance}
 distance(s1)
 ```
 
-```{r}
-bp + 
-  s1 + 
-  s1@label(distance(s1)) 
+
+## Line passing through the segment
+
+The line that passes through the segment contains information about the segment, such as its slope, intercept, or angle.
+
+To access the line that passes between both points:
+
+```{r segline}
+s1@line
+s1@line@slope
+s1@line@intercept
+s1@line@angle
 ```
 
+
+```{r fig-line}
+#| fig-cap: Line passing through segment
+#| code-fold: true
+bp +
+  s1@line |> set_props(color = "royalblue4") +
+  s1@midpoint(position = c(0,1))@label(
+    polar_just = polar(s1@line@angle + degree(90), 1.5), 
+    plot_point = TRUE) +
+  label(c(equation(s1@line), 
+          "Distance = " + round(s1@distance, 2)), 
+        p = midpoint(s1), 
+        vjust = c(-.2, 1.1), 
+        angle = s1@line@angle)
+```
+
+
+## Midpoints
+
+By default, the `midpoint` function's `position` argument is .5, which finds the point halfway between the point of a segment:
+
+```{r midpoint}
+s1@midpoint()
+```
+
+```{r fig-midpoint}
+#| fig-cap: Midpoint of a segment
+#| code-fold: true
+bp +
+  s1 +
+  s1@midpoint()@label("Midpoint", hjust = 0, vjust = 1) +
+  s1@midpoint(c(0, .5, 1))@label(plot_point = TRUE,
+                             hjust = 1,
+                             vjust = 0)
+```
+
+
+To find the midpoint 25% of the distance between the endpoints of segment:
+
+```{r midpoint25}
+s1@midpoint(position = .25)
+```
+
+
+```{r fig-midpoint25}
+#| fig-cap: Midpoint
+#| code-fold: true
+
+bp +
+  s1 +
+  {p25 <- s1@midpoint(.25)} +
+  p25@label(
+    label = c(
+      p25@auto_label,
+      "Midpoint a quarter the<br>way between endpoints"
+    ),
+    vjust = c(0, 1),
+    hjust = c(1, 0)
+  ) +
+  s1@midpoint(c(0, 1))@label(plot_point = TRUE,
+                             hjust = 1,
+                             vjust = 0)
+```
+
+Multiple midpoints can be specified:
+
+```{r fig-multiplemidpoints}
+#| fig-cap: Selecting multiple midpoints
+bp + 
+  s1 + 
+    s1@midpoint(seq(0,1,.2))
+```
+
+A quick way to get the endpoints of a segment is to specify "midpoints" at positions 0 and 1:
+
+```{r fig-endpoints}
+#| fig-cap: Selecting a segment's endpoints via the `midpoint` property.
+bp + 
+  s1 + 
+  s1@midpoint(c(0,1))
+```
 

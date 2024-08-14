@@ -18,6 +18,31 @@ prop_vjust = new_property(
   }
 )
 
+prop_polar_just <- new_property(class_numeric, setter = function(self, value) {
+  if (length(value) > 0) {
+  multiplier <- 1.2
+  if (S7_inherits(value, point)) {
+    theta = value@theta
+    multiplier <- value@r
+  } else if (S7_inherits(value, class_angle)) {
+      theta <- value
+  } else {
+    theta <- degree(value)
+  }
+
+  self@vjust = polar2just(theta, multiplier, axis = "v")
+  self@hjust = polar2just(theta, multiplier, axis = "h")
+
+  }
+  self@polar_just = numeric(0)
+  self
+
+
+  })
+
+
+
+
 
 # style----
 #' style class
@@ -77,7 +102,7 @@ style <- new_class(
     n = class_numeric,
     nudge_x = class_numeric,
     nudge_y = class_numeric,
-    polar_just = class_numeric,
+    polar_just = prop_polar_just,
     resect = class_numeric_or_unit,
     resect_fins = class_numeric_or_unit,
     resect_head = class_numeric_or_unit,
@@ -152,8 +177,8 @@ style <- new_class(
 
     if (length(polar_just) > 0) {
 
-      if (S7_inherits(polar_just, S7_class(degree(0))@parent) || is.numeric(polar_just)) {
-        polar_just <- polar(theta = radian(polar_just), r = 1.2)
+      if (S7_inherits(polar_just, class_angle) || is.numeric(polar_just)) {
+        polar_just <- polar(theta = degree(polar_just), r = 1.2)
       }
       hjust <- polar2just(polar_just@theta, polar_just@r, axis = "h")
       vjust <- polar2just(polar_just@theta, polar_just@r, axis = "v")
@@ -171,6 +196,10 @@ style <- new_class(
 
     if (length(arrow_mid) > 0) {
       arrow_mid <- class_arrowhead(arrow_mid)
+    }
+
+    if (S7_inherits(angle, class_angle)) {
+      angle <- c(angle) * 360
     }
 
 
@@ -328,8 +357,11 @@ method(`+`, list(style, class_any)) <- function(e1, e2) {
 
 method(get_tibble, style) <- function(x) {
   d <- get_non_empty_props(x)
-  
-   tibble::tibble(!!!d) 
+
+   tibble::tibble(!!!d)
 }
 
-
+method(`[`, style) <- function(x, y) {
+  d <- as.list(x@tibble[y,])
+  rlang::inject(style(!!!d))
+}

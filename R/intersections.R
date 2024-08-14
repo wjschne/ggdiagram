@@ -97,9 +97,7 @@ method(intersection, list(line, circle)) <- function(x,y) {
     bx <- x0 - B * m
     ay <- y0 - A * m
     by <- y0 + A * m
-    pa <- point(ax, ay) + y@center
-    pb <- point(bx, by) + y@center
-    p <- c(pa, pb)
+    p <- point(c(ax, bx), c(ay, by)) + y@center
   }
   p
 
@@ -108,6 +106,73 @@ method(intersection, list(line, circle)) <- function(x,y) {
 method(intersection, list(circle, line)) <- function(x,y) {
   intersection(y,x)
 }
+
+
+method(intersection, list(segment, circle)) <- function(x, y) {
+  # https://raw.org/book/computer-graphics/line-segment-ellipse-intersection/
+
+  # A <- x@p1 - y@center
+  # B <- x@p2 - y@center
+  #
+  # V <- B - A
+  #
+  # r2 <- y@radius ^ 2
+  #
+  # aa <- r2 * (V@x ^ 2 + V@y ^ 2)
+  # bb <- 2 * r2 * (A@y * V@y + A@x + V@x)
+  # cc <- r2 * (A@y ^ 2 + A@x ^ 2 - r2)
+  #
+  # D <- bb ^ 2 - 4 * aa * cc
+  #
+  #
+  # # Ax <- A@x
+  # # Ay <- A@y
+  # # Bx <- B@x
+  # # By <- B@y
+  # # r2 <- y@radius ^ 2
+  # #
+  # # aa <- r2 * ((By - Ay) ^ 2) + r2 * ((Bx - Ax) ^ 2)
+  # # bb <- 2 * r2 * Ay * (By - Ay) + 2 * r2 * Ax * (Bx - Ax)
+  # # cc <- r2 * (Ay ^ 2) + r2 * (Ax ^ 2) - r2 * r2
+  # # D <- (bb ^ 2) - 4 * aa * cc
+  #
+  # D[D < 0] <- NA
+  # print(D)
+  # postt <- (-bb + sqrt(D)) / (2 * aa)
+  # print(postt)
+  # negtt <- (-bb - sqrt(D)) / (2 * aa)
+  # print(negtt)
+  #
+  # same <- abs(postt - negtt) < .Machine$double.eps
+  # print(same)
+  # negtt[same] <- NULL
+  # tt <- c(postt, negtt)
+  # tt <- tt[tt <= 1 & tt >= 0]
+  #
+  # if (length(tt) == 0) {
+  #   message("There are no points of intersections with this ellipse.")
+  #   return(NULL)
+  # }
+  #
+  #
+  #
+  #
+  # P <- A + ((B - A) * tt)
+  # y@center + P
+
+  p <- intersection(x@line, y)
+  betweenx <- .between(p@x, x@p1@x, x@p2@x)
+
+  p[betweenx]
+
+
+
+}
+
+method(intersection, list(circle, segment)) <- function(x,y) {
+  intersection(y, x)
+}
+
 
 method(intersection, list(point, line)) <- function(x, y) {
   if (identical(TRUE, all.equal(0, y@a * x@x + y@b * x@y + y@c))) {
@@ -187,37 +252,60 @@ method(intersection, list(rectangle, point)) <- function(x, y) {
 }
 
 
-method(intersection,
-       list(segment, ellipse)) <- function(x, y, sep = .01) {
-  p <- seq(0,1,sep)
-  sp <-midpoint(x,position = p)
-  i <- inside(sp, y)
-  d <- data.frame(p = p, i = i, lag_i = c(i[-1], 2))
-  d_change <- d[d$i * d$lag_i == -1,]
-  d_on <- d[d$i == 0, ]
-  if (nrow(d_change) == 0 && nrow(d_on) == 0) {
-    return(NULL)
-  } else {
-    pp <- list()
-    for (ii in d_on$p) {
-      pp <- c(pp, midpoint(x, position = ii))
-    }
+method(intersection, list(segment, ellipse)) <- function(x, y) {
+         # https://raw.org/book/computer-graphics/line-segment-ellipse-intersection/
 
-    for (ii in d_change$p) {
-      s <- segment(
-        midpoint(x, position = ii),
-        midpoint(x, position = ii + sep))
+         A <- rotate(x@p1 - y@center, y@angle * -1)
+         B <- rotate(x@p2 - y@center, y@angle * -1)
+         Ax <- A@x
+         Ay <- A@y
+         Bx <- B@x
+         By <- B@y
+         rx2 <- y@a ^ 2
+         ry2 <- y@b ^ 2
 
-      if (distance(s) < (.1 ^ 15)) {
-        pp <- c(pp, s@p1)
-      } else {
-        pp <- c(pp, intersection(s, y, sep = .5))
-      }
-    }
-  }
- pp
+         aa <- rx2 * ((By - Ay) ^ 2) + ry2 * ((Bx - Ax) ^ 2)
+         bb <- 2 * rx2 * Ay * (By - Ay) + 2 * ry2 * Ax * (Bx - Ax)
+         cc <- rx2 * (Ay ^ 2) + ry2 * (Ax ^ 2) - rx2 * ry2
+         D <- (bb ^ 2) - 4 * aa * cc
+         D[D < 0] <- NA
+
+         postt <- (-bb + sqrt(D)) / (2 * aa)
+         negtt <- (-bb - sqrt(D)) / (2 * aa)
+
+         same <- abs(postt - negtt) < .Machine$double.eps
+         negtt[same] <- NULL
+         tt <- c(postt, negtt)
+         tt <- tt[tt <= 1 & tt >= 0]
+
+         if (length(tt) == 0) {
+           message("There are no points of intersections with this ellipse.")
+           return(NULL)
+         }
+
+
+
+
+         P <- A + ((B - A) * tt)
+         y@center + rotate(P, y@angle)
+
+
 
 }
+
+method(intersection, list(ellipse, segment)) <- function(x,y) {
+  interaction(y, x)
+}
+
+method(intersection, list(line, ellipse)) <- function(x,y) {
+  x <- ellipse()
+  y <- line(slope = 4, intercept = 1)
+  p1 <- y@point_at_x(x@center - x@a - x@b)
+  p2 <- y@point_at_x(x@center + x@a + x@b)
+  intersection(segment(p1,p2), y)
+}
+
+
 
 
 # points(x = intersect_line_segment@x, y = intersect_line_segment@y)
@@ -225,8 +313,8 @@ method(intersection, list(line, ellipse)) <- function(x, y) {
   # theta <- angle(degree = seq(0, 360))
   x <- line(slope = 1, intercept = 0)
   y <- ellipse(center = point(0,0),a = 1, b = 1)
-  
-  eps <- distance(y@point_at_theta(radian(0)), y@point_at_theta(radian(.Machine$double.eps)))
+
+  eps <- distance(y@point_at(radian(0)), y@point_at(radian(.Machine$double.eps)))
   # eps <- .00001
   # par(pty = "s")
   xmax <- max(y@xy[,1])
@@ -238,7 +326,7 @@ method(intersection, list(line, ellipse)) <- function(x, y) {
   } else {
     s1 <- segment(x@point_at_x(xmin),
                   x@point_at_x(xmax))
-                  
+
     s2 <- segment(point((ymin - x@intercept) / x@slope, ymin),
                   point((ymax - x@intercept) / x@slope,ymax))
     if (distance(s1) < distance(s2)) {
@@ -361,4 +449,46 @@ method(intersection, list(line, ellipse)) <- function(x, y) {
     }
   }
   line_ellipse_intersection
+}
+
+
+method(intersection, list(circle, circle)) <- function(x,y) {
+  # https://paulbourke.net/geometry/circlesphere/
+  if (any(distance(x@center, y@center) > x@radius + y@radius)) {
+    stop("At least one pair of circles is too far apart to intersect.")
+  }
+
+  if (any(distance(x@center, y@center) < abs(x@radius - y@radius))) {
+    stop("At least one pair of circles does not intersect because one circle contains the other.")
+  }
+
+  if (any(x == y)) {
+    stop("At least one pair of cirlces has the same center and radius, and thus they intersect at an infinite number of points.")
+
+  }
+
+  d <- tibble::tibble(
+    P0 = as.list(x@center),
+    P1 = as.list(y@center),
+    xr = x@radius,
+    yr = y@radius,
+    d = distance(x@center,
+                 y@center),
+    a = (xr ^ 2 - yr ^ 2 + d ^ 2) / (2 * d),
+    h = sqrt(xr ^ 2 - a ^ 2)
+  ) |>
+    dplyr::mutate(P2 = purrr::pmap(list(P0, P1, a, d), function(P0, P1, a, d) {
+      P0 + (a / d) * (P1 - P0)
+    }),
+    P3 = purrr::pmap(list(P0, P1, P2, h, d),
+                     function(P0, P1, P2, h, d) {
+                       P10 <- P1 - P0
+                       P2 + point(c(-1,1), c(1,-1)) * point(P10@y, P10@x) *  (h / d)
+
+    }))
+
+  d$P3[[1]]
+
+
+
 }

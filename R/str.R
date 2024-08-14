@@ -92,6 +92,7 @@ str_properties <- function(
     additional_text <- paste0("Other props: ", paste(p_names[p_names %in% omit], collapse = ", "),"\n")
     cat(stringr::str_wrap(string = additional_text, width = 50, exdent = 13))
   }
+  if (nest.lev == 0) cat("\n")
 
 }
 

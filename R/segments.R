@@ -3,9 +3,9 @@ sg_styles <- c(
   "arrow_head",
   "arrow_fins",
   "arrowhead_length",
+  "color",
   "length_head",
   "length_fins",
-  "color",
   "lineend",
   "linejoin",
   "linewidth",
@@ -20,8 +20,14 @@ sg_styles <- c(
 )
 
 sg_props <- list(
-  primary = list(p1 = new_property(class = point), p2 = new_property(class = point)),
+  # primary ----
+  primary = list(p1 = new_property(class = point),
+                 p2 = new_property(class = point)),
+  extra = list(
+    label = new_property(label_or_character_or_angle)
+  ),
   styles = style@properties[sg_styles],
+  # derived ----
   derived = list(
     distance = new_property(
       getter = function(self) {
@@ -83,20 +89,32 @@ sg_props <- list(
       }
     )
   ),
+  # functions ----
   funs = list(
-    label = new_property(
+    geom = new_property(class_function, getter = function(self) {
+      \(...) {
+        as.geom(self, ...)
+      }
+    }),
+    auto_label = new_property(
       class_function,
       getter = function(self) {
         \(
           label,
           position = .5,
-          vjust = 0,
+          # offset_angle  = self@angle + degree(90),
+          # polar_multiplier = 1.2,
+          # polar_just = polar(self@angle, r = multiplier),
+          # hjust = NULL,
+          vjust = class_missing,
           angle = self@line@angle,
           ...
         ) {
+
+
           label(
             p = midpoint(self, position = position),
-            label = ifelse(is.numeric(label),signs::signs(label, accuracy = .01),label),
+            label = purrr::map_chr(label, \(l) ifelse(is.numeric(l),signs::signs(l, accuracy = .01),l)),
             vjust = vjust,
             angle = angle,
             ...
@@ -123,6 +141,47 @@ sg_props <- list(
     #     purrr::partial(arrow_segment, p1 = self, p2 = class_missing)
     #   }
     # )
+  ),
+  # info ----
+  info = list(
+    aesthetics = new_property(class_function, getter = function(self) {
+      class_aesthetics_list(
+        geom = ggarrow::geom_arrow_segment,
+        mappable_bare = character(0),
+        mappable_identity = c(
+          "color",
+          "linewidth",
+          "linewidth_head",
+          "linewidth_fins",
+          "linetype",
+          "arrow_head",
+          "arrow_fins",
+          "arrow_mid",
+          "resect_head",
+          "resect_fins",
+          "alpha",
+          "stroke_colour",
+          "stroke_width"),
+        not_mappable = c(
+          "lineend",
+          "linejoin",
+          "arrow_head",
+          'arrow_fins',
+          "length",
+          "length_head",
+          "length_fins",
+          "length_mid",
+          "resect",
+          "resect_fins",
+          "resect_head",
+          "linemitre"
+        ),
+        required_aes = c("x", "y", "xend", "yend"),
+        omit_names = c("linejoin", "rule", "group", "label"),
+        inherit.aes = FALSE,
+        style = sg_styles
+      )
+    })
   )
 )
 
@@ -130,12 +189,8 @@ sg_props <- list(
 
 #' segment class
 #'
-#' @param a coefficient in general form: a * x + b * y + c = 0
-#' @param b coefficient in general form: a * x + b * y + c = 0
-#' @param a constant in general form: a * x + b * y + c = 0
-#' @param slope coefficient in y = slope * x + intercept
-#' @param intercept value of y when x is 0
-#' @param xintercept value of x when y is 0
+#' @param p1 starting point
+#' @param p2 end point
 #' @param style a style list
 #' @param ... properties passed to style
 #' @export
@@ -145,13 +200,16 @@ segment <- new_class(
   properties =  rlang::inject(
     list(
       !!!sg_props$primary,
+      !!!sg_props$extra,
       !!!sg_props$styles,
       !!!sg_props$derived,
-      !!!sg_props$funs
+      !!!sg_props$funs,
+      !!!sg_props$info
     )
   ),
   constructor = function(p1 = class_missing,
                          p2 = class_missing,
+                         label = class_missing,
                          alpha = class_missing,
                          arrow_head = ggarrow::arrow_head_minimal(90),
                          arrow_fins = class_missing,
@@ -243,6 +301,29 @@ segment <- new_class(
     if (length(non_empty_list) > 0) {
       d <- dplyr::bind_cols(d, tibble::tibble(!!!non_empty_list))
     }
+    pos <- .5
+
+    if (S7_inherits(label, ggdiagram::label)) {
+      pos <- label@position
+      if (all(label@p == point(0,0))) {
+        label@p <- midpoint(p1,p2, position = pos)
+      }
+      if (all(length(label@angle) == 0)) {
+        label@angle = (p2 - p1)@theta
+      }
+      label@style <- s_style + label@style
+    }
+
+    label <- centerpoint_label(
+      label,
+      midpoint(p1,p2, position = pos),
+      d,
+      "segment",
+      style = s_style,
+      vjust = 0,
+      angle = (p2 - p1)@theta)
+
+
 
     p1 <- set_props(p1, x = d$p1x, y = d$p1y)
     p2 <- set_props(p2, x = d$p2x, y = d$p2y)
@@ -251,6 +332,7 @@ segment <- new_class(
       S7_object(),
       p1 = p1,
       p2 = p2,
+      label = label,
       alpha = d[["alpha"]] %||% alpha,
       arrow_head = d[["arrow_head"]] %||% arrow_head,
       arrow_fins = d[["arrow_fins"]] %||% arrow_fins,
@@ -341,33 +423,17 @@ method(as.geom, segment) <- function(x, ...) {
     d <- dplyr::rename(d, length = arrowhead_length)
   }
 
-   make_geom_helper(
+   gs <- make_geom_helper(
     d = d,
-    .geom_x = ggarrow::geom_arrow_segment,
     user_overrides = get_non_empty_props(style(...)),
-    mappable_bare = character(0),
-    mappable_identity = c(
-      "color", "linewidth", "linewidth_head", "linewidth_fins", "linetype", 
-      "arrow_head", "arrow_fins", "arrow_mid", "resect_head", "resect_fins",
-      "alpha", "stroke_colour","stroke_width"),
-    not_mappable = c(
-      "lineend",
-      "linejoin",
-      "arrow_head",
-      'arrow_fins',
-      "length",
-      "length_head",
-      "length_fins",
-      "length_mid",
-      "resect",
-      "resect_fins",
-      "resect_head",
-      "linemitre"
-    ),
-    required_aes = c("x", "y", "xend", "yend"),
-    omit_names = c("linejoin", "rule", "group"),
-    inherit.aes = FALSE
+    aesthetics = x@aesthetics
   )
+
+   if (S7_inherits(x@label, label)) {
+     gl <- as.geom(x@label)
+     gs <- list(gs, gl)
+   }
+   gs
 
 }
 
@@ -402,7 +468,13 @@ method(nudge, list(segment, point, class_missing)) <- function(object, x, y) {
   object + x
 }
 
+method(nudge, list(segment, point, class_numeric)) <- function(object, x, y) {
+  object + (x + y)
+}
+
 method(nudge, list(segment, segment, class_missing)) <- function(object, x, y) {
   object + x
 }
+
+
 

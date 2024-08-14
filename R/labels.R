@@ -4,19 +4,17 @@ lb_styles <- c("alpha", "angle", "color", "family","fill","fontface",
                "polar_just","size","text.color","vjust")
 
 lb_props <- list(
+  # primary ----
   primary = list(
     label = new_property(class = class_character),
     p = new_property(class = point)
   ),
   styles = style@properties[lb_styles],
-  extras = list(
-    plot_point = new_property(class_logical, validator = function(value) {
-      if(length(value) !=1 ) {
-        stop("The plot_point property must be a TRUE/FALSE value of length 1.")
-      }
-    })
-  ),
+  # derived ----
   derived = list(
+    auto_label = new_property(getter = function(self) {
+      label_object(self@p)
+    }),
    length = new_property(
       getter = function(self) {
         length(self@label)
@@ -29,7 +27,7 @@ lb_props <- list(
                        lb_styles)
        rlang::inject(style(!!!get_non_empty_list(pr)))},
      setter = function(self, value) {
-       point(self@x, self@y, style = self@style + value)
+       label(p = self@p, label = self@label, style = self@style + value)
      }),
     tibble = new_property(getter = function(self) {
       if (length(self@angle) > 0) {
@@ -63,7 +61,56 @@ lb_props <- list(
 
     })
   ),
-  funs = list()
+  # functions ----
+  funs = list(
+    geom = new_property(class_function, getter = function(self) {
+      \(...) {
+        as.geom(self, ...)
+      }
+    })
+  ),
+  extras = list(
+    plot_point = new_property(class_logical, validator = function(value) {
+      if(length(value) !=1 ) {
+        stop("The plot_point property must be a TRUE/FALSE value of length 1.")
+      }
+    }),
+    position = new_property(class_numeric)
+  ),
+  info = list(aesthetics = new_property(
+    getter = function(self) {
+      class_aesthetics_list(
+        geom = ggtext::geom_richtext,
+        mappable_bare = c(
+          "angle",
+          "family",
+          "fontface",
+          "hjust",
+          "vjust",
+          "lineheight"),
+        mappable_identity = c(
+          "color",
+          "fill",
+          "size",
+          "alpha",
+          "text.color",
+          "label.color",
+          "label.size"
+        ),
+        not_mappable = c(
+          "label.margin",
+          "label.padding",
+          "label.r",
+          "nudge_x",
+          "nudge_y"
+        ),
+        required_aes = c("x", "y", "label"),
+        omit_names = c("group", "position"),
+        inherit.aes = FALSE,
+        style = lb_styles
+      )
+    }
+  ))
 )
 
 
@@ -84,7 +131,8 @@ label <- new_class(
     !!!lb_props$styles,
     !!!lb_props$extras,
     !!!lb_props$derived,
-    !!!lb_props$funs)),
+    !!!lb_props$funs,
+    !!!lb_props$info)),
   constructor = function(label = class_missing,
                          p = class_missing,
                          angle = class_missing,
@@ -108,7 +156,10 @@ label <- new_class(
                          vjust = class_missing,
                          style = class_missing,
                          plot_point = FALSE,
+                         position = .5,
                          ...) {
+
+
 
     if (missing(p)) {
       p <- point()
@@ -131,28 +182,27 @@ label <- new_class(
       polar_just <- class_missing
     }
     if (missing(label)) {
-      
+
       label = paste0(
-        "(", 
+        "(",
         ifelse(rlang::is_integerish(p@x), p@x, signs::signs(p@x, accuracy = .1)),
         ",",
         ifelse(rlang::is_integerish(p@y), p@y, signs::signs(p@y, accuracy = .1)),
         ")")
 
 
-    } 
-    # label <- ifelse(
-    #   is.numeric(label) & 
-    #     !S7::S7_inherits(label, class_angle) & 
-    #     rlang::is_integerish(label),
-    #   signs::signs(label, accuracy = .1),
-    #   as.character(label))
-    
+    }
 
     d <- tibble::tibble(x = p@x, y = p@y, label = as.character(label))
+
     if (length(angle) > 0) {
       if (nrow(d) > 1 && length(angle) == 1) {
-        S7_data(angle) <- rep(S7_data(angle), nrow(d))
+        if (S7_inherits(angle, class_angle)) {
+          S7_data(angle) <- rep(S7_data(angle), nrow(d))
+        } else {
+          angle <- degree(rep(angle, nrow(d)))
+        }
+
 
       }
     }
@@ -242,10 +292,49 @@ label <- new_class(
       size = d[["size"]] %||% size,
       text.color = d[["text.color"]] %||% text.color,
       vjust = d[["vjust"]] %||% vjust,
-      plot_point = plot_point
+      plot_point = plot_point,
+      position = position
     )
   }
 )
+
+label_or_character_or_angle <- new_union(label, class_character, class_angle)
+
+# Centerpoint----
+centerpoint <- new_class(
+  name = "centerpoint",
+  parent = xy,
+  properties = list(center = new_property(
+    class = point,
+    default = point(0, 0)
+  ),
+  label = new_property(label_or_character_or_angle))
+)
+
+method(as.geom, centerpoint) <- function(x, ...) {
+  gc <- as.geom(super(x, has_style))
+  if (S7_inherits(x@label, label)) {
+    gl <- as.geom(x@label)
+    gc <- list(gc, gl)
+  }
+  gc
+}
+
+method(`+`, list(centerpoint, point)) <- function(e1, e2) {
+  circle(e1@center + e2, e1@radius)
+}
+
+method(`-`, list(centerpoint, point)) <- function(e1, e2) {
+  circle(e1@center - e2, e1@radius)
+}
+
+method(`+`, list(point, centerpoint)) <- function(e1, e2) {
+  circle(e2@center + e1, e2@radius)
+}
+
+method(`-`, list(point, centerpoint)) <- function(e1, e2) {
+  circle(e1 - e2@center, e2@radius)
+}
 
 
 method(str, label) <- function(
@@ -304,14 +393,8 @@ method(as.geom, label) <- function(x, ...) {
 
   gl <- make_geom_helper(
     d = d,
-    .geom_x = ggtext::geom_richtext,
-    user_overrides = overides,
-    mappable_bare = c("angle", "family", "fontface", "hjust", "vjust", "lineheight"),
-    mappable_identity = c("color", "fill", "size", "alpha", "text.color", "label.color", "label.size"),
-    not_mappable = c("label.margin", "label.padding", "label.r", "nudge_x", "nudge_y"),
-    required_aes = c("x", "y", "label"),
-    omit_names = "group",
-    inherit.aes = FALSE)
+    aesthetics = x@aesthetics,
+    user_overrides = overides)
 
     if (x@plot_point) {
 
@@ -320,4 +403,41 @@ method(as.geom, label) <- function(x, ...) {
     }
   gl
 
+}
+
+method(label_object, label) <- function(object, accuracy = .1) {
+  label_object(object@p, accuracy = accuracy)
+}
+
+method(`[`, label) <- function(x, y) {
+  d <- as.list(x@tibble[y,])
+  rlang::inject(label(!!!d))
+}
+
+centerpoint_label <- function(label, center, d, shape_name = "shape", ...) {
+  if (is.character(label) || S7_inherits(label, class_angle)) {
+    label <- label(label = label, p = center, ...)
+  }
+
+  if (length(label) > 0) {
+    if (nrow(d) > 1) {
+      if (!(label@length == 1 || label@length == nrow(d))) {
+        stop(
+          paste0(
+            "label length is ",
+            label@length,
+            ". It must be either of length 1 or compatible with the length of the ",
+            shape_name,
+            " (length = ",
+            nrow(d),
+            "."
+          )
+        )
+      }
+    }
+
+  } else {
+    label <- character(0)
+  }
+  label
 }

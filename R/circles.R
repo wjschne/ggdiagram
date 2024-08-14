@@ -8,11 +8,13 @@ cr_styles <- c(
 )
 
 cr_props <- list(
+  # primary ----
   primary = list(
     # center = new_property(class = point, default = point(0,0)),
     radius = new_property(class = class_numeric, default = 1)
   ),
   styles = style@properties[cr_styles],
+  # derived ----
   derived = list(
     area = new_property(getter = function(self) {
       pi + self@radius ^ 2
@@ -25,7 +27,7 @@ cr_props <- list(
     }),
     length = new_property(
       getter = function(self) {
-        length(self@radius)
+        nrow(self@tibble)
       }
     ),
     style = new_property(
@@ -53,15 +55,27 @@ cr_props <- list(
       get_non_empty_tibble(d)
     })
   ),
+  # functions ----
   funs = list(
-    tangent_at_theta = new_property(
+    geom = new_property(class_function, getter = function(self) {
+      \(...) {
+        as.geom(self, ...)
+      }
+    }),
+    angle_at = new_property(class_function, getter = function(self) {
+      \(point) {
+        dp <- point - self@center
+        dp@theta
+      }
+    }),
+    tangent_at = new_property(
       class = class_function,
       getter = function(self) {
         \(theta = degree(0)) {
           x0 <- self@center@x
           y0 <- self@center@y
           x1 <- cos(theta) * self@radius + self@center@x
-          y1 <- cos(theta) * self@radius + self@center@y
+          y1 <- sin(theta) * self@radius + self@center@y
           line(
             a = x1 - x0,
             b = y1 - y0,
@@ -71,13 +85,33 @@ cr_props <- list(
         }
       }
     ),
-    point_at_theta = new_property(
+    point_at = new_property(
       class_function,
       getter = function(self) {
-        
+
         \(theta = degree(0)) polar(theta = theta, r = self@radius, style = self@style) + self@center
       }
-    )))
+    )),
+  # info ----
+  info = list(
+  aesthetics = new_property(getter = function(self) {
+    class_aesthetics_list(
+      geom = ggforce::geom_circle,
+      mappable_bare = character(0),
+      mappable_identity = c(
+        "linewidth",
+        "linetype",
+        "alpha",
+        "color",
+        "fill"
+      ),
+      not_mappable = c("n"),
+      required_aes = c("x0", "y0", "r", "group"),
+      omit_names = c("linejoin", "rule"),
+      inherit.aes = FALSE,
+      style = cr_styles
+    )}
+  )))
 
 # Circle----
 
@@ -99,9 +133,11 @@ circle <- new_class(
     !!!cr_props$primary,
     !!!cr_props$styles,
     !!!cr_props$derived,
-    !!!cr_props$funs)),
+    !!!cr_props$funs,
+    !!!cr_props$info)),
   constructor = function(center = point(0,0),
                          radius = 1,
+                         label = class_missing,
                          alpha = class_missing,
                          color = class_missing,
                          fill = class_missing,
@@ -109,6 +145,8 @@ circle <- new_class(
                          linetype = class_missing,
                          n = class_missing,
                          style = class_missing,
+                         x0 = class_missing,
+                         y0 = class_missing,
                          ...) {
     c_style <- style +
       style(
@@ -121,6 +159,14 @@ circle <- new_class(
       ) +
       style(...)
 
+    if (length(x0) > 0) {
+      center@x <- x0
+    }
+
+    if (length(y0) > 0) {
+      center@y <- y0
+    }
+
     non_empty_list <- get_non_empty_props(c_style)
     d <- tibble::tibble(x0 = center@x, y0 = center@y, radius = radius)
     if (length(non_empty_list) > 0) {
@@ -129,11 +175,25 @@ circle <- new_class(
         tibble::tibble(!!!non_empty_list))
     }
 
+
     center = set_props(center, x = d$x0, y = d$y0)
 
+    if (S7_inherits(label, ggdiagram::label)) {
+      if (all(label@p == point(0,0))) {
+        label@p <- center
+      }
+    }
+
+    label <- centerpoint_label(label,
+                               center = center,
+                               d = d,
+                               shape_name = "circle")
 
 
-     new_object(centerpoint(center = center),
+
+
+
+     new_object(centerpoint(center = center, label = label),
                  radius = d$radius,
                  alpha = d[["alpha"]] %||% alpha,
                  color = d[["color"]] %||% color ,
@@ -155,26 +215,14 @@ str_properties(object,
                    nest.lev = nest.lev)
 }
 
-method(as.geom, circle) <- function(x, ...) {
-  d <- get_tibble_defaults(x)
-  make_geom_helper(
-    d = d,
-    .geom_x = ggforce::geom_circle,
-    user_overrides = get_non_empty_props(style(...)),
-    mappable_bare = character(0),
-    mappable_identity = c(
-      "linewidth",
-      "linetype",
-      "alpha",
-      "color",
-      "fill"
-    ),
-    not_mappable = c("n"),
-    required_aes = c("x0", "y0", "r", "group"),
-    omit_names = c("linejoin", "rule"),
-    inherit.aes = FALSE
-  )
-}
+# method(as.geom, circle) <- function(x, ...) {
+#   d <- get_tibble_defaults(x)
+#   make_geom_helper(
+#     d = d,
+#     user_overrides = get_non_empty_props(style(...)),
+#
+#   )
+# }
 
 
 method(get_tibble, circle) <- function(x) {
@@ -194,4 +242,43 @@ method(get_tibble_defaults, circle) <- function(x) {
     n = 360
   )
   get_tibble_defaults_helper(x, sp,required_aes = c("x0", "y0", "r", "n"))
+}
+
+method(`[`, circle) <- function(x, y) {
+  d <- as.list(x@tibble[y,])
+  rlang::inject(circle(!!!d))
+}
+
+method(`==`, list(circle, circle)) <- function(e1, e2) {
+  (e1@center == e2@center) & (e1@radius == e1@radius)
+}
+
+method(path, list(circle, line)) <- function(x,y, ...) {
+  p2 <- projection(x@center, y)
+  p1 <- intersection(segment(x@center, p2), x)
+  path(p1, p2, ...)
+}
+
+method(path, list(line, circle)) <- function(x,y, ...) {
+  p1 <- projection(y@center, x)
+  p2 <- intersection(segment(y@center, p1), y)
+  path(p1, p2, ...)
+}
+
+# Place ----
+
+method(place, list(circle, circle)) <- function(x, from, where = "right", sep = 1) {
+
+  where <- degree(where)
+  p <- polar(where, sep + x@radius + from@radius)
+  x@center@x <- from@center@x + p@x
+  x@center@y <- from@center@y + p@y
+  x
+
+}
+
+method(place, list(line, circle)) <- function(x, from, where = "right", sep = 1) {
+  where <- degree(where)
+  from@radius <- sep + from@radius
+  from@tangent_at(where)
 }

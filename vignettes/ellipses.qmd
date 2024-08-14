@@ -47,40 +47,267 @@ my_font <- "Roboto Condensed"
 ```
 
 
-```{r}
-my_colors <- c("blue", "red")
+## Base plot
 
-ggplot() +
-  theme_void() +
+To avoid repetitive code, we make a base plot:
+
+```{r baseplot}
+my_font <- "Roboto Condensed"
+my_text_size <- 20
+my_point_size <- 2.5
+# my_colors <- viridis::viridis(2, begin = .25, end = .5)
+my_colors <- c("#3B528B", "#21908C")
+update_geom_defaults(geom = "richtext", 
+                     new = list(family = my_font, 
+                                size = .8 * my_text_size / ggplot2::.pt))
+
+update_geom_defaults("point", list(size = my_point_size))
+
+
+theme_set(
+  theme_minimal(
+    base_size = my_text_size, 
+    base_family = my_font) +
+    theme(axis.title.y = element_text(angle = 0, vjust = 0.5)))
+
+
+
+
+bp <- ggplot() +
   coord_equal() +
-  circle(radius = c(1, 3), color = my_colors) +
-  arc(
-    radius = 4,
-    start = degree(c(0, 20)),
-    end = degree(c(10, 90)),
-    color = my_colors
-  ) +
-  ellipse(
-    center = point(),
-    a = c(2, 6),
-    b = c(3, 4),
-    m1 = c(10, 3),
-    m2 = c(10, 2),
-    angle = degree(c(0, 45)),
-    n = 360,
-    color = my_colors
-  ) +
-  line(slope = 3:4,
-       intercept = 1,
-       color = my_colors) +
-  point(3:4, 1, color = my_colors) +
-  segment(point(), point(1, 1:2), color = my_colors)
-  
-  
+  scale_x_continuous(labels = WJSmisc::signs_centered, limits = c(-4, 4)) +
+  scale_y_continuous(labels = signs::signs, limits = c(-4, 4)) +
+  theme_minimal(base_size = 16) +
+  theme(
+    axis.title.x =  element_text(face = "italic"),
+    axis.title.y = element_text(
+      face = "italic",
+      angle = 0,
+      hjust = .5,
+      vjust = .5
+    )
+  )
+```
+
+
+A common way to specify an ellipse is with a center point and the two distances from the center point *c* to the horizontal and vertical edges, *a* and *b*, respectively.
+
+$$\left(\frac{x-c_x}{a}\right)^2+\left(\frac{y-c_y}{b}\right)^2=1$$
+
+
+```{r abellipse}
+a <- 4
+b <- 3
+c1 <- point(0,0)
+e1 <- ellipse(c1, a = a, b = b)
+```
+
+
+```{r fig-abellipse}
+#| fig-cap: An ellipse can be specified with a center, and semi-major radii.
+#| code-fold: true
+ 
+
+bp + 
+  e1 + 
+  segment(c1, point(c(a, 0), c(0, b)), color = my_colors, label = label(label = c("*a* = " + a, "*b* = " + b), angle = 0)) +
+  c1
+```
+
+# Foci
+
+A circle has one focus, the center. If *a* &ne; *b*, an ellipse has two foci. 
+
+```{r}
+bp + 
+  e1 + 
+  label("*F*~1~", e1@focus_1, plot_point = T, vjust = 1.1) +
+  label("*F*~2~", e1@focus_2, plot_point = T, vjust = 1.1)
+```
+
+
+For any point *P* on the ellipse, the sum of PF~1~ and PF~2~ is 2*a* if *a* > *b* and 2*b* if *b* > *a*.
+
+```{r}
+deg <- degree(61.5)
+
+bp + 
+  e1 + 
+  label("*F*~1~", e1@focus_1, plot_point = T, vjust = 1.1) +
+  label("*F*~2~", e1@focus_2, plot_point = T, vjust = 1.1) + 
+  {P <- e1@point_at(deg)} +
+  P@label("*P*", polar_just = polar(deg, 1.5)) +
+  segment(e1@focus_1, 
+          P, 
+          label = "*PF*~1~ = " + distance(e1@focus_1, P) |> scales::number(.01)) + 
+  segment(P, 
+          e1@focus_2, 
+          label = "*PF*~2~ = " + distance(e1@focus_2, P) |> scales::number(.01)) + 
+  label("*PF*~1~ + *PF*~2~ = 2*a* = 8", p = point(0,4), size = 20)
 
 ```
 
 
 
+## Point on the ellipse at a specific angle
 
+```{r ptheta}
+
+e1@point_at(degree(45))
+```
+
+
+```{r fig-ptheta}
+#| fig-cap: Point on ellipse that is 45&deg; from the x-axis.
+#| code-fold: true
+
+deg <- degree(60)
+bp +
+  e1 +
+  {p45 <- e1@point_at(deg)} +
+  p45@label(hjust = 0, vjust = 0) +
+  segment(e1@center, p45) +
+  arc(
+    center = e1@center,
+    radius = 1,
+    start = degree(0),
+    end = deg,
+    label = deg
+  )
+
+
+  
+```
+
+
+# Superellipses
+
+The standard formula for an ellipse can be altered such that the squared entities can be raised to any positive number.
+
+$$
+\left(\frac{x-c_x}{a}\right)^{m_1}+\left(\frac{y-c_y}{b}\right)^{m_2}=1
+$$
+
+*m*~2~ is set equal to *m*~1~ unless otherwise specified.
+
+If *m*~1~ is 3, and *a* and *b* are equal, we can make a *squircle*, which is a square-ish circle.
+
+
+```{r}
+bp + ellipse(point(0,0), a = 3, b = 3, m1 = 3)
+```
+
+If we increase *m*~1~ to a high value like 10, we can a rectangle with pleasingly rounded corners.
+
+```{r}
+bp +
+  ellipse(
+    point(0, 0),
+    a = 3,
+    b = 3,
+    m1 = 10,
+    color = NA,
+    fill = "dodgerblue",
+    label = label(
+      label = "My<br>Variable",
+      fill = NA,
+      color = "white",
+      size = 70
+    )
+  )
+  
+```
+
+
+```{r}
+deg <- "north-northeast"
+bp + 
+  {e2 <- ellipse(point(0,0), 
+          a = 3, 
+          b = 3, 
+          m1 = 10)} +
+  {p1 <- e2@point_at(degree(deg))} + 
+  segment(e2@center, p1) + 
+  arc(end = degree(deg))
+  
+
+```
+
+# Paths Among Ellipses
+
+```{r}
+bp + 
+  {e1 <- ellipse(point(-2,0), a = 2)} +
+  {e2 <- ellipse(point(3,2), b = 2)} +
+  path(e1, e2, resect = 2)
+```
+
+
+# Placing Ellipses
+
+# Placing Ellipses Next to Ellipses
+
+The `place` function will set an object at a position and distance from another object. Here we set an ellipse to the the right of `e1` (i.e., "east" or 0 degrees) with a separation of 2.
+
+```{r}
+bp + 
+  {e1 <- ellipse(point(-2, 0), a = 2)} +
+  place(ellipse(b = 2), from = e1, where = "right", sep = 2)
+```
+
+
+The `sep` parameter in the `place` function is not necessarily the shortest distance between ellipses. Instead, it is the distance between the ellipses on the segment connecting the center points. 
+
+```{r}
+deg <- degree(30)
+
+bp + 
+  {e1 <- ellipse(point(-2,-1, 
+                       color =  "dodgerblue4"), 
+                 a = 2, 
+                 b = 1.5)} +
+  {e2 <- place(ellipse(point(color = "orchid4"),
+                       b = 2), 
+               from = e1, 
+               where = deg, 
+               sep = 2)} + 
+  path(e1, e2, 
+       arrow_head = ggarrow::arrow_head_minimal(), 
+       linetype = "dashed", 
+       label = label(2, vjust = 0)) +
+  arc(e1@center, end = deg, label = deg) + 
+  segment(e1@center, e1@point_at(deg)) + 
+  segment(e2@center, e2@point_at(deg + degree(180))) + 
+  label("*e*~1~", e1@center) + 
+  label("*e*~2~", e2@center)
+
+```
+
+You can place many ellipses at once
+
+```{r}
+bp + 
+  {e1 <- ellipse(point(0,0), m1 = 4, label = label("*e*~0~", size = 40))} + 
+  {e2 <- place(
+    x = ellipse(a = .4, b = .4, m1 = 4, label = "*e*~" + 1:12 + "~"),
+    from = e1,
+    where = degree(seq(0, 330, 30)),
+    sep = 2
+  )} +
+  path(e1, e2, resect = 2)
+```
+
+```{r}
+bp + 
+  {e1 <- ellipse(point(-3,2), b = 2)} + 
+  {p1 <- place(point(), e1, degree(-30), sep  = 2)} + 
+  place(ellipse(b = 2), p1, degree(30), sep = 2)
+```
+
+```{r}
+bp + 
+  {e1 <- ellipse(m1 = 5)} +
+  place(x = line(), from = e1, where = degree(45), sep = 2)
+  
+```
 

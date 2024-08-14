@@ -96,8 +96,7 @@ p2@theta
 #| fig-cap: "Polar Coordinates"
 #| fig-width: 7
 #| fig-height: 7
-a <- arc(end = p2@theta, color = "royalblue3")
-s <- segment(point(), p2 = p2)
+
 
 ggplot() +
   coord_equal(xlim = c(-p2@r, p2@r), 
@@ -111,11 +110,8 @@ ggplot() +
   circle(radius = p2@r) +
   p2@label(plot_point = TRUE, 
            polar_just = polar(p2@theta, r = 1.5)) +
-  s + 
-  s@label("*r* = " + round(distance(s), 2)) +
-  a +
-  a@label("&theta; = " + degree(p2@theta), 
-          angle = a@midpoint()@theta)
+  segment(point(), p2 = p2, label = "*r* = " + round(p2@r, 2)) + 
+  arc(end = p2@theta, color = "royalblue3", label = "&theta; = " + degree(p2@theta)) 
 ```
 
 
@@ -172,7 +168,7 @@ p2 * 2
 p3 / 4
 ```
 
-The x and y coordinates can be scaled separately with other points:
+The *x* and *y* coordinates can be scaled separately with other points:
 
 ```{r point_scaling}
 p1 / p3
@@ -230,21 +226,30 @@ distance(p3, c1)
 #| fig-cap: "Point to Circle Distances"
 #| fig-width: 7
 #| fig-height: 7
-pts <- bind_shape(c(p1, p2, p3))
-intersect_c1_p2 <- c1@point_at_theta((p2 - c1@center)@theta)
-seg_c1_p2 <- segment(
-  p2, 
-  intersect_c1_p2, 
+# pts <- bind_shape(c(p1, p2, p3))
+intersect_c1_p2 <- c1@point_at((p2 - c1@center)@theta)
+
+seg_style <- style(
   arrowhead_length = 7,
   arrow_head = my_arrow_head,
   arrow_fins = my_arrow_head,
-  resect = unit(5, "pt"))
+  resect = unit(5, "pt")
+)
 
-intersect_c1_p3 <- c1@point_at_theta((p3 - c1@center)@theta)
-seg_c1_p3 <- seg_c1_p2
-seg_c1_p3@p1 <- p3
-seg_c1_p3@p2 <- intersect_c1_p3
-seg_c1_p3@color = p3@color
+seg_c1_p2 <- segment(
+  intersect_c1_p2,
+  p2, 
+  style = seg_style, 
+  label = scales::number(distance(intersect_c1_p2, p2), .1))
+
+intersect_c1_p3 <- c1@point_at((p3 - c1@center)@theta)
+seg_c1_p3 <- segment(intersect_c1_p3,
+                     p3,
+                     color = p3@color, 
+                     label = scales::number(distance(intersect_c1_p3, p3), .1),
+                     style = seg_style)
+
+
 
 p_labels <- paste0("P<sub>",1:3, "</sub>")
 
@@ -257,15 +262,13 @@ bp +
              theta = (p1 - c1@center)@theta,
              r = 1.3)) +
   seg_c1_p2 +
-  seg_c1_p2@label(label = distance(seg_c1_p2)) +
   seg_c1_p2@midpoint(c(0,1)) +
-  seg_c1_p2@midpoint(c(0))@label(
+  seg_c1_p2@midpoint(1)@label(
     label = p_labels[2], 
     polar_just = polar(theta = seg_c1_p3@line@angle, 1.5)) +
   seg_c1_p3 +
-  seg_c1_p3@label(label = distance(seg_c1_p3)) + 
   seg_c1_p3@midpoint(c(0,1)) +
-  seg_c1_p3@midpoint(c(0))@label(
+  seg_c1_p3@midpoint(c(1))@label(
     label = p_labels[3], 
     polar_just = polar(theta = seg_c1_p3@line@angle, 1.5))
 
@@ -335,7 +338,7 @@ ggplot() +
     stroke = 1.5,
     fill = "yellow",
     shape = "triangle filled",
-    data = get_tibble_defaults(pts)
+    data = pts@tibble
   )
 ```
 

@@ -5,13 +5,15 @@ pt_props <- list(
     y = new_property(class = class_numeric, default = 0)
   ),
   styles = style@properties[pt_styles],
+  # Derived ----
   derived = list(
-    theta = new_property(
+    auto_label = new_property(getter = function(self) {
+      label_object(self)
+
+    }),
+    length = new_property(
       getter = function(self) {
-        radian(radian = atan2(self@y, self@x))
-      },
-      setter = function(self, value) {
-        set_props(self, x = cos(value) * self@r, y = sin(value) * self@r)
+        length(self@x)
       }
     ),
     r = new_property(
@@ -22,14 +24,12 @@ pt_props <- list(
         set_props(self, x = cos(self@theta) * value, y = sin(self@theta) * value)
       }
     ),
-    xy = new_property(
+    theta = new_property(
       getter = function(self) {
-        `colnames<-`(cbind(self@x, self@y), c("x", "y"))
-      }
-    ),
-    length = new_property(
-      getter = function(self) {
-        length(self@x)
+        radian(radian = atan2(self@y, self@x))
+      },
+      setter = function(self, value) {
+        set_props(self, x = cos(value) * self@r, y = sin(value) * self@r)
       }
     ),
     style = new_property(
@@ -54,28 +54,27 @@ pt_props <- list(
                      stroke = self@stroke
                      )
       get_non_empty_tibble(d)
-    })
+    }),
+    xy = new_property(
+      getter = function(self) {
+        `colnames<-`(cbind(self@x, self@y), c("x", "y"))
+      }
+    )
   ),
+  # Functions ----
   funs = list(
+    geom = new_property(class_function, getter = function(self) {
+      \(...) {
+        as.geom(self, ...)
+      }
+    }),
     label = new_property(class_function, getter = function(self) {
       \(label = NULL,
         accuracy = .1,
         ...
       ) {
         if (is.null(label)) {
-          if (rlang::is_integerish(self@x)) {
-            x <- signs::signs(self@x)
-          } else {
-            x = signs::signs(self@x, accuracy = accuracy, trim_leading_zeros = TRUE)
-          }
-
-          if (rlang::is_integerish(self@y)) {
-            y <- signs::signs(self@y)
-          } else {
-            y = signs::signs(self@y, accuracy = accuracy, trim_leading_zeros = TRUE)
-          }
-
-          label <- paste0("(", x, ",", y, ")")
+          label = label_object(self, accuracy)
 
         }
         if (is.numeric(label) & !S7_inherits(label)) {
@@ -85,15 +84,25 @@ pt_props <- list(
             label = signs::signs(label, accuracy = accuracy, trim_leading_zeros = TRUE)
           }
         }
-
-
-
         label(p = self, label = label, ...)
       }
 
     })
 
-  )
+  ),
+  info = list(
+    aesthetics = new_property(getter = function(self) {
+    class_aesthetics_list(
+      geom = ggplot2::geom_point,
+      mappable_bare = character(0),
+      mappable_identity = c("shape", "color", "size", "fill", "alpha", "stroke"),
+      not_mappable = character(0),
+      required_aes = c("x", "y"),
+      omit_names = "group",
+      inherit.aes = FALSE,
+      style = pt_styles
+    )
+  }))
 )
 
 
@@ -119,7 +128,8 @@ point <- new_class(
     !!!pt_props$primary,
     !!!pt_props$styles,
     !!!pt_props$derived,
-    !!!pt_props$funs)),
+    !!!pt_props$funs,
+    !!!pt_props$info)),
   constructor = function(x = 0,
                          y = 0,
                          alpha = class_missing,
@@ -183,8 +193,9 @@ polar <- new_class(
                          size = class_missing,
                          stroke = class_missing,
                         style = class_missing) {
-    if (length(r) == 0) r <- 0
-    if (length(theta) == 0) theta <- angle(0)
+    if (length(r) == 0) r <- 1
+    if (length(theta) == 0) theta <- degree(0)
+    if (is.character(theta)) thata <- degree(theta)
 
 
     p <- point(x = cos(theta) * r,
@@ -247,21 +258,6 @@ method(get_tibble_defaults, point) <- function(x) {
   get_tibble_defaults_helper(x, sp, required_aes = c("x", "y"))
 }
 
-method(as.geom, point) <- function(x, ...) {
-  d <- get_tibble_defaults(x)
-  make_geom_helper(
-    d = d,
-    .geom_x = ggplot2::geom_point,
-    user_overrides = get_non_empty_props(style(...)),
-    mappable_bare = character(0),
-    mappable_identity = c("shape", "color", "size", "fill", "alpha", "stroke"),
-    not_mappable = character(0),
-    required_aes = c("x", "y"),
-    omit_names = "group",
-    inherit.aes = FALSE)
-
-}
-
 #' Convert hjust and vjust parameters from polar coordinates
 #' @param x angle
 #' @param multiplier distance
@@ -288,6 +284,12 @@ method(polar2just, class_numeric) <- function(x, multiplier = 1.2, axis = c("h",
 method(polar2just, class_angle) <- function(x, multiplier = 1.2, axis = c("h", "v")) {
   polar2just(x@radian, multiplier, axis)
 }
+
+method(`==`, list(point, point)) <- function(e1, e2) {
+  (e1@x == e2@x) & (e1@y == e2@y)
+}
+
+
 
 # arithmetic ----
 purrr::walk(list(`+`, `-`, `*`, `/`, `^`), \(.f) {
@@ -316,31 +318,7 @@ x + ((y - x) * position)
 
 
 
-# Centerpoint----
-centerpoint <- new_class(
-  name = "centerpoint",
-  parent = xy,
-  properties = list(center = new_property(
-    class = point,
-    default = point(0, 0)
-  ))
-)
 
-method(`+`, list(centerpoint, point)) <- function(e1, e2) {
-  circle(e1@center + e2, e1@radius)
-}
-
-method(`-`, list(centerpoint, point)) <- function(e1, e2) {
-  circle(e1@center - e2, e1@radius)
-}
-
-method(`+`, list(point, centerpoint)) <- function(e1, e2) {
-  circle(e2@center + e1, e2@radius)
-}
-
-method(`-`, list(point, centerpoint)) <- function(e1, e2) {
-  circle(e1 - e2@center, e2@radius)
-}
 
 method(`%*%`, list(point, point)) <- function(x, y) {
   x@xy[1, , drop = TRUE] %*% y@xy[1, , drop = TRUE]
@@ -381,3 +359,43 @@ method(`%|-%`, list(point, point)) <- function(e1,e2) {
 
 method(`%-|%`, list(point, point)) <- function(e1,e2) {
   point(e2@x, e1@y)}
+
+
+method(label_object, point) <- function(object, accuracy = .1) {
+
+      if (rlang::is_integerish(object@x)) {
+        x <- signs::signs(object@x)
+      } else {
+        x = signs::signs(object@x, accuracy = accuracy, trim_leading_zeros = TRUE)
+      }
+
+      if (rlang::is_integerish(object@y)) {
+        y <- signs::signs(object@y)
+      } else {
+        y = signs::signs(object@y, accuracy = accuracy, trim_leading_zeros = TRUE)
+      }
+
+      paste0("(", x, ",", y, ")")
+
+}
+
+
+
+method(`[`, point) <- function(x, y) {
+  d <- as.list(x@tibble[y,])
+  rlang::inject(point(!!!d))
+}
+
+method(path, list(point, point)) <- function(x,y, arrow_head = the$arrow_head, length_head = 7, ...) {
+  s <- segment(x,y, arrow_head = arrow_head, length_head = length_head, ...)
+  s
+
+}
+
+method(place, list(point, point)) <- function(x, from, where = "right", sep = 1) {
+  where <- degree(where)
+  p <- polar(where, sep)
+  x@x <- from@x + p@x
+  x@y <- from@y + p@y
+  x
+}

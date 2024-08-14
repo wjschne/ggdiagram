@@ -28,6 +28,7 @@ label(
   vjust = class_missing,
   style = class_missing,
   plot_point = FALSE,
+  position = 0.5,
   ...
 )
 }

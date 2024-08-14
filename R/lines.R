@@ -1,4 +1,25 @@
 ln_styles <- c("alpha", "color", "lineend", "linejoin", "linewidth", "linetype")
+vline_aesthetics_list <- class_aesthetics_list(
+  geom = ggplot2::geom_vline,
+  required_aes = "xintercept",
+  omit_names = c("slope", "intercept", "a", "b", "c", "group"),
+  mappable_bare = character(0),
+  mappable_identity = c("color", "linewidth", "linetype", "alpha"),
+  not_mappable = character(0),
+  style = ln_styles
+)
+
+abline_aesthetics_list <- class_aesthetics_list(
+  geom = ggplot2::geom_abline,
+  mappable_bare = character(0),
+  mappable_identity = c("color", "linewidth", "linetype", "alpha"),
+  not_mappable = character(0),
+  required_aes = c("intercept", "slope"),
+  omit_names = c("xintercept", "a", "b", "c", "group"),
+  style = ln_styles
+)
+
+abline_aesthetics <-
 ln_props <- list(
   primary = list(
     # ax + by + c = 0
@@ -57,7 +78,7 @@ ln_props <- list(
         b = self@b,
         c = self@c,
         alpha = self@alpha,
-        color = self@color,
+        color = c(self@color),
         lineend = self@lineend,
         linejoin = self@linejoin,
         linewidth = self@linewidth,
@@ -67,6 +88,11 @@ ln_props <- list(
     })
   ),
   funs = list(
+    geom = new_property(class_function, getter = function(self) {
+      \(...) {
+        as.geom(self, ...)
+      }
+    }),
     point_at_x = new_property(class_function, getter = function(self) {
       \(x = 0, ...) {
         if (any(self@b == 0)) stop("Not possible with verical lines")
@@ -84,7 +110,11 @@ ln_props <- list(
         projection(point, self, ...)
       }
     })
-)
+),
+info = list(
+  aesthetics = new_property(getter = function(self) {
+    abline_aesthetics_list
+  }))
 
 )
 
@@ -110,7 +140,8 @@ line <- new_class(
     !!!ln_props$primary,
     !!!ln_props$styles,
     !!!ln_props$derived,
-    !!!ln_props$funs)),
+    !!!ln_props$funs,
+    !!!ln_props$info)),
   constructor = function(slope = class_missing,
                          intercept = class_missing,
                          xintercept = class_missing,
@@ -128,7 +159,7 @@ line <- new_class(
 
     l_style <- style + style(
       alpha = alpha,
-      color = color,
+      color = c(color),
       lineend = lineend,
       linejoin = linejoin,
       linewidth = linewidth,
@@ -152,9 +183,9 @@ line <- new_class(
         dplyr::pull(ab0) %>%
         any()
       if (check_ab0) stop("If a and b are 0, c must be 0.")
-      
 
-      
+
+
       if (length(slope) > 0 && all(slope != -b / a)) stop("Some slopes are inconsistent with a and b parameters.")
       if (length(intercept) > 0 && all(intercept != -c / a)) stop("Some intercepts are inconsistent with b and c parameters.")
 
@@ -185,7 +216,9 @@ line <- new_class(
       d$c <- d$xintercept * -1
 
     } else {
-      stop("There is insufficient information to create a line. Specify a slope and intercept OR an xintercept OR a, b, and c.")
+      d$a = 1
+      d$b = 0
+      d$c = 0
     }
     non_empty_list <- get_non_empty_props(l_style)
     if (length(non_empty_list) > 0) {
@@ -242,41 +275,33 @@ method(get_tibble_defaults, line) <- function(x) {
 
 
 
-v_line_helper <- function(d, ...) {
-  f_geom <- ggplot2::geom_vline
-  req <- "xintercept"
-  omit <- c("slope", "intercept", "a", "b", "c")
-  make_geom_helper(
-    d = d,
-    .geom_x = f_geom,
-    user_overrides = get_non_empty_props(style(...)),
-    mappable_bare = character(0),
-    mappable_identity = c("color", "linewidth", "linetype", "alpha"),
-    not_mappable = character(0),
-    required_aes = req,
-    omit_names = c(omit,"group")
-  )
-}
-ab_line_helper <- function(d, ...) {
-  f_geom <- ggplot2::geom_abline
-  req <- c("intercept", "slope")
-  omit <- c("xintercept", "a", "b", "c")
-  make_geom_helper(
-    d = d,
-    .geom_x = f_geom,
-    user_overrides = get_non_empty_props(style(...)),
-    mappable_bare = "",
-    not_mappable = "",
-    required_aes = req,
-    omit_names = c(omit,"group")
-  )
-}
+
+
+# v_line_helper <- function(d, ...) {
+#
+#
+#   make_geom_helper(
+#     d = d,
+#     user_overrides = get_non_empty_props(style(...)),
+#     aesthetics = vline_aesthetics
+#   )
+# }
+# ab_line_helper <- function(d, ...) {
+#   make_geom_helper(
+#     d = d,
+#     aesthetics = abline_aesthetics,
+#     user_overrides = get_non_empty_props(style(...))
+#   )
+# }
 
 method(as.geom, line) <- function(x, ...) {
+  overrides <- get_non_empty_props(style(...))
 get_tibble_defaults(x) %>%
   tidyr::nest(.by = geom, .key = "d") %>%
-  dplyr::mutate(.f = ifelse(geom == "ab", c(ab_line_helper), c(v_line_helper)),
-                output = purrr::map(d, .f)) %>%
+  dplyr::mutate(a = ifelse(geom == "ab", c(abline_aesthetics_list), c(vline_aesthetics_list)),
+                output = purrr::map2(d,a,
+                                     make_geom_helper,
+                                     user_overrides = overrides)) %>%
   dplyr::pull(output)
 }
 
@@ -334,4 +359,9 @@ ab <- object@a * object@a + object@b * object@b
 xp <- (object@b * object@b * point@x - object@b * object@a * point@y - object@a * object@c) / ab
 yp <- (object@a * object@a * point@y - object@a * object@b * point@x - object@b * object@c) / ab
 point(xp, yp, style = point@style, ...)
+}
+
+method(`[`, line) <- function(x, y) {
+  d <- as.list(x@tibble[y,])
+  rlang::inject(line(!!!d))
 }

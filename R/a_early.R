@@ -2,21 +2,33 @@ library(S7)
 
 
 #' @export
-#' @importFrom S7 set_prop
+#' @importFrom S7 prop
 S7::prop
 
 #' @export
 #' @importFrom S7 set_props
-#' @rdname prop
 S7::set_props
 
 #' @export
-#' @importFrom S7 set_props
-#' @rdname prop
+#' @importFrom S7 props
 S7::props
 
 
 # classes ----
+class_aesthetics_list <- new_class(
+  name = "class_aesthetics_list",
+  properties = list(
+    geom = class_function,
+    style = class_character,
+    mappable_bare = class_character,
+    mappable_identity = class_character,
+    not_mappable = class_character,
+    required_aes = class_character,
+    omit_names = class_character,
+    inherit.aes = class_logical
+  )
+                                     )
+
 class_ggplot <- new_S3_class("ggplot")
 class_unit <- new_S3_class(
   "unit",
@@ -42,6 +54,13 @@ class_margin <- new_class(
     if (length(x) > 0) {
       if (is.numeric(x) && !grid::is.unit(x)) {
         x <- unit(x, units = units)
+      }
+      if (is.list(x)) {
+        if(all(purrr::map_lgl(x, \(o) "margin" %in% class(o)))) {
+          return(purrr::map(x, class_margin))
+
+        }
+
       }
       if ("margin" %in% class(x)) {
 
@@ -93,6 +112,8 @@ method(print, has_style) <- function(x, ...) {
   str(x, ...)
   invisible(x)
 }
+
+
 
 
 shape <- new_class(name = "shape",
@@ -225,6 +246,42 @@ the$arrow_head <- arrowheadr::arrow_head_deltoid()
 
 
 # helpers ----
+
+.namedpositions <- c(
+  east = 0,
+  `east-northeast` = 22.5,
+  northeast = 45,
+  `north-northeast` = 67.5,
+  north = 90,
+  `north-northwest` = 112.5,
+  northwest = 135,
+  `west-northwest` = 157.5,
+  west = 180,
+  `west-southwest` = 202.5,
+  southwest = 225,
+  `south-southwest` = 247.5,
+  south = 270,
+  `south-southeast` = 292.5,
+  southeast = 315,
+  `east-southeast` = 337.5,
+  right = 0,
+  `top right` = 45,
+  top = 90,
+  `top left` = 135,
+  left = 180,
+  `bottom left` = 215,
+  bottom = 270,
+  `bottom right` = 315
+)
+
+#' @keywords internal
+cardinalpoint <- function(x) {
+  .namedpositions
+  if (!all(x %in% names(.namedpositions))) {
+    stop("Position must be an angle, numeric, or a one of cardinal points:\nnoorth, east, south, west, northeast, northwest, southwest, southeast, east-northest, north-northeast, north-northwest, west-northwest, west-southwest, south-southwest, south-southeast, east-southeast")
+  }
+  unname(.namedpositions[x])
+}
 
 #' @keywords internal
 allsameclass <- function(l, classname) {
@@ -506,6 +563,14 @@ check_inconsistent <- function(object) {
   }
 }
 
+.between <- function(x, lb, ub) {
+  b <- cbind(lb = lb, ub = ub)
+  ub <- apply(b, 1, max)
+  lb <- apply(b, 1, min)
+  (x >= lb) & (x <= ub)
+
+}
+
 # as.geom ----
 #' Convert shapes to ggplot2 geoms
 #'
@@ -519,6 +584,15 @@ method(as.geom, class_shape_list) <- function(x, ...) {
   c(lapply(x, \(g) as.geom(g, ...)[[1]]))
 }
 
+method(as.geom, has_style) <- function(x, ...) {
+  d <- get_tibble_defaults(x)
+  make_geom_helper(
+    d = d,
+    user_overrides = get_non_empty_props(style(...)),
+    aesthetics = x@aesthetics)
+
+}
+
 method(`+`, list(class_ggplot, class_shape_list)) <- function(e1, e2) {
   e1 + as.geom(e2)
 }
@@ -526,31 +600,26 @@ method(`+`, list(class_ggplot, class_shape_list)) <- function(e1, e2) {
 
 #' @keywords internal
 make_geom_helper <- function(d = NULL,
-                             .geom_x,
+                             aesthetics,
                              user_overrides,
-                             not_mappable = character(),
-                             required_aes = character(),
-                             mappable_bare = character(),
-                             mappable_identity = character(),
-                             omit_names = character(),
                              ...) {
-  
+
   omit_names <- unique(
-    c(omit_names, 
+    c(aesthetics@omit_names,
       setdiff(
-        names(style@properties), 
+        names(style@properties),
         unique(c(
-          mappable_bare, 
-          required_aes, 
-          not_mappable, 
-          mappable_identity)))))
-       
+          aesthetics@mappable_bare,
+          aesthetics@required_aes,
+          aesthetics@not_mappable,
+          aesthetics@mappable_identity)))))
+
   # add group so that I() function will not disturb drawing order
   if (!("group" %in% unique(c(omit_names, colnames(d))))) {
     d$group <- seq(nrow(d))
   }
   # 1 row per unique combination of not mappable arguments
-  d_nested <- tidyr::nest(d, .by = any_of(not_mappable))
+  d_nested <- tidyr::nest(d, .by = any_of(aesthetics@not_mappable))
 
 
   # all colnames  but data
@@ -593,7 +662,8 @@ make_geom_helper <- function(d = NULL,
 
 
     # get names for bare mapping
-    bare_mapping <- intersect(unique(c(required_aes, mappable_bare)),
+    bare_mapping <- intersect(unique(c(aesthetics@required_aes,
+                                       aesthetics@mappable_bare)),
                               data_names)
 
     # omitted arguments
@@ -612,7 +682,7 @@ make_geom_helper <- function(d = NULL,
       omit_mapping = omit_mapping
     )
 
-    rlang::inject(.geom_x(
+    rlang::inject(aesthetics@geom(
       mapping = myaes,
       data = data,
       !!!user_overrides,
@@ -693,8 +763,51 @@ rotate2columnmatrix <- function(x, theta) {
       cos(theta)),
     nrow = 2,
     ncol = 2)
-  colnames(x_rotated) <- colnames(x)
+  colnames(x_rotated) <- NULL
   x_rotated
 }
 
 
+#' Automatic label for objects
+#'
+#' @param object object
+#' @param ... additional arguments
+label_object <- new_generic("label_object", "object")
+
+
+# Justify ----
+#' Text justification
+#'
+#' @param x hjust or angle
+#' @param y vjust or multiplier
+justify <- new_generic("justify", c("x", "y"))
+
+method(justify, list(class_numeric, class_numeric)) <- function(x,y) {
+    list(
+      hjust = x,
+      vjust = y
+    )
+}
+
+
+
+#' Arrow path from one shape to another
+#'
+#' @param x first shape (e.g., point, circle, ellipse, rectangle)
+#' @param y second shape
+#' @export
+path <- new_generic("path", c("x", "y"))
+
+#' Place an object a specified distance from another object
+#'
+#' @param x first shape (e.g., point, circle, ellipse, rectangle)
+#' @param y second shape
+#' @export
+place <- new_generic("place", c("x", "from"),
+                     fun = function(x, from, where = "right", sep = 1, ...) {
+                       S7::S7_dispatch()
+                     })
+
+method(as.list, shape) <- function(x, ...) {
+  purrr::map(seq(1, x@length), \(i) x[i])
+}

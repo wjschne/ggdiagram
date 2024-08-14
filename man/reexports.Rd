@@ -4,6 +4,8 @@
 \name{reexports}
 \alias{reexports}
 \alias{prop}
+\alias{set_props}
+\alias{props}
 \title{Objects exported from other packages}
 \keyword{internal}
 \description{
@@ -11,6 +13,6 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{S7}{\code{\link[S7]{prop}}}
+  \item{S7}{\code{\link[S7]{prop}}, \code{\link[S7]{props}}, \code{\link[S7:props]{set_props}}}
 }}
 

@@ -14,13 +14,24 @@ rc_styles <- c(
   "linetype"
 )
 
+rc_aesthetics_list <- class_aesthetics_list(
+  geom = ggplot2::geom_tile,
+  required_aes = c("x", "y", "width", "height", "group"),
+  omit_names = c("linejoin", "rule"),
+  mappable_bare = character(0),
+  mappable_identity = c("color", "fill", "linewidth", "linetype", "alpha"),
+  not_mappable = character(0),
+  inherit.aes = FALSE,
+  style = rc_styles
+)
+
 rc_props <- list(
   primary = list(
       width = new_property(class = class_numeric, default = 1),
       height = new_property(class = class_numeric, default = 1)
   ),
   styles = style@properties[rc_styles],
-  derived = list(  
+  derived = list(
     northeast = new_property(
       point,
       getter = function(self) {
@@ -77,7 +88,7 @@ rc_props <- list(
         south = segment(p1 = self@southwest, p2 = self@southeast, style = self@style)
       )
 
-    }),  
+    }),
     length = new_property(
       getter = function(self) {
         length(self@width)
@@ -93,8 +104,8 @@ rc_props <- list(
       setter = function(self, value) {
         rectangle(
           center = self@center,
-          width = self@width, 
-          height = self@height, 
+          width = self@width,
+          height = self@height,
           style = self@style + value)
       }
     ),
@@ -113,9 +124,14 @@ rc_props <- list(
     })
   ),
   funs = list(
-    point_at_theta = new_property(
+    geom = new_property(class_function, getter = function(self) {
+      \(...) {
+        as.geom(self, ...)
+      }
+    }),
+    point_at = new_property(
       class_function,
-      getter = function(self) {        
+      getter = function(self) {
         \(theta = degree(0), ...) {
           s <- segment(self@center, self@center + polar(theta = theta, r = distance(self@center, self@northeast)))
           st <- self@style + style(...)
@@ -124,7 +140,11 @@ rc_props <- list(
           p
         }
       }
-    )))
+    )),
+  info = list(
+    aesthetics = new_property(getter = function(self) {
+      rc_aesthetics_list
+    })))
 
 # Rectangle ----
 
@@ -147,14 +167,16 @@ rectangle <- new_class(
     !!!rc_props$primary,
     !!!rc_props$styles,
     !!!rc_props$derived,
-    !!!rc_props$funs)),
+    !!!rc_props$funs,
+    !!!rc_props$info)),
   constructor = function(center = class_missing,
-  width = class_missing,
-  height = class_missing,
-  northeast = class_missing,
-  northwest = class_missing,
-  southwest = class_missing,
-  southeast = class_missing,
+                          width = class_missing,
+                          height = class_missing,
+                          northeast = class_missing,
+                          northwest = class_missing,
+                          southwest = class_missing,
+                          southeast = class_missing,
+                          label = class_missing,
                          alpha = class_missing,
                          color = "black",
                          fill = NA_character_,
@@ -162,7 +184,7 @@ rectangle <- new_class(
                          linetype = class_missing,
                          style = class_missing,
                          ...) {
-    
+
                           hasnorth <- FALSE
                           hassouth <- FALSE
                           haseast <- FALSE
@@ -179,32 +201,32 @@ rectangle <- new_class(
                             hasnorth <- TRUE
                             haswest <- TRUE
                           }
-                      
+
                           if (length(southeast) > 0) {
                             south <- southeast@y
                             east <- southeast@x
                             hassouth <- TRUE
                             haseast <- TRUE
                           }
-                      
+
                           if (length(southwest) > 0) {
                             south <- southwest@y
                             west <- southwest@x
                             hassouth <- TRUE
                             haswest <- TRUE
                           }
-                      
+
                           if (hassouth && hasnorth) {
                             height <- abs(north - south)
                           }
-                      
+
                           if (haswest && haseast) {
                             width <- abs(west - east)
                           }
-                      
+
                           if (length(center) > 0 &&
                               length(width) > 0 && length(height) > 0) {
-      
+
                           } else if (length(center) > 0 &&
                                      (hasnorth || hassouth) && (haswest || haseast)) {
                             if (haseast) {
@@ -259,6 +281,10 @@ rectangle <- new_class(
 
     center = set_props(center, x = d$x, y = d$y)
     center@style <- rc_style
+    label <- centerpoint_label(label,
+                               center = center,
+                               d = d,
+                               shape_name = "rectangle")
 
 
 
@@ -267,6 +293,7 @@ rectangle <- new_class(
      new_object(centerpoint(center = center),
                  width = d$width,
                  height = d$height,
+                 label = label,
                  alpha = d[["alpha"]] %||% alpha,
                  color = d[["color"]] %||% color ,
                  fill = d[["fill"]]  %||% fill,
@@ -294,20 +321,9 @@ method(print, rectangle) <- function(x, ...) {
 }
 
 
-method(as.geom, rectangle) <- function(x, ...) {
-  d <- get_tibble_defaults(x)
-  make_geom_helper(
-    d = d,
-    .geom_x = ggplot2::geom_tile,
-    user_overrides = get_non_empty_props(style(...)),
-    mappable_bare = character(0),
-    mappable_identity = c("color","fill","linewidth","linetype","alpha"),
-    not_mappable = character(0),
-    required_aes = c("x", "y", "width", "height", "group"),
-    omit_names = c("linejoin", "rule"),
-    inherit.aes = FALSE)
 
-}
+
+
 
 method(get_tibble, rectangle) <- function(x) {
   x@tibble
@@ -328,8 +344,13 @@ method(get_tibble_defaults, rectangle) <- function(x) {
 }
 
 method(`==`, list(rectangle, rectangle)) <- function(e1, e2) {
-  (e1@center@x == e2@center@x) && 
-    (e1@center@y == e2@center@y) && 
-    (e1@width == e2@width) && 
+  (e1@center@x == e2@center@x) &&
+    (e1@center@y == e2@center@y) &&
+    (e1@width == e2@width) &&
     (e1@height == e2@height)
+}
+
+method(`[`, rectangle) <- function(x, y) {
+  d <- as.list(x@tibble[y,])
+  rlang::inject(rectangle(!!!d))
 }

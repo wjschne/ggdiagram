@@ -7,6 +7,7 @@
 segment(
   p1 = class_missing,
   p2 = class_missing,
+  label = class_missing,
   alpha = class_missing,
   arrow_head = ggarrow::arrow_head_minimal(90),
   arrow_fins = class_missing,
@@ -30,19 +31,13 @@ segment(
 )
 }
 \arguments{
+\item{p1}{starting point}
+
+\item{p2}{end point}
+
 \item{style}{a style list}
 
 \item{...}{properties passed to style}
-
-\item{b}{coefficient in general form: a * x + b * y + c = 0}
-
-\item{a}{constant in general form: a * x + b * y + c = 0}
-
-\item{slope}{coefficient in y = slope * x + intercept}
-
-\item{intercept}{value of y when x is 0}
-
-\item{xintercept}{value of x when y is 0}
 }
 \description{
 segment class

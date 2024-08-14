@@ -9,8 +9,9 @@ ellipse(
   a = 1,
   b = 1,
   angle = 0,
-  m1 = 2,
-  m2 = 2,
+  m1 = class_missing,
+  m2 = class_missing,
+  label = class_missing,
   alpha = class_missing,
   color = class_missing,
   fill = class_missing,
@@ -22,26 +23,48 @@ ellipse(
 )
 }
 \arguments{
-\item{center}{point at center of ellipse}
+\item{center}{point at center of ellipse. \emph{Settable.}}
 
-\item{a}{distance of semi-major axis}
+\item{a}{distance of semi-major axis. \emph{Settable.}}
 
-\item{b}{distance of semi-minor axis}
+\item{b}{distance of semi-minor axis. \emph{Settable.}}
 
-\item{m1}{exponent of semi-major axis}
+\item{angle}{ellipse rotation. \emph{Settable.}}
 
-\item{m2}{exponent of semi-minor axis}
+\item{m1}{exponent of semi-major axis. \emph{Settable.} Controls roundedness of superellipse}
 
-\item{n}{number of points in ellipse (default = 360)}
+\item{m2}{exponent of semi-minor axis. \emph{Settable.} By default equal to \code{m1}. If different, some functions may not work as expected (e.g., \code{point_at}).}
 
-\item{style}{a style object}
+\item{alpha}{numeric value for alpha transparency}
+
+\item{color}{character string for color}
+
+\item{fill}{character string for fill color}
+
+\item{linewidth}{width of lines}
+
+\item{linetype}{type of lines}
+
+\item{n}{number of points in ellipse (default = 360). \emph{Settable.}}
+
+\item{style}{gets and sets style parameters}
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> arguments passed to style object if style is empty}
 
-\item{theta}{ellipse rotation}
+\item{length}{Gets the number of ellipses}
+
+\item{tibble}{Gets a tibble (data.frame) containing parameters and styles used by \code{ggforce::geom_ellipse}.}
+
+\item{geom}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggforce::geom_ellipse}.}
+
+\item{normal_at}{A function that finds a point perpendicular to the ellipse at angle \code{theta} at the specified \code{distance}. The \code{definitional} parameter is passed to the \code{point_at} function.}
+
+\item{point_at}{A function that finds a point on the ellipse at an angle \code{theta}. If \code{definitional} is \code{FALSE} (default), then \code{theta} is interpreted as an angle. If \code{TRUE}, then \code{theta} is the parameter in the definition of the ellipse in polar coordinates.}
+
+\item{tangent_at}{A function that finds a tangent line on the ellipse. Uses \code{point_at} to find the tangent point at angle \code{theta} and then returns the tangent line at that point.}
 }
 \description{
-ellipse class
+Makes ellipses and superellipses
 }
 \examples{
 # specify center point and semi-major axes

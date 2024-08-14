@@ -12,6 +12,7 @@ rectangle(
   northwest = class_missing,
   southwest = class_missing,
   southeast = class_missing,
+  label = class_missing,
   alpha = class_missing,
   color = "black",
   fill = NA_character_,

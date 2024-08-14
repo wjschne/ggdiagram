@@ -55,8 +55,8 @@ method(distance, list(circle, circle)) <- function(x,y, center = FALSE) {
     if (x@radius + y@radius > distance(d)) {
       d <- point(0,0)
     } else {
-      px <- x@point_at_theta(d@theta)
-      py <- x@point_at_theta(d@theta + pi)
+      px <- x@point_at(d@theta)
+      py <- x@point_at(d@theta + pi)
       d <- py - px
     }
 
@@ -66,7 +66,7 @@ method(distance, list(circle, circle)) <- function(x,y, center = FALSE) {
 method(distance, list(point, circle)) <- function(x,y, center = FALSE) {
   d <- y@center - x
   if (!center) {    
-    py <- y@point_at_theta(radian(pi) + d@theta)
+    py <- y@point_at(radian(pi) + d@theta)
     d <- py - x
   }
   d@r

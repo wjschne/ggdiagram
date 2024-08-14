@@ -27,10 +27,10 @@ turn2angle <- function(x, object) {
 #' # Three Different ways to make a right angle
 #' ## 90 degrees
 #' degree(90)
-#' 
+#'
 #' ## half pi radians
 #' radian(.5 * pi)
-#' 
+#'
 #' ## A quarter turn
 #' turn(.25)
 #'
@@ -98,35 +98,40 @@ class_angle_or_character <- new_union(class_character, class_angle)
 #' @rdname class_angle
 #' @export
 degree <- new_class(
-  name = "degree", 
+  name = "degree",
   parent = class_angle,
   constructor = function(degree = class_missing) {
+    if (is.character(degree)) degree <- cardinalpoint(degree)
     if (S7_inherits(degree, class_angle)) degree <- c(degree) * 360
     new_object(degree / 360)
   })
 
-# Angle wrappers ----
+
+
+
 #' degree class
 #'
 #' @rdname class_angle
 #' @export
 radian <- new_class(
-  name = "radian", 
+  name = "radian",
   parent = class_angle,
   constructor = function(radian = class_missing) {
+    if (is.character(radian)) radian <- cardinalpoint(radian) * pi / 180
     if (S7_inherits(radian, class_angle)) radian <- c(radian) * 2 * pi
     new_object(radian / (2 * pi))
   })
 
-# Angle wrappers ----
+
 #' degree class
 #'
 #' @rdname class_angle
 #' @export
 turn <- new_class(
-  name = "turn", 
+  name = "turn",
   parent = class_angle,
   constructor = function(turn = class_missing) {
+    if (is.character(turn)) turn <- cardinalpoint(turn) / 360
     if (S7_inherits(turn, class_angle)) turn <- c(turn)
     new_object(turn)
   })
@@ -205,13 +210,43 @@ method(print, class_angle) <- function(x, ...) {
 }
 
 method(str, class_angle) <- function(object,
-                               nest.lev = 0,
-                               additional = FALSE,
-                               omit = ".data") {
+                                     nest.lev = 0,
+                                     additional = FALSE,
+                                     omit = ".data") {
   str_properties(object,
                  omit = omit,
                  nest.lev = nest.lev,
-                additional = additional)
+                 additional = additional)
+}
+
+method(str, degree) <- function(object,
+                                nest.lev = 0,
+                                additional = FALSE,
+                                omit = c(".data", "turn", "radian")) {
+  str_properties(object,
+                 omit = omit,
+                 nest.lev = nest.lev,
+                 additional = additional)
+}
+
+method(str, radian) <- function(object,
+                                nest.lev = 0,
+                                additional = FALSE,
+                                omit = c(".data", "turn", "degree")) {
+  str_properties(object,
+                 omit = omit,
+                 nest.lev = nest.lev,
+                 additional = additional)
+}
+
+method(str, turn) <- function(object,
+                                nest.lev = 0,
+                                additional = FALSE,
+                                omit = c(".data", "degree", "radian")) {
+  str_properties(object,
+                 omit = omit,
+                 nest.lev = nest.lev,
+                 additional = additional)
 }
 
 method(as.character, class_angle) <- function(x,
@@ -243,4 +278,11 @@ method(as.character, class_angle) <- function(x,
     turn = paste0(round_probability(x@turn, digits = digits)),
     class_angle = 2 * pi)
 }
+
+
+method(`[`, class_angle) <- function(x, y) {
+  S7::S7_data(x) <-  c(x)[y]
+  x
+}
+
 

@@ -7,6 +7,7 @@
 circle(
   center = point(0, 0),
   radius = 1,
+  label = class_missing,
   alpha = class_missing,
   color = class_missing,
   fill = class_missing,
@@ -14,6 +15,8 @@ circle(
   linetype = class_missing,
   n = class_missing,
   style = class_missing,
+  x0 = class_missing,
+  y0 = class_missing,
   ...
 )
 }

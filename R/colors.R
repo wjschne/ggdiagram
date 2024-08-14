@@ -46,7 +46,7 @@ method(str, class_color) <- function(
     object,
     nest.lev = 0,
     additional = FALSE,
-    omit = omit_props(object, include = c(".data"))) {
+    omit = omit_props(object, include = c(".data", "color"))) {
   str_properties(
     object,
     omit = omit,
@@ -56,4 +56,9 @@ method(str, class_color) <- function(
 method(print, class_color) <- function(x, ...) {
   str(x, ...)
   invisible(x)
+}
+
+method(`[`, class_color) <- function(x, y) {
+  S7::S7_data(x) <-  c(x)[y]
+  x
 }

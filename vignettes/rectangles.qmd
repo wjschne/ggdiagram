@@ -140,24 +140,22 @@ rc_center <- c(
     fill = my_colors$primary@lighten(.15), 
     vjust = -.15)))
 
-rc_width <- c(
-  as.geom(s_north), 
-  as.geom(s_north@label(
+rc_width <- as.geom(s_north |> set_props(label = label(
     label = "Width = " + r1@width,
+    p = midpoint(s_north),
     color = my_colors$secondary,
     vjust = 0,
     label.margin = ggplot2::margin(2, 2, 2, 2, "pt")
   )))
 
-rc_height <- c(
-  as.geom(s_east),
-  as.geom(s_east@label(
+rc_height <- as.geom(s_east |> 
+                       set_props(label = label(
     label = "Height = " + r1@height,
+    p  = midpoint(s_east),
     vjust = 0,
     color = my_colors$secondary,
-    angle = -90)
-  )
-)
+    angle = -90)))
+
 
 rc_nw <- r1@northwest@label(
   plot_point = T,
@@ -482,7 +480,7 @@ Points at any angle
 
 ```{r theta60}
 theta <- degree(60)
-r1@point_at_theta(theta)
+r1@point_at(theta)
 ```
 
 
@@ -490,7 +488,7 @@ r1@point_at_theta(theta)
 #| fig-cap: "The point on a rectangle at angle &theta; = 60&deg;"
 #| code-fold: true
 #| fig-height: 4.75
-r1_theta <- r1@point_at_theta(theta)
+r1_theta <- r1@point_at(theta)
 
 rc_plot +
   segment(r1@center, r1_theta) +
@@ -499,10 +497,10 @@ rc_plot +
     plot_point = T) +
   arc(center = r1@center,
       radius = .5,
-      end = theta) +
-  arc(center = r1@center,
-      radius = .5,
-      end = theta)@label(fill = my_colors$primary@lighten(.15)) 
+      end = theta,
+      label = label(theta, 
+                    fill = my_colors$primary@lighten(.15), 
+                    color = my_colors$primary@color)) 
 ```
 
 
