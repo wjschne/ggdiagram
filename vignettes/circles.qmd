@@ -148,19 +148,31 @@ bp +
 
 ## Placing circles next to each other
 
-```{r}
+The `place` function places an object at a specified direction and distance from another object. 
+
+```{r fig-place}
+#| fig-cap: Place Circle B one unit to the right of Circle A
 bp + 
-  {c2 <- circle(point(-2, 0), radius = 1)} + 
-  place(circle(radius = 1.5), c2, where = "right", sep = 1)
+  {A <- circle(
+    center = point(-2, 0), 
+    radius = 1, 
+    label = label("A", size = 30))} + 
+  place(
+    circle(radius = 1.5,
+           label = label("B", size = 30)),
+    from = A,
+    where = "right",
+    sep = 1)
 ```
 
 The `where` argument can take degrees or named positions: 
 
 `r paste0(names(ggdiagram:::.namedpositions), collapse = ", ")`
 
-Multiple circles can be created at once with named positions:
+Multiple circles can be created at once with named directions:
 
-```{r}
+```{r fig-multplace}
+#| fig-cap: Place mutliple circles using named directions
 bp + 
   {c3 <- circle(point(0, 0), radius = 1)} + 
   place(circle(radius = .5), 
@@ -171,7 +183,8 @@ bp +
 
 Or with numbers (degrees):
 
-```{r}
+```{r fig-multdegree}
+#| fig-cap: Place mutliple circles using degrees
 bp + 
   c3 + 
   place(circle(radius = .5), c3, where = c(0, 30, -30), sep = 1)
@@ -179,7 +192,8 @@ bp +
 
 With styles:
 
-```{r}
+```{r fig-style}
+#| fig-cap: Place mutliple circles with styling
 bp +
   {c3 <- circle(
       point(0, 0),
@@ -199,9 +213,10 @@ bp +
 
 ## Placing circles next to points and points next to circles
 
-This works the same as placing circles next to each other.
+This works the same as placing circles next to each other. Here we create a point in the center, place six circles around it, and then place 12 points around each circle.
 
-```{r}
+```{r fig-multimulti}
+#| Place circles around a point, and points around each circle
 bp + 
   {p1 <- point(0,0)} +
   {c1 <- place(x = circle(radius = .5, 
@@ -223,27 +238,30 @@ bp +
 
 ## Placing lines next to circles
 
-```{r}
+```{r fig-linecircle}
+#| fig-cap: Placing a line one unit northeast of a circle
 bp +
   {c1 <- circle()} +
   place(line(), c1, where = degree(45), sep = 1)
 ```
 
 
-# Drawing paths between circles
+# Drawing path connectors between circles
 
 Let's make two circles and draw an arrow path between them
 
-```{r}
+```{r fig-connectcircles}
+#| fig-cap: Connect two circles
 bp + 
   {c1 <- circle(point(-2, 2), radius = 1)} + 
   {c2 <- circle(point(1.5,-1.5), radius = 1.5)} +
-  path(c1, c2)
+  connect(c1, c2)
 ```
 
 That is fine, but we often need labels and styling to make scientific diagrams. For example:
 
-```{r}
+```{r fig-connectcirclesstyles}
+#| fig-cap: Connect two circles with labels and styles
 bp +
   {cthis <- circle(
     point(-2, 2),
@@ -269,17 +287,20 @@ bp +
       size = 55
     )
   )} +
-  path(cthis, cthat, 
+  connect(cthis, cthat, 
        resect = 2, 
        label = label("Causes", size = 20, vjust = 0))
 ```
 
 # Paths between circles and lines
 
-```{r}
+```{r fig-connectcircleline}
+#| fig-cap: Connect a circle to a line and a line to a circle
 bp + 
   c1 +
-  {l1 <- line(slope = 2, intercept = -1)} +
-  path(c1, l1)
+  {l1 <- line(slope = 2, intercept = 0)} +
+  connect(c1, l1) +
+  {c2 <- circle(point(2, -2))} + 
+  connect(l1, c2)
 ```
 

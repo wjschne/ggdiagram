@@ -26,11 +26,13 @@ rc_aesthetics_list <- class_aesthetics_list(
 )
 
 rc_props <- list(
+  # Primary ----
   primary = list(
       width = new_property(class = class_numeric, default = 1),
       height = new_property(class = class_numeric, default = 1)
   ),
   styles = style@properties[rc_styles],
+  # Derived ----
   derived = list(
     northeast = new_property(
       point,
@@ -123,6 +125,7 @@ rc_props <- list(
       get_non_empty_tibble(d)
     })
   ),
+  # Functions ----
   funs = list(
     geom = new_property(class_function, getter = function(self) {
       \(...) {
@@ -141,6 +144,7 @@ rc_props <- list(
         }
       }
     )),
+  # Information ----
   info = list(
     aesthetics = new_property(getter = function(self) {
       rc_aesthetics_list
@@ -354,3 +358,5 @@ method(`[`, rectangle) <- function(x, y) {
   d <- as.list(x@tibble[y,])
   rlang::inject(rectangle(!!!d))
 }
+
+

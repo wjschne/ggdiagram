@@ -1,5 +1,6 @@
 pt_styles <- c("alpha", "color", "fill", "shape", "size", "stroke")
 pt_props <- list(
+  # Primary ----
   primary = list(
     x = new_property(class = class_numeric, default = 0),
     y = new_property(class = class_numeric, default = 0)
@@ -9,7 +10,6 @@ pt_props <- list(
   derived = list(
     auto_label = new_property(getter = function(self) {
       label_object(self)
-
     }),
     length = new_property(
       getter = function(self) {
@@ -111,15 +111,20 @@ pt_props <- list(
 
 #' point
 #'
-#' Points are specified with x and y coordinates.# Polar class ----
+#' Points are specified with x and y coordinates.
 #' @export
-#' @param x Coordinate on the x-axis
-#' @param y Coordinate on the y-axis
+#' @param x Vector of coordinates on the x-axis (also can take a tibble/data.frame or 2-column matrix as input.)
+#' @param y Vector of coordinates on the y-axis
 #' @param style a style object
-#' @param n the length of the point object
 #' @param r Radius = Distance from the origin to the point
 #' @param theta Angle of the vector from the origin to the point
 #' @param ... properties passed to style
+#' @param auto_label Gets x and y coordinates and makes a label `"(x,y)"`
+#' @param length The number of points in the point object
+#' @param style Gets and sets the styles associated with points
+#' @param tibble Gets a tibble (data.frame) containing parameters and styles used by `ggplot2::geom_point`.
+#' @param xy Gets a 2-column matrix of the x and y coordinates of the point object.
+#' @param geom A function that converts the object to a geom. Any additional parameters are passed to `ggplot2::geom_point`.
 #' @export
 point <- new_class(
   name = "point",
@@ -140,6 +145,14 @@ point <- new_class(
                          stroke = class_missing,
                          style = class_missing,
                          ...) {
+
+    if ("data.frame" %in% class(x)) {
+      return(rlang::inject(point(!!!get_non_empty_list(x))))
+    }
+
+    if ("matrix" %in% class(x) && ncol(x) == 2) {
+      return(point(x[,1], x[,2]))
+    }
 
     p_style <- style +
       style(
@@ -386,7 +399,7 @@ method(`[`, point) <- function(x, y) {
   rlang::inject(point(!!!d))
 }
 
-method(path, list(point, point)) <- function(x,y, arrow_head = the$arrow_head, length_head = 7, ...) {
+method(connect, list(point, point)) <- function(x,y, arrow_head = the$arrow_head, length_head = 7, ...) {
   s <- segment(x,y, arrow_head = arrow_head, length_head = length_head, ...)
   s
 
@@ -399,3 +412,5 @@ method(place, list(point, point)) <- function(x, from, where = "right", sep = 1)
   x@y <- from@y + p@y
   x
 }
+
+point_or_list <- new_union(point, class_list)

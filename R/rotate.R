@@ -18,7 +18,7 @@ method(rotate, list(line, class_angle_or_numeric)) <- function(
   theta,
   origin = point(0, 0), ...) {
 # https://math.stackexchange.com/a/2278909
-  if (!S7_inherits(theta, class_angle)) theta = radian(theta)
+  if (!S7_inherits(theta, class_angle)) theta = degree(theta)
 A <- x@a * cos(theta) + x@b * sin(theta)
 B <- x@b * cos(theta) + x@a * sin(theta)
 C <- (x@a - A) * origin@x + (x@b - B) * origin@y + x@c
@@ -35,7 +35,7 @@ method(rotate, list(point, class_angle_or_numeric)) <- function(
 
   if (!S7_inherits(theta, class_angle)) theta <- degree(theta)
 
-  d <- tibble(x0 = x@x - origin@x,
+  d <- tibble::tibble(x0 = x@x - origin@x,
               y0 = x@y - origin@y,
               theta = theta@radian)
 
@@ -47,7 +47,7 @@ xr <- purrr::map(unique(d$theta), \(th) {
   rotate2columnmatrix(th) |>
   `colnames<-`(c("x", "y")) |>
   tibble::as_tibble()}) |>
-  bind_rows() |>
+  dplyr::bind_rows() |>
   as.matrix()
 
 
@@ -93,9 +93,10 @@ method(rotate,
     x,
     theta,
     origin = point(0, 0)) {
-  x_center_r <- rotate(x@center, theta, origin = origin)
+  x@center <- rotate(x@center, theta, origin = origin)
+  x@angle <- x@angle + theta
 
-  ellipse(center = x_center_r, a = x@a, b = x@b, angle = x@angle + theta, n = x@n)
+  x
        }
 # Rotate rectangle
 method(rotate, list(rectangle, class_angle_or_numeric)) <- function(x, theta, origin = point(0, 0)) {

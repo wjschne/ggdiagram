@@ -12,6 +12,7 @@ BugReports: https://github.com/wjschne/ggdiagram/issues
 Imports: 
     arrowheadr,
     dplyr,
+    geomtextpath,
     ggarrow,
     ggforce,
     ggplot2,
@@ -44,11 +45,14 @@ Collate:
     'labels.R'
     'lines.R'
     'segments.R'
+    'paths.R'
     'arrows.R'
     'circles.R'
     'ellipses.R'
     'arcs.R'
+    'bzcurve.R'
     'rectangles.R'    
+    'polygons.R'
     'distances.R'
     'intersections.R'
     'inside.R'

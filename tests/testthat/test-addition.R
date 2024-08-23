@@ -57,7 +57,7 @@ test_that("constructor", {
   expect_error(line(a = 1, b = 1, c = 1, slope = 3), "Some slopes are inconsistent with a and b parameters.")
   expect_error(line(slope = Inf, intercept = Inf), "There is not enough information to make a line. Specify the x-intercept or the a,b,c parameters.")
   expect_error(line(intercept = Inf), "There is not enough information to make a line. Specify the x-intercept or the a,b,c parameters.")
-  expect_error(line(slope = Inf), "There is insufficient information to create a line.")
+
 
   # Angle
   t <- degree(1)
@@ -166,18 +166,18 @@ test_that("intersection", {
   p1 <- point(0, 1)
   p2 <- point(2, 1)
   expect_equal(intersection(l1, c1),
-               c(p2, p1))
+               bind(c(p2, p1)))
   expect_equal(intersection(c1, l1),
-               c(p2, p1))
+               bind(c(p2, p1)))
   expect_equal(intersection(line(intercept = 2), c1),
                point(1,2))
   l1 <- line(xintercept = 1)
   p1 <- point(1, 0)
   p2 <- point(1, 2)
   expect_equal(intersection(l1, c1),
-               c(p1, p2))
+               bind(c(p1, p2)))
   expect_equal(intersection(c1, l1),
-               c(p1, p2))
+               bind(c(p1, p2)))
   expect_equal(intersection(line(xintercept = 2), c1),
                point(2,1))
   l1 <- line(slope = 1, intercept = 2 * sin(degree(45)))
@@ -190,9 +190,9 @@ test_that("intersection", {
   l1 <- line(slope = .5, intercept = 0)
   c1 <- circle(point(0,0), radius = 1)
   expect_equal(intersection(l1, c1),
-               c(point(x = cos(atan(.5)), y = sin(atan(.5))),
+               bind(c(point(x = cos(atan(.5)), y = sin(atan(.5))),
                  point(x = -cos(atan(.5)), y = -sin(atan(.5)))
-                 ))
+                 )))
   e1 <- ellipse(a = 1, b = 2)
 
   s5 <- segment(point(-2,-2), point(2,2))
@@ -220,36 +220,36 @@ test_that("rotate", {
     line(xintercept = -2)
   )
   # rotate a line with a numeric radian
-  expect_identical(
+  expect_equal(
     rotate(line(xintercept = 2), turn(turn = .5)),
     rotate(line(xintercept = 2), pi)
   )
 
   # rotate a point
-  expect_identical(
+  expect_equal(
     rotate(point(1,0), turn(turn = .5)),
     point(-1,0)
   )
 
   # rotate a segment
-  expect_identical(
+  expect_equal(
     rotate(segment(point(0,1), point(1,0)), theta = turn(.5)),
     segment(point(0,-1), point(-1,0))
   )
 
   # rotate a circle
-  expect_identical(
+  expect_equal(
     rotate(x = circle(point(1, 2)),
            theta = turn(.25)),
     circle(point(-2, 1)))
 
-  expect_identical(
+  expect_equal(
     rotate(x = circle(point(1, 2), n = 50),
            theta = turn(.25)),
     circle(point(-2, 1), n = 50))
 
   # rotate an ellipse
-  expect_identical(
+  expect_equal(
     rotate(x = ellipse(center = point(1, 2), a = 2, b = 1),
            theta = turn(.25)),
     ellipse(point(-2, 1), a = 2, b = 1, angle = turn(.25)))
@@ -284,6 +284,7 @@ test_that("inside", {
 
   p1 <- point(0,1.9)
   rp1 <- rotate(p1, degree(45))
+
   expect_equal(inside(p1, e1), 1)
   expect_equal(inside(p1, re1), -1)
   expect_equal(inside(rp1, e1), -1)

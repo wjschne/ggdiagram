@@ -98,10 +98,7 @@ str_properties <- function(
 
 
 
-method(print, has_style) <- function(x, ...) {
-  str(x, ...)
-  invisible(x)
-}
+
 
 method(print, class_arrowhead) <- function(x, ...) {
   str(x, ...)
@@ -131,5 +128,14 @@ str_properties(object,
 }
 
 
-
+method(str, class_aesthetics_list) <- function(
+    object,
+    nest.lev = 0,
+    additional = TRUE,
+    omit = "") {
+  str_properties(object,
+                 omit = omit,
+                 nest.lev = nest.lev,
+                 additional = additional)
+}
 

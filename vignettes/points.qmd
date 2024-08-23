@@ -70,11 +70,14 @@ bp <- ggplot() +
 
 Points have x and y coordinates. 
 
-```{r points}
+```{r fig-points}
+#| fig-cap: Creating points
 p1 <- point(1, 2, color = "firebrick")
 p2 <- point(3, 4, color = "royalblue3")
 
-bp + p1 + p2
+bp + 
+  p1 + 
+  p2
 ```
 
 ## Polar Coordinates
@@ -110,8 +113,12 @@ ggplot() +
   circle(radius = p2@r) +
   p2@label(plot_point = TRUE, 
            polar_just = polar(p2@theta, r = 1.5)) +
-  segment(point(), p2 = p2, label = "*r* = " + round(p2@r, 2)) + 
-  arc(end = p2@theta, color = "royalblue3", label = "&theta; = " + degree(p2@theta)) 
+  segment(p1 = point(), 
+          p2 = p2, 
+          label = "*r* = " + round(p2@r, 2)) + 
+  arc(end = p2@theta, 
+      color = "royalblue3", 
+      label = "&theta; = " + degree(p2@theta)) 
 ```
 
 
@@ -243,16 +250,15 @@ seg_c1_p2 <- segment(
   label = scales::number(distance(intersect_c1_p2, p2), .1))
 
 intersect_c1_p3 <- c1@point_at((p3 - c1@center)@theta)
-seg_c1_p3 <- segment(intersect_c1_p3,
-                     p3,
-                     color = p3@color, 
-                     label = scales::number(distance(intersect_c1_p3, p3), .1),
-                     style = seg_style)
 
-
+seg_c1_p3 <- segment(
+  intersect_c1_p3,
+  p3,
+  color = p3@color, 
+  label = scales::number(distance(intersect_c1_p3, p3), .1),
+  style = seg_style)
 
 p_labels <- paste0("P<sub>",1:3, "</sub>")
-
 
 bp +
   c1 +
@@ -271,13 +277,7 @@ bp +
   seg_c1_p3@midpoint(c(1))@label(
     label = p_labels[3], 
     polar_just = polar(theta = seg_c1_p3@line@angle, 1.5))
-
-  
-
-
 ```
-
-
 
 # Convert points to geoms
 

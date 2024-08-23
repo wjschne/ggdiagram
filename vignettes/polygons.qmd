@@ -1,0 +1,138 @@
+---
+title: "Polygons (pgon)"
+format: 
+  html:
+    toc: true
+    html-math-method: katex
+vignette: >
+  %\VignetteIndexEntry{points}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r presetup, include = FALSE}
+library(ggdiagram)
+library(ggplot2)
+library(dplyr)
+library(ggtext)
+library(ggarrow)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  dev = "ragg_png",
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 7
+)
+
+```
+
+# Setup
+
+```{r setup}
+library(ggdiagram)
+library(ggplot2)
+library(dplyr)
+library(ggtext)
+library(ggarrow)
+library(geomtextpath)
+
+
+```
+
+# Base Plot
+
+
+## Base plot
+
+To avoid repetitive code, we make a base plot:
+
+```{r baseplot}
+my_font <- "Roboto Condensed"
+my_text_size <- 20
+my_point_size <- 2.5
+my_arrowhead <- arrowheadr::arrow_head_deltoid(2.1)
+# my_colors <- viridis::viridis(2, begin = .25, end = .5)
+my_colors <- c("#3B528B", "#21908C")
+update_geom_defaults(geom = "richtext", 
+                     new = list(family = my_font, 
+                                size = .8 * my_text_size / ggplot2::.pt))
+
+update_geom_defaults(geom = "labelpath", 
+                     new = list(family = my_font,
+                                size = .8 * my_text_size / ggplot2::.pt))
+
+update_geom_defaults("point", list(size = my_point_size))
+update_geom_defaults("arrow_segment", list(length_head = 5))
+update_geom_defaults("arrow", list(linewidth = 2))
+
+theme_set(
+  theme_minimal(
+    base_size = my_text_size, 
+    base_family = my_font) +
+    theme(axis.title.y = element_text(angle = 0, vjust = 0.5)))
+
+bp <- ggplot() +
+  coord_equal() +
+  scale_x_continuous(labels = WJSmisc::signs_centered, limits = c(-4, 4)) +
+  scale_y_continuous(labels = signs::signs, limits = c(-4, 4)) +
+  theme_minimal(base_size = 16) +
+  theme(
+    axis.title.x =  element_text(face = "italic"),
+    axis.title.y = element_text(
+      face = "italic",
+      angle = 0,
+      hjust = .5,
+      vjust = .5
+    )
+  )
+```
+
+# Polygons
+
+The `pgon` function creates an object that connects points to make a polygon.
+
+```{r fig-path}
+#| fig-cap: Plotting a path.
+p <- point(x = c(-4,-3, 4,  3, -1), 
+           y = c( 0, 4, 3, -3, -4))
+bp + 
+  pgon(p, fill = "dodgerblue3")
+```
+
+
+# Polygon Labels
+
+The label of a `pgon` object is placed, by default, at the centroid of the polygon. The centroid is the point whose x coordinate is the average of all the x coordinates of the polygon's points and whose y coordinate is likewise the average of all the point's y coordinates.
+
+
+```{r fig-pgonlabel}
+#| fig-cap: A path with a curved label
+bp +
+  pgon(
+    p = p,
+    label = label(
+      "My<br>Polygon",
+      size = 20,
+      color = "white"
+    ),
+    fill = "dodgerblue4"
+  )
+
+```
+
+# Connecting polygons
+
+Connections between polygons are arrows that emanate from and point towards the polygons' centroids.
+
+```{r fig-pgonconnect}
+#| fig-cap: Arrow between two polygons
+bp + 
+  {p1 <- pgon(.5 * p - point(1.9,1.9), 
+              fill = "dodgerblue4")} + 
+  {p2 <- pgon(.5 * p + point(1.9, 1.9), 
+              fill = "orchid4")} + 
+  connect(p1, p2, 
+          resect = 1, 
+          label = ".45")
+```
+

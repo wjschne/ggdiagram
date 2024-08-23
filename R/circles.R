@@ -253,17 +253,7 @@ method(`==`, list(circle, circle)) <- function(e1, e2) {
   (e1@center == e2@center) & (e1@radius == e1@radius)
 }
 
-method(path, list(circle, line)) <- function(x,y, ...) {
-  p2 <- projection(x@center, y)
-  p1 <- intersection(segment(x@center, p2), x)
-  path(p1, p2, ...)
-}
 
-method(path, list(line, circle)) <- function(x,y, ...) {
-  p1 <- projection(y@center, x)
-  p2 <- intersection(segment(y@center, p1), y)
-  path(p1, p2, ...)
-}
 
 # Place ----
 
@@ -273,6 +263,10 @@ method(place, list(circle, circle)) <- function(x, from, where = "right", sep = 
   p <- polar(where, sep + x@radius + from@radius)
   x@center@x <- from@center@x + p@x
   x@center@y <- from@center@y + p@y
+
+  if (S7_inherits(x@label, label)) {
+    x@label@p <- x@center
+  }
   x
 
 }
@@ -282,3 +276,5 @@ method(place, list(line, circle)) <- function(x, from, where = "right", sep = 1)
   from@radius <- sep + from@radius
   from@tangent_at(where)
 }
+
+

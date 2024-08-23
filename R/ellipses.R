@@ -49,7 +49,7 @@ el_props <- list(
         y0 = self@center@y,
         a = self@a,
         b = self@b,
-        angle = self@angle,
+        angle = self@angle@radian,
         m1 = self@m1,
         m2 = self@m2,
         alpha = self@alpha,
@@ -240,7 +240,7 @@ ellipse <- new_class(
      new_object(centerpoint(center = center, label = label),
                  a = d$a,
                  b = d$b,
-                 angle = d$angle,
+                 angle = radian(d$angle),
                  m1 = d$m1,
                  m2 = d$m2,
                  alpha = d[["alpha"]] %||% alpha,
@@ -289,9 +289,29 @@ method(`[`, ellipse) <- function(x, y) {
   rlang::inject(ellipse(!!!d))
 }
 
-method(path, list(circle_or_ellipse, circle_or_ellipse)) <- function(x,y, ...) {
+method(connect, list(centerpoint, centerpoint)) <- function(x,y, ...) {
   theta <- radian(atan2(y@center@y - x@center@y, y@center@x - x@center@x))
-  path(x@point_at(theta), y@point_at(theta + degree(180)), ...)
+  connect(x@point_at(theta), y@point_at(theta + degree(180)), ...)
+}
+
+method(connect, list(centerpoint, point)) <- function(x,y, ...) {
+  theta <- radian(atan2(y@y - x@center@y, y@x - x@center@x))
+  connect(x@point_at(theta), y, ...)
+}
+
+method(connect, list(point, centerpoint)) <- function(x,y, ...) {
+  theta <- radian(atan2(y@center@y - x@y, y@center@x - x@x))
+  connect(x, y@point_at(theta + degree(180)), ...)
+}
+
+method(connect, list(centerpoint, line)) <- function(x,y, ...) {
+  p2 <- projection(x@center, y)
+  connect(x, p2, ...)
+}
+
+method(connect, list(line, centerpoint)) <- function(x,y, ...) {
+  p1 <- projection(y@center, x)
+  connect(p1, y, ...)
 }
 
 

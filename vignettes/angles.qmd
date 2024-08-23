@@ -137,7 +137,7 @@ For labeling, sometimes is convenient to convert angles to text:
 ```{r ascharacter}
 as.character(degree(90))
 as.character(turn(.25))
-as.character(radian(.5* pi))
+as.character(radian(.5 * pi))
 ```
 
 ## Angle Metric Conversions
@@ -246,9 +246,9 @@ When degrees are outside the range of &pm;360, they recalculate:
 
 $$
 \begin{align}
-80\unicode{xb0} + 300\unicode{xb0} &= 380\unicode{xb0}\\
-&= 380\unicode{xb0}-360\unicode{xb0}\\
-&=20\unicode{xb0}\end{align}
+80^{\circ} + 300^\circ &= 380^\circ\\
+&= 380^\circ-360^\circ\\
+&=20^\circ\end{align}
 $$
 
 
@@ -268,7 +268,7 @@ degree(80) + degree(300)
 
 
 
-$$\begin{align}20\unicode{xb0} - 40\unicode{xb0} &= -20\unicode{xb0}\\&=340\unicode{xb0}\end{align}$$
+$$\begin{align}20^\circ - 40^\circ &= -20^\circ\\&=340^\circ\end{align}$$
 
 ```{r fig-neg}
 #| code-fold: true
@@ -282,14 +282,14 @@ make_angles(c(40, -60))
 degree(40) - degree(60)
 ```
 
-$$2\cdot20\unicode{xb0}=40\unicode{xb0}$$
+$$2\cdot20^\circ=40^\circ$$
 
 
 ```{r mult20}
 2 * degree(20)
 ```
 
-$$\begin{align}2\cdot180 &= 360\unicode{xb0}\\&=0\unicode{xb0}\end{align}$$
+$$\begin{align}2\cdot180 &= 360^\circ\\&=0^\circ\end{align}$$
 
 ```{r mult180}
 2 * degree(180)

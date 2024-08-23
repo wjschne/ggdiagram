@@ -244,3 +244,14 @@ bp +
   s1@midpoint(c(0,1))
 ```
 
+# Segment chains
+
+If a point object with multiple points is placed in the `p1` slot but the `p2` slot is left empty, a series of segments chained together will be created.
+
+```{r fig-chain}
+#| fig-cap: Chained segments
+bp + 
+  segment(point(c(-4, -2, -1, 2,  4), 
+                c(-2,  1, -2, 3, -3)))
+```
+

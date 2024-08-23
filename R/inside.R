@@ -24,8 +24,8 @@ method(inside, list(point, circle)) <- function(x,y) {
 }
 
 method(inside, list(point, ellipse)) <- function(x,y) {
-  rx <- rotate(x, -1*y@angle, origin = y@center)
+  rx <- rotate(x, theta = -1*y@angle, origin = y@center)
   xc <- rx - y@center
-  -1 * sign((xc@x ^ 2) / (y@a ^ 2) + (xc@y ^ 2) / (y@b ^ 2) - 1)
+  -1 * sign((xc@x / y@a) ^ y@m1 + (xc@y / y@b) ^ y@m1 - 1)
 }
 

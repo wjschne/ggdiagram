@@ -484,11 +484,27 @@ method(intersection, list(circle, circle)) <- function(x,y) {
                      function(P0, P1, P2, h, d) {
                        P10 <- P1 - P0
                        P2 + point(c(-1,1), c(1,-1)) * point(P10@y, P10@x) *  (h / d)
-
     }))
-
   d$P3[[1]]
+}
 
 
+method(intersection, list(pgon, segment)) <- function(x,y) {
+  if (S7_inherits(x@p, point)) {
+    x@p <- list(x@p)
+  }
+    purrr::map(x@p, \(p) {
+      l <- as.list(segment(point(tibble::as_tibble(rbind(p@xy, p@xy[1,]))))) |>
+        purrr::map(\(s) intersection(s, y))
 
+      l <- Filter(\(x) S7_inherits(x, point), l)
+      if (length(l) > 0) {
+        l[[1]]
+      }
+    })[[1]]
+  }
+
+
+method(intersection, list(segment, pgon)) <- function(x,y) {
+  intersection(y,x)
 }

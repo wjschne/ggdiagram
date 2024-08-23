@@ -13,6 +13,7 @@ arc(
   start_point = class_missing,
   end_point = class_missing,
   n = 360,
+  wedge = FALSE,
   alpha = class_missing,
   arrow_head = class_missing,
   arrow_fins = class_missing,
@@ -45,6 +46,8 @@ arc(
 
 \item{end}{end angle (default = 0 degrees)}
 
+\item{label}{A character, angle, or label object}
+
 \item{n}{number of points in arc (default = 360)}
 
 \item{style}{a style object}
@@ -52,6 +55,8 @@ arc(
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> arguments passed to style object if style is empty}
 
 \item{theta}{interior angle (end - start)}
+
+\item{length}{The number of arcs in the arc object}
 }
 \description{
 arc class

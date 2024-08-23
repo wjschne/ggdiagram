@@ -21,6 +21,39 @@ arc_styles <- c(
   "stroke_width"
 )
 
+wedge_styles <- c(
+  "alpha",
+  "color",
+  "fill",
+  "linewidth",
+  "linetype"
+)
+
+wedge_aesthetics <- class_aesthetics_list(
+  geom = ggplot2::geom_polygon,
+  mappable_bare = character(0),
+  mappable_identity = c(
+    "color",
+    "fill",
+    "linewidth",
+    "linetype",
+    "alpha"),
+  not_mappable = c(
+    character(0)
+  ),
+  required_aes = c(
+    "x",
+    "y",
+    "group"),
+  omit_names = c(
+    "rule",
+    "label",
+    "arrow_head",
+    "arrow_fins"),
+  inherit.aes = FALSE,
+  style = wedge_styles
+)
+
 # cat(paste0(arc_styles, ' = ', arc_styles, collapse = ",\n"))
 
 arc_props <- list(
@@ -31,6 +64,9 @@ arc_props <- list(
     end = new_property(class = class_angle_or_numeric, default = 0)
   ),
   styles = style@properties[arc_styles],
+  extra = list(
+    wedge = new_property(class = class_logical)
+  ),
   # derived ----
   derived = list(
     length = new_property(
@@ -55,6 +91,22 @@ arc_props <- list(
       self@end - self@start
     }),
     tibble = new_property(getter = function(self) {
+      if (self@wedge) {
+        d <- list(
+          x0 = self@center@x,
+          y0 = self@center@y,
+          r = self@radius,
+          start = c(self@start) * 2 * pi,
+          end = c(self@end) * 2 * pi,
+          alpha = self@alpha,
+          color = self@color,
+          fill = self@fill,
+          linewidth = self@linewidth,
+          linetype = self@linetype,
+          n = self@n
+        )
+
+      } else {
       d <- list(
         x0 = self@center@x,
         y0 = self@center@y,
@@ -82,6 +134,7 @@ arc_props <- list(
         stroke_color = self@stroke_color,
         stroke_width = self@stroke_width
       )
+      }
       get_non_empty_tibble(d)
     })
   ),
@@ -170,7 +223,8 @@ arc_props <- list(
           "y0",
           "r",
           "start",
-          "end"),
+          "end",
+          "label"),
         inherit.aes = FALSE,
         style = arc_styles
       )
@@ -186,8 +240,10 @@ arc_props <- list(
 #' @param radius distance between center and edge arc (default = 1)
 #' @param start start angle (default = 0 degrees)
 #' @param end end angle (default = 0 degrees)
+#' @param label A character, angle, or label object
 #' @param theta interior angle (end - start)
 #' @param n number of points in arc (default = 360)
+#' @param length The number of arcs in the arc object
 #' @param style a style object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object if style is empty
 #' @examples
@@ -201,6 +257,7 @@ arc <- new_class(
   properties = rlang::inject(
     list(
       !!!arc_props$primary,
+      !!!arc_props$extra,
       !!!arc_props$styles,
       !!!arc_props$derived,
       !!!arc_props$funs,
@@ -215,6 +272,7 @@ arc <- new_class(
                          start_point = class_missing,
                          end_point = class_missing,
                          n = 360,
+                         wedge = FALSE,
                          alpha = class_missing,
                          arrow_head = class_missing,
                          arrow_fins = class_missing,
@@ -316,8 +374,15 @@ arc <- new_class(
       if (all(label@p@x == 0) && all(label@p@y == 0)) {
         m <- start + ((end - start) * label@position)
         label@p <- center + polar(theta = m, r = radius)
-        label@hjust <- polar2just(m, 1.4, axis = "h")
-        label@vjust <- polar2just(m, 1.4, axis = "v")
+        if (all(length(label@hjust) == 0)) {
+          label@hjust <- polar2just(m, 1.4, axis = "h")
+        }
+
+        if (all(length(label@vjust) == 0)) {
+          label@vjust <- polar2just(m, 1.4, axis = "v")
+        }
+
+
 
       }
 
@@ -351,6 +416,7 @@ arc <- new_class(
       radius = d$radius,
       start = start,
       end = end,
+      wedge = wedge,
       alpha = d[["alpha"]] %||% alpha,
       arrow_head = d[["arrow_head"]] %||% arrow_head,
       arrow_fins = d[["arrow_fins"]] %||% arrow_fins,
@@ -380,7 +446,7 @@ method(str, arc) <- function(
   object,
   nest.lev = 0,
   additional = FALSE,
-  omit = omit_props(object, include = c("center","radius", "start", "end"))) {
+  omit = omit_props(object, include = c("center","radius", "start", "end", "theta"))) {
 str_properties(object,
                    omit = omit,
                    nest.lev = nest.lev)
@@ -393,28 +459,46 @@ method(as.geom, arc) <- function(x, ...) {
     d <- dplyr::rename(d, length = arrowhead_length)
   }
 
- d <- d %>%
-  dplyr::mutate(group = factor(dplyr::row_number())) %>%
-  dplyr::mutate(xy = purrr::pmap(list(x0, y0, r, start, end, n), \(X0, Y0, R, START, END, N) {
+  d <- d %>%
+    dplyr::mutate(group = factor(dplyr::row_number())) %>%
+    dplyr::mutate(xy = purrr::pmap(list(x0, y0, r, start, end, n),
+                                   \(X0, Y0, R, START, END, N) {
     THETA <- seq(c(START), c(END), length.out = N)
-    tibble::tibble(
+    dd <- tibble::tibble(
       x = X0 + cos(THETA) * R,
       y = Y0 + sin(THETA) * R
     )
+
+    if (x@wedge) {
+      dd <- dplyr::bind_rows(
+        dd,
+        tibble(x = X0,
+               y = Y0)
+      )
+
+    }
+    dd
   })) %>%
   tidyr::unnest(xy) %>%
   dplyr::select(-c(x0, y0, r, start, end, n))
 
 overrides <- get_non_empty_props(style(...))
-  if (!("arrow_head" %in% c(colnames(d), names(overrides)))) {
-    overrides$arrow_head <- ggarrow::arrow_head_minimal(90)
+
+  if (all(x@wedge == TRUE)) {
+    arc_aesthetics <- wedge_aesthetics
+  } else {
+    if (!("arrow_head" %in% c(colnames(d), names(overrides)))) {
+      overrides$arrow_head <- ggarrow::arrow_head_minimal(90)
+    }
+    arc_aesthetics <- x@aesthetics
   }
+
 
 
   gc <- make_geom_helper(
     d = d,
     user_overrides = overrides,
-    aesthetics = x@aesthetics)
+    aesthetics = arc_aesthetics)
 
   if (S7_inherits(x@label, label)) {
     gl <- as.geom(x@label)

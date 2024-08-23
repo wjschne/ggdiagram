@@ -129,7 +129,38 @@ c_gg <- function(...) {
   class_shape_list(sl)
 }
 
+
+
 # generics ----
+
+#' bind method
+#' @param x list of objects to bind
+#' @export
+bind <- new_generic(name = "bind", dispatch_args = "x")
+
+method(bind, class_list) <- function(x) {
+  .f <- S7_class(x[[1]])@name
+  allsame <- allsameclass(x, .f)
+  if (length(allsame) > 0) stop(allsame)
+  d <- get_non_empty_list(dplyr::bind_rows(purrr::map(x, \(o) o@tibble)))
+  .fn <- switch(.f,
+                arc = arc,
+                bzcurve = bzcurve,
+                circle = circle,
+                ellipse = ellipse,
+                label= label,
+                line = line,
+                point = point,
+                rectangle = rectangle,
+                segment = segment,
+                style = style)
+  rlang::inject(.fn(!!!d))
+
+
+
+}
+
+
 
 # str ----
 #' structure
@@ -791,12 +822,12 @@ method(justify, list(class_numeric, class_numeric)) <- function(x,y) {
 
 
 
-#' Arrow path from one shape to another
+#' Arrow connect one shape to another
 #'
 #' @param x first shape (e.g., point, circle, ellipse, rectangle)
 #' @param y second shape
 #' @export
-path <- new_generic("path", c("x", "y"))
+connect <- new_generic("connect", c("x", "y"))
 
 #' Place an object a specified distance from another object
 #'

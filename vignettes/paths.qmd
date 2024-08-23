@@ -1,0 +1,170 @@
+---
+title: "Paths"
+format: 
+  html:
+    toc: true
+    html-math-method: katex
+vignette: >
+  %\VignetteIndexEntry{points}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r presetup, include = FALSE}
+library(ggdiagram)
+library(ggplot2)
+library(dplyr)
+library(ggtext)
+library(ggarrow)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  dev = "ragg_png",
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 7
+)
+
+```
+
+# Setup
+
+```{r setup}
+library(ggdiagram)
+library(ggplot2)
+library(dplyr)
+library(ggtext)
+library(ggarrow)
+library(geomtextpath)
+
+
+```
+
+# Base Plot
+
+
+## Base plot
+
+To avoid repetitive code, we make a base plot:
+
+```{r baseplot}
+my_font <- "Roboto Condensed"
+my_text_size <- 20
+my_point_size <- 2.5
+my_arrowhead <- arrowheadr::arrow_head_deltoid(2.1)
+# my_colors <- viridis::viridis(2, begin = .25, end = .5)
+my_colors <- c("#3B528B", "#21908C")
+update_geom_defaults(geom = "richtext", 
+                     new = list(family = my_font, 
+                                size = .8 * my_text_size / ggplot2::.pt))
+
+update_geom_defaults(geom = "labelpath", 
+                     new = list(family = my_font,
+                                size = .8 * my_text_size / ggplot2::.pt))
+
+update_geom_defaults("point", list(size = my_point_size))
+update_geom_defaults("arrow_segment", list(length_head = 5))
+update_geom_defaults("arrow", list(linewidth = 2))
+
+theme_set(
+  theme_minimal(
+    base_size = my_text_size, 
+    base_family = my_font) +
+    theme(axis.title.y = element_text(angle = 0, vjust = 0.5)))
+
+
+geomtextpath::geomlabel
+
+bp <- ggplot() +
+  coord_equal() +
+  scale_x_continuous(labels = WJSmisc::signs_centered, limits = c(-4, 4)) +
+  scale_y_continuous(labels = signs::signs, limits = c(-4, 4)) +
+  theme_minimal(base_size = 16) +
+  theme(
+    axis.title.x =  element_text(face = "italic"),
+    axis.title.y = element_text(
+      face = "italic",
+      angle = 0,
+      hjust = .5,
+      vjust = .5
+    )
+  )
+```
+
+# Paths
+
+The `path` function creates an object that connects points along a path.
+
+```{r fig-path}
+#| fig-cap: Plotting a path.
+p <- point(c(-4,-3,4), c(0,-2, 0), color = "dodgerblue")
+bp + 
+  path(p) +
+  p
+```
+
+
+# Path Labels
+
+The label of a path is created with `geomtextpath::geom_labelpath`, and thus will curve if the path is curved.
+
+
+```{r fig-pathlabel}
+#| fig-cap: A path with a curved label
+p_curve <- tibble(x = seq(-4, 4, .1), 
+                  y = (pnorm(x) * 8 - 4)) |>
+  point()
+
+
+
+bp +
+  path(
+    p = p_curve,
+    label = label(
+      "A path label will curve along the path.",
+      vjust = -.1,
+      size = 20,
+      color = "dodgerblue4"
+    ),
+    arrowhead_length = 8,
+    arrow_head = my_arrowhead
+  )
+
+
+```
+
+You can control the position of the path label with either the label's `position` or `hjust` properties. 
+
+```{r fig-labelposition}
+#| fig-cap: A path with a curved label at position .1
+bp +
+  path(
+    p = p_curve,
+    label = label(
+      "A path label will curve along the path.",
+      vjust = -.1,
+      size = 20,
+      color = "dodgerblue4",
+      position = .1
+    ),
+    arrowhead_length = 8,
+    arrow_head = my_arrowhead
+  )
+```
+
+
+# Multiple paths
+
+To create multiple paths at once, specify a list or vector of point objects.
+
+```{r fig-multiplepath}
+#| fig-cap: Multiple paths
+bp +
+  path(c(p_curve, 
+         p_curve * .5 + point(2,-2),
+         p_curve * .5 + point(-2,2)), 
+       color = c("orchid4",
+                 "dodgerblue3",
+                 "firebrick4"),
+       label = c(".52", ".42", ".61"))
+```
+

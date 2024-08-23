@@ -3,6 +3,36 @@ lb_styles <- c("alpha", "angle", "color", "family","fill","fontface",
                "label.r","label.size","lineheight","nudge_x","nudge_y",
                "polar_just","size","text.color","vjust")
 
+gtextcurve_aes <- class_aesthetics_list(
+  geom = purrr::partial(geomtextpath::geom_labelpath,rich = TRUE, arrow = NULL, text_only = TRUE),
+  mappable_bare = c(
+    "family",
+    "fontface",
+    "group",
+    "hjust",
+    "vjust",
+    "lineheight",
+    "spacing"),
+  mappable_identity = c(
+    "color",
+    "fill",
+    "size",
+    "alpha",
+    "textcolour",
+    "boxcolour",
+    "boxlinewidth"
+  ),
+  not_mappable = c(
+    "halign",
+    "label.padding",
+    "label.r"
+  ),
+  required_aes = c("x", "y", "label"),
+  omit_names = c("position"),
+  inherit.aes = FALSE,
+  style = lb_styles
+)
+
 lb_props <- list(
   # primary ----
   primary = list(

@@ -135,12 +135,6 @@ sg_props <- list(
         \(x = 0, y = 0) nudge(self, x, y)
       }
     )
-    # arrow_segment = new_property(
-    #   class_function,
-    #   getter = function(self) {
-    #     purrr::partial(arrow_segment, p1 = self, p2 = class_missing)
-    #   }
-    # )
   ),
   # info ----
   info = list(
@@ -477,4 +471,15 @@ method(nudge, list(segment, segment, class_missing)) <- function(object, x, y) {
 }
 
 
+method(`[`, segment) <- function(x, y) {
+  d <- x@tibble[y,]
+  p1 <- point(d$x, d$y)
+  p2 <- point(d$xend, d$yend)
+  d <- as.list(d |> dplyr::select(-x, -y, -xend, -yend))
+  rlang::inject(segment(p1 = p1, p2 = p2, !!!d))
+}
 
+
+method(`==`, list(segment, segment)) <- function(e1, e2) {
+  (e1@p1 == e2@p1) & (e1@p2 == e2@p2)
+}

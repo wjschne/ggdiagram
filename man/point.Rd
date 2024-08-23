@@ -31,11 +31,11 @@ polar(
 )
 }
 \arguments{
-\item{x}{Coordinate on the x-axis}
+\item{x}{Vector of coordinates on the x-axis (also can take a tibble/data.frame or 2-column matrix as input.)}
 
-\item{y}{Coordinate on the y-axis}
+\item{y}{Vector of coordinates on the y-axis}
 
-\item{style}{a style object}
+\item{style}{Gets and sets the styles associated with points}
 
 \item{...}{properties passed to style}
 
@@ -43,10 +43,18 @@ polar(
 
 \item{r}{Radius = Distance from the origin to the point}
 
-\item{n}{the length of the point object}
+\item{auto_label}{Gets x and y coordinates and makes a label \code{"(x,y)"}}
+
+\item{length}{The number of points in the point object}
+
+\item{tibble}{Gets a tibble (data.frame) containing parameters and styles used by \code{ggplot2::geom_point}.}
+
+\item{xy}{Gets a 2-column matrix of the x and y coordinates of the point object.}
+
+\item{geom}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggplot2::geom_point}.}
 }
 \description{
-Points are specified with x and y coordinates.# Polar class ----
+Points are specified with x and y coordinates.
 
 Polar points are ordinary points but are specified with an angle (theta) and a radial distance (r)
 }
