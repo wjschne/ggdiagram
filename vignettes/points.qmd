@@ -115,10 +115,10 @@ ggplot() +
            polar_just = polar(p2@theta, r = 1.5)) +
   segment(p1 = point(), 
           p2 = p2, 
-          label = "*r* = " + round(p2@r, 2)) + 
+          label = paste0("*r* = ", round(p2@r, 2))) + 
   arc(end = p2@theta, 
       color = "royalblue3", 
-      label = "&theta; = " + degree(p2@theta)) 
+      label = paste0("&theta; = ", degree(p2@theta)))
 ```
 
 
@@ -283,12 +283,11 @@ bp +
 
 The `as.geom` function is called implicitly whenever a point object is added to a ggplot.
 
-```{r}
+```{r fig-pts}
 pts <- point(x = c(3,2), 
              y = c(4,3), 
              color = c("red", "blue"),
              size = c(3, 6))
-
 
 ggplot() + 
   pts
@@ -296,14 +295,14 @@ ggplot() +
 
 This is equivalent to 
 
-```{r}
+```{r fig-asgeom}
 ggplot() +
   as.geom(pts)
 ```
 
 And this is equivalent to 
 
-```{r}
+```{r fig-geompoint}
 ggplot() +
   geom_point(
     aes(
@@ -318,7 +317,7 @@ That is, any style information that can be mapped will be handled via the `I` (i
 
 Calling the `as.geom` function directly is useful for overriding any style information in the points. 
 
-```{r}
+```{r fig-yellowtriangle}
 ggplot() + 
   as.geom(pts, 
           stroke = 1.5,
@@ -328,7 +327,7 @@ ggplot() +
 
 This is equivalent to 
 
-```{r}
+```{r fig-yellowtriangle_geom}
 ggplot() +
   geom_point(
     aes(x = x, 

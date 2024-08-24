@@ -53,7 +53,7 @@ bz_props <- list(
         pr <- purrr::map(bz_styles,
                          prop,
                          object = self
-        ) %>%
+        ) |>
           `names<-`(bz_styles)
         rlang::inject(style(!!!get_non_empty_list(pr)))
       },

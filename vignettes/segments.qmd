@@ -130,7 +130,7 @@ A "pipe-friendly" way to modify any ggdiagram object is to use S7's `set_props` 
 
 ```{r setprops}
 bp +
-  s1 %>% 
+  s1 |>
     set_props(color = "red") 
 ```
 
@@ -172,7 +172,7 @@ bp +
     polar_just = polar(s1@line@angle + degree(90), 1.5), 
     plot_point = TRUE) +
   label(c(equation(s1@line), 
-          "Distance = " + round(s1@distance, 2)), 
+          paste0("Distance = ", round(s1@distance, 2))), 
         p = midpoint(s1), 
         vjust = c(-.2, 1.1), 
         angle = s1@line@angle)

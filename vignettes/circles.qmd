@@ -115,7 +115,7 @@ bp +
     c1@center,
     c1@point_at(0),
     color = my_colors[1],
-    label = label("*r* = "+c1@radius, angle = 0)
+    label = label(paste0("*r* = ", c1@radius), angle = 0, vjust = 0)
   )
 
 ```
@@ -124,7 +124,6 @@ bp +
 ## Point on the circle at a specific angle
 
 ```{r ptheta}
-
 c1@point_at(degree(60))
 ```
 
@@ -132,7 +131,6 @@ c1@point_at(degree(60))
 ```{r fig-ptheta}
 #| fig-cap: Point on ellipse that is 45&deg; from the x-axis.
 #| code-fold: true
-
 deg <- degree(60)
 
 bp + 
@@ -177,7 +175,10 @@ bp +
   {c3 <- circle(point(0, 0), radius = 1)} + 
   place(circle(radius = .5), 
         from = c3, 
-        where = c("northwest", "northeast", "south-southeast", "south-southwest"), 
+        where = c("northwest", 
+                  "northeast", 
+                  "south-southeast", 
+                  "south-southwest"), 
         sep = 1)
 ```
 
@@ -187,7 +188,10 @@ Or with numbers (degrees):
 #| fig-cap: Place mutliple circles using degrees
 bp + 
   c3 + 
-  place(circle(radius = .5), c3, where = c(0, 30, -30), sep = 1)
+  place(circle(radius = .5), 
+        from = c3, 
+        where = c(0, 30, -30), 
+        sep = 1)
 ```
 
 With styles:
@@ -195,17 +199,18 @@ With styles:
 ```{r fig-style}
 #| fig-cap: Place mutliple circles with styling
 bp +
-  {c3 <- circle(
-      point(0, 0),
+  {c4 <- circle(
       radius = 1,
       color = NA,
       fill = "gray35")} +
   place(
     circle(
       color = NA,
-      fill = class_color(viridis::viridis(6, option = "D"))@lighten(.7)@color
+      fill = class_color(viridis::viridis(
+        n = 6, 
+        option = "D"))@lighten(.7)@color
     ),
-    from = c3,
+    from = c4,
     where = degree(seq(0, 300, 60)),
     sep = 1
   ) 
@@ -216,16 +221,16 @@ bp +
 This works the same as placing circles next to each other. Here we create a point in the center, place six circles around it, and then place 12 points around each circle.
 
 ```{r fig-multimulti}
-#| Place circles around a point, and points around each circle
+#| fig-cap: Place circles around a point, and points around each circle
 bp + 
   {p1 <- point(0,0)} +
-  {c1 <- place(x = circle(radius = .5, 
+  {c6 <- place(x = circle(radius = .5, 
                           fill = viridis::viridis(6), 
                           color = NA), 
         from = p1, 
         where = degree(seq(0,300,60)), 
         sep = 2)} +
-  purrr::map(as.list(c1), 
+  purrr::map(as.list(c6), 
              \(x) point(color = x@fill) |> 
                place(from = x, 
                      where = degree(seq(0, 330, 30)), 
@@ -241,8 +246,8 @@ bp +
 ```{r fig-linecircle}
 #| fig-cap: Placing a line one unit northeast of a circle
 bp +
-  {c1 <- circle()} +
-  place(line(), c1, where = degree(45), sep = 1)
+  {c7 <- circle()} +
+  place(line(), c7, where = degree(45), sep = 1)
 ```
 
 

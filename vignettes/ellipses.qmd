@@ -7,6 +7,7 @@ knitr:
 format: 
   html:
     toc: true
+    html-math-method: katex
 vignette: >
   %\VignetteIndexEntry{angles}
   %\VignetteEngine{quarto::html}
@@ -106,11 +107,15 @@ e1 <- ellipse(c1, a = a, b = b)
 ```{r fig-abellipse}
 #| fig-cap: An ellipse can be specified with a center, and semi-major radii.
 #| code-fold: true
- 
-
 bp + 
   e1 + 
-  segment(c1, point(c(a, 0), c(0, b)), color = my_colors, label = label(label = c("*a* = " + a, "*b* = " + b), angle = 0)) +
+  segment(c1, 
+          point(c(a, 0), c(0, b)), 
+          color = my_colors, 
+          label = label(
+            label = paste0(c("*a* = ", "*b* = "), 
+                           c(a, b)), 
+            angle = 0)) +
   c1
 ```
 
@@ -118,32 +123,40 @@ bp +
 
 A circle has one focus, the center. If *a* &ne; *b*, an ellipse has two foci. 
 
-```{r}
+```{r fig-foci}
+#| fig-cap: An ellipse has two foci
 bp + 
   e1 + 
-  label("*F*~1~", e1@focus_1, plot_point = T, vjust = 1.1) +
-  label("*F*~2~", e1@focus_2, plot_point = T, vjust = 1.1)
+  label("*F*~1~", e1@focus_1, plot_point = T, vjust = 1.2) +
+  label("*F*~2~", e1@focus_2, plot_point = T, vjust = 1.2)
 ```
 
 
 For any point *P* on the ellipse, the sum of PF~1~ and PF~2~ is 2*a* if *a* > *b* and 2*b* if *b* > *a*.
 
-```{r}
+```{r fig-focilength}
+#| fig-cap: The sum of distances from the foci is constant.
 deg <- degree(61.5)
 
 bp + 
   e1 + 
-  label("*F*~1~", e1@focus_1, plot_point = T, vjust = 1.1) +
-  label("*F*~2~", e1@focus_2, plot_point = T, vjust = 1.1) + 
+  label("*F*~1~", e1@focus_1, plot_point = T, vjust = 1.2) +
+  label("*F*~2~", e1@focus_2, plot_point = T, vjust = 1.2) + 
   {P <- e1@point_at(deg)} +
   P@label("*P*", polar_just = polar(deg, 1.5)) +
   segment(e1@focus_1, 
           P, 
-          label = "*PF*~1~ = " + distance(e1@focus_1, P) |> scales::number(.01)) + 
+          label = paste0("*PF*~1~ = ",
+                         distance(e1@focus_1, P) |>
+                           round())) + 
   segment(P, 
           e1@focus_2, 
-          label = "*PF*~2~ = " + distance(e1@focus_2, P) |> scales::number(.01)) + 
-  label("*PF*~1~ + *PF*~2~ = 2*a* = 8", p = point(0,4), size = 20)
+          label = paste0("*PF*~2~ = ",
+                         distance(e1@focus_2, P) |> 
+                           round())) + 
+  label("*PF*~1~ + *PF*~2~ = 2*a* = 8", 
+        p = point(0,4), 
+        size = 20)
 
 ```
 
@@ -152,8 +165,7 @@ bp +
 ## Point on the ellipse at a specific angle
 
 ```{r ptheta}
-
-e1@point_at(degree(45))
+e1@point_at(degree(60))
 ```
 
 
@@ -165,7 +177,7 @@ deg <- degree(60)
 bp +
   e1 +
   {p45 <- e1@point_at(deg)} +
-  p45@label(hjust = 0, vjust = 0) +
+  p45@label(polar_just = polar(deg, 1.5)) +
   segment(e1@center, p45) +
   arc(
     center = e1@center,
@@ -190,19 +202,23 @@ $$
 
 *m*~2~ is set equal to *m*~1~ unless otherwise specified.
 
-If *m*~1~ is 3, and *a* and *b* are equal, we can make a *squircle*, which is a square-ish circle.
+If *m*~1~ is 4, and *a* and *b* are equal, we can make a *squircle*, which is a square-ish circle.
 
 
-```{r}
-bp + ellipse(point(0,0), a = 3, b = 3, m1 = 3)
+```{r fig-squircle}
+#| fig-cap: A squircle 
+bp + 
+  ellipse(a = 3, 
+          b = 3, 
+          m1 = 4)
 ```
 
 If we increase *m*~1~ to a high value like 10, we can a rectangle with pleasingly rounded corners.
 
-```{r}
+```{r fig-myvariable}
+#| fig-cap: A superellipse can look like a rectangle with rounded corners.
 bp +
   ellipse(
-    point(0, 0),
     a = 3,
     b = 3,
     m1 = 10,
@@ -218,47 +234,37 @@ bp +
   
 ```
 
+# Connection Paths Among Ellipses
 
-```{r}
-deg <- "north-northeast"
-bp + 
-  {e2 <- ellipse(point(0,0), 
-          a = 3, 
-          b = 3, 
-          m1 = 10)} +
-  {p1 <- e2@point_at(degree(deg))} + 
-  segment(e2@center, p1) + 
-  arc(end = degree(deg))
-  
-
-```
-
-# Paths Among Ellipses
-
-```{r}
+```{r fig-connectellipse}
+#| fig-cap: Connections between ellipses
 bp + 
   {e1 <- ellipse(point(-2,0), a = 2)} +
   {e2 <- ellipse(point(3,2), b = 2)} +
-  path(e1, e2, resect = 2)
+  connect(e1, e2, resect = 2)
 ```
 
 
 # Placing Ellipses
 
-# Placing Ellipses Next to Ellipses
-
 The `place` function will set an object at a position and distance from another object. Here we set an ellipse to the the right of `e1` (i.e., "east" or 0 degrees) with a separation of 2.
 
-```{r}
+```{r fig-placeellipse}
+#| fig-cap: Place an ellipse 2 units to the right of another ellipse.
 bp + 
-  {e1 <- ellipse(point(-2, 0), a = 2)} +
-  place(ellipse(b = 2), from = e1, where = "right", sep = 2)
+  {e1 <- ellipse(center = point(-2, 0), 
+                 a = 2)} +
+  place(ellipse(b = 2), 
+        from = e1, 
+        where = "right", 
+        sep = 2)
 ```
 
 
 The `sep` parameter in the `place` function is not necessarily the shortest distance between ellipses. Instead, it is the distance between the ellipses on the segment connecting the center points. 
 
-```{r}
+```{r fig-placedistance}
+#| fig-cap: The separation distance between ellipses is along the path that connects their centers.
 deg <- degree(30)
 
 bp + 
@@ -271,7 +277,7 @@ bp +
                from = e1, 
                where = deg, 
                sep = 2)} + 
-  path(e1, e2, 
+  connect(e1, e2, 
        arrow_head = ggarrow::arrow_head_minimal(), 
        linetype = "dashed", 
        label = label(2, vjust = 0)) +
@@ -283,31 +289,67 @@ bp +
 
 ```
 
-You can place many ellipses at once
+You can place many ellipses at once. In @fig-manyconnections, 12 ellipses are placed around the central ellipse. Connection paths are then drawn to each ellipse.
 
-```{r}
+```{r fig-manyconnections}
+#| fig-cap: Many ellipses can be placed at once.
+
+# Number of ellipses
+k <- 12
+
+# Colors
+e_fills <- hsv(h = seq(0, 1 - 1 / k, length.out = k), 
+               s = .4, 
+               v = .6)
+
 bp + 
-  {e1 <- ellipse(point(0,0), m1 = 4, label = label("*e*~0~", size = 40))} + 
-  {e2 <- place(
-    x = ellipse(a = .4, b = .4, m1 = 4, label = "*e*~" + 1:12 + "~"),
-    from = e1,
-    where = degree(seq(0, 330, 30)),
+  {e_0 <- ellipse(m1 = 6, 
+                 label = label("*e*~0~", 
+                               size = 40, 
+                               color = "white", 
+                               fill = "gray20"),
+                 color = NA,
+                 fill = "gray20")} + 
+  {e_x <- place(
+    x = ellipse(a = .4, 
+                b = .4, 
+                m1 = 6, 
+                label = label(paste0("*e*~", seq(k), "~"), 
+                              color = "white", 
+                              fill = e_fills),
+                color = NA,
+                fill = e_fills),
+    from = e_0,
+    where = degree(seq(0, 360 - 360 / k, 360 / k)),
     sep = 2
   )} +
-  path(e1, e2, resect = 2)
+  connect(e_0, 
+          e_x, 
+          resect = 2, 
+          color = e_fills) + 
+  theme_void()
 ```
 
-```{r}
-bp + 
-  {e1 <- ellipse(point(-3,2), b = 2)} + 
-  {p1 <- place(point(), e1, degree(-30), sep  = 2)} + 
-  place(ellipse(b = 2), p1, degree(30), sep = 2)
-```
+Lines can be placed in relation to ellipses:
 
-```{r}
+```{r fig-placeline}
+#| fig-cap: A line placed 3 units and 45 degrees from a squircle.
 bp + 
-  {e1 <- ellipse(m1 = 5)} +
-  place(x = line(), from = e1, where = degree(45), sep = 2)
-  
+  {e1 <- ellipse(m1 = 4)} +
+  {l1 <- place(x = line(), 
+               from = e1, 
+               where = {deg1 <- degree(45)}, 
+               sep = {d = 3})} + 
+  connect(e1, l1, 
+          label = paste0("Distance = ", d),           
+          arrow_fins = arrowheadr::arrow_head_deltoid(), 
+          length_fins = 8, 
+          length_head = 8, 
+          resect = 1) + 
+  label(label = l1@equation, 
+        p = polar(theta = deg1, 
+                  r = e1@point_at(deg1)@r + d), 
+        angle = l1@angle, 
+        vjust = 0)
 ```
 

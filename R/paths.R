@@ -50,7 +50,7 @@ path_props <- list(
         pr <- purrr::map(path_styles,
                          prop,
                          object = self
-        ) %>%
+        ) |>
           `names<-`(path_styles)
         rlang::inject(style(!!!get_non_empty_list(pr)))
       },

@@ -173,9 +173,11 @@ arc_labels <- as.character(end_angles - start_angles)
 mycolors <- c("firebrick4", "royalblue3", "orchid4")
 
 
-arc_labels[3] <- arc_labels[1] + 
-  " + " + arc_labels[2] + 
-  " = " + arc_labels[3]
+arc_labels[3] <- paste0(arc_labels[1],
+                        " + ", 
+                        arc_labels[2],
+                        " = ", 
+                        arc_labels[3])
 
 arcs <- arc(radius = r, 
       start = start_angles, 
@@ -354,7 +356,10 @@ ggplot() +
   segment(
     polar(theta = 0, r = cos(theta)),
     p,
-    label = "sin(" + theta + ") = " + round(sin(theta), 2),
+    label = paste0("sin(", 
+                   theta,  
+                   ") = ", 
+                   round(sin(theta), 2)),
     color = my_colors[1],
     linewidth = .5
   ) +
@@ -362,7 +367,12 @@ ggplot() +
   segment(
     point(0, sin(theta)),
     point(cos(theta), sin(theta)),
-    label = label("cos(" + theta + ") = " + round(cos(theta), 2), vjust = 1),
+    label = label(
+      paste0(
+        "cos(",
+        theta,
+        ") = ",
+        round(cos(theta), 2)), vjust = 1),
     color = my_colors[2],
     linewidth = .5
   ) +
@@ -370,7 +380,11 @@ ggplot() +
   segment(
     p,
     p + polar(theta - 90, r = tan(theta)),
-    label = "tan(" + theta + ") = " + round(tan(theta), 2),
+    label = paste0(
+      "tan(",
+      theta,
+      ") = ",
+      round(tan(theta), 2)),
     color = my_colors[3],
     linewidth = .5
   ) +
@@ -379,7 +393,11 @@ ggplot() +
     o,
     point(1 / cos(theta)),
     label = label(
-      label = "sec(" + theta + ") = " + round(1 / cos(theta), 2),
+      label = paste0(
+        "sec(",
+        theta,
+        ") = ",
+        round(1 / cos(theta), 2)),
       vjust = 1
     ),
     color = my_colors[5]
@@ -388,7 +406,11 @@ ggplot() +
   segment(
     p + polar(theta + 90, r = 1 / tan(theta)),
     p,
-    label = "cot(" + theta + ") = " + round(1 / tan(theta), 2),
+    label = paste0(
+      "cot(",
+      theta,
+      ") = ",
+      round(1 / tan(theta), 2)),
     color = my_colors[4],
     linewidth = .5
   ) +
@@ -396,7 +418,11 @@ ggplot() +
   segment(
     o,
     point(0, 1 / sin(theta)),
-    label = "csc(" + theta + ") = " + round(1 / sin(theta), 2),
+    label = paste0(
+      "csc(",
+      theta,
+      ") = ",
+      round(1 / sin(theta), 2)),
     color = my_colors[6]
   ) 
    

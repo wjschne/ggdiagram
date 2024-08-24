@@ -19,7 +19,7 @@ test_that("equality", {
   tidyr::crossing(tibble::tibble(
     .f = list(degree, radian, turn),
     ratio = c(360, 2 * pi, 1)),
-    .g = list(`>`, `<`, `<=`, `>=`, `==`, `!=`)) %>%
+    .g = list(`>`, `<`, `<=`, `>=`, `==`, `!=`)) |>
     dplyr::mutate(t1 = .2,
                   t2 = .3,
                   a1 = purrr::map2(.f, t1, \(f,t) f(t)),
@@ -29,9 +29,9 @@ test_that("equality", {
                   ta = purrr::pmap_lgl(list(.g, a1,a2), \(g, aa1, aa2) g(aa1,aa2)),
                   tn = purrr::pmap_lgl(list(.g, n1,n2), \(g, aa1, aa2) g(aa1,aa2)),
                   test = ta == tn
-                  ) %>%
-    dplyr::pull(test) %>%
-    all() %>%
+                  ) |>
+    dplyr::pull(test) |>
+    all() |>
     expect_true()
 })
 
@@ -292,15 +292,4 @@ test_that("inside", {
 
 
 })
-
-
-
-
-test_that("string concatenation", {
-  expect_equal("a" + "b", "ab")
-  expect_equal(2 + "b", "2b")
-  expect_equal("a" + 2, "a2")
-  expect_equal(2 + 2, 4)
-})
-
 

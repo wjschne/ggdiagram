@@ -79,7 +79,7 @@ arc_props <- list(
         pr <- purrr::map(arc_styles,
           prop,
           object = self
-        ) %>%
+        ) |>
           `names<-`(arc_styles)
         rlang::inject(style(!!!get_non_empty_list(pr)))
       },
@@ -459,8 +459,8 @@ method(as.geom, arc) <- function(x, ...) {
     d <- dplyr::rename(d, length = arrowhead_length)
   }
 
-  d <- d %>%
-    dplyr::mutate(group = factor(dplyr::row_number())) %>%
+  d <- d |>
+    dplyr::mutate(group = factor(dplyr::row_number())) |>
     dplyr::mutate(xy = purrr::pmap(list(x0, y0, r, start, end, n),
                                    \(X0, Y0, R, START, END, N) {
     THETA <- seq(c(START), c(END), length.out = N)
@@ -478,8 +478,8 @@ method(as.geom, arc) <- function(x, ...) {
 
     }
     dd
-  })) %>%
-  tidyr::unnest(xy) %>%
+  })) |>
+  tidyr::unnest(xy) |>
   dplyr::select(-c(x0, y0, r, start, end, n))
 
 overrides <- get_non_empty_props(style(...))

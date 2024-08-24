@@ -178,9 +178,9 @@ line <- new_class(
     d_names <- colnames(d)
 
     if (all(c("a", "b", "c") %in% d_names)) {
-      check_ab0 <- d %>%
-        dplyr::mutate(ab0 = (a == 0) & (b == 0) & (c != 0)) %>%
-        dplyr::pull(ab0) %>%
+      check_ab0 <- d |>
+        dplyr::mutate(ab0 = (a == 0) & (b == 0) & (c != 0)) |>
+        dplyr::pull(ab0) |>
         any()
       if (check_ab0) stop("If a and b are 0, c must be 0.")
 
@@ -253,7 +253,7 @@ str_properties(object,
 }
 
 method(get_tibble, line) <- function(x) {
-  x@tibble %>%
+  x@tibble |>
     dplyr::mutate(geom = ifelse(is.infinite(slope), "v", "ab"))
 }
 
@@ -296,12 +296,12 @@ method(get_tibble_defaults, line) <- function(x) {
 
 method(as.geom, line) <- function(x, ...) {
   overrides <- get_non_empty_props(style(...))
-get_tibble_defaults(x) %>%
-  tidyr::nest(.by = geom, .key = "d") %>%
+get_tibble_defaults(x) |>
+  tidyr::nest(.by = geom, .key = "d") |>
   dplyr::mutate(a = ifelse(geom == "ab", c(abline_aesthetics_list), c(vline_aesthetics_list)),
                 output = purrr::map2(d,a,
                                      make_geom_helper,
-                                     user_overrides = overrides)) %>%
+                                     user_overrides = overrides)) |>
   dplyr::pull(output)
 }
 

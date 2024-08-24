@@ -166,17 +166,8 @@ method(bind, class_list) <- function(x) {
 #' structure
 #'
 #' @param object object
-#' @export
 #' @keywords internal
-str <- new_generic(name = "str", dispatch_args = "object")
-
-#' Addition
-#'
-#' @param e1 object
-#' @param e2 object
-#' @keywords internal
-#' @export
-`+` <- new_generic("+", c("e1", "e2"))
+str <- new_external_generic(package = "utils", name = "str", dispatch_args = "object")
 
 method(`+`, list(class_ggplot, has_style)) <- function(e1, e2) {
   e1 + as.geom(e2)
@@ -571,15 +562,15 @@ check_inconsistent <- function(object) {
   max_n <- max(prop_n)
   prop_inconsistent <- prop_n[!(prop_n %in% unique(c(0, 1, max_n)))]
   if (length(prop_inconsistent) > 0) {
-    msg <- tibble::enframe(prop_n[!(prop_n %in% unique(c(0, 1)))]) %>%
+    msg <- tibble::enframe(prop_n[!(prop_n %in% unique(c(0, 1)))]) |>
       dplyr::summarize(.by = value,
-                       name = paste0(name, collapse = ", ")) %>%
+                       name = paste0(name, collapse = ", ")) |>
       dplyr::mutate(v = paste0(
         "Size ",
         value,
         ": Properties: ",
-        name)) %>%
-      dplyr::pull(v) %>%
+        name)) |>
+      dplyr::pull(v) |>
       paste0(collapse = "\n")
     object_class <- .simpleCap(S7_class(object)@name)
 

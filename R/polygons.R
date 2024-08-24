@@ -81,7 +81,7 @@ pgon_props <- list(
         pr <- purrr::map(pgon_styles,
                          prop,
                          object = self
-        ) %>%
+        ) |>
           `names<-`(pgon_styles)
         rlang::inject(style(!!!get_non_empty_list(pr)))
       },

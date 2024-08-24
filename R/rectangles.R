@@ -99,7 +99,7 @@ rc_props <- list(
     style = new_property(
       getter = function(self) {
         pr <- purrr::map(rc_styles,
-                         prop, object = self) %>%
+                         prop, object = self) |>
           `names<-`(rc_styles)
         rlang::inject(style(!!!get_non_empty_list(pr)))
       },

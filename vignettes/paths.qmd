@@ -71,9 +71,6 @@ theme_set(
     base_family = my_font) +
     theme(axis.title.y = element_text(angle = 0, vjust = 0.5)))
 
-
-geomtextpath::geomlabel
-
 bp <- ggplot() +
   coord_equal() +
   scale_x_continuous(labels = WJSmisc::signs_centered, limits = c(-4, 4)) +

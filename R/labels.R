@@ -445,7 +445,7 @@ method(`[`, label) <- function(x, y) {
 }
 
 centerpoint_label <- function(label, center, d, shape_name = "shape", ...) {
-  if (is.character(label) || S7_inherits(label, class_angle)) {
+  if (is.character(label) || S7_inherits(label, class_angle) || is.numeric(label)) {
     label <- label(label = label, p = center, ...)
   }
 

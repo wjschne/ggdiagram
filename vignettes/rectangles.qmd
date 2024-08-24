@@ -141,7 +141,7 @@ rc_center <- c(
     vjust = -.15)))
 
 rc_width <- as.geom(s_north |> set_props(label = label(
-    label = "Width = " + r1@width,
+    label = paste0("Width = ", r1@width),
     p = midpoint(s_north),
     color = my_colors$secondary,
     vjust = 0,
@@ -150,7 +150,7 @@ rc_width <- as.geom(s_north |> set_props(label = label(
 
 rc_height <- as.geom(s_east |> 
                        set_props(label = label(
-    label = "Height = " + r1@height,
+    label = paste0("Height = ", r1@height),
     p  = midpoint(s_east),
     vjust = 0,
     color = my_colors$secondary,
@@ -429,6 +429,7 @@ r1@north
 #| fig-cap: The named points of a rectangle
 #| code-fold: true
 #| fig-height: 4.75
+#| message: false
 
 rc_plot +
   purrr::map(
@@ -518,7 +519,7 @@ r1@side@north
 #| code-fold: true
 #| fig-height: 4.75
 rc_plot + 
-  r1@side@north %>% 
+  r1@side@north |>
     set_props(color = my_colors$secondary@color, linewidth = 2) +
   r1@north@label(label = "North Side",
                  vjust = -.1, 

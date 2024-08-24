@@ -199,9 +199,10 @@ bp +
       p1 = l@projection(p),
       p2 = p,
       linetype = "dashed",
-      label = "Distance = "+ distance(l@projection(p), p) %>%
-        round(digits = 2) %>%
-        as.character())} + 
+      label = paste0("Distance = ", 
+                     distance(l@projection(p), p) |>
+                       round(digits = 2) |>
+                       as.character()))} + 
   s_projected@midpoint(c(0, 1))@label(
     polar_just = degree(s_projected@line@angle) + c(180, 0),
     plot_point = TRUE)  

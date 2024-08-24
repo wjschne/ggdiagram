@@ -35,7 +35,7 @@ pt_props <- list(
     style = new_property(
       getter = function(self) {
         pr <- purrr::map(pt_styles,
-                         prop, object = self) %>%
+                         prop, object = self) |>
           `names<-`(pt_styles)
         rlang::inject(style(!!!get_non_empty_list(pr)))
       },

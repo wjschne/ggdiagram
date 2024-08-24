@@ -106,10 +106,10 @@ bp +
     end = {ang_end <- degree(75)}
     )} +
   label(p = p1, 
-        label = "Center " + p1@auto_label, 
+        label = paste0("Center ", p1@auto_label), 
         vjust = 1, 
         plot_point = TRUE) + 
-  connect(p1, a1@midpoint(), label = "Radius = " + r) + 
+  connect(p1, a1@midpoint(), label = paste0("Radius = ", r)) + 
   label(label = ang_start, 
         p = a1@midpoint(0),
         polar_just = polar(ang_start + degree(-90), 1.3), 
