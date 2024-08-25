@@ -23,7 +23,15 @@ knitr::opts_chunk$set(
   fig.width = 7,
   fig.height = 7
 )
+
+
 my_font <- "Roboto Condensed"
+thematic::font_spec(my_font)
+
+
+
+
+
 update_geom_defaults("richtext",
                      list(family = my_font, 
                           fill = "white",
