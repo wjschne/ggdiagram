@@ -26,7 +26,7 @@ knitr::opts_chunk$set(
 
 
 my_font <- "Roboto Condensed"
-thematic::font_spec(my_font)
+thematic::font_spec(my_font, install = TRUE)
 
 
 
