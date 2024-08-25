@@ -34,7 +34,6 @@ Suggests:
     ragg,
     signs,
     spelling,
-    thematic,
     testthat (>= 3.0.0),
     tinter,
     viridis,

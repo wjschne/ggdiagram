@@ -26,11 +26,6 @@ knitr::opts_chunk$set(
 
 
 my_font <- "Roboto Condensed"
-thematic::font_spec(my_font, install = TRUE)
-
-
-
-
 
 update_geom_defaults("richtext",
                      list(family = my_font, 
