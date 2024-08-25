@@ -110,9 +110,9 @@ arc class
 
 \item{\code{geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggarrow::geom_arrow}.}
 
-\item{\code{point_at}}{A function that finds a point on the arc at the specified angle.}
-
 \item{\code{length}}{The number of arcs in the arc object}
+
+\item{\code{point_at}}{A function that finds a point on the arc at the specified angle.}
 
 \item{\code{tangent_at}}{A function that finds the tangent line at the specified angle.}
 
