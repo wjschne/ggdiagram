@@ -156,9 +156,14 @@ rc_props <- list(
 #' @param center point at center of the circle
 #' @param width width
 #' @param height height
-#' @param xy 2-column matrix of points
+#' @param northeast upper right point
+#' @param northwest upper left point
+#' @param southwest lower left point
+#' @param southeast lower right point
+#' @param label A character, angle, or label object
 #' @param style a style object
-#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object if style is empty
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object
+#' @inherit style params
 #' @examples
 #' # specify center point and radius
 #' p <- point(0,0)

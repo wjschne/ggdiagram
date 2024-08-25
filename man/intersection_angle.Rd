@@ -4,17 +4,12 @@
 \alias{intersection_angle}
 \title{Compute the angle of the intersection of two objects}
 \usage{
-intersection_angle(x, y, ...)
+intersection_angle(x, y)
 }
 \arguments{
 \item{x}{an object (point, segment, line)}
 
 \item{y}{an object (point, segment, line)}
-
-\item{degrees}{return angle in degrees if TRUE}
-}
-\value{
-an angle in radians
 }
 \description{
 Compute the angle of the intersection of two objects

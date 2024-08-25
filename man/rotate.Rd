@@ -11,7 +11,9 @@ rotate(x, theta, ..., origin = point(0, 0))
 
 \item{theta}{angle}
 
-\item{center}{length 2 vector  or point about which rotation occurs}
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
+
+\item{origin}{length 2 vector  or point about which rotation occurs}
 }
 \description{
 Rotate an object in 2 dimensions

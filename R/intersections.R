@@ -3,10 +3,8 @@
 #'
 #' @param x an object (point, segment, line)
 #' @param y an object (point, segment, line)
-#' @param degrees return angle in degrees if TRUE
-#' @return an angle in radians
 #' @export
-intersection_angle <- new_generic("intersection_angle", c("x", 'y'))
+intersection_angle <- new_generic("intersection_angle", c("x", 'y'), function(x,y) S7_dispatch())
 method(intersection_angle, list(line, line)) <- function(x, y) {
   y@angle - x@angle
 
@@ -35,9 +33,10 @@ method(intersection_angle, list(segment, line)) <- function(x, y) {
 #'
 #' @param x object
 #' @param y object
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @export
 intersection <- new_generic("intersection", c("x", "y"))
-method(intersection, list(line, line)) <- function(x,y) {
+method(intersection, list(line, line)) <- function(x,y, ...) {
   c_p <- x@a * y@b - y@a * x@b
   if (identical(TRUE, all.equal(c_p, 0))) {
     p <- list()
@@ -45,13 +44,13 @@ method(intersection, list(line, line)) <- function(x,y) {
     a_p <- (x@b * y@c - y@b * x@c)
     b_p <- (x@c * y@a - y@c * x@a)
 
-    p <- point(a_p / c_p, b_p / c_p)
+    p <- point(a_p / c_p, b_p / c_p, ...)
   }
   p
 }
-method(intersection, list(segment, segment)) <- function(x,y) {
+method(intersection, list(segment, segment)) <- function(x,y, ...) {
 
-  i_line <- intersection(x@line, y@line)
+  i_line <- intersection(x@line, y@line, ...)
   p <- list()
   if (length(i_line) > 0) {
     A <- t(rbind((x@p2 - x@p1)@xy,
@@ -67,15 +66,15 @@ method(intersection, list(segment, segment)) <- function(x,y) {
 
 
 
-method(intersection, list(line, segment)) <- function(x,y) {
-  intersection(intersection(x, y@line), y)
+method(intersection, list(line, segment)) <- function(x,y, ...) {
+  intersection(intersection(x, y@line), y, ...)
 }
 
-method(intersection, list(segment, line)) <- function(x,y) {
-  intersection(y, x)
+method(intersection, list(segment, line)) <- function(x,y, ...) {
+  intersection(y, x, ...)
 }
 
-method(intersection, list(line, circle)) <- function(x,y) {
+method(intersection, list(line, circle)) <- function(x,y, ...) {
   # https://cp-algorithms.com/geometry/circle-line-intersection.html
   c0 <- circle(center = point(0,0), radius = y@radius)
   A <- x@a
@@ -89,7 +88,7 @@ method(intersection, list(line, circle)) <- function(x,y) {
     p <- list()
   } else if (
     abs(C * C - y@radius * y@radius * A2B2) < 3 * .Machine$double.eps) {
-    p <- point(x0 , y0) + y@center
+    p <- y@center + point(x0 , y0, ...)
   } else {
     d <- y@radius * y@radius - C * C / A2B2
     m <- sqrt(d / A2B2)
@@ -97,18 +96,18 @@ method(intersection, list(line, circle)) <- function(x,y) {
     bx <- x0 - B * m
     ay <- y0 - A * m
     by <- y0 + A * m
-    p <- point(c(ax, bx), c(ay, by)) + y@center
+    p <- y@center + point(c(ax, bx), c(ay, by), ...)
   }
   p
 
 }
 
-method(intersection, list(circle, line)) <- function(x,y) {
-  intersection(y,x)
+method(intersection, list(circle, line)) <- function(x,y, ...) {
+  intersection(y,x, ...)
 }
 
 
-method(intersection, list(segment, circle)) <- function(x, y) {
+method(intersection, list(segment, circle)) <- function(x, y, ...) {
   # https://raw.org/book/computer-graphics/line-segment-ellipse-intersection/
 
   # A <- x@p1 - y@center
@@ -160,7 +159,7 @@ method(intersection, list(segment, circle)) <- function(x, y) {
   # P <- A + ((B - A) * tt)
   # y@center + P
 
-  p <- intersection(x@line, y)
+  p <- intersection(x@line, y, ...)
   betweenx <- .between(p@x, x@p1@x, x@p2@x)
 
   p[betweenx]
@@ -169,30 +168,33 @@ method(intersection, list(segment, circle)) <- function(x, y) {
 
 }
 
-method(intersection, list(circle, segment)) <- function(x,y) {
-  intersection(y, x)
+method(intersection, list(circle, segment)) <- function(x,y, ...) {
+  intersection(y, x, ...)
 }
 
 
-method(intersection, list(point, line)) <- function(x, y) {
+method(intersection, list(point, line)) <- function(x, y, ...) {
   if (identical(TRUE, all.equal(0, y@a * x@x + y@b * x@y + y@c))) {
-    x
+    s <- rlang::list2(...)
+    rlang::inject(set_props(x, !!!s))
   } else {
     list()
   }
 }
-method(intersection, list(line, point)) <- function(x, y) {
-  intersection(y, x)
+
+method(intersection, list(line, point)) <- function(x, y, ...) {
+  intersection(y, x, ...)
 }
 
 
-method(intersection, list(point, segment)) <- function(x, y) {
+method(intersection, list(point, segment)) <- function(x, y, ...) {
   if (identical(x, intersection(x, y@line))) {
     xp1 <- distance(x, y@p1)
     xp2 <- distance(x, y@p2)
     p1p2 <- distance(y)
     if (identical(TRUE, all.equal(p1p2, xp1 + xp2))) {
-      x
+      s <- rlang::list2(...)
+      rlang::inject(set_props(x, !!!s))
     } else {
       list()
     }
@@ -201,58 +203,58 @@ method(intersection, list(point, segment)) <- function(x, y) {
   }
 }
 
-method(intersection, list(segment, point)) <- function(x, y) {
-  intersection(y, x)
+method(intersection, list(segment, point)) <- function(x, y, ...) {
+  intersection(y, x, ...)
 }
 
-method(intersection, list(line, rectangle)) <- function(x, y) {
+method(intersection, list(line, rectangle)) <- function(x, y, ...) {
   unique(c(intersection(x, segment(p1 = y@northeast,
-                            p2 = y@northwest)),
+                            p2 = y@northwest), ...),
     intersection(x, segment(p1 = y@northwest,
-                            p2 = y@southwest)),
+                            p2 = y@southwest), ...),
     intersection(x, segment(p1 = y@southwest,
-                            p2 = y@southeast)),
+                            p2 = y@southeast), ...),
     intersection(x, segment(p1 = y@southeast,
-                            p2 = y@northeast))
+                            p2 = y@northeast), ...)
   ))
 }
-method(intersection, list(rectangle, line)) <- function(x, y) {
-  intersection(y, x)
+method(intersection, list(rectangle, line)) <- function(x, y, ...) {
+  intersection(y, x, ...)
 }
 
-method(intersection, list(segment, rectangle)) <- function(x, y) {
+method(intersection, list(segment, rectangle)) <- function(x, y, ...) {
   unique(c(intersection(x, segment(p1 = y@northeast,
-                                   p2 = y@northwest)),
+                                   p2 = y@northwest), ...),
            intersection(x, segment(p1 = y@northwest,
-                                   p2 = y@southwest)),
+                                   p2 = y@southwest), ...),
            intersection(x, segment(p1 = y@southwest,
-                                   p2 = y@southeast)),
+                                   p2 = y@southeast), ...),
            intersection(x, segment(p1 = y@southeast,
-                                   p2 = y@northeast))
+                                   p2 = y@northeast), ...)
   ))
 }
-method(intersection, list(rectangle, segment)) <- function(x, y) {
-  intersection(y, x)
+method(intersection, list(rectangle, segment)) <- function(x, y, ...) {
+  intersection(y, x, ...)
 }
 
-method(intersection, list(point, rectangle)) <- function(x, y) {
+method(intersection, list(point, rectangle)) <- function(x, y, ...) {
   unique(c(intersection(x, segment(p1 = y@northeast,
-                                   p2 = y@northwest)),
+                                   p2 = y@northwest), ...),
            intersection(x, segment(p1 = y@northwest,
-                                   p2 = y@southwest)),
+                                   p2 = y@southwest), ...),
            intersection(x, segment(p1 = y@southwest,
-                                   p2 = y@southeast)),
+                                   p2 = y@southeast), ...),
            intersection(x, segment(p1 = y@southeast,
-                                   p2 = y@northeast))
+                                   p2 = y@northeast), ...)
   ))
 }
 
-method(intersection, list(rectangle, point)) <- function(x, y) {
-  intersection(y, x)
+method(intersection, list(rectangle, point)) <- function(x, y, ...) {
+  intersection(y, x, ...)
 }
 
 
-method(intersection, list(segment, ellipse)) <- function(x, y) {
+method(intersection, list(segment, ellipse)) <- function(x, y, ...) {
          # https://raw.org/book/computer-graphics/line-segment-ellipse-intersection/
 
          A <- rotate(x@p1 - y@center, y@angle * -1)
@@ -287,29 +289,31 @@ method(intersection, list(segment, ellipse)) <- function(x, y) {
 
 
          P <- A + ((B - A) * tt)
-         y@center + rotate(P, y@angle)
+         i <- y@center + rotate(P, y@angle)
+         s <- rlang::list2(...)
+         rlang::inject(set_props(i, !!!s))
 
 
 
 }
 
-method(intersection, list(ellipse, segment)) <- function(x,y) {
-  interaction(y, x)
+method(intersection, list(ellipse, segment)) <- function(x,y, ...) {
+  intersection(y, x, ...)
 }
 
-method(intersection, list(line, ellipse)) <- function(x,y) {
-  x <- ellipse()
-  y <- line(slope = 4, intercept = 1)
-  p1 <- y@point_at_x(x@center - x@a - x@b)
-  p2 <- y@point_at_x(x@center + x@a + x@b)
-  intersection(segment(p1,p2), y)
-}
+# method(intersection, list(line, ellipse)) <- function(x,y) {
+#   x <- ellipse()
+#   y <- line(slope = 4, intercept = 1)
+#   p1 <- y@point_at_x(x@center - x@a - x@b)
+#   p2 <- y@point_at_x(x@center + x@a + x@b)
+#   intersection(segment(p1,p2), y)
+# }
 
 
 
 
 # points(x = intersect_line_segment@x, y = intersect_line_segment@y)
-method(intersection, list(line, ellipse)) <- function(x, y) {
+method(intersection, list(line, ellipse)) <- function(x, y, ...) {
   # theta <- angle(degree = seq(0, 360))
   x <- line(slope = 1, intercept = 0)
   y <- ellipse(center = point(0,0),a = 1, b = 1)
@@ -448,11 +452,13 @@ method(intersection, list(line, ellipse)) <- function(x, y) {
 
     }
   }
-  line_ellipse_intersection
+  s <- rlang::list2(...)
+  rlang::inject(set_props(line_ellipse_intersection, !!!s))
+
 }
 
 
-method(intersection, list(circle, circle)) <- function(x,y) {
+method(intersection, list(circle, circle)) <- function(x,y, ...) {
   # https://paulbourke.net/geometry/circlesphere/
   if (any(distance(x@center, y@center) > x@radius + y@radius)) {
     stop("At least one pair of circles is too far apart to intersect.")
@@ -485,15 +491,17 @@ method(intersection, list(circle, circle)) <- function(x,y) {
                        P10 <- P1 - P0
                        P2 + point(c(-1,1), c(1,-1)) * point(P10@y, P10@x) *  (h / d)
     }))
-  d$P3[[1]]
+  i <- d$P3[[1]]
+  s <- rlang::list2(...)
+  rlang::inject(set_props(i, !!!s))
 }
 
 
-method(intersection, list(pgon, segment)) <- function(x,y) {
+method(intersection, list(pgon, segment)) <- function(x,y, ...) {
   if (S7_inherits(x@p, point)) {
     x@p <- list(x@p)
   }
-    purrr::map(x@p, \(p) {
+    i <- purrr::map(x@p, \(p) {
       l <- as.list(segment(point(tibble::as_tibble(rbind(p@xy, p@xy[1,]))))) |>
         purrr::map(\(s) intersection(s, y))
 
@@ -502,9 +510,11 @@ method(intersection, list(pgon, segment)) <- function(x,y) {
         l[[1]]
       }
     })[[1]]
+    s <- rlang::list2(...)
+    rlang::inject(set_props(i, !!!s))
   }
 
 
-method(intersection, list(segment, pgon)) <- function(x,y) {
-  intersection(y,x)
+method(intersection, list(segment, pgon)) <- function(x,y, ...) {
+  intersection(y,x, ...)
 }

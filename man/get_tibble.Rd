@@ -5,9 +5,9 @@
 \alias{get_tibble_defaults}
 \title{Get object data with styles in a tibble}
 \usage{
-get_tibble(x, ...)
+get_tibble(x)
 
-get_tibble_defaults(x, ...)
+get_tibble_defaults(x)
 }
 \arguments{
 \item{x}{object}

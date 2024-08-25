@@ -139,13 +139,13 @@ turn <- new_class(
 # arithmetic ----
 purrr::walk(list(`+`, `-`, `*`, `/`, `^`), \(.f) {
   method(.f, list(class_angle, class_angle)) <- function(e1, e2) {
-    convert(.f(S7_data(e1), S7_data(e2)), S7_class(e2))
+    S7::convert(.f(S7_data(e1), S7_data(e2)), S7_class(e2))
   }
   method(.f, list(class_angle, class_numeric)) <- function(e1, e2) {
-    convert(num2turn(.f(prop(e1, S7_class(e1)@name), e2), e1), S7_class(e1))
+    S7::convert(num2turn(.f(prop(e1, S7_class(e1)@name), e2), e1), S7_class(e1))
   }
   method(.f, list(class_numeric, class_angle)) <- function(e1, e2) {
-    convert(num2turn(.f(e1, prop(e2, S7_class(e2)@name)), e2), S7_class(e2))
+    S7::convert(num2turn(.f(e1, prop(e2, S7_class(e2)@name)), e2), S7_class(e2))
   }
 })
 

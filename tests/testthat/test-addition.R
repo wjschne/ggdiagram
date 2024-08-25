@@ -134,7 +134,6 @@ test_that("distances", {
   expect_equal(distance(p1, p2), 5)
   expect_equal(distance(s1), 5)
   expect_equal(distance(c1, c2), 2)
-  expect_equal(distance(c1, c2, center = TRUE), 5)
   expect_equal(distance(c1, c1), 0)
 })
 

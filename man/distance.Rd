@@ -11,7 +11,7 @@ distance(x, y, ...)
 
 \item{y}{a point, line, or circle}
 
-\item{center}{logical. if the distance between 2 circles should be calculated from their centers or their edges}
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> Not used}
 }
 \value{
 numeric
@@ -37,7 +37,4 @@ distance(p1, l1)
 c1 <- circle(p1, radius = 1)
 c2 <- circle(p2, radius = 2)
 distance(c1, c2)
-
-# Distance between the centers of 2 circles
-distance(c1, c2, center = TRUE)
 }

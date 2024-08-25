@@ -25,15 +25,49 @@ circle(
 
 \item{radius}{distance between center and edge circle}
 
+\item{label}{A character, angle, or label object}
+
+\item{alpha}{numeric value for alpha transparency}
+
+\item{color}{character string for color}
+
+\item{fill}{character string for fill color}
+
+\item{linewidth}{Width of lines}
+
+\item{linetype}{type of lines}
+
 \item{n}{number of points in circle (default = 360)}
 
 \item{style}{a style object}
 
-\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> arguments passed to style object if style is empty}
+\item{x0}{x-coordinate of circle's center. Overrides \verb{@center@x}}
+
+\item{y0}{y-coordinate of circle's center. Overrides `@center@y}
+
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> arguments passed to style object}
 }
 \description{
 circle class
 }
+\section{Slots}{
+
+\describe{
+\item{\code{aesthetics}}{A list of information about the circle's aesthetic properties}
+
+\item{\code{angle_at}}{A function that finds the angle of the specified point in relation to the circle's center}
+
+\item{\code{geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggforce::geom_circle}.}
+
+\item{\code{length}}{The number of circles in the circle object}
+
+\item{\code{point_at}}{A function that finds a point on the circle at the specified angle.}
+
+\item{\code{tangent_at}}{A function that finds the tangent line at the specified angle.}
+
+\item{\code{tibble}}{Gets a tibble (data.frame) containing parameters and styles used by \code{ggforce::geom_cirlce}.}
+}}
+
 \examples{
 # specify center point and radius
 p <- point(0,0)

@@ -28,14 +28,28 @@ line(
 
 \item{xintercept}{value of x when y is 0}
 
-\item{a}{constant in general form: a * x + b * y + c = 0}
+\item{a}{coefficient in general form: a * x + b * y + c = 0}
 
 \item{b}{coefficient in general form: a * x + b * y + c = 0}
 
+\item{c}{constant in general form: a * x + b * y + c = 0}
+
+\item{alpha}{numeric value for alpha transparency}
+
+\item{color}{character string for color}
+
+\item{lineend}{Line end style (round, butt, square).}
+
+\item{linejoin}{Line join style (round, mitre, bevel).}
+
+\item{linewidth}{Width of lines}
+
+\item{linetype}{type of lines}
+
 \item{style}{a style list}
 
-\item{...}{properties passed to style}
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
 }
 \description{
-line class
+Creates a line
 }

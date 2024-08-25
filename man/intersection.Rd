@@ -10,6 +10,8 @@ intersection(x, y, ...)
 \item{x}{object}
 
 \item{y}{object}
+
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
 }
 \description{
 intersection of 2 objects (e.g., lines)

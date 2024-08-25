@@ -3,7 +3,7 @@
 #'
 #' @param x a point, line, segment, or circle
 #' @param y a point, line, or circle
-#' @param center logical. if the distance between 2 circles should be calculated from their centers or their edges
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> Not used
 #' @rdname distance
 #' @return numeric
 #' @examples
@@ -24,11 +24,8 @@
 #' c1 <- circle(p1, radius = 1)
 #' c2 <- circle(p2, radius = 2)
 #' distance(c1, c2)
-#'
-#' # Distance between the centers of 2 circles
-#' distance(c1, c2, center = TRUE)
 #' @export
-distance <- new_generic("distance", c("x", "y"))
+distance <- new_generic(name = "distance", c("x", "y"))
 method(distance, list(point, point)) <- function(x,y) {
   d <- (y - x)
   d@r
@@ -42,16 +39,12 @@ method(distance, list(point, line)) <- function(x,y) {
 method(distance, list(line, point)) <- function(x,y) {
   distance(y, x)
 }
-
-
-
 method(distance, list(segment, class_missing)) <- function(x,y) {
   distance(x@p1, x@p2)
 }
-
-method(distance, list(circle, circle)) <- function(x,y, center = FALSE) {
+method(distance, list(circle, circle)) <- function(x,y) {
   d <- (y@center - x@center)
-  if (!center) {
+
     if (x@radius + y@radius > distance(d)) {
       d <- point(0,0)
     } else {
@@ -60,17 +53,17 @@ method(distance, list(circle, circle)) <- function(x,y, center = FALSE) {
       d <- py - px
     }
 
-  }
+
   d@r
 }
-method(distance, list(point, circle)) <- function(x,y, center = FALSE) {
+method(distance, list(point, circle)) <- function(x,y) {
   d <- y@center - x
-  if (!center) {    
+
     py <- y@point_at(radian(pi) + d@theta)
     d <- py - x
-  }
+
   d@r
 }
-method(distance, list(circle, point)) <- function(x,y, center = FALSE) {
+method(distance, list(circle, point)) <- function(x,y) {
   distance(y, x)
 }

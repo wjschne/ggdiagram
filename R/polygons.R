@@ -64,7 +64,7 @@ pgon_props <- list(
       d <- dplyr::summarise(d, .by = dplyr::any_of(gr),
                        x = mean(x, na.rm = TRUE),
                        y = mean(y, na.rm = TRUE)) |>
-        dplyr::select(-group)
+        dplyr::select(-.data$group)
 
       rlang::inject(point(!!!d))
     }),
@@ -109,6 +109,11 @@ pgon_props <- list(
   ),
   # functions ----
   funs = list(
+    geom = new_property(class_function, getter = function(self) {
+      \(...) {
+        as.geom(self, ...)
+      }
+    })
   ),
   # info ----
   info = list(aesthetics = new_property(
@@ -128,10 +133,12 @@ pgon_props <- list(
 #' If you wish to specify multiple polygons, you must supply a list of point objects. When plotted, the pgon function uses the ggplot2::geom_polygon function to create the geom.
 #' @export
 #' @param p point object or list of point objects
-#' @param length The number of polygons in the pgon object
-#' @param ... properties passed to style
+#' @param label A character, angle, or label object
+#' @slot length The number of polygons in the pgon object
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @param style Gets and sets the styles associated with polygons
-#' @param tibble Gets a tibble (data.frame) containing parameters and styles used by `ggplot2::geom_polygon`.
+#' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggplot2::geom_polygon`.
+#' @inherit style params
 pgon <- new_class(
   name = "pgon",
   parent = has_style,
@@ -152,6 +159,7 @@ pgon <- new_class(
                          fill = class_missing,
                          linewidth = .75,
                          linetype = class_missing,
+                         style = class_missing,
                          ...) {
 
 
@@ -191,10 +199,10 @@ pgon <- new_class(
           tibble::as_tibble(pp@xy) |>
             dplyr::mutate(group = idx)})) |>
         dplyr::bind_rows() |>
-        dplyr::summarise(.by = group,
-                         x = mean(x),
-                         y = mean(y)) |>
-        select(-group) |>
+        dplyr::summarise(.by = .data$group,
+                         x = mean(.data$x),
+                         y = mean(.data$y)) |>
+        dplyr::select(-.data$group) |>
         point()
 
       centroid@style <- pgon_style

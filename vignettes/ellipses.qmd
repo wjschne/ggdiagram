@@ -9,7 +9,7 @@ format:
     toc: true
     html-math-method: katex
 vignette: >
-  %\VignetteIndexEntry{angles}
+  %\VignetteIndexEntry{ellipses}
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 ---

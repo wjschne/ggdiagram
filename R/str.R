@@ -30,6 +30,16 @@ obj_desc <- function(x) {
   )
 }
 
+# from S7 internals
+str_function <- function(object, ..., nest.lev = 0) {
+  attr(object, "srcref") <- NULL
+  if (identical(class(object), "function")) {
+    cat(" ")
+  }
+  utils::str(object, ..., nest.lev = nest.lev)
+}
+
+
 # modified from S7 internals
 str_nest <- function(object,
                      prefix,
@@ -48,9 +58,9 @@ str_nest <- function(object,
     xi <- object[[i]]
 
     if (is.function(xi)) {
-      S7:::str_function(xi, nest.lev = nest.lev + 1)
+      str_function(xi, nest.lev = nest.lev + 1)
     } else if (S7::S7_inherits(xi)) {
-      str(xi, ..., nest.lev = nest.lev + 1)
+      utils::str(xi, ..., nest.lev = nest.lev + 1)
     } else {
       utils::str(xi, ...)
     }
@@ -81,7 +91,7 @@ str_properties <- function(
     omit) {
   p_names <- prop_names(object)
   cat(if (nest.lev > 0) " ")
-  cat(S7:::obj_desc(object))
+  cat(obj_desc(object))
 
   cat("\n")
 
@@ -90,7 +100,7 @@ str_properties <- function(
            nest.lev = nest.lev)
   if (length(omit) > 0 && additional && nest.lev == 0) {
     additional_text <- paste0("Other props: ", paste(p_names[p_names %in% omit], collapse = ", "),"\n")
-    cat(stringr::str_wrap(string = additional_text, width = 50, exdent = 13))
+    cat(stringr::str_wrap(string = additional_text, width = 67, exdent = 13))
   }
   if (nest.lev == 0) cat("\n")
 

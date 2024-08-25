@@ -1,5 +1,14 @@
 library(S7)
 
+do_nothing <- function(x) {
+  if (FALSE) {
+    p1 <- ggforce::geom_circle()
+    p2 <- arrowheadr::arrow_head_deltoid()
+    p3 <- geomtextpath::geom_labelcurve()
+  }
+}
+
+utils::globalVariables("properties")
 
 #' @export
 #' @importFrom S7 prop
@@ -15,6 +24,18 @@ S7::props
 
 
 # classes ----
+#' class_aesthetics_list
+#'
+#' list of aesthetics
+#' @param geom Which geom function converts the shape
+#' @param style vector of style names
+#' @param mappable_bare aesthetics used without identity function
+#' @param mappable_identity aesthetics used with identity function
+#' @param not_mappable properties that cannot be mapped and thus are created with separate geom objects for each unique combination of values
+#' @param required_aes required aesthetics
+#' @param omit_names properties that are ignored
+#' @param inherit.aes Defaults to `FALSE` so that ggdiagram objects do not interfere with other layers in the ggplot
+#' @keywords internal
 class_aesthetics_list <- new_class(
   name = "class_aesthetics_list",
   properties = list(
@@ -53,10 +74,10 @@ class_margin <- new_class(
       return(x)
     if (length(x) > 0) {
       if (is.numeric(x) && !grid::is.unit(x)) {
-        x <- unit(x, units = units)
+        x <- grid::unit(x, units = units)
       }
       if (is.list(x)) {
-        if(all(purrr::map_lgl(x, \(o) "margin" %in% class(o)))) {
+        if (all(purrr::map_lgl(x, \(o) {"margin" %in% class(o)}))) {
           return(purrr::map(x, class_margin))
 
         }
@@ -135,10 +156,15 @@ c_gg <- function(...) {
 
 #' bind method
 #' @param x list of objects to bind
+#' @param ... Arguments passed to style
+#' @examples
+#' bind(c(point(1,2), point(3,4)))
+#' bind(c(circle(point(0,0), radius = 1),
+#'        circle(point(1,1), radius = 2)))
 #' @export
 bind <- new_generic(name = "bind", dispatch_args = "x")
 
-method(bind, class_list) <- function(x) {
+method(bind, class_list) <- function(x, ...) {
   .f <- S7_class(x[[1]])@name
   allsame <- allsameclass(x, .f)
   if (length(allsame) > 0) stop(allsame)
@@ -154,24 +180,15 @@ method(bind, class_list) <- function(x) {
                 rectangle = rectangle,
                 segment = segment,
                 style = style)
-  rlang::inject(.fn(!!!d))
-
-
-
+  o <- rlang::inject(.fn(!!!d))
+  dots <- rlang::list2(...)
+  rlang::inject(S7::set_props(o, !!!dots))
 }
 
 
 
-# str ----
-#' structure
-#'
-#' @param object object
-#' @keywords internal
 str <- new_external_generic(package = "utils", name = "str", dispatch_args = "object")
 
-method(`+`, list(class_ggplot, has_style)) <- function(e1, e2) {
-  e1 + as.geom(e2)
-}
 
 method(`+`, list(class_any, class_any)) <- function(e1, e2) {
   .Primitive("+")(e1, e2)
@@ -192,27 +209,9 @@ method(`+`, list(class_character, class_numeric)) <- function(e1, e2) {
 #'
 #' @param x object
 #' @export
-get_tibble <- new_generic("get_tibble", "x")
+get_tibble <- new_generic("get_tibble", "x", fun = function(x) {S7::S7_dispatch()})
 method(get_tibble, class_list) <- function(x) {
   purrr::map_df(S7_data(x), get_tibble)
-}
-
-#' Combine several objects (of the same type) into one object
-#'
-#' @param x object
-#' @export
-bind_shape <- new_generic("bind_shape", "x")
-method(bind_shape, class_list) <- function(x) {
-  d <- purrr::map_df(x, get_tibble)
-  d <- as.list(d)
-
-  o <- x[[1]]
-  o <- rlang::inject(set_props(o, !!!d))
-
-  if (prop_exists(o, "arrow_head") && length(o@arrow_head) > 0) {
-    o@arrow_head <- class_arrowhead(o@arrow_head)
-  }
-  o
 }
 
 #' Get points for making points
@@ -226,6 +225,9 @@ get_points <- new_generic("get_points", "x")
 #'
 #' Shorten segments
 #' @param resect a numeric distance
+#' @param x object
+#' @param distance resect distance
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @export
 resect <- new_generic("resect", c("x", "distance"))
 
@@ -235,17 +237,22 @@ resect <- new_generic("resect", c("x", "distance"))
 #' @param x object
 #' @export
 #' @rdname get_tibble
-get_tibble_defaults <- new_generic("get_tibble_defaults", "x")
+get_tibble_defaults <- new_generic("get_tibble_defaults", "x", fun = function(x) S7_dispatch())
 method(get_tibble_defaults, class_any) <- function(x) {
   get_tibble(x)
 }
 
 
-#' Make an automatic label
+#' Move an object
 #'
 #' @param object object
 #' @param x nudge right and left
 #' @param y nudge up and down
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
+#' @examples
+#' circle() |> nudge(x = 2)
+#' # Alternative to nudge:
+#' circle() + point(2, 0)
 #' @export
 nudge <- new_generic("nudge", c("object", "x", "y"))
 
@@ -255,16 +262,6 @@ as_arrow <- new_generic("as_arrow", c("object"))
 class_numeric_or_character <- new_union(class_numeric, class_character)
 class_numeric_or_unit <- new_union(class_numeric, class_unit)
 
-
-
-# internal states ----
-the <- new.env(parent = emptyenv())
-# the$point <- c("alpha", "color", "fill", "shape", "size", "stroke")
-# the$line <- c("alpha", "color", "stroke", "lineend", "linejoin", "linetype", "linewidth")
-# the$polygon <- c("alpha", "color", "fill", "linetype", "linewidth")
-# the$text <- c("alpha", "angle", "color", "family", "fontface", "hjust", "size", "size.unit", "vjust")
-# the$richtext <- c("alpha", "angle", "color", "family", "fontface", "hjust", "size", "vjust", "nudge_x", "nudge_y", "label.color", "label.padding", "label.margin", "label.r", "label.size", "lineheight")
-the$arrow_head <- arrowheadr::arrow_head_deltoid()
 
 
 # helpers ----
@@ -563,14 +560,14 @@ check_inconsistent <- function(object) {
   prop_inconsistent <- prop_n[!(prop_n %in% unique(c(0, 1, max_n)))]
   if (length(prop_inconsistent) > 0) {
     msg <- tibble::enframe(prop_n[!(prop_n %in% unique(c(0, 1)))]) |>
-      dplyr::summarize(.by = value,
-                       name = paste0(name, collapse = ", ")) |>
+      dplyr::summarize(.by = .data$value,
+                       name = paste0(.data$name, collapse = ", ")) |>
       dplyr::mutate(v = paste0(
         "Size ",
-        value,
+        .data$value,
         ": Properties: ",
-        name)) |>
-      dplyr::pull(v) |>
+        .data$name)) |>
+      dplyr::pull(.data$v) |>
       paste0(collapse = "\n")
     object_class <- .simpleCap(S7_class(object)@name)
 
@@ -594,26 +591,33 @@ check_inconsistent <- function(object) {
 }
 
 # as.geom ----
-#' Convert shapes to ggplot2 geoms
+#' as.geom function
+#'
+#' Converts a ggdiagram shape to a ggplot2 geom
+#'
+#' Usually the `as.geom` function is not necessary to call explicitly because it is called whenever a ggdiagram shape is added to a ggplot. However, in complex situations (e.g., making a function that assembles many objects), it is sometimes necessary to make the call explicitly.
 #'
 #' @param x a shape
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> Pass arguments to ggplot2::geom_point
 #' @rdname as.geom
 #' @export
+#' @examples
+#' library(ggplot2)
+#' c1 <- circle(radius = 3)
+#' ggplot() +
+#'   as.geom(c1, fill = "black") +
+#'   coord_equal()
+#'
 as.geom <- new_generic("as.geom", "x")
 
 method(as.geom, class_shape_list) <- function(x, ...) {
   c(lapply(x, \(g) as.geom(g, ...)[[1]]))
 }
 
-method(as.geom, has_style) <- function(x, ...) {
-  d <- get_tibble_defaults(x)
-  make_geom_helper(
-    d = d,
-    user_overrides = get_non_empty_props(style(...)),
-    aesthetics = x@aesthetics)
-
+method(`+`, list(class_ggplot, has_style)) <- function(e1, e2) {
+  e1 + as.geom(e2)
 }
+
 
 method(`+`, list(class_ggplot, class_shape_list)) <- function(e1, e2) {
   e1 + as.geom(e2)
@@ -641,7 +645,7 @@ make_geom_helper <- function(d = NULL,
     d$group <- seq(nrow(d))
   }
   # 1 row per unique combination of not mappable arguments
-  d_nested <- tidyr::nest(d, .by = any_of(aesthetics@not_mappable))
+  d_nested <- tidyr::nest(d, .by = dplyr::any_of(aesthetics@not_mappable))
 
 
   # all colnames  but data
@@ -651,11 +655,12 @@ make_geom_helper <- function(d = NULL,
   d_unit_types <- purrr::map_chr(d_nested[, d_unit_names], grid::unitType)
 
   d_nested <- dplyr::mutate(d_nested,
-                            across(all_of(d_unit_names), .fns = as.numeric))
+                            dplyr::across(dplyr::all_of(d_unit_names),
+                                          .fns = as.numeric))
 
 
 
-  d_all <- tidyr::nest(d_nested, .by = data, .key = "unmappable")
+  d_all <- tidyr::nest(d_nested, .by = .data$data, .key = "unmappable")
 
   # make geom for each row in d_nested
   purrr::pmap(d_all, \(data, unmappable) {
@@ -673,7 +678,7 @@ make_geom_helper <- function(d = NULL,
     not_mapped <- purrr::map2(not_mapped,
                               names(not_mapped), \(x, name) {
       if (name %in% d_unit_names) {
-        x <- unit(x, d_unit_types[name])
+        x <- grid::unit(x, d_unit_types[name])
       }
       x
     })
@@ -744,19 +749,28 @@ rounder <- function(x, digits = 2, add = FALSE) {
 # Equation ----
 #' equation
 #'
+#' Get equation for object
+#'
 #' @param x object
 #' @param type equation type. Can be `y`, `general`, or `parametric`
+#' @param digits rounding digits
 #' @export
-equation <- new_generic("equation", dispatch_args = "x")
+equation <- new_generic(
+  "equation",
+  dispatch_args = "x",
+  fun = function(x,
+                 type = c("y", "general", "parametric"),
+                 digits = 2) S7_dispatch())
 
 
 # Projection ----
 #' Find projection of a point on an object (e.g., line or segment)
 #'
-#' @param point point
+#' @param p point
 #' @param object object (e.g., line or segment)
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object
 #' @export
-projection <- new_generic("projection", c("point", "object"))
+projection <- new_generic("projection", c("p", "object"))
 
 
 # midpoint----
@@ -766,6 +780,7 @@ projection <- new_generic("projection", c("point", "object"))
 #' @param x object
 #' @param y object (can be omitted for segments and arcs)
 #' @param position numeric vector. 0 is start, 1 is end. Defaults to .5
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @export
 midpoint <- new_generic(
   "midpoint",
@@ -796,34 +811,21 @@ rotate2columnmatrix <- function(x, theta) {
 #' @param ... additional arguments
 label_object <- new_generic("label_object", "object")
 
-
-# Justify ----
-#' Text justification
-#'
-#' @param x hjust or angle
-#' @param y vjust or multiplier
-justify <- new_generic("justify", c("x", "y"))
-
-method(justify, list(class_numeric, class_numeric)) <- function(x,y) {
-    list(
-      hjust = x,
-      vjust = y
-    )
-}
-
-
-
 #' Arrow connect one shape to another
 #'
 #' @param x first shape (e.g., point, circle, ellipse, rectangle)
 #' @param y second shape
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> Arguments passed to style
 #' @export
 connect <- new_generic("connect", c("x", "y"))
 
 #' Place an object a specified distance from another object
 #'
-#' @param x first shape (e.g., point, circle, ellipse, rectangle)
-#' @param y second shape
+#' @param x shape (e.g., point, circle, ellipse, rectangle)
+#' @param from shape that x is placed in relation to
+#' @param where named direction, angle, or number (degrees)
+#' @param sep separation distance
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> Arguments passed to style
 #' @export
 place <- new_generic("place", c("x", "from"),
                      fun = function(x, from, where = "right", sep = 1, ...) {

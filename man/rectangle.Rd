@@ -29,11 +29,29 @@ rectangle(
 
 \item{height}{height}
 
+\item{northeast}{upper right point}
+
+\item{northwest}{upper left point}
+
+\item{southwest}{lower left point}
+
+\item{southeast}{lower right point}
+
+\item{label}{A character, angle, or label object}
+
+\item{alpha}{numeric value for alpha transparency}
+
+\item{color}{character string for color}
+
+\item{fill}{character string for fill color}
+
+\item{linewidth}{Width of lines}
+
+\item{linetype}{type of lines}
+
 \item{style}{a style object}
 
-\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> arguments passed to style object if style is empty}
-
-\item{xy}{2-column matrix of points}
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> arguments passed to style object}
 }
 \description{
 rectangle class

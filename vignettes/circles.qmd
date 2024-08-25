@@ -8,7 +8,7 @@ format:
   html:
     toc: true
 vignette: >
-  %\VignetteIndexEntry{angles}
+  %\VignetteIndexEntry{circles}
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 ---
@@ -294,7 +294,8 @@ bp +
   )} +
   connect(cthis, cthat, 
        resect = 2, 
-       label = label("Causes", size = 20, vjust = 0))
+       label = label("Causes", size = 20, vjust = 0),
+       color = "black")
 ```
 
 # Paths between circles and lines

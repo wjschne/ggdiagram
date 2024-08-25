@@ -151,7 +151,10 @@ lb_props <- list(
 #' @param label text label
 #' @param p point
 #' @param style a style list
-#' @param ... properties passed to style
+#' @param plot_point plot point (default = FALSE)
+#' @param position position (used in conjunction with the `place` function)
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
+#' @inherit style params
 #' @export
 label <- new_class(
   name = "label",
@@ -342,7 +345,7 @@ centerpoint <- new_class(
 )
 
 method(as.geom, centerpoint) <- function(x, ...) {
-  gc <- as.geom(super(x, has_style))
+  gc <- as.geom(super(x, has_style), ...)
   if (S7_inherits(x@label, label)) {
     gl <- as.geom(x@label)
     gc <- list(gc, gl)
@@ -365,6 +368,30 @@ method(`+`, list(point, centerpoint)) <- function(e1, e2) {
 method(`-`, list(point, centerpoint)) <- function(e1, e2) {
   circle(e1 - e2@center, e2@radius)
 }
+
+method(`%|-%`, list(centerpoint, point)) <- function(e1,e2) {
+  `%|-%`(e1@center, e2)
+  }
+
+method(`%|-%`, list(point, centerpoint)) <- function(e1,e2) {
+  `%|-%`(e1, e2@center)
+  }
+
+method(`%|-%`, list(centerpoint, centerpoint)) <- function(e1,e2) {
+  `%|-%`(e1@center, e2@center)
+  }
+
+method(`%-|%`, list(centerpoint, point)) <- function(e1,e2) {
+  `%-|%`(e1@center, e2)
+}
+
+method(`%-|%`, list(point, centerpoint)) <- function(e1,e2) {
+  `%-|%`(e1, e2@center)
+  }
+
+method(`%-|%`, list(centerpoint, centerpoint)) <- function(e1,e2) {
+  `%-|%`(e1@center, e2@center)
+  }
 
 
 method(str, label) <- function(
@@ -471,3 +498,36 @@ centerpoint_label <- function(label, center, d, shape_name = "shape", ...) {
   }
   label
 }
+
+method(nudge, list(label, class_numeric, class_numeric)) <- function(object, x, y) {
+  object@p <- object@p + point(x, y)
+  object
+}
+
+method(nudge, list(label, class_numeric, class_missing)) <- function(object, x, y) {
+  object@p <- object@p + point(x, 0)
+  object
+}
+
+method(nudge, list(label, class_missing, class_numeric)) <- function(object, x, y) {
+  object@p <- object@p + point(0, y)
+  object
+}
+
+
+method(nudge, list(centerpoint, class_numeric, class_numeric)) <- function(object, x, y) {
+  object@center <- object@center + point(x, y)
+  object
+}
+
+method(nudge, list(centerpoint, class_numeric, class_missing)) <- function(object, x, y) {
+  object@center <- object@center + point(x, 0)
+  object
+}
+
+method(nudge, list(centerpoint, class_missing, class_numeric)) <- function(object, x, y) {
+  object@center <- object@center + point(0, y)
+  object
+}
+
+

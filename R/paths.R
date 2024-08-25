@@ -92,6 +92,11 @@ path_props <- list(
   ),
   # functions ----
   funs = list(
+    geom = new_property(class_function, getter = function(self) {
+      \(...) {
+        as.geom(self, ...)
+      }
+    }),
     midpoint = new_property(class_function, getter = function(self) {
       \(position = .5, ...) midpoint(self, position = position, ...)
     })
@@ -144,11 +149,13 @@ path_props <- list(
 #'
 #' If you wish to specify multiple paths, you must supply a list of point objects. When plotted, the path function uses the ggarrow::geom_arrow function to create the geom.
 #' @export
-#' @param p point object or list of point objects
-#' @param length The number of paths in the path object
-#' @param ... properties passed to style
+#' @param p object or list of point objects
+#' @param label A character, angle, or label object
 #' @param style Gets and sets the styles associated with paths
-#' @param tibble Gets a tibble (data.frame) containing parameters and styles used by `ggarrow::geom_arrow`.
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
+#' @slot length The number of paths in the path object
+#' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggarrow::geom_arrow`.
+#' @inherit style params
 path <- new_class(
   name = "path",
   parent = has_style,

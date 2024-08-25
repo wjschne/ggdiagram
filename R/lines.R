@@ -21,6 +21,7 @@ abline_aesthetics_list <- class_aesthetics_list(
 
 abline_aesthetics <-
 ln_props <- list(
+  # primary ----
   primary = list(
     # ax + by + c = 0
     a = new_property(class = class_numeric, default = 0),
@@ -28,6 +29,7 @@ ln_props <- list(
     c = new_property(class = class_numeric, default = 0)
   ),
   styles = style@properties[ln_styles],
+  # derived ----
   derived = list(
     slope = new_property(
       getter = function(self) {
@@ -87,6 +89,7 @@ ln_props <- list(
       get_non_empty_tibble(d)
     })
   ),
+  # functions ----
   funs = list(
     geom = new_property(class_function, getter = function(self) {
       \(...) {
@@ -111,6 +114,7 @@ ln_props <- list(
       }
     })
 ),
+# information ----
 info = list(
   aesthetics = new_property(getter = function(self) {
     abline_aesthetics_list
@@ -124,14 +128,17 @@ info = list(
 
 #' line class
 #'
+#' Creates a line
+#'
 #' @param a coefficient in general form: a * x + b * y + c = 0
 #' @param b coefficient in general form: a * x + b * y + c = 0
-#' @param a constant in general form: a * x + b * y + c = 0
+#' @param c constant in general form: a * x + b * y + c = 0
 #' @param slope coefficient in y = slope * x + intercept
 #' @param intercept value of y when x is 0
 #' @param xintercept value of x when y is 0
 #' @param style a style list
-#' @param ... properties passed to style
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
+#' @inherit style params
 #' @export
 line <- new_class(
   "line",
@@ -180,7 +187,7 @@ line <- new_class(
     if (all(c("a", "b", "c") %in% d_names)) {
       check_ab0 <- d |>
         dplyr::mutate(ab0 = (a == 0) & (b == 0) & (c != 0)) |>
-        dplyr::pull(ab0) |>
+        dplyr::pull(.data$ab0) |>
         any()
       if (check_ab0) stop("If a and b are 0, c must be 0.")
 
@@ -354,11 +361,11 @@ method(equation, line) <- function(
 
 
 
-method(projection, list(point, line)) <- function(point,object, ...) {
+method(projection, list(point, line)) <- function(p,object, ...) {
 ab <- object@a * object@a + object@b * object@b
-xp <- (object@b * object@b * point@x - object@b * object@a * point@y - object@a * object@c) / ab
-yp <- (object@a * object@a * point@y - object@a * object@b * point@x - object@b * object@c) / ab
-point(xp, yp, style = point@style, ...)
+xp <- (object@b * object@b * p@x - object@b * object@a * p@y - object@a * object@c) / ab
+yp <- (object@a * object@a * p@y - object@a * object@b * p@x - object@b * object@c) / ab
+point(xp, yp, style = p@style, ...)
 }
 
 method(`[`, line) <- function(x, y) {

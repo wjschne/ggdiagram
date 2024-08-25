@@ -31,15 +31,51 @@ path(
 )
 }
 \arguments{
-\item{p}{point object or list of point objects}
+\item{p}{object or list of point objects}
+
+\item{label}{A character, angle, or label object}
+
+\item{alpha}{numeric value for alpha transparency}
+
+\item{arrow_head}{A 2-column matrix of polygon points}
+
+\item{arrow_fins}{A 2-column matrix of polygon points}
+
+\item{arrowhead_length}{Determines the size of the arrow ornaments. This parameter becomes the \code{length} parameter in ggarrow functions. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner.}
+
+\item{length_head}{Determines the size of the arrow head. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner. From ggarrow.}
+
+\item{length_fins}{Determines the size of the arrow fins. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner. From ggarrow.}
+
+\item{color}{character string for color}
+
+\item{fill}{character string for fill color}
+
+\item{lineend}{Line end style (round, butt, square).}
+
+\item{linejoin}{Line join style (round, mitre, bevel).}
+
+\item{linewidth}{Width of lines}
+
+\item{linewidth_fins}{Line width for arrow fins}
+
+\item{linewidth_head}{Line width for arrow fins}
+
+\item{linetype}{type of lines}
+
+\item{resect}{A numeric(1) denoting millimeters or \if{html}{\out{<unit>}} to shorten the arrow head and fins.}
+
+\item{resect_fins}{A numeric(1) denoting millimeters or \if{html}{\out{<unit>}} to shorten the arrow fins}
+
+\item{resect_head}{A numeric(1) denoting millimeters or \if{html}{\out{<unit>}} to shorten the arrow head.}
+
+\item{stroke_color}{Color of point border line}
+
+\item{stroke_width}{Stroke width in arrows}
 
 \item{style}{Gets and sets the styles associated with paths}
 
-\item{...}{properties passed to style}
-
-\item{length}{The number of paths in the path object}
-
-\item{tibble}{Gets a tibble (data.frame) containing parameters and styles used by \code{ggarrow::geom_arrow}.}
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
 }
 \description{
 A path is specified with a point object that contains at least 2 points, the start and the end. Any number of intermediate points are possible.
@@ -47,3 +83,11 @@ A path is specified with a point object that contains at least 2 points, the sta
 \details{
 If you wish to specify multiple paths, you must supply a list of point objects. When plotted, the path function uses the ggarrow::geom_arrow function to create the geom.
 }
+\section{Slots}{
+
+\describe{
+\item{\code{length}}{The number of paths in the path object}
+
+\item{\code{tibble}}{Gets a tibble (data.frame) containing parameters and styles used by \code{ggarrow::geom_arrow}.}
+}}
+

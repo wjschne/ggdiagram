@@ -4,7 +4,8 @@
 #'
 #' @param x object
 #' @param theta angle
-#' @param center length 2 vector  or point about which rotation occurs
+#' @param origin length 2 vector  or point about which rotation occurs
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @export
 rotate <- new_generic(
   name = "rotate",
@@ -81,10 +82,12 @@ method(rotate, list(segment, class_angle_or_numeric)) <- function(x, theta, orig
 method(rotate, list(centerpoint, class_angle_or_numeric)) <- function(
       x,
     theta,
-    origin = point(0, 0)) {
-  x_center_r <- rotate(x@center, theta, origin = origin)
+    origin = point(0, 0),
+    ...) {
+  x_center_r <- rotate(x@center, theta, origin = origin, ...)
   x@center <- x_center_r
-  x
+  s <- rlang::list2(...)
+  rlang::inject(set_props(x,!!!s))
   }
 
 # Rotate ellipse
@@ -92,19 +95,20 @@ method(rotate,
        list(ellipse, class_angle_or_numeric)) <- function(
     x,
     theta,
-    origin = point(0, 0)) {
-  x@center <- rotate(x@center, theta, origin = origin)
+    origin = point(0, 0),
+    ...) {
+  x@center <- rotate(x@center, theta, origin = origin, ...)
   x@angle <- x@angle + theta
-
-  x
+  s <- rlang::list2(...)
+  rlang::inject(set_props(x,!!!s))
        }
 # Rotate rectangle
-method(rotate, list(rectangle, class_angle_or_numeric)) <- function(x, theta, origin = point(0, 0)) {
+method(rotate, list(rectangle, class_angle_or_numeric)) <- function(x, theta, origin = point(0, 0), ...) {
 
   point(c(
     rotate(point(x.northeast), theta),
     rotate(point(x.northwest), theta),
     rotate(point(x.southwest), theta),
     rotate(point(x.southeast), theta)
-    ))
+    ), ...)
 }

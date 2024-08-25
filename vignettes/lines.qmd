@@ -4,7 +4,7 @@ format:
   html:
     toc: true
 vignette: >
-  %\VignetteIndexEntry{points}
+  %\VignetteIndexEntry{lines}
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 ---

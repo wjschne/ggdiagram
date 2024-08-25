@@ -7,6 +7,12 @@
 resect(x, distance, ...)
 }
 \arguments{
+\item{x}{object}
+
+\item{distance}{resect distance}
+
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
+
 \item{resect}{a numeric distance}
 }
 \description{

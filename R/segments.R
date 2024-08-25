@@ -185,8 +185,10 @@ sg_props <- list(
 #'
 #' @param p1 starting point
 #' @param p2 end point
+#' @param label A character, angle, or label object
 #' @param style a style list
-#' @param ... properties passed to style
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
+#' @inherit style params
 #' @export
 segment <- new_class(
   name = "segment",

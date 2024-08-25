@@ -2,7 +2,7 @@
 % Please edit documentation in R/a_early.R
 \name{nudge}
 \alias{nudge}
-\title{Make an automatic label}
+\title{Move an object}
 \usage{
 nudge(object, x, y, ...)
 }
@@ -12,7 +12,14 @@ nudge(object, x, y, ...)
 \item{x}{nudge right and left}
 
 \item{y}{nudge up and down}
+
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
 }
 \description{
-Make an automatic label
+Move an object
+}
+\examples{
+circle() |> nudge(x = 2)
+# Alternative to nudge:
+circle() + point(2, 0)
 }

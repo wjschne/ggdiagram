@@ -5,7 +5,7 @@ format:
     toc: true
     html-math-method: katex
 vignette: >
-  %\VignetteIndexEntry{points}
+  %\VignetteIndexEntry{beziercurves}
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 ---

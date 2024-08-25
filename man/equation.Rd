@@ -4,13 +4,15 @@
 \alias{equation}
 \title{equation}
 \usage{
-equation(x, ...)
+equation(x, type = c("y", "general", "parametric"), digits = 2)
 }
 \arguments{
 \item{x}{object}
 
 \item{type}{equation type. Can be \code{y}, \code{general}, or \code{parametric}}
+
+\item{digits}{rounding digits}
 }
 \description{
-equation
+Get equation for object
 }

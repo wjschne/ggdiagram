@@ -71,7 +71,7 @@ cr_props <- list(
     tangent_at = new_property(
       class = class_function,
       getter = function(self) {
-        \(theta = degree(0)) {
+        \(theta = degree(0), ...) {
           x0 <- self@center@x
           y0 <- self@center@y
           x1 <- cos(theta) * self@radius + self@center@x
@@ -80,7 +80,8 @@ cr_props <- list(
             a = x1 - x0,
             b = y1 - y0,
             c = x0 ^ 2 - (x1 * x0) + y0 ^ 2 - (y1 * y0) - self@radius ^ 2,
-            style = self@style
+            style = self@style,
+            ...
           )
         }
       }
@@ -88,8 +89,9 @@ cr_props <- list(
     point_at = new_property(
       class_function,
       getter = function(self) {
-
-        \(theta = degree(0)) polar(theta = theta, r = self@radius, style = self@style) + self@center
+        \(theta = degree(0), ...) {
+          self@center + polar(theta = theta, r = self@radius, style = self@style, ...)
+          }
       }
     )),
   # info ----
@@ -118,9 +120,20 @@ cr_props <- list(
 #' circle class
 #' @param center point at center of the circle
 #' @param radius distance between center and edge circle
+#' @param label A character, angle, or label object
+#' @param x0 x-coordinate of circle's center. Overrides `@center@x`
+#' @param y0 y-coordinate of circle's center. Overrides `@center@y
 #' @param n number of points in circle (default = 360)
 #' @param style a style object
-#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object if style is empty
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object
+#' @inherit style params
+#' @slot aesthetics A list of information about the circle's aesthetic properties
+#' @slot angle_at A function that finds the angle of the specified point in relation to the circle's center
+#' @slot geom A function that converts the object to a geom. Any additional parameters are passed to `ggforce::geom_circle`.
+#' @slot length The number of circles in the circle object
+#' @slot point_at A function that finds a point on the circle at the specified angle.
+#' @slot tangent_at A function that finds the tangent line at the specified angle.
+#' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggforce::geom_cirlce`.
 #' @examples
 #' # specify center point and radius
 #' p <- point(0,0)
@@ -215,16 +228,6 @@ str_properties(object,
                    nest.lev = nest.lev)
 }
 
-# method(as.geom, circle) <- function(x, ...) {
-#   d <- get_tibble_defaults(x)
-#   make_geom_helper(
-#     d = d,
-#     user_overrides = get_non_empty_props(style(...)),
-#
-#   )
-# }
-
-
 method(get_tibble, circle) <- function(x) {
   x@tibble
 }
@@ -252,8 +255,6 @@ method(`[`, circle) <- function(x, y) {
 method(`==`, list(circle, circle)) <- function(e1, e2) {
   (e1@center == e2@center) & (e1@radius == e1@radius)
 }
-
-
 
 # Place ----
 

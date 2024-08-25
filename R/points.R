@@ -115,16 +115,16 @@ pt_props <- list(
 #' @export
 #' @param x Vector of coordinates on the x-axis (also can take a tibble/data.frame or 2-column matrix as input.)
 #' @param y Vector of coordinates on the y-axis
-#' @param style a style object
 #' @param r Radius = Distance from the origin to the point
 #' @param theta Angle of the vector from the origin to the point
-#' @param ... properties passed to style
-#' @param auto_label Gets x and y coordinates and makes a label `"(x,y)"`
-#' @param length The number of points in the point object
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
+#' @slot auto_label Gets x and y coordinates and makes a label `"(x,y)"`
+#' @slot length The number of points in the point object
 #' @param style Gets and sets the styles associated with points
-#' @param tibble Gets a tibble (data.frame) containing parameters and styles used by `ggplot2::geom_point`.
-#' @param xy Gets a 2-column matrix of the x and y coordinates of the point object.
-#' @param geom A function that converts the object to a geom. Any additional parameters are passed to `ggplot2::geom_point`.
+#' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggplot2::geom_point`.
+#' @slot xy Gets a 2-column matrix of the x and y coordinates of the point object.
+#' @slot geom A function that converts the object to a geom. Any additional parameters are passed to `ggplot2::geom_point`.
+#' @inherit style params
 #' @export
 point <- new_class(
   name = "point",
@@ -271,6 +271,8 @@ method(get_tibble_defaults, point) <- function(x) {
   get_tibble_defaults_helper(x, sp, required_aes = c("x", "y"))
 }
 
+#' polar2just
+#'
 #' Convert hjust and vjust parameters from polar coordinates
 #' @param x angle
 #' @param multiplier distance
@@ -326,12 +328,10 @@ purrr::walk(list(`+`, `-`, `*`, `/`, `^`), \(.f) {
 })
 
 method(midpoint, list(point, point)) <- function(x,y, position = .5, ...) {
-x + ((y - x) * position)
+  p <- x + ((y - x) * position)
+  s <- rlang::list2(...)
+  rlang::inject(set_props(p, !!!s))
 }
-
-
-
-
 
 method(`%*%`, list(point, point)) <- function(x, y) {
   x@xy[1, , drop = TRUE] %*% y@xy[1, , drop = TRUE]
@@ -357,22 +357,25 @@ NULL
 #' @rdname perpendicular_point
 #' @aliases %|-%
 #' @export
-`%|-%` <- new_generic("%|-%", c("e1", "e2"))
+`%|-%` <- new_generic("%|-%", c("e1", "e2"), fun = function(e1,e2) {S7_dispatch()})
 
 method(`%|-%`, list(point, point)) <- function(e1,e2) {
-  point(e1@x, e2@y)}
+  e2@x <- e1@x
+  e2
+  }
+
+
 
 #' @name perpendicular_horizontal
 #' @rdname perpendicular_point
 #' @aliases %-|%
-#' @param e1 first point
-#' @param e2 second point
 #' @export
-`%-|%` <- new_generic("%-|%", c("e1", "e2"))
+`%-|%` <- new_generic("%-|%", c("e1", "e2"), fun = function(e1,e2) {S7_dispatch()})
 
 method(`%-|%`, list(point, point)) <- function(e1,e2) {
-  point(e2@x, e1@y)}
-
+  e2@y <- e1@y
+  e2
+  }
 
 method(label_object, point) <- function(object, accuracy = .1) {
 
@@ -399,7 +402,7 @@ method(`[`, point) <- function(x, y) {
   rlang::inject(point(!!!d))
 }
 
-method(connect, list(point, point)) <- function(x,y, arrow_head = the$arrow_head, length_head = 7, ...) {
+method(connect, list(point, point)) <- function(x,y, arrow_head = arrowheadr::arrow_head_deltoid(2.4), length_head = 7, ...) {
   s <- segment(x,y, arrow_head = arrow_head, length_head = length_head, ...)
   s
 
@@ -414,3 +417,16 @@ method(place, list(point, point)) <- function(x, from, where = "right", sep = 1)
 }
 
 point_or_list <- new_union(point, class_list)
+
+
+method(nudge, list(point, class_numeric, class_numeric)) <- function(object, x, y) {
+  object + point(x, y)
+}
+
+method(nudge, list(point, class_numeric, class_missing)) <- function(object, x, y) {
+  object + point(x, 0)
+}
+
+method(nudge, list(point, class_missing, class_numeric)) <- function(object, x, y) {
+  object + point(0, y)
+}

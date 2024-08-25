@@ -4,7 +4,7 @@
 \alias{inside}
 \title{is a point inside a shape ?}
 \usage{
-inside(x, y, ...)
+inside(x, y)
 }
 \arguments{
 \item{x}{object}

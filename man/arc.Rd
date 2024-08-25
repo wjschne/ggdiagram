@@ -48,19 +48,79 @@ arc(
 
 \item{label}{A character, angle, or label object}
 
+\item{start_point}{Specify where arc starts. Overrides \verb{@center}}
+
+\item{end_point}{Specify where arc ends Overrides \verb{@center}}
+
 \item{n}{number of points in arc (default = 360)}
+
+\item{wedge}{Draw a wedge instead of an arc (default = \code{FALSE})}
+
+\item{alpha}{numeric value for alpha transparency}
+
+\item{arrow_head}{A 2-column matrix of polygon points}
+
+\item{arrow_fins}{A 2-column matrix of polygon points}
+
+\item{arrowhead_length}{Determines the size of the arrow ornaments. This parameter becomes the \code{length} parameter in ggarrow functions. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner.}
+
+\item{length_head}{Determines the size of the arrow head. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner. From ggarrow.}
+
+\item{length_fins}{Determines the size of the arrow fins. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner. From ggarrow.}
+
+\item{color}{character string for color}
+
+\item{fill}{character string for fill color}
+
+\item{lineend}{Line end style (round, butt, square).}
+
+\item{linejoin}{Line join style (round, mitre, bevel).}
+
+\item{linewidth}{Width of lines}
+
+\item{linewidth_fins}{Line width for arrow fins}
+
+\item{linewidth_head}{Line width for arrow fins}
+
+\item{linetype}{type of lines}
+
+\item{resect}{A numeric(1) denoting millimeters or \if{html}{\out{<unit>}} to shorten the arrow head and fins.}
+
+\item{resect_fins}{A numeric(1) denoting millimeters or \if{html}{\out{<unit>}} to shorten the arrow fins}
+
+\item{resect_head}{A numeric(1) denoting millimeters or \if{html}{\out{<unit>}} to shorten the arrow head.}
+
+\item{stroke_color}{Color of point border line}
+
+\item{stroke_width}{Stroke width in arrows}
 
 \item{style}{a style object}
 
-\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> arguments passed to style object if style is empty}
-
-\item{theta}{interior angle (end - start)}
-
-\item{length}{The number of arcs in the arc object}
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> arguments passed to style object}
 }
 \description{
 arc class
 }
+\section{Slots}{
+
+\describe{
+\item{\code{aesthetics}}{A list of information about the arc's aesthetic properties}
+
+\item{\code{angle_at}}{A function that finds the angle of the specified point in relation to the arc's center}
+
+\item{\code{geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggarrow::geom_arrow}.}
+
+\item{\code{point_at}}{A function that finds a point on the arc at the specified angle.}
+
+\item{\code{length}}{The number of arcs in the arc object}
+
+\item{\code{tangent_at}}{A function that finds the tangent line at the specified angle.}
+
+\item{\code{theta}}{interior angle (end - start)}
+
+\item{\code{tibble}}{Gets a tibble (data.frame) containing parameters and styles used by \code{ggarrow::geom_arrow}.}
+}}
+
 \examples{
 # specify center point and radius
 p <- point(0,0)

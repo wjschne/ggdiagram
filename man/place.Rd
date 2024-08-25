@@ -7,9 +7,15 @@
 place(x, from, where = "right", sep = 1, ...)
 }
 \arguments{
-\item{x}{first shape (e.g., point, circle, ellipse, rectangle)}
+\item{x}{shape (e.g., point, circle, ellipse, rectangle)}
 
-\item{y}{second shape}
+\item{from}{shape that x is placed in relation to}
+
+\item{where}{named direction, angle, or number (degrees)}
+
+\item{sep}{separation distance}
+
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> Arguments passed to style}
 }
 \description{
 Place an object a specified distance from another object

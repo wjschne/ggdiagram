@@ -37,9 +37,51 @@ label(
 
 \item{p}{point}
 
+\item{angle}{angle of text}
+
+\item{alpha}{numeric value for alpha transparency}
+
+\item{color}{character string for color}
+
+\item{family}{font family}
+
+\item{fill}{character string for fill color}
+
+\item{fontface}{Can be plain, bold, italic, or bold.italic}
+
+\item{hjust}{horizontal justification.}
+
+\item{label.color}{Color of label outline.}
+
+\item{label.margin}{Amount of distance around label. Unit vector of length four. Usually created with \code{ggplot2::margin}.}
+
+\item{label.padding}{Amount of padding around label. Unit vector of length four. Usually created with \code{ggplot2::margin}.}
+
+\item{label.r}{Radius of rounded corners. Defaults to 0.15 lines.}
+
+\item{label.size}{Width of label outline.}
+
+\item{lineheight}{Height of line of text}
+
+\item{polar_just}{an angle, polar point, or point that alters hjust and vjust (polar polar_just not stored in style)}
+
+\item{nudge_x}{Horizontal adjustment to nudge labels by.}
+
+\item{nudge_y}{Vertical adjustment to nudge labels by.}
+
+\item{size}{numeric size}
+
+\item{text.color}{Color of label text.}
+
+\item{vjust}{vertical justification}
+
 \item{style}{a style list}
 
-\item{...}{properties passed to style}
+\item{plot_point}{plot point (default = FALSE)}
+
+\item{position}{position (used in conjunction with the \code{place} function)}
+
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
 }
 \description{
 label class

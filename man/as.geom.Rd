@@ -2,7 +2,7 @@
 % Please edit documentation in R/a_early.R
 \name{as.geom}
 \alias{as.geom}
-\title{Convert shapes to ggplot2 geoms}
+\title{as.geom function}
 \usage{
 as.geom(x, ...)
 }
@@ -12,5 +12,16 @@ as.geom(x, ...)
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> Pass arguments to ggplot2::geom_point}
 }
 \description{
-Convert shapes to ggplot2 geoms
+Converts a ggdiagram shape to a ggplot2 geom
+}
+\details{
+Usually the \code{as.geom} function is not necessary to call explicitly because it is called whenever a ggdiagram shape is added to a ggplot. However, in complex situations (e.g., making a function that assembles many objects), it is sometimes necessary to make the call explicitly.
+}
+\examples{
+library(ggplot2)
+c1 <- circle(radius = 3)
+ggplot() +
+  as.geom(c1, fill = "black") +
+  coord_equal()
+
 }

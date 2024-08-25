@@ -77,11 +77,11 @@ el_props <- list(
       }
     }),
     point_at = new_property(class_function, getter = function(self) {
-      \(theta = degree(0), definitional = FALSE) {
+      \(theta = degree(0), definitional = FALSE, ...) {
         if (!S7_inherits(theta, class_angle)) theta <- degree(theta)
 
         if (definitional) {
-          self@center + rotate(point(cos(t) * self@a, sin(t) * self@b), self@angle)
+          self@center + rotate(point(cos(t) * self@a, sin(t) * self@b, ...), self@angle)
         } else {
 
         rtheta <- theta - radian(self@angle)
@@ -93,7 +93,7 @@ el_props <- list(
         rp <- rotate(point((abs(cos(t)) ^ (2 / self@m1)) *
                              self@a * ((cos(rtheta) >= 0) * 2 - 1),
                            (abs(sin(t)) ^ (2 / self@m1)) *
-                             self@b * ((sin(rtheta) >= 0) * 2 - 1)),
+                             self@b * ((sin(rtheta) >= 0) * 2 - 1), ...),
                      self@angle)
 
 
@@ -102,11 +102,13 @@ el_props <- list(
       }
     }),
     tangent_at = new_property(class_function, getter = function(self) {
-      \(theta = degree(0), definitional = FALSE) {
+      \(theta = degree(0), definitional = FALSE, ...) {
         if (!S7_inherits(theta, class_angle)) theta <- degree(theta)
         p <- self@point_at(theta, definitional)
         p_normal <- self@normal_at(theta, definitional)
-        segment(p, rotate(p_normal, degree(90), origin = p))@line
+        l <- segment(p, rotate(p_normal, degree(90), origin = p))@line
+        s <- rlang::list2(...)
+        rlang::inject(set_props(l, !!!s))
       }
     })
 
@@ -152,16 +154,17 @@ el_props <- list(
 #' @param m1 exponent of semi-major axis. *Settable.* Controls roundedness of superellipse
 #' @param m2 exponent of semi-minor axis. *Settable.* By default equal to `m1`. If different, some functions may not work as expected (e.g., `point_at`).
 #' @param angle ellipse rotation. *Settable.*
+#' @param label A character, angle, or label object
 #' @param n number of points in ellipse (default = 360). *Settable.*
-#' @param length Gets the number of ellipses
-#' @param tibble Gets a tibble (data.frame) containing parameters and styles used by `ggforce::geom_ellipse`.
-#' @param geom A function that converts the object to a geom. Any additional parameters are passed to `ggforce::geom_ellipse`.
-#' @param normal_at A function that finds a point perpendicular to the ellipse at angle `theta` at the specified `distance`. The `definitional` parameter is passed to the `point_at` function.
-#' @param point_at A function that finds a point on the ellipse at an angle `theta`. If `definitional` is `FALSE` (default), then `theta` is interpreted as an angle. If `TRUE`, then `theta` is the parameter in the definition of the ellipse in polar coordinates.
-#' @param tangent_at A function that finds a tangent line on the ellipse. Uses `point_at` to find the tangent point at angle `theta` and then returns the tangent line at that point.
+#' @slot length Gets the number of ellipses
+#' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggforce::geom_ellipse`.
+#' @slot geom A function that converts the object to a geom. Any additional parameters are passed to `ggforce::geom_ellipse`.
+#' @slot normal_at A function that finds a point perpendicular to the ellipse at angle `theta` at the specified `distance`. The `definitional` parameter is passed to the `point_at` function.
+#' @slot point_at A function that finds a point on the ellipse at an angle `theta`. If `definitional` is `FALSE` (default), then `theta` is interpreted as an angle. If `TRUE`, then `theta` is the parameter in the definition of the ellipse in polar coordinates.
+#' @slot tangent_at A function that finds a tangent line on the ellipse. Uses `point_at` to find the tangent point at angle `theta` and then returns the tangent line at that point.
 #' @inherit style params
 #' @param style gets and sets style parameters
-#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object if style is empty
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object
 #' @examples
 #' # specify center point and semi-major axes
 #' p <- point(0,0)
@@ -197,14 +200,6 @@ ellipse <- new_class(
     if (length(m1) == 0) m1 <- 2
 
     if (length(m2) == 0) m2 <- m1
-
-
-
-
-
-
-
-
 
     el_style <- center@style + style +
       style(
@@ -264,6 +259,11 @@ str_properties(object,
 }
 
 circle_or_ellipse <- new_union(circle, ellipse)
+
+method(projection, list(point, circle_or_ellipse)) <- function(p,object, ...) {
+  d <- p - object@center
+  object@point_at(d@theta, ...)
+}
 
  method(get_tibble, ellipse) <- function(x) {
   x@tibble

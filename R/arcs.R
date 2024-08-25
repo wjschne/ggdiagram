@@ -140,6 +140,11 @@ arc_props <- list(
   ),
   # functions ----
   funs = list(
+    geom = new_property(class_function, getter = function(self) {
+      \(...) {
+        as.geom(self, ...)
+      }
+    }),
     angle_at = new_property(class_function, getter = function(self) {
       \(point) {
         dp <- point - self@center
@@ -152,7 +157,7 @@ arc_props <- list(
         polar_just_angle = (self@midpoint(position) - self@center)@theta,
         polar_just_distance = 1.4,
         ...) {
-        mp <- midpoint(self, position = position)
+        mp <- midpoint(self, position = position, ...)
         label(p = mp,
               label = label,
               polar_just = polar(theta = polar_just_angle,
@@ -165,13 +170,13 @@ arc_props <- list(
     point_at = new_property(
       class_function,
       getter = function(self) {
-        \(theta = degree(0)) polar(theta = theta, r = self@radius, style = self@style)
+        \(theta = degree(0), ...) polar(theta = theta, r = self@radius, style = self@style, ...)
       }
     ),
     tangent_at = new_property(
       class = class_function,
       getter = function(self) {
-        \(theta = degree(0)) {
+        \(theta = degree(0), ...) {
           x0 <- self@center@x
           y0 <- self@center@y
           x1 <- cos(theta) * self@radius + self@center@x
@@ -180,7 +185,8 @@ arc_props <- list(
             a = x1 - x0,
             b = y1 - y0,
             c = x0^2 - (x1 * x0) + y0^2 - (y1 * y0) - self@radius^2,
-            style = self@style
+            style = self@style,
+            ...
           )
         }
       }
@@ -240,12 +246,22 @@ arc_props <- list(
 #' @param radius distance between center and edge arc (default = 1)
 #' @param start start angle (default = 0 degrees)
 #' @param end end angle (default = 0 degrees)
+#' @param start_point Specify where arc starts. Overrides `@center`
+#' @param end_point Specify where arc ends Overrides `@center`
 #' @param label A character, angle, or label object
-#' @param theta interior angle (end - start)
 #' @param n number of points in arc (default = 360)
-#' @param length The number of arcs in the arc object
+#' @param wedge Draw a wedge instead of an arc (default = `FALSE`)
 #' @param style a style object
-#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object if style is empty
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object
+#' @inherit style params
+#' @slot aesthetics A list of information about the arc's aesthetic properties
+#' @slot angle_at A function that finds the angle of the specified point in relation to the arc's center
+#' @slot geom A function that converts the object to a geom. Any additional parameters are passed to `ggarrow::geom_arrow`.
+#' @slot length The number of arcs in the arc object
+#' @slot point_at A function that finds a point on the arc at the specified angle.
+#' @slot tangent_at A function that finds the tangent line at the specified angle.
+#' @slot theta interior angle (end - start)
+#' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggarrow::geom_arrow`.
 #' @examples
 #' # specify center point and radius
 #' p <- point(0,0)

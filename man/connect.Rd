@@ -10,6 +10,8 @@ connect(x, y, ...)
 \item{x}{first shape (e.g., point, circle, ellipse, rectangle)}
 
 \item{y}{second shape}
+
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> Arguments passed to style}
 }
 \description{
 Arrow connect one shape to another

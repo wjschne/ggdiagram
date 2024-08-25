@@ -4,7 +4,7 @@
 #' @param x object
 #' @param y object
 #' @export
-inside <- new_generic("inside", c("x", "y"))
+inside <- new_generic("inside", c("x", "y"), fun = function(x,y) S7_dispatch())
 method(inside, list(point, rectangle)) <- function(x,y) {
  insideTF <-  (x@x <= y@northeast@x &&
     x@x >= y@northwest@x &&

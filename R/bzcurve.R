@@ -102,6 +102,11 @@ bz_props <- list(
   ),
   # functions ----
   funs = list(
+    geom = new_property(class_function, getter = function(self) {
+      \(...) {
+        as.geom(self, ...)
+      }
+    }),
     midpoint = new_property(class_function, getter = function(self) {
       \(position = .5, ...) midpoint(self, position = position, ...)
     })
@@ -156,10 +161,22 @@ bz_props <- list(
 #' If you wish to specify multiple bezier curves, you must supply a list of point objects. When plotted, the bzcurve function uses the bezier::bezier function to create the point coordinates of the curve and the ggarrow::geom_arrow function to create the geom.
 #' @export
 #' @param p point object or list of point objects
-#' @param length The number of curves in the bzcurve object
-#' @param ... properties passed to style
+#' @param label A character, angle, or label object
+#' @slot length The number of curves in the bzcurve object
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]>  properties passed to style
 #' @param style Gets and sets the styles associated with bzcurves
-#' @param tibble Gets a tibble (data.frame) containing parameters and styles used by `ggarrow::geom_arrow`.
+#' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggarrow::geom_arrow`.
+#' @inherit style params
+#' @slot geom A function that converts the object to a geom. Any additional parameters are passed to `ggarrow::geom_arrow`.
+#' @slot midpoint A function that selects 1 or more midpoints of the bzcurve. The `position` argument can be between 0 and 1. Additional arguments are passed to the point's style object.
+#' @slot aesthetics A list of information about the bzcurve's aesthetic properties
+#' @examples
+#' library(ggplot2)
+#' control_points <- point(c(0,1,2,4), c(0,4,0,0))
+#' ggplot() + coord_equal() +
+#'   bzcurve(control_points, color = "blue") +
+#'   path(control_points, linetype = "dashed", linewidth = .5) +
+#'   control_points
 bzcurve <- new_class(
   name = "bzcurve",
   parent = has_style,

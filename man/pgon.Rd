@@ -12,19 +12,28 @@ pgon(
   fill = class_missing,
   linewidth = 0.75,
   linetype = class_missing,
+  style = class_missing,
   ...
 )
 }
 \arguments{
 \item{p}{point object or list of point objects}
 
-\item{...}{properties passed to style}
+\item{label}{A character, angle, or label object}
 
-\item{length}{The number of polygons in the pgon object}
+\item{alpha}{numeric value for alpha transparency}
+
+\item{color}{character string for color}
+
+\item{fill}{character string for fill color}
+
+\item{linewidth}{Width of lines}
+
+\item{linetype}{type of lines}
 
 \item{style}{Gets and sets the styles associated with polygons}
 
-\item{tibble}{Gets a tibble (data.frame) containing parameters and styles used by \code{ggplot2::geom_polygon}.}
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
 }
 \description{
 A polygon is specified with a point object that contains at least 3 points, the start and the end. Any number of intermediate points are possible. The pgon class could not be named 'polygon' because that function name is used in base R graphics.
@@ -32,3 +41,11 @@ A polygon is specified with a point object that contains at least 3 points, the 
 \details{
 If you wish to specify multiple polygons, you must supply a list of point objects. When plotted, the pgon function uses the ggplot2::geom_polygon function to create the geom.
 }
+\section{Slots}{
+
+\describe{
+\item{\code{length}}{The number of polygons in the pgon object}
+
+\item{\code{tibble}}{Gets a tibble (data.frame) containing parameters and styles used by \code{ggplot2::geom_polygon}.}
+}}
+

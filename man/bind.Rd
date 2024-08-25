@@ -8,7 +8,14 @@ bind(x, ...)
 }
 \arguments{
 \item{x}{list of objects to bind}
+
+\item{...}{Arguments passed to style}
 }
 \description{
 bind method
+}
+\examples{
+bind(c(point(1,2), point(3,4)))
+bind(c(circle(point(0,0), radius = 1),
+       circle(point(1,1), radius = 2)))
 }

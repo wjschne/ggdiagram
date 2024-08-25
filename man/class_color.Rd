@@ -8,21 +8,25 @@ class_color(color = class_missing)
 }
 \arguments{
 \item{color}{character (R color or hex code)}
-
-\item{transparentize}{function to return the color with a new transparency (i.e., alpha)}
-
-\item{lighten}{function to return a lighter color}
-
-\item{darken}{function to return a darker color}
 }
 \description{
 color class
 }
+\section{Slots}{
+
+\describe{
+\item{\code{transparentize}}{function to return the color with a new transparency (i.e., alpha)}
+
+\item{\code{lighten}}{function to return a lighter color}
+
+\item{\code{darken}}{function to return a darker color}
+}}
+
 \examples{
 mycolor <- class_color("blue")
 mycolor
 c(mycolor)
-mycolor@tranparentize(.5)
+mycolor@transparentize(.5)
 mycolor@lighten(.5)
 mycolor@darken(.5)
 }

@@ -1,15 +1,15 @@
 #' color class
 #'
 #' @param color character (R color or hex code)
-#' @param transparentize function to return the color with a new transparency (i.e., alpha)
-#' @param lighten function to return a lighter color
-#' @param darken function to return a darker color
+#' @slot transparentize function to return the color with a new transparency (i.e., alpha)
+#' @slot lighten function to return a lighter color
+#' @slot darken function to return a darker color
 #' @export
 #' @examples
 #' mycolor <- class_color("blue")
 #' mycolor
 #' c(mycolor)
-#' mycolor@tranparentize(.5)
+#' mycolor@transparentize(.5)
 #' mycolor@lighten(.5)
 #' mycolor@darken(.5)
 class_color <- new_class(

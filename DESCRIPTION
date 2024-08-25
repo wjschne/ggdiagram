@@ -11,25 +11,32 @@ URL: https://github.com/wjschne/ggdiagram,
 BugReports: https://github.com/wjschne/ggdiagram/issues
 Imports: 
     arrowheadr,
+    farver,
     dplyr,
     geomtextpath,
     ggarrow,
     ggforce,
     ggplot2,
     ggtext,
-    glue,
+    grid,
     magrittr,
     purrr,
     rlang,
     S7,
+    stringr,
     tibble,
     tidyr
 Suggests: 
     knitr,
     quarto,
     rmarkdown,
+    scales,
+    signs,
     spelling,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    tinter,
+    viridis,
+    WJSmisc (>= 0.3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
@@ -59,3 +66,5 @@ Collate:
     'rotate.R'
     'zzz.R'
 VignetteBuilder: quarto
+Remotes:  
+    wjschne/WJSmisc

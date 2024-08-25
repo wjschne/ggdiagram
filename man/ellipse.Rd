@@ -35,13 +35,15 @@ ellipse(
 
 \item{m2}{exponent of semi-minor axis. \emph{Settable.} By default equal to \code{m1}. If different, some functions may not work as expected (e.g., \code{point_at}).}
 
+\item{label}{A character, angle, or label object}
+
 \item{alpha}{numeric value for alpha transparency}
 
 \item{color}{character string for color}
 
 \item{fill}{character string for fill color}
 
-\item{linewidth}{width of lines}
+\item{linewidth}{Width of lines}
 
 \item{linetype}{type of lines}
 
@@ -49,23 +51,27 @@ ellipse(
 
 \item{style}{gets and sets style parameters}
 
-\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> arguments passed to style object if style is empty}
-
-\item{length}{Gets the number of ellipses}
-
-\item{tibble}{Gets a tibble (data.frame) containing parameters and styles used by \code{ggforce::geom_ellipse}.}
-
-\item{geom}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggforce::geom_ellipse}.}
-
-\item{normal_at}{A function that finds a point perpendicular to the ellipse at angle \code{theta} at the specified \code{distance}. The \code{definitional} parameter is passed to the \code{point_at} function.}
-
-\item{point_at}{A function that finds a point on the ellipse at an angle \code{theta}. If \code{definitional} is \code{FALSE} (default), then \code{theta} is interpreted as an angle. If \code{TRUE}, then \code{theta} is the parameter in the definition of the ellipse in polar coordinates.}
-
-\item{tangent_at}{A function that finds a tangent line on the ellipse. Uses \code{point_at} to find the tangent point at angle \code{theta} and then returns the tangent line at that point.}
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> arguments passed to style object}
 }
 \description{
 Makes ellipses and superellipses
 }
+\section{Slots}{
+
+\describe{
+\item{\code{length}}{Gets the number of ellipses}
+
+\item{\code{tibble}}{Gets a tibble (data.frame) containing parameters and styles used by \code{ggforce::geom_ellipse}.}
+
+\item{\code{geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggforce::geom_ellipse}.}
+
+\item{\code{normal_at}}{A function that finds a point perpendicular to the ellipse at angle \code{theta} at the specified \code{distance}. The \code{definitional} parameter is passed to the \code{point_at} function.}
+
+\item{\code{point_at}}{A function that finds a point on the ellipse at an angle \code{theta}. If \code{definitional} is \code{FALSE} (default), then \code{theta} is interpreted as an angle. If \code{TRUE}, then \code{theta} is the parameter in the definition of the ellipse in polar coordinates.}
+
+\item{\code{tangent_at}}{A function that finds a tangent line on the ellipse. Uses \code{point_at} to find the tangent point at angle \code{theta} and then returns the tangent line at that point.}
+}}
+
 \examples{
 # specify center point and semi-major axes
 p <- point(0,0)

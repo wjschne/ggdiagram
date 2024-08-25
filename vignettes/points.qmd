@@ -24,8 +24,6 @@ library(ggtext)
 library(ggarrow)
 library(arrowheadr)
 my_font <- "Roboto Condensed"
-gdtools::register_gfont(family = my_font)
-gdtools::addGFontHtmlDependency(family = my_font)
 ```
 
 # Setup
@@ -233,7 +231,6 @@ distance(p3, c1)
 #| fig-cap: "Point to Circle Distances"
 #| fig-width: 7
 #| fig-height: 7
-# pts <- bind_shape(c(p1, p2, p3))
 intersect_c1_p2 <- c1@point_at((p2 - c1@center)@theta)
 
 seg_style <- style(

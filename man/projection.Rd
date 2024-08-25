@@ -4,12 +4,14 @@
 \alias{projection}
 \title{Find projection of a point on an object (e.g., line or segment)}
 \usage{
-projection(point, object, ...)
+projection(p, object, ...)
 }
 \arguments{
-\item{point}{point}
+\item{p}{point}
 
 \item{object}{object (e.g., line or segment)}
+
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> arguments passed to style object}
 }
 \description{
 Find projection of a point on an object (e.g., line or segment)

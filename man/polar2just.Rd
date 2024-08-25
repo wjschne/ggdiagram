@@ -2,7 +2,7 @@
 % Please edit documentation in R/points.R
 \name{polar2just}
 \alias{polar2just}
-\title{Convert hjust and vjust parameters from polar coordinates}
+\title{polar2just}
 \usage{
 polar2just(x, multiplier = 1.2, axis = c("h", "v"))
 }

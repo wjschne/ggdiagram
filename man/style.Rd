@@ -69,27 +69,73 @@ style(
 
 \item{fontface}{Can be plain, bold, italic, or bold.italic}
 
-\item{hjust}{horizontal justification}
+\item{hjust}{horizontal justification.}
 
-\item{lineheight}{height of line of text}
+\item{justify}{A numeric(1) between 0 and 1 to control where the arrows should be drawn relative to the path's endpoints. A value of 0 sets the arrow's tips at the path's end, whereas a value of 1 sets the arrow's base at the path's end. From ggarrow.}
 
-\item{linejoin}{height of line of text}
+\item{label.color}{Color of label outline.}
 
-\item{linewidth}{width of lines}
+\item{label.margin}{Amount of distance around label. Unit vector of length four. Usually created with \code{ggplot2::margin}.}
+
+\item{label.padding}{Amount of padding around label. Unit vector of length four. Usually created with \code{ggplot2::margin}.}
+
+\item{label.r}{Radius of rounded corners. Defaults to 0.15 lines.}
+
+\item{label.size}{Width of label outline.}
+
+\item{arrowhead_length}{Determines the size of the arrow ornaments. This parameter becomes the \code{length} parameter in ggarrow functions. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner.}
+
+\item{length_head}{Determines the size of the arrow head. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner. From ggarrow.}
+
+\item{length_fins}{Determines the size of the arrow fins. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner. From ggarrow.}
+
+\item{length_mid}{Determines the size of the middle arrows. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner. From ggarrow.}
+
+\item{lineend}{Line end style (round, butt, square).}
+
+\item{lineheight}{Height of line of text}
+
+\item{linejoin}{Line join style (round, mitre, bevel).}
+
+\item{linewidth_fins}{Line width for arrow fins}
+
+\item{linewidth_head}{Line width for arrow fins}
+
+\item{linewidth}{Width of lines}
 
 \item{linetype}{type of lines}
 
-\item{n}{number of points in a polygon}
+\item{n}{Number of points in a polygon, circle, arc, or ellipse}
+
+\item{nudge_x}{Horizontal adjustment to nudge labels by.}
+
+\item{nudge_y}{Vertical adjustment to nudge labels by.}
 
 \item{polar_just}{an angle, polar point, or point that alters hjust and vjust (polar polar_just not stored in style)}
 
-\item{shape}{type of shape}
+\item{resect}{A numeric(1) denoting millimeters or \if{html}{\out{<unit>}} to shorten the arrow head and fins.}
+
+\item{resect_fins}{A numeric(1) denoting millimeters or \if{html}{\out{<unit>}} to shorten the arrow fins}
+
+\item{resect_head}{A numeric(1) denoting millimeters or \if{html}{\out{<unit>}} to shorten the arrow head.}
+
+\item{shape}{Point shape type. Can be specified with an integer (between 0 and 25), a single character (which uses that character as the plotting symbol), a . to draw the smallest rectangle that is visible (i.e., about one pixel), an NA to draw nothing, or a mapping to a discrete variable.}
 
 \item{size}{numeric size}
 
 \item{size.unit}{How the size aesthetic is interpreted: as points ("pt"), millimeters ("mm"), centimeters ("cm"), inches ("in"), or picas ("pc").}
 
+\item{stroke}{Width of point border line}
+
+\item{stroke_color}{Color of point border line}
+
+\item{stroke_width}{Stroke width in arrows}
+
+\item{text.color}{Color of label text.}
+
 \item{vjust}{vertical justification}
+
+\item{...}{unused}
 }
 \description{
 style class
