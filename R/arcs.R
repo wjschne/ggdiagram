@@ -309,6 +309,8 @@ arc <- new_class(
                          stroke_color = class_missing,
                          stroke_width = class_missing,
                          style = class_missing,
+                         x0 = class_missing,
+                         y0 = class_missing,
                          ...) {
 
     if (!S7_inherits(start, class_angle)) {
@@ -318,6 +320,19 @@ arc <- new_class(
     if (!S7_inherits(end, class_angle)) {
       end <- degree(end)
     }
+
+    if (length(x0) > 0 | length(y0) > 0) {
+      if (length(x0) == 0) {
+        x0 <- 0
+      }
+      if (length(y0) == 0) {
+        y0 <- 0
+      }
+      center <- point(tibble::tibble(x = x0, y = y0))
+    }
+
+
+
 
     if (S7_inherits(start_point, point)) {
       c1 <- circle(radius = radius)
@@ -559,6 +574,8 @@ method(
 
 method(`[`, arc) <- function(x, y) {
   d <- as.list(x@tibble[y,])
-  rlang::inject(arc(!!!d))
+  z <- rlang::inject(arc(!!!d))
+  z@label <- x@label[y]
+  z
 }
 

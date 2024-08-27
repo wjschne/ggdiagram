@@ -352,3 +352,15 @@ method(as.geom, path) <- function(x, ...) {
   }
   gc
 }
+
+
+method(`[`, path) <- function(x, y) {
+  d <- x@tibble[y,]
+  dl <- d %>%
+    dplyr::select(-.data$x, -.data$y, -.data$group) %>%
+    unique() %>%
+    as.list()
+  z <- rlang::inject(path(p = x@p[y], !!!dl))
+  z@label <- x@label[y]
+  z
+}

@@ -193,6 +193,8 @@ ellipse <- new_class(
                          linetype = class_missing,
                          n = class_missing,
                          style = class_missing,
+                         x0 = class_missing,
+                         y0 = class_missing,
                          ...) {
     if (!S7_inherits(angle, class_angle)) angle <- degree(angle)
 
@@ -211,6 +213,16 @@ ellipse <- new_class(
         n = n
       ) +
       style(...)
+
+    if (length(x0) > 0 | length(y0) > 0) {
+      if (length(x0) == 0) {
+        x0 <- 0
+      }
+      if (length(y0) == 0) {
+        y0 <- 0
+      }
+      center <- point(tibble::tibble(x = x0, y = y0))
+    }
 
     non_empty_list <- get_non_empty_props(el_style)
     d <- tibble::tibble(x0 = center@x, y0 = center@y, a = a, b = b, angle = angle@radian, m1 = m1, m2 = m2)
@@ -285,8 +297,11 @@ method(get_tibble_defaults, ellipse) <- function(x) {
 }
 
 method(`[`, ellipse) <- function(x, y) {
-  d <- as.list(x@tibble[y,])
-  rlang::inject(ellipse(!!!d))
+  d <- x@tibble[y,]
+  dl <- as.list(dplyr::select(d, -.data$x0, -.data$y0))
+  z <- rlang::inject(ellipse(center = point(d$x0, d$y0), !!!dl))
+  z@label <- x@label[y]
+  z
 }
 
 method(connect, list(centerpoint, centerpoint)) <- function(x,y, ...) {

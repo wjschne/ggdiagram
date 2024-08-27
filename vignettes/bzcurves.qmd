@@ -142,3 +142,14 @@ bp +
     arrow_head = my_arrowhead)
 ```
 
+```{r}
+bzcurve(
+    c(
+      point(c(-4, -3, 4), c(0,  4, 0)),
+      point(c(-4, -3, 4), c(0, -4, 0))
+    ),
+    resect_head = 2, 
+    arrowhead_length = 7,
+    arrow_head = my_arrowhead)[1]
+```
+

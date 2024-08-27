@@ -70,6 +70,7 @@ class_margin <- new_class(
   name = "class_margin",
   parent = class_list,
   constructor = function(x = class_missing, units = "pt") {
+
     if (S7_inherits(x, class_margin))
       return(x)
     if (length(x) > 0) {
@@ -77,12 +78,19 @@ class_margin <- new_class(
         x <- grid::unit(x, units = units)
       }
       if (is.list(x)) {
-        if (all(purrr::map_lgl(x, \(o) {"margin" %in% class(o)}))) {
+         if (all(purrr::map_lgl(x, \(o) {"margin" %in% class(o)}))) {
+          return(purrr::map(x, class_margin))
+         }
+        if (all(purrr::map_lgl(x, \(o) {"unit" %in% class(o)}))) {
+          return(purrr::map(x, class_margin))
+        }
+        if (all(purrr::map_lgl(x, \(o) {S7_inherits(o, class_margin)}))) {
           return(purrr::map(x, class_margin))
 
         }
 
       }
+
       if ("margin" %in% class(x)) {
 
       } else if ("unit" %in% class(x)) {

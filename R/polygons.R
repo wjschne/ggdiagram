@@ -275,6 +275,17 @@ method(as.geom, pgon) <- function(x, ...) {
 }
 
 
+method(`[`, pgon) <- function(x, y) {
+  d <- x@tibble[y,]
+  dl <- d %>%
+    dplyr::select(-.data$x, -.data$y, -.data$group) %>%
+    unique() %>%
+    as.list()
+  z <- rlang::inject(pgon(p = x@p[y], !!!dl))
+  z@label <- x@label[y]
+  z
+}
+
 method(connect, list(pgon, pgon)) <- function(x,y, ...) {
   centroid_segment <- segment(x@centroid, y@centroid)
   connect(intersection(x, centroid_segment), intersection(y, centroid_segment), ...)

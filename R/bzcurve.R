@@ -357,3 +357,15 @@ method(as.geom, bzcurve) <- function(x, ...) {
   }
   gc
 }
+
+method(`[`, bzcurve) <- function(x, y) {
+  d <- x@tibble[y,]
+  dl <- d %>%
+    dplyr::select(-.data$x, -.data$y, -.data$group) %>%
+    unique() %>%
+    as.list()
+  z <- rlang::inject(bzcurve(p = x@p[y], !!!dl))
+  z@label <- x@label[y]
+  z
+}
+

@@ -172,12 +172,14 @@ circle <- new_class(
       ) +
       style(...)
 
-    if (length(x0) > 0) {
-      center@x <- x0
-    }
-
-    if (length(y0) > 0) {
-      center@y <- y0
+    if ((length(x0) > 0) || (length(y0) > 0)) {
+      if (length(x0) == 0) {
+        x0 <- 0
+      }
+      if (length(y0) == 0) {
+        y0 <- 0
+      }
+      center <- point(tibble::tibble(x = x0, y = y0))
     }
 
     non_empty_list <- get_non_empty_props(c_style)
@@ -248,8 +250,11 @@ method(get_tibble_defaults, circle) <- function(x) {
 }
 
 method(`[`, circle) <- function(x, y) {
-  d <- as.list(x@tibble[y,])
-  rlang::inject(circle(!!!d))
+  d <- x@tibble[y,]
+  dl <- as.list(dplyr::select(d, -.data$x0, -.data$y0))
+  z <- rlang::inject(circle(center = point(d$x0, d$y0), !!!dl))
+  z@label <- x@label[y]
+  z
 }
 
 method(`==`, list(circle, circle)) <- function(e1, e2) {

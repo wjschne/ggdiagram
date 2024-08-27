@@ -192,7 +192,19 @@ rectangle <- new_class(
                          linewidth = .5,
                          linetype = class_missing,
                          style = class_missing,
+                         x = class_missing,
+                         y = class_missing,
                          ...) {
+    
+                          if (length(x) > 0 | length(y) > 0) {
+                            if (length(x) == 0) {
+                              x <- 0
+                            }
+                            if (length(y) == 0) {
+                              y <- 0
+                            }
+                            center <- point(tibble::tibble(x = x, y = y))
+                          }
 
                           hasnorth <- FALSE
                           hassouth <- FALSE
@@ -360,8 +372,11 @@ method(`==`, list(rectangle, rectangle)) <- function(e1, e2) {
 }
 
 method(`[`, rectangle) <- function(x, y) {
-  d <- as.list(x@tibble[y,])
-  rlang::inject(rectangle(!!!d))
+  d <- x@tibble[y,]
+  dl <- as.list(dplyr::select(d, -.data$x0, -.data$y0))
+  z <- rlang::inject(rectangle(center = point(d$x0, d$y0), !!!dl))
+  z@label <- x@label[y]
+  z
 }
 
 

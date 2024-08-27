@@ -58,9 +58,10 @@ my_text_size <- 20
 my_point_size <- 2.5
 # my_colors <- viridis::viridis(2, begin = .25, end = .5)
 my_colors <- c("#3B528B", "#21908C")
-update_geom_defaults(geom = "richtext", 
-                     new = list(family = my_font, 
-                                size = .8 * my_text_size / ggplot2::.pt))
+update_geom_defaults(
+  geom = "richtext", 
+  new = list(family = my_font, 
+             size = .8 * my_text_size / ggplot2::.pt))
 
 update_geom_defaults("point", list(size = my_point_size))
 
@@ -76,7 +77,8 @@ theme_set(
 
 bp <- ggplot() +
   coord_equal() +
-  scale_x_continuous(labels = WJSmisc::signs_centered, limits = c(-4, 4)) +
+  scale_x_continuous(labels = WJSmisc::signs_centered, 
+                     limits = c(-4, 4)) +
   scale_y_continuous(labels = signs::signs, limits = c(-4, 4)) +
   theme_minimal(base_size = 16) +
   theme(
@@ -352,4 +354,6 @@ bp +
         angle = l1@angle, 
         vjust = 0)
 ```
+
+
 
