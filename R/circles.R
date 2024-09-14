@@ -19,6 +19,13 @@ cr_props <- list(
     area = new_property(getter = function(self) {
       pi + self@radius ^ 2
     }),
+    bounding_box = new_property(getter = function(self) {
+        rectangle(
+          southwest = point(x = min(self@center@x - self@radius),
+                            y = min(self@center@y - self@radius)),
+          northeast = point(x = max(self@center@x + self@radius),
+                            y = max(self@center@y + self@radius)))
+    }),
     circumference = new_property(getter = function(self) {
       pi + self@radius * 2
     }),
@@ -68,10 +75,18 @@ cr_props <- list(
         dp@theta
       }
     }),
+    normal_at = new_property(class_function, getter = function(self) {
+      \(theta = degree(0), distance = 1) {
+        if (S7_inherits(theta, point)) theta <- projection(theta, self)@theta
+        if (!S7_inherits(theta, class_angle)) theta <- degree(theta)
+        polar(theta, self@radius + distance) + self@center
+      }
+    }),
     tangent_at = new_property(
       class = class_function,
       getter = function(self) {
         \(theta = degree(0), ...) {
+          if (!S7_inherits(theta, class_angle)) theta <- degree(theta)
           x0 <- self@center@x
           y0 <- self@center@y
           x1 <- cos(theta) * self@radius + self@center@x
@@ -90,6 +105,7 @@ cr_props <- list(
       class_function,
       getter = function(self) {
         \(theta = degree(0), ...) {
+          if (!S7_inherits(theta, class_angle)) theta <- degree(theta)
           self@center + polar(theta = theta, r = self@radius, style = self@style, ...)
           }
       }
@@ -263,19 +279,19 @@ method(`==`, list(circle, circle)) <- function(e1, e2) {
 
 # Place ----
 
-method(place, list(circle, circle)) <- function(x, from, where = "right", sep = 1) {
-
-  where <- degree(where)
-  p <- polar(where, sep + x@radius + from@radius)
-  x@center@x <- from@center@x + p@x
-  x@center@y <- from@center@y + p@y
-
-  if (S7_inherits(x@label, label)) {
-    x@label@p <- x@center
-  }
-  x
-
-}
+# method(place, list(circle, circle)) <- function(x, from, where = "right", sep = 1) {
+#
+#   where <- degree(where)
+#   p <- polar(where, sep + x@radius + from@radius)
+#   x@center@x <- from@center@x + p@x
+#   x@center@y <- from@center@y + p@y
+#
+#   if (S7_inherits(x@label, label)) {
+#     x@label@p <- x@center
+#   }
+#   x
+#
+# }
 
 method(place, list(line, circle)) <- function(x, from, where = "right", sep = 1) {
   where <- degree(where)
@@ -283,4 +299,23 @@ method(place, list(line, circle)) <- function(x, from, where = "right", sep = 1)
   from@tangent_at(where)
 }
 
+method(shape_array, circle) <- function(x, k = 2, sep = 1, where = "east", anchor = "center", ...) {
+  # s <- seq(0, (sep + x@radius) * (k - 1), sep + x@radius)
+  # px <- cos(degree(where)) * s
+  # py <- sin(degree(where)) * s
+  # p <- circle(point(px, py), radius = x@radius)
+  # bb <- p@bounding_box
+  # if (anchor == "center") {
+  #   p_anchor <- bb@center
+  # } else {
+  #   p_anchor <- bb@point_at(anchor)
+  # }
+  # circle(p@center - p_anchor + x@center, style = x@style, ...)
 
+  sa <- shape_array_helper(x = x, k = k, sep = sep, where = where, anchor = anchor, ...)
+
+  rlang::inject(circle(center = sa$p_center,
+                        radius = x@radius,
+                        style = x@style,
+                        !!!sa$dots))
+}

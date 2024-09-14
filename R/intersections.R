@@ -50,17 +50,59 @@ method(intersection, list(line, line)) <- function(x,y, ...) {
 }
 method(intersection, list(segment, segment)) <- function(x,y, ...) {
 
-  i_line <- intersection(x@line, y@line, ...)
-  p <- list()
-  if (length(i_line) > 0) {
-    A <- t(rbind((x@p2 - x@p1)@xy,
-                 (y@p1 - y@p2)@xy))
-    B <- t((y@p1 - x@p1)@xy)
-    C <- solve(A, B)
-    if (all(C >= 0 & C <= 1)) {
-      p <- i_line
-    }
+  # i_line <- intersection(x@line, y@line, ...)
+
+  # https://stackoverflow.com/a/1968345/4513316
+
+  d <- tibble::tibble(
+    p0_x = x@p1@x,
+    p0_y = x@p1@y,
+    p1_x = x@p2@x,
+    p1_y = x@p2@y,
+    p2_x = y@p1@x,
+    p2_y = y@p1@y,
+    p3_x = y@p2@x,
+    p3_y = y@p2@y,
+    s1_x = p1_x - p0_x,
+    s1_y = p1_y - p0_y,
+    s2_x = p3_x - p2_x,
+    s2_y = p3_y - p2_y,
+    s12_x = p0_x - p2_x,
+    s12_y = p0_y - p2_y,
+    denom = -s2_x * s1_y + s1_x * s2_y
+  ) |>
+    dplyr::filter(denom != 0) |>
+    dplyr::mutate(
+      s = (-s1_y * s12_x + s1_x * s12_y) / denom,
+      u = (s2_x * s12_y - s2_y * s12_x) / denom
+    ) |>
+    dplyr::filter(
+      s >= 0 & s <= 1 & u >= 0 & u <= 1
+    ) |>
+    unique()
+
+  if (nrow(d) > 0) {
+    p <- d |>
+      dplyr::mutate(i_x = p0_x + (u * s1_x),
+             i_y = p0_y + (u * s1_y)) |>
+      dplyr::select(x = i_x,
+                    y = i_y) |>
+      point(style = x@style + y@style + style(...))
+
+  } else {
+    p <- list()
   }
+  # p <- list()
+  # if (length(i_line) > 0) {
+  #   A <- t(rbind((x@p2 - x@p1)@xy,
+  #                (y@p1 - y@p2)@xy))
+  #   print(A)
+  #   B <- t((y@p1 - x@p1)@xy)
+  #   C <- solve(A, B)
+  #   if (all(C >= 0 & C <= 1)) {
+  #     p <- i_line
+  #   }
+  # }
   p
 }
 
@@ -223,6 +265,9 @@ method(intersection, list(rectangle, line)) <- function(x, y, ...) {
 }
 
 method(intersection, list(segment, rectangle)) <- function(x, y, ...) {
+  y@width <- ifelse(y@width == 0, .0001, y@width)
+  y@height <- ifelse(y@height == 0, .0001, y@height)
+
   unique(c(intersection(x, segment(p1 = y@northeast,
                                    p2 = y@northwest), ...),
            intersection(x, segment(p1 = y@northwest,

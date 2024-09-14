@@ -29,6 +29,18 @@ sg_props <- list(
   styles = style@properties[sg_styles],
   # derived ----
   derived = list(
+    bounding_box = new_property(getter = function(self) {
+
+      d_rect <- self@tibble |>
+        dplyr::summarise(xmin = min(c(x,xend)),
+                         xmax = max(c(x,xend)),
+                         ymin = min(c(y,yend)),
+                         ymax = max(c(y,yend)))
+
+      rectangle(southwest = point(d_rect$xmin, d_rect$ymin),
+                northeast = point(d_rect$xmax, d_rect$ymax))
+
+    }),
     distance = new_property(
       getter = function(self) {
         distance(self)
@@ -225,7 +237,32 @@ segment <- new_class(
                          stroke_color = class_missing,
                          stroke_width = class_missing,
                          style = class_missing,
+                         x = class_missing,
+                         xend = class_missing,
+                         y = class_missing,
+                         yend = class_missing,
                          ...) {
+
+    if ((length(x) > 0) || (length(xend) > 0)) {
+      if (length(x) == 0) {
+        x <- 0
+      }
+      if (length(xend) == 0) {
+        xend <- 0
+      }
+      p1 <- point(tibble::tibble(x = x, y = xend))
+    }
+
+    if ((length(y) > 0) || (length(yend) > 0)) {
+      if (length(y) == 0) {
+        y <- 0
+      }
+      if (length(yend) == 0) {
+        yend <- 0
+      }
+      p2 <- point(tibble::tibble(x = y, y = yend))
+    }
+
     if (length(p1) == 0) {
       stop("p1 must be a point object with one or more points.")
     } else {

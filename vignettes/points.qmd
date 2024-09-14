@@ -9,7 +9,9 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r presetup, include = FALSE}
+```{r}
+#| label: presetup
+#| include: false
 knitr::opts_chunk$set(
   collapse = TRUE,
   dev = "ragg_png",
@@ -30,7 +32,8 @@ my_font <- "Roboto Condensed"
 
 ## Packages
 
-```{r setup}
+```{r}
+#| label: setup
 library(ggdiagram)
 library(ggplot2)
 library(dplyr)
@@ -44,7 +47,8 @@ library(arrowheadr)
 
 To avoid repetitive code, we make a base plot:
 
-```{r baseplot}
+```{r}
+#| label: baseplot
 my_font <- "Roboto Condensed"
 my_text_size <- 20
 my_point_size <- 3
@@ -68,7 +72,8 @@ bp <- ggplot() +
 
 Points have x and y coordinates. 
 
-```{r fig-points}
+```{r}
+#| label: fig-points
 #| fig-cap: Creating points
 p1 <- point(1, 2, color = "firebrick")
 p2 <- point(3, 4, color = "royalblue3")
@@ -85,14 +90,16 @@ A point's x and y coordinates can be specified in polar coordinates
 * `@r`: The distance from the origin to the point (i.e., the vector's magnitude)
 * `@theta`: The angle (in radians) from the line on the x-axis to the line containing the vector.
 
-```{r rtheta}
+```{r}
+#| label: rtheta
 p2
 p2@r
 p2@theta
 ```
 
 
-```{r fig-polar}
+```{r}
+#| label: fig-polar
 #| code-fold: true
 #| fig-cap: "Polar Coordinates"
 #| fig-width: 7
@@ -122,13 +129,15 @@ ggplot() +
 
 A point can be created with polar coordinates
 
-```{r polar}
+```{r}
+#| label: polar
 polar(r = 5, theta = degree(60))
 ```
 
 If the angle is numeric instead of an angle, it is assumed to be in radians. 
 
-```{r radian}
+```{r}
+#| label: radian
 polar(r = 1, theta = pi)@theta
 ```
 
@@ -137,7 +146,8 @@ polar(r = 1, theta = pi)@theta
 
 This will extract any styles that have been set.
 
-```{r get_tibble}
+```{r}
+#| label: get_tibble
 get_tibble(point(1,2, 
                  color = "red", 
                  shape = 16))
@@ -145,7 +155,8 @@ get_tibble(point(1,2,
 
 As a convenience, the tibble associated with the point object can be accessed with the `@tibble` property.
 
-```{r at_tibble}
+```{r}
+#| label: at_tibble
 point(1:5,2, 
       color = "blue", 
       shape = 1:5)@tibble
@@ -158,7 +169,8 @@ point(1:5,2,
 
 Points can be added and subtracted:
 
-```{r addition}
+```{r}
+#| label: addition
 p1 <- point(2, 3)
 p2 <- point(2, 1)
 p3 <- p1 + p2
@@ -168,14 +180,16 @@ p3 - p2
 
 Points can be scaled with constants
 
-```{r scaling}
+```{r}
+#| label: scaling
 p2 * 2
 p3 / 4
 ```
 
 The *x* and *y* coordinates can be scaled separately with other points:
 
-```{r point_scaling}
+```{r}
+#| label: point_scaling
 p1 / p3
 p1 * p3
 ```
@@ -185,13 +199,15 @@ p1 * p3
 
 The distance between two points:
 
-```{r point_distance}
+```{r}
+#| label: point_distance
 distance(p1, p2)
 ```
 
 The shortest distance from a point to a line:
 
-```{r point_line_distance}
+```{r}
+#| label: point_line_distance
 l1 <- line(slope = 1, 
            intercept = 2)
 distance(p1, l1)
@@ -199,8 +215,8 @@ distance(p1, l1)
 
 The shortest distance from a point to a circle's edge:
 
-```{r point_circle_distance}
-
+```{r}
+#| label: point_circle_distance
 c1 <- circle(center = point(2, 2), radius = 2)
 p1 <- c1@center + polar(
   r = c1@radius * 1, 
@@ -226,7 +242,8 @@ distance(p2, c1)
 distance(p3, c1)
 ```
 
-```{r fig-pointcircle}
+```{r}
+#| label: fig-pointcircle
 #| code-fold: true
 #| fig-cap: "Point to Circle Distances"
 #| fig-width: 7
@@ -280,7 +297,8 @@ bp +
 
 The `as.geom` function is called implicitly whenever a point object is added to a ggplot.
 
-```{r fig-pts}
+```{r}
+#| label: fig-pts
 pts <- point(x = c(3,2), 
              y = c(4,3), 
              color = c("red", "blue"),
@@ -292,14 +310,16 @@ ggplot() +
 
 This is equivalent to 
 
-```{r fig-asgeom}
+```{r}
+#| label: fig-asgeom
 ggplot() +
   as.geom(pts)
 ```
 
 And this is equivalent to 
 
-```{r fig-geompoint}
+```{r}
+#| label: fig-geompoint
 ggplot() +
   geom_point(
     aes(
@@ -314,7 +334,8 @@ That is, any style information that can be mapped will be handled via the `I` (i
 
 Calling the `as.geom` function directly is useful for overriding any style information in the points. 
 
-```{r fig-yellowtriangle}
+```{r}
+#| label: fig-yellowtriangle
 ggplot() + 
   as.geom(pts, 
           stroke = 1.5,
@@ -324,7 +345,8 @@ ggplot() +
 
 This is equivalent to 
 
-```{r fig-yellowtriangle_geom}
+```{r}
+#| label: fig-yellowtriangle_geom
 ggplot() +
   geom_point(
     aes(x = x, 
@@ -339,9 +361,18 @@ ggplot() +
 ```
 
 
+# Bounding box
 
+It is possible to find the rectangle that bounds all the points in a point object
 
-
+```{r}
+#| label: fig-bounding
+#| fig-cap: The bounding box of a set of points
+bp + 
+  {pts <- point(x = 1:4,
+                y = c(3,3,4, 2))} + 
+  pts@bounding_box
+```
 
 
 

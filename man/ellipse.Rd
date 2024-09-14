@@ -19,6 +19,8 @@ ellipse(
   linetype = class_missing,
   n = class_missing,
   style = class_missing,
+  x0 = class_missing,
+  y0 = class_missing,
   ...
 )
 }
@@ -65,11 +67,11 @@ Makes ellipses and superellipses
 
 \item{\code{geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggforce::geom_ellipse}.}
 
-\item{\code{normal_at}}{A function that finds a point perpendicular to the ellipse at angle \code{theta} at the specified \code{distance}. The \code{definitional} parameter is passed to the \code{point_at} function.}
+\item{\code{normal_at}}{A function that finds a point perpendicular to the ellipse at angle \code{theta} at the specified \code{distance}. The \code{definitional} parameter is passed to the \code{point_at} function. If a point is supplied instead of an angle, the point is projected onto the ellipse and then the normal is calculated found from the projected point.}
 
 \item{\code{point_at}}{A function that finds a point on the ellipse at an angle \code{theta}. If \code{definitional} is \code{FALSE} (default), then \code{theta} is interpreted as an angle. If \code{TRUE}, then \code{theta} is the parameter in the definition of the ellipse in polar coordinates.}
 
-\item{\code{tangent_at}}{A function that finds a tangent line on the ellipse. Uses \code{point_at} to find the tangent point at angle \code{theta} and then returns the tangent line at that point.}
+\item{\code{tangent_at}}{A function that finds a tangent line on the ellipse. Uses \code{point_at} to find the tangent point at angle \code{theta} and then returns the tangent line at that point. If a point is supplied instead of an angle, the point is projected onto the ellipse and then the tangent line is found from there.}
 }}
 
 \examples{

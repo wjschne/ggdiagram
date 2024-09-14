@@ -27,6 +27,10 @@ segment(
   stroke_color = class_missing,
   stroke_width = class_missing,
   style = class_missing,
+  x = class_missing,
+  xend = class_missing,
+  y = class_missing,
+  yend = class_missing,
   ...
 )
 }

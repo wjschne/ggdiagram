@@ -9,7 +9,9 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r presetup, include = FALSE}
+```{r}
+#| label: presetup
+#| include: false
 knitr::opts_chunk$set(
   collapse = TRUE,
   dev = "ragg_png",
@@ -28,7 +30,8 @@ my_font <- "Roboto Condensed"
 
 ## Packages
 
-```{r setup}
+```{r}
+#| label: setup
 library(ggdiagram)
 library(ggplot2)
 library(dplyr)
@@ -40,7 +43,8 @@ library(ggtext)
 
 To avoid repetitive code, we make a base plot:
 
-```{r baseplot}
+```{r}
+#| label: baseplot
 my_font <- "Roboto Condensed"
 my_text_size <- 20
 my_point_size <- 2.5
@@ -82,12 +86,14 @@ bp <- ggplot() +
 
 Lines can be constructed from a slope and an intercept:
 
-```{r construct_line}
+```{r}
+#| label: construct_line
 l <- line(slope = 2, intercept = 1, color = my_colors[1])
 l
 ```
 
-```{r fig-slopeintercept}
+```{r}
+#| label: fig-slopeintercept
 #| fig-cap: !expr 'paste0("A line with slope of ", l@slope, " and intercept of ", l@intercept)'
 #| code-fold: true
 
@@ -99,29 +105,32 @@ bp +
 
 Because the default slope is 0, a horizontal line can be set with just the intercept:
 
-```{r hline}
+```{r}
+#| label: hline
 h <- line(intercept = 2, color = my_colors[1])
 h
 ```
 
-```{r fig-horitonal}
+```{r}
+#| label: fig-horitonal
 #| fig-cap: !expr 'paste0("A horizontal line intercept of ", h@intercept)'
 #| code-fold: true
 bp + 
   h + 
   h@point_at_x(0)@label(h@equation)
-
 ```
 
 
 A vertical line can be set with the x-intercept:
 
-```{r vline}
+```{r}
+#| label: vline
 v <- line(xintercept = -2, color = my_colors[1])
 v
 ```
 
-```{r fig-v}
+```{r}
+#| label: fig-v
 #| fig-cap: !expr 'paste0("Vertical line at x = ", signs::signs(v@xintercept))'
 #| code-fold: true
 bp + 
@@ -138,11 +147,13 @@ $$
 ax+by+c=0
 $$
 
-```{r abcline}
+```{r}
+#| label: abcline
 l_123 <- line(a = 1, b = 2, c = 3, color = my_colors[1])
 ```
 
-```{r fig-ablcline_plot}
+```{r}
+#| label: fig-ablcline_plot
 #| fig-cap: !expr 'paste0("Line with slope = ", signs::signs(l_123@slope), " and intercept = ", signs::signs(l_123@intercept))'
 #| code-fold: true
 bp +
@@ -162,7 +173,8 @@ With respect to the general form, the slope is equal to $-\frac{a}{b}$, the y-in
 A point can be "projected" onto a line. Imagine shining a light on the point in a direction perpendicular to the line. The point's shadow on the line would be the shortest distance between the line and the point.
 
 
-```{r projection}
+```{r}
+#| label: projection
 p <- point(3,-2, color = my_colors[2])
 l <- line(slope = 2, intercept = 2, color = my_colors[1])
 # Point p projected onto line l
@@ -170,15 +182,13 @@ p_projected <- projection(p, l)
 
 # Alternately:
 l@projection(p)
-
-
-
 ```
 
 
 The shortest distance from a point to a line can be calculated.
 
-```{r short}
+```{r}
+#| label: short
 # distance from point p to line l
 distance(p, l)
 
@@ -186,7 +196,8 @@ distance(p, l)
 segment(p, l@projection(p))@distance
 ```
 
-```{r fig-point_line}
+```{r}
+#| label: fig-point_line
 #| fig-cap: Shortest distance between a line and point
 #| code-fold: true
 

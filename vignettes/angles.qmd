@@ -10,7 +10,9 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r presetup, include = FALSE}
+```{r}
+#| label: presetup
+#| include: false
 library(ggdiagram)
 library(ggplot2)
 library(dplyr)
@@ -37,7 +39,8 @@ update_geom_defaults("arrow_segment", list(length_head = 5))
 
 # Setup
 
-```{r setup}
+```{r}
+#| label: setup
 library(ggdiagram)
 library(ggplot2)
 library(dplyr)
@@ -82,8 +85,6 @@ my_shades <- (tinter::tinter("royalblue",
                             steps = 7, 
                             direction = "tints")[seq(length(angle_types))])
 
-
-
 ggplot() +
   coord_equal() +
   theme_void() +
@@ -110,7 +111,8 @@ ggplot() +
 
 One can create equivalent angles with any of the three metrics.
 
-```{r convenient_wrappers}
+```{r}
+#| label: convenient_wrappers
 degree(90)
 turn(1 / 4)
 radian(pi / 2)
@@ -118,7 +120,8 @@ radian(pi / 2)
 
 Although these methods have convenient printing, under the hood they are still angles with all three properties:
 
-```{r still_angles}
+```{r}
+#| label: still_angles
 radian(pi)
 radian(pi)@degree
 radian(pi)@turn
@@ -137,7 +140,8 @@ turn(.5)@degree
 
 For labeling, sometimes is convenient to convert angles to text:
 
-```{r ascharacter}
+```{r}
+#| label: ascharacter
 as.character(degree(90))
 as.character(turn(.25))
 as.character(radian(.5 * pi))
@@ -147,7 +151,8 @@ as.character(radian(.5 * pi))
 
 Any of the metrics can be converted to any other:
 
-```{r angle_convert}
+```{r}
+#| label: angle_convert
 a <- degree(degree = 270)
 a
 radian(a)
@@ -162,7 +167,8 @@ Angles can be added, subtracted, multiplied, and divided. The underlying value s
 
 30&deg; + 60&deg; = 90&deg;
 
-```{r angle_maker}
+```{r}
+#| label: angle_maker
 #| code-fold: true
 make_angles <- function(a = c(80, 300), 
                         r = c(.1, .2, .3), 
@@ -210,7 +216,8 @@ ggplot() +
 
 
 
-```{r fig-3060}
+```{r}
+#| label: fig-3060
 #| code-fold: true
 #| fig-cap: "30&deg; + 60&deg; = 90&deg;"
 #| fig-width: 7
@@ -225,25 +232,29 @@ make_angles(a = c(30, 60),
 ```
 
 
-```{r add}
+```{r}
+#| label: add
 degree(30) + degree(60)
 ```
 
 Adding a number to the degree class assumes the number is in the degree metric.
 
-```{r add_degree}
+```{r}
+#| label: add_degree
 degree(30) + 10
 ```
 
 Likewise, adding a number to a radian (or an angle by default) makes a radian:
 
-```{r add_radian}
+```{r}
+#| label: add_radian
 radian(pi) + 0.5 * pi
 ```
 
 Turns work the same way:
 
-```{r add_turn}
+```{r}
+#| label: add_turn
 turn(.1) + .2
 ```
 
@@ -257,7 +268,8 @@ $$
 $$
 
 
-```{r fig-80300}
+```{r}
+#| label: fig-80300
 #| code-fold: true
 #| fig-cap: "80&deg; + 300&deg; = 380&deg; = 20&deg;"
 
@@ -266,7 +278,8 @@ make_angles(c(80, 300))
 ```
 
 
-```{r add380}
+```{r}
+#| label: add380
 degree(80) + degree(300)
 ```
 
@@ -275,7 +288,8 @@ degree(80) + degree(300)
 
 $$\begin{align}20^\circ - 40^\circ &= -20^\circ\\&=340^\circ\end{align}$$
 
-```{r fig-neg}
+```{r}
+#| label: fig-neg
 #| code-fold: true
 #| fig-cap: "40&deg; &minus; 60&deg; = &minus;20&deg;"
 #| fig-width: 7
@@ -283,20 +297,23 @@ $$\begin{align}20^\circ - 40^\circ &= -20^\circ\\&=340^\circ\end{align}$$
 make_angles(c(40, -60)) 
 ```
 
-```{r subtract}
+```{r}
+#| label: subtract
 degree(40) - degree(60)
 ```
 
 $$2\cdot20^\circ=40^\circ$$
 
 
-```{r mult20}
+```{r}
+#| label: mult20
 2 * degree(20)
 ```
 
 $$\begin{align}2\cdot180 &= 360^\circ\\&=0^\circ\end{align}$$
 
-```{r mult180}
+```{r}
+#| label: mult180
 2 * degree(180)
 ```
 
@@ -304,7 +321,8 @@ $$\begin{align}2\cdot180 &= 360^\circ\\&=0^\circ\end{align}$$
 
 Angles can take the three standard trigonometric functions
 
-```{r trig}
+```{r}
+#| label: trig
 theta <- degree(60)
 cos(theta)
 sin(theta)
@@ -312,7 +330,8 @@ tan(theta)
 ```
 
 
-```{r fig-trig}
+```{r}
+#| label: fig-trig
 #| code-fold: true
 #| fig-cap: "Trigonometric functions"
 #| fig-width: 9
@@ -439,13 +458,15 @@ Benefits of using trigonometric functions with angles instead of numeric radians
 
 For example, `tan(pi)` is slightly off from its true value of 0.
 
-```{r tan}
+```{r}
+#| label: tan
 tan(pi)
 ```
 
 By contrast, `tan(radian(pi))` rounds to 0 exactly.
 
-```{r tanpi}
+```{r}
+#| label: tanpi
 tan(radian(pi))
 
 ```

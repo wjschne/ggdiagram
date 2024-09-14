@@ -149,7 +149,7 @@ purrr::walk(list(`+`, `-`, `*`, `/`, `^`), \(.f) {
   }
 })
 
-
+# equality ----
 method(`==`, list(class_angle, class_angle)) <- function(e1, e2) {
   abs(S7_data(e1) - S7_data(e2)) <= .Machine$double.eps
 }
@@ -179,6 +179,7 @@ purrr::walk(list(`<`, `<=`, `>`, `>=`), \(.f) {
   }
 })
 
+# Trigonometry ----
 method(cos, class_angle) <- function(x) {
   cospi(S7_data(x) * 2)
 }
@@ -190,6 +191,7 @@ method(tan, class_angle) <- function(x) {
 }
 
 
+# Angle Conversions ----
 
 method(convert, list(class_numeric, degree)) <- function(from, to) {
   degree(from * 360)
@@ -249,6 +251,8 @@ method(str, turn) <- function(object,
                  additional = additional)
 }
 
+# as.character ----
+
 method(as.character, class_angle) <- function(x,
   ...,
   digits = NULL,
@@ -279,10 +283,16 @@ method(as.character, class_angle) <- function(x,
     class_angle = 2 * pi)
 }
 
-
+# subset ----
 method(`[`, class_angle) <- function(x, y) {
   S7::S7_data(x) <-  c(x)[y]
   x
 }
 
+# as.list ----
+method(as.list, class_angle) <- function(x, ...) {
+  purrr::map(seq(length(c(x))), \(i) x[i])
+}
 
+
+# tibble

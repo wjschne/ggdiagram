@@ -12,6 +12,8 @@ rectangle(
   northwest = class_missing,
   southwest = class_missing,
   southeast = class_missing,
+  angle = 0,
+  radius = class_missing,
   label = class_missing,
   alpha = class_missing,
   color = "black",
@@ -19,6 +21,8 @@ rectangle(
   linewidth = 0.5,
   linetype = class_missing,
   style = class_missing,
+  x = class_missing,
+  y = class_missing,
   ...
 )
 }
@@ -36,6 +40,8 @@ rectangle(
 \item{southwest}{lower left point}
 
 \item{southeast}{lower right point}
+
+\item{angle}{angle of text}
 
 \item{label}{A character, angle, or label object}
 

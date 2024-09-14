@@ -14,7 +14,9 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r presetup, include = FALSE}
+```{r}
+#| label: presetup
+#| include: false
 library(ggdiagram)
 library(ggplot2)
 library(dplyr)
@@ -164,7 +166,9 @@ bp +
 
 
 
-## Point on the ellipse at a specific angle
+# Point on the ellipse at a specific angle
+
+The `@point_at` property of an `ellipse` object is a function that can find a point at a specific angle.
 
 ```{r ptheta}
 e1@point_at(degree(60))
@@ -188,9 +192,76 @@ bp +
     end = deg,
     label = deg
   )
+```
+
+# Point on the ellipse using definitional parameter *t*
+
+The angle expected by the `@point_at` function is a true angle. However, the parametric equation for ellipses has a parameter *t* that looks like an angle, but actually has no direct geometric interpretation:
+
+$$
+\begin{align}
+t&=[0,2\pi)\\
+(x,y) &= (a\cos(t),b\sin(t))
+\end{align}
+$$
+
+```{r fig-definitionalpoints}
+#| fig-cap: The ellipse's definitional parameter *t* does not always line up with angles on a circle
+#| code-fold: true
+
+theta <- degree(seq(0, 350, 30))
+
+bp + 
+  {c1 = circle(radius = 3.6, color = "gray30")} +
+  {e1 <- ellipse(a = 2.8)} +
+  {p1 <- c1@point_at(theta)} +
+  label(theta, p1, polar_just = polar(theta, r = 1.5)) +
+  segment(point(), p1, linewidth = .2) +
+  {p2 <- e1@point_at(theta, definitional = T, color = "dodgerblue")} +
+  segment(point(), p2) + 
+  label(theta@degree, p2, polar_just = polar(theta, r = 1.5)) +
+  theme_void()
+```
 
 
-  
+If the definitional point at *t* is desired:
+
+```{r definitional}
+ellipse(a = 2)@point_at(degree(60), definitional = TRUE)
+```
+
+# Tangent lines
+
+Like the `@point_at` property, the `@tangent` property is a function that will find the tangent line at a specified angle or point.
+
+```{r}
+#| label: fig-tangent
+#| fig-cap: Tangent lines on an ellipse
+bp + 
+  {e1 <- ellipse(a = 3, b = 2)} + 
+  e1@point_at(60, color = "firebrick4") + 
+  e1@tangent_at(60, color = "firebrick4")
+```
+
+The `@tangent` function can also take a point instead of an angle. 
+
+
+```{r}
+bp + 
+  e1 + 
+  {p1 <- e1@point_at(60)} +
+  e1@tangent_at(p1) 
+```
+
+
+If the point is not on the ellipse, the tangent will be at the point's projection onto the ellipse:
+
+```{r}
+bp + 
+  e1 + 
+  {p1 <- point(3, 2, color = "firebrick4")} +
+  e1@tangent_at(p1) + 
+  projection(p1, e1)
 ```
 
 
@@ -356,4 +427,55 @@ bp +
 ```
 
 
+
+```{r}
+n <- 5
+
+e1 <- ellipse(point(runif(n,-2,2), 
+                      runif(n,-2,2)),
+                a = runif(n, .5, 1.5),
+                b = runif(n, .5, 1.5),
+                m1 = runif(n,2,10),
+                angle = degree(runif(n, 0, 360)))
+
+# d_rect <- e1@tibble |>
+#         dplyr::mutate(group = dplyr::row_number(),
+#                       d = purrr::pmap(list(x0 = x0,
+#                                            y0 = y0,
+#                                            a = a,
+#                                            b = b,
+#                                            angle = angle,
+#                                            m1 = m1,
+#                                            m2 = m2),
+#                                       \(x0, y0,a,b,angle, m1,m2) {
+#                                         th <- degree(seq(0,359.5,.5))
+#                                         cs <- cos(th)
+#                                         sn <- sin(th)
+#                                         x <- a * (abs(cs) ^ (2 / m1)) * sign(cs)
+#                                         y <- b * (abs(sn) ^ (2 / m2)) * sign(sn)
+#                                         xy <- rotate2columnmatrix(
+#                                           cbind(x,y), angle)
+#                                         xr <- xy[,1] + x0
+#                                         yr <- xy[,2] + y0
+#                                         tibble(xmin = min(xr),
+#                                                xmax = max(xr),
+#                                                ymin = min(yr),
+#                                                ymax = max(yr))
+#                                       })) |>
+#         tidyr::unnest(d) %>% 
+#         dplyr::summarise(xmin = min(xmin),
+#                          xmax = max(xmax),
+#                          ymin = min(ymin),
+#                          ymax = max(ymax))
+      
+
+
+ggplot() + coord_equal() + theme_minimal() +
+  e1 + 
+  e1@bounding_box 
+  # rectangle(southwest = point(d_rect$xmin, d_rect$ymin),
+  #               northeast = point(d_rect$xmax, d_rect$ymax))
+
+
+```
 

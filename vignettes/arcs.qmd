@@ -10,7 +10,9 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r presetup, include = FALSE}
+```{r}
+#| label: presetup
+#| include: false
 library(ggdiagram)
 library(ggplot2)
 library(dplyr)
@@ -27,7 +29,8 @@ knitr::opts_chunk$set(
 
 # Setup
 
-```{r setup}
+```{r}
+#| label: setup
 library(ggdiagram)
 library(ggplot2)
 library(dplyr)
@@ -42,7 +45,8 @@ library(ggarrow)
 
 To avoid repetitive code, we make a base plot:
 
-```{r baseplot}
+```{r}
+#| label: baseplot
 my_font <- "Roboto Condensed"
 my_text_size <- 20
 my_point_size <- 2.5
@@ -85,39 +89,47 @@ bp <- ggplot() +
 
 Just as a segment is part of a line between two points on the line, an arc is part of a circle between two points (on the circle). Thus, an arc has all the properties a circle, with the addition of starting and ending points. For the sake of simplicity, these starting points are specified as angles.
 
-Arc starting and points can be specified with any angle unit. If a number is used, it will be interpreted as a degree unit.
+Arc starting and ending points can be specified with any angle unit. If a number is used, it will be interpreted as a degree unit.
 
-```{r arc}
+```{r}
+#| label: arc
 arc(center = point(1,2), 
-    start = 20, 
-    end = 150, 
+    start = 25, 
+    end = 75, 
     radius = 3)
 ```
 
 
-```{r fig-arc}
+```{r}
+#| label: fig-arc
 #| fig-cap: Arc with starting and ending angles and center point.
 #| code-fold: true
 bp +
+  {p1 <- point(0, 0)} + 
   {a1 <- arc(
-    center = {p1 <- point(0, 0)},
+    center = p1,
     radius = {r <- 4},
     start = {ang_start <- degree(25)},
     end = {ang_end <- degree(75)}
     )} +
-  label(p = p1, 
-        label = paste0("Center ", p1@auto_label), 
-        vjust = 1, 
-        plot_point = TRUE) + 
-  connect(p1, a1@midpoint(), label = paste0("Radius = ", r)) + 
-  label(label = ang_start, 
-        p = a1@midpoint(0),
-        polar_just = polar(ang_start + degree(-90), 1.3), 
-        plot_point = TRUE) +
-  label(label = ang_end, 
-        p = a1@midpoint(1), 
-        polar_just = polar(ang_end + degree(90), 1), 
-        plot_point = TRUE)
+  label(
+    label = paste0("Center ", p1@auto_label), 
+    p = p1, 
+    vjust = 1.1) + 
+  connect(
+    p1, 
+    a1@midpoint(), 
+    label = paste0("Radius = ", r)) + 
+  label(
+    label = ang_start, 
+    p = a1@midpoint(0),
+    polar_just = polar(ang_start + degree(-90), 1.3), 
+    plot_point = TRUE) +
+  label(
+    label = ang_end, 
+    p = a1@midpoint(1), 
+    polar_just = polar(ang_end + degree(90), 1), 
+    plot_point = TRUE)
 ```
 
 # Starting or ending points of arcs
@@ -125,7 +137,8 @@ bp +
 Sometimes you do not know where the center of an arc should be. Instead, you want the arc to start or end at a specific point. For example, you might want to specify the start point or the end point.
 
 
-```{r fig-startpoint}
+```{r}
+#| label: fig-startpoint
 #| fig-cap: Fixing the start and end points of an arc
 
 bp +
@@ -146,7 +159,8 @@ bp +
 
 The midpoint function can find one or more midpoints at different positions. The default position is .5. 
 
-```{r fig-midpoint}
+```{r}
+#| label: fig-midpoint
 #| fig-cap: Default midpoint on a arc
 bp +
   a1 +
@@ -155,7 +169,8 @@ bp +
 
 The starting and ending points are at position 0 and 1, respectively.
 
-```{r fig-multimidpoints}
+```{r}
+#| label: fig-multimidpoints
 #| fig-cap: Multiple midpoints can be specified
 bp +
   a1 +
@@ -166,7 +181,8 @@ bp +
 
 By default, the arc label will appear outside the midpoint of the arc
 
-```{r fig-label}
+```{r}
+#| label: fig-label
 #| fig-cap: "A labelled arc"
 bp +
   arc(radius = 3, 
@@ -179,7 +195,8 @@ bp +
 
 If a label is needed elsewhere, it can be set with the `label` function's `position` property.
 
-```{r fig-labelmultiple}
+```{r}
+#| label: fig-labelmultiple
 #| fig-cap: "Multiple labels on an arc"
 bp +
   arc(radius = 3, 
@@ -192,7 +209,8 @@ bp +
 
 If the orientation of the label needs to be changed, it can be set with `vjust`, `hjust`, or `polar_just`.
 
-```{r fig-labeladjust}
+```{r}
+#| label: fig-labeladjust
 #| fig-cap: "The arc's labels can be adjusted."
 bp + 
   arc(radius = 3, 
@@ -205,7 +223,8 @@ bp +
 
 There are cases where the arc is already created and a label is needed. Although the `label` can be added after the arc has been created, the position would have to be set manually (otherwise the position will be at 0,0 by default). In such cases, the `auto_label` function can help place the label correctly. By default, the `auto_label` will show the the `theta` property (i.e., `end` &minus; `start`).
 
-```{r fig-autolabel}
+```{r}
+#| label: fig-autolabel
 #| fig-cap: Using the arc's autolabel
 bp + 
   {a1 <- arc(radius = 3, 
@@ -216,7 +235,8 @@ bp +
 
 However, any label can be inserted at any position.
 
-```{r fig-autolabeladjust}
+```{r}
+#| label: fig-autolabeladjust
 #| fig-cap: Adjusting the arc's autolabel
 bp + 
   a1 +
@@ -227,7 +247,8 @@ bp +
 
 The arc object is plotted using `ggarrow::arrow`. This means that arrows can be placed on either end of an arc.
 
-```{r fig-arcarrow}
+```{r}
+#| label: fig-arcarrow
 #| fig-cap: "Arcs with arrowheads"
 my_arrow_head <- arrowheadr::arrow_head_deltoid(d = 2.2)
 
@@ -247,15 +268,19 @@ bp +
 
 If the `arc@wedge` property is set to `TRUE`, the `arc` function will plot a wedge using `ggplot2::geom_polygon`.
 
-```{r fig-wedge}
+```{r}
+#| label: fig-wedge
 #| fig-cap: Arc wedges
+theta <- c(0, 120, 180, 360)
 bp +
   arc(radius = 3, 
-      start = c(0, 120, 180), 
-      end = c(120, 180, 360), 
+      start = theta[-length(theta)], 
+      end = theta[-1], 
       wedge = TRUE,
       fill = c("dodgerblue4", "orchid4", "darkgreen"), 
       color = "white", 
       linewidth = 1)
 ```
+
+
 

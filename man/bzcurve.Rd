@@ -7,6 +7,7 @@
 bzcurve(
   p = class_missing,
   label = class_missing,
+  label_sloped = TRUE,
   n = 360,
   alpha = class_missing,
   arrow_head = class_missing,

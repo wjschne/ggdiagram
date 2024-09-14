@@ -9,7 +9,7 @@ bind(x, ...)
 \arguments{
 \item{x}{list of objects to bind}
 
-\item{...}{Arguments passed to style}
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
 }
 \description{
 bind method

@@ -35,11 +35,24 @@ bz_props <- list(
     })
   ),
   extra = list(
-    label = label_or_character_or_angle
+    label = label_or_character_or_angle,
+    label_sloped = new_property(class_logical)
   ),
   styles = style@properties[bz_styles],
   # derived ----
   derived = list(
+    bounding_box = new_property(getter = function(self) {
+
+      d_rect <- self@tibble |>
+        dplyr::summarise(xmin = min(x),
+                         xmax = max(x),
+                         ymin = min(y),
+                         ymax = max(y))
+
+      rectangle(southwest = point(d_rect$xmin, d_rect$ymin),
+                northeast = point(d_rect$xmax, d_rect$ymax))
+
+    }),
     length = new_property(
       getter = function(self) {
         if ("list" %in% class(self@p)) {
@@ -89,11 +102,15 @@ bz_props <- list(
         stroke_width = self@stroke_width
       )
       get_non_empty_tibble(d) |>
-        dplyr::mutate(p = purrr::map(p, \(x) {x@tibble |> dplyr::select(x,y) |> as.matrix()})) |>
+        dplyr::mutate(p = purrr::map(p, \(x) {
+          x@tibble |> dplyr::select(x,y) |> as.matrix()
+          })) |>
         dplyr::mutate(p = purrr::map2(p,n, \(pp,nn) {
-          bezier::bezier(t = seq(0,1, length.out = nn), p = pp) |>
+          bezier::bezier(t = seq(0,1, length.out = nn),
+                         p = pp) |>
             `colnames<-`(c("x", "y")) |>
             tibble::as_tibble()
+
         })) |>
         tidyr::unnest(p) |>
         dplyr::select(-n)
@@ -144,7 +161,8 @@ bz_props <- list(
         omit_names = c(
           "linejoin",
           "rule",
-          "label"),
+          "label",
+          "label_sloped"),
         inherit.aes = FALSE,
         style = bz_styles
       )
@@ -192,6 +210,7 @@ bzcurve <- new_class(
   ),
   constructor = function(p = class_missing,
                          label = class_missing,
+                         label_sloped = TRUE,
                          n = 360,
                          alpha = class_missing,
                          arrow_head = class_missing,
@@ -259,10 +278,10 @@ bz_style <- style +
     if (length(label) == 0) label = character(0)
 
 
-
     new_object(.parent = S7_object(),
       p =  d$p,
       label = label,
+      label_sloped = label_sloped,
       alpha = d[["alpha"]] %||% alpha,
       arrow_head = d[["arrow_head"]] %||% arrow_head,
       arrow_fins = d[["arrow_fins"]] %||% arrow_fins,
@@ -310,10 +329,31 @@ method(str, bzcurve) <- function(
                   additional = TRUE)
                 })
 
+
 }
 
 method(get_tibble, bzcurve) <- function(x) {
   x@tibble
+}
+
+
+method(get_tibble_defaults, bzcurve) <- function(x) {
+  sp <- style(
+    alpha = replace_na(as.double(ggarrow::GeomArrow$default_aes$alpha), 1),
+    arrow_head = ggarrow::arrow_head_minimal(90),
+    arrow_fins = ggarrow::arrow_fins_minimal(90),
+    color = replace_na(ggarrow::GeomArrow$default_aes$colour, "black"),
+    stroke_color = replace_na(ggarrow::GeomArrow$default_aes$colour, "black"),
+    stroke_width = replace_na(ggarrow::GeomArrow$default_aes$colour, 0.25),
+    lineend = "butt",
+    linejoin = "round",
+    linewidth = replace_na(ggarrow::GeomArrow$default_aes$linewidth, .5),
+    linewidth_head = replace_na(ggarrow::GeomArrow$default_aes$linewidth, 1),
+    linewidth_fins = replace_na(ggarrow::GeomArrow$default_aes$linewidth, 1),
+    linetype = replace_na(ggarrow::GeomArrow$default_aes$linetype, 1),
+    n = 360
+  )
+  get_tibble_defaults_helper(x, sp,required_aes = c("x", "y", "group"))
 }
 
 
@@ -329,31 +369,85 @@ method(as.geom, bzcurve) <- function(x, ...) {
     overrides$arrow_head <- ggarrow::arrow_head_minimal(90)
   }
 
-
   gc <- make_geom_helper(
     d = d,
     user_overrides = overrides,
     aesthetics = x@aesthetics)
 
   if (S7_inherits(x@label, label)) {
-    d <- tidyr::nest(d |> dplyr::select(x,y,group), .by = group) |>
-      dplyr::bind_cols(x@label@tibble |> select(-c(x,y))) |>
-      tidyr::unnest(data)
 
-    if ("size" %in% colnames(d)) {
-      d <- dplyr::mutate(d, size = size / ggplot2::.pt)
+
+
+    if (all(x@label_sloped)) {
+
+      d_label <- tidyr::nest(dplyr::select(d, x, y, group), .by = group) |>
+        dplyr::bind_cols(dplyr::select(x@label@tibble, -c(x, y))) |>
+        tidyr::unnest(data)
+
+      if ("size" %in% colnames(d_label)) {
+        d_label <- dplyr::mutate(d_label, size = size / ggplot2::.pt)
+      }
+
+
+      if (!("boxcolour" %in% colnames(d_label))) {
+        d_label <- dplyr::mutate(d_label, boxcolour = NA)
+      }
+
+      if (!("label.padding" %in% colnames(d_label))) {
+        d_label <- dplyr::mutate(d_label, label.padding = unit(2, "pt"))
+      } else {
+        d_label <- dplyr::mutate(
+          d_label,
+          label.padding = purrr::map(label.padding, 1),
+          .by = group)
+      }
+
+      gl <- make_geom_helper(
+        d_label,
+        aesthetics = gtextcurve_aes,
+        user_overrides = NULL)
+
+    } else {
+      dpos <- tibble(group = unique(d$group),
+                     pos = x@label@position)
+
+      d_l <- dplyr::select(x@label@tibble, -c(x, y))
+
+
+      d_label <- dplyr::select(d, x,y,group) |>
+        dplyr::left_join(dpos, by = "group") |>
+        dplyr::mutate(x0 = dplyr::lag(x),
+                      y0 = dplyr::lag(y),
+                      .by = group) |>
+        dplyr::filter(!is.na(x0)) |>
+        dplyr::mutate(dist_xy = sqrt((x - x0) ^ 2 + (y - y0) ^ 2),
+                      p = cumsum(dist_xy) / sum(dist_xy),
+                      p0 = dplyr::lag(p, default = 0),
+                      .by = group) |>
+        dplyr::filter(p0 <= pos, pos <= p) |>
+        dplyr::filter(p0 == min(p0), .by = group) |>
+        dplyr::mutate(ppos =  (pos - p0) / (p - p0),
+                      xpos = x0 + (x - x0) * ppos,
+                      ypos = y0 + (y - y0) * ppos) |>
+        dplyr::select(group, x = xpos, y = ypos) |>
+        dplyr::bind_cols(d_l)
+
+      if ("size" %in% colnames(d_label)) {
+        d_label <- dplyr::mutate(d_label, size = size / ggplot2::.pt)
+      }
+
+
+      gl <- make_geom_helper(
+        d = d_label,
+        aesthetics = x@label@aesthetics,
+        user_overrides = NULL)
+
     }
 
-    if (!("boxcolour" %in% colnames(d))) {
-      d <- dplyr::mutate(d, boxcolour = NA)
-    }
 
-    if (!("label.padding" %in% colnames(d))) {
-      d <- dplyr::mutate(d, label.padding = unit(2, "pt"))
-    }
 
-    gl <- make_geom_helper(d, aesthetics = gtextcurve_aes, user_overrides = NULL)
     gc <- list(gc, gl)
+
   }
   gc
 }
@@ -369,3 +463,11 @@ method(`[`, bzcurve) <- function(x, y) {
   z
 }
 
+method(midpoint, list(bzcurve, class_missing)) <- function(x,y, position = .5, ...) {
+
+
+  purrr::map(x@p, \(xx) {
+    point(bezier::bezier(t = position, p = xx@xy), ...)
+    }) %>%
+    bind()
+}

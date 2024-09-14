@@ -19,13 +19,59 @@ el_props <- list(
   styles = style@properties[el_styles],
   # derived ----
   derived = list(
+    area = new_property(getter = function(self) {
+      pi * self@a * self@b
+    }),
+    bounding_box = new_property(getter = function(self) {
+      d_rect <- self@tibble |>
+        dplyr::mutate(group = dplyr::row_number(),
+                      d = purrr::pmap(list(x0 = x0,
+                                           y0 = y0,
+                                           a = a,
+                                           b = b,
+                                           angle = angle,
+                                           m1 = m1,
+                                           m2 = m2),
+                                      \(x0, y0,a,b,angle, m1,m2) {
+                                        th <- degree(seq(0,359.5,.5))
+                                        cs <- cos(th)
+                                        sn <- sin(th)
+                                        x <- a * (abs(cs) ^ (2 / m1)) * sign(cs)
+                                        y <- b * (abs(sn) ^ (2 / m2)) * sign(sn)
+                                        xy <- rotate2columnmatrix(
+                                          cbind(x,y), angle)
+                                        xr <- xy[,1] + x0
+                                        yr <- xy[,2] + y0
+                                        tibble(xmin = min(xr),
+                                               xmax = max(xr),
+                                               ymin = min(yr),
+                                               ymax = max(yr))
+                                      })) |>
+        tidyr::unnest(d) |>
+        dplyr::summarise(xmin = min(xmin),
+                         xmax = max(xmax),
+                         ymin = min(ymin),
+                         ymax = max(ymax))
+      rectangle(southwest = point(d_rect$xmin, d_rect$ymin),
+                northeast = point(d_rect$xmax, d_rect$ymax))
+    }),
     focus_1 = new_property(point, getter = function(self) {
-      self@center + point(ifelse(self@a > self@b, -sqrt(self@a ^ 2 - self@b ^ 2), 0),
-                          ifelse(self@b > self@a, sqrt(self@b ^ 2 - self@a ^ 2), 0))
+      ab_df <- self@a ^ 2 - self@b ^ 2
+      ab_df[ab_df < 0] <- 0
+      x <- sqrt(ab_df) * -1
+      ab_df <- self@a ^ 2 - self@b ^ 2
+      ab_df[ab_df > 0] <- 0
+      y <- sqrt(abs(ab_df))
+      self@center + point(x,y)
     }),
     focus_2 = new_property(point, getter = function(self) {
-      self@center + point(ifelse(self@a > self@b, sqrt(self@a ^ 2 - self@b ^ 2), 0),
-                          ifelse(self@b > self@a, -sqrt(self@b ^ 2 - self@a ^ 2), 0))
+      ab_df <- self@a ^ 2 - self@b ^ 2
+      ab_df[ab_df < 0] <- 0
+      x <- sqrt(ab_df)
+      ab_df <- self@a ^ 2 - self@b ^ 2
+      ab_df[ab_df > 0] <- 0
+      y <- sqrt(abs(ab_df)) * -1
+      self@center + point(x, y)
     }),
     length = new_property(
       getter = function(self) {
@@ -63,55 +109,95 @@ el_props <- list(
   ),
   # functions ----
   funs = list(
+    angle_at = new_property(class_function, getter = function(self) {
+      \(point) {
+        dp <- point - self@center
+        dp@theta
+      }
+    }),
     geom = new_property(class_function, getter = function(self) {
       \(...) {
         as.geom(self, ...)
       }
     }),
-    normal_at = new_property(class_function, getter = function(self) {
-      \(theta = degree(0), distance = 1, definitional = FALSE) {
-        if (!S7_inherits(theta, class_angle)) theta <- degree(theta)
-          p <- self@point_at(theta, definitional) - self@center
-          p1 <- point(self@m1 * ((p@x) / self@a) ^ (self@m1 - 1), self@m2 * (p@y / self@b) ^ (self@m2 - 1))
-          self@center + p + (distance * p1 / p1@r) * point(sign(cos(theta)), sign(sin(theta)))
+    normal_at = new_property(
+      class_function,
+      getter = function(self) {
+        \(theta = degree(0), distance = 1) {
+          if (S7_inherits(theta, point)) {
+            theta <- projection(theta, self)@theta
+            }
+          if (!S7_inherits(theta, class_angle)) {
+            theta <- degree(theta)
+            }
+
+          p0 <- self@point_at(theta - self@angle) - self@center
+          p1 <- point(sign(cos(theta)) * abs((self@a ^ (-1 * self@m1)) * self@m1 * (p0@x ^ (self@m1 - 1))),
+                      sign(sin(theta)) * abs((self@b ^ (-1 * self@m2)) * self@m2 * (p0@y ^ (self@m2 - 1))))
+          self@point_at(
+            theta) +
+            distance / p1@r * rotate(p1, self@angle)
       }
     }),
     point_at = new_property(class_function, getter = function(self) {
       \(theta = degree(0), definitional = FALSE, ...) {
         if (!S7_inherits(theta, class_angle)) theta <- degree(theta)
 
-        if (definitional) {
-          self@center + rotate(point(cos(t) * self@a, sin(t) * self@b, ...), self@angle)
-        } else {
-
         rtheta <- theta - radian(self@angle)
 
-        t <- radian(dplyr::if_else(abs(cos(rtheta)) < .Machine$double.eps, rtheta@radian, atan((
-          abs(suppressWarnings(tan(rtheta))) * self@a / self@b
-        ) ^ (self@m1 / 2))))
+        if (definitional) {
+          return(
+            self@center + rotate(
+              point(abs(cos(theta) ^ (2 / self@m1)) * self@a * sign(cos(theta)),
+                    abs(sin(theta) ^ (2 / self@m2)) * self@b * sign(sin(theta)), ...),
+              theta = self@angle,
+              origin = self@center)
+            )
+        } else {
+        t <- radian(
+          dplyr::if_else(
+            abs(cos(rtheta)) < .Machine$double.eps,
+            rtheta@radian,
+            atan(
+              (
+                abs(suppressWarnings(tan(rtheta))) *
+                  self@a / self@b
+                ) ^ (self@m1 / 2))
+            )
+          )
 
-        rp <- rotate(point((abs(cos(t)) ^ (2 / self@m1)) *
-                             self@a * ((cos(rtheta) >= 0) * 2 - 1),
-                           (abs(sin(t)) ^ (2 / self@m1)) *
-                             self@b * ((sin(rtheta) >= 0) * 2 - 1), ...),
-                     self@angle)
-
+        rp <- rotate(
+          point((abs(cos(t)) ^ (2 / self@m1)) *
+                  self@a * ((cos(rtheta) >= 0) * 2 - 1),
+                (abs(sin(t)) ^ (2 / self@m1)) *
+                  self@b * ((sin(rtheta) >= 0) * 2 - 1), ...),
+          self@angle)
 
         self@center + rp
         }
       }
     }),
-    tangent_at = new_property(class_function, getter = function(self) {
-      \(theta = degree(0), definitional = FALSE, ...) {
-        if (!S7_inherits(theta, class_angle)) theta <- degree(theta)
-        p <- self@point_at(theta, definitional)
-        p_normal <- self@normal_at(theta, definitional)
-        l <- segment(p, rotate(p_normal, degree(90), origin = p))@line
+    tangent_at = new_property(
+      class_function,
+      getter = function(self) {
+        \(theta = degree(0), ...) {
+          if (S7_inherits(theta, point)) {
+            theta <- projection(theta, self)@theta
+            }
+        if (!S7_inherits(theta, class_angle)) {
+          theta <- degree(theta)
+          }
+
+        p <- self@point_at(theta)
+        p_normal <- self@normal_at(theta)
+        l <- segment(
+          p1 = p,
+          p2 = rotate(p_normal, degree(90), origin = p))@line
+
         s <- rlang::list2(...)
         rlang::inject(set_props(l, !!!s))
       }
     })
-
   ),
   info = list(
     aesthetics = new_property(getter = function(self) {
@@ -159,9 +245,9 @@ el_props <- list(
 #' @slot length Gets the number of ellipses
 #' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggforce::geom_ellipse`.
 #' @slot geom A function that converts the object to a geom. Any additional parameters are passed to `ggforce::geom_ellipse`.
-#' @slot normal_at A function that finds a point perpendicular to the ellipse at angle `theta` at the specified `distance`. The `definitional` parameter is passed to the `point_at` function.
+#' @slot normal_at A function that finds a point perpendicular to the ellipse at angle `theta` at the specified `distance`. The `definitional` parameter is passed to the `point_at` function. If a point is supplied instead of an angle, the point is projected onto the ellipse and then the normal is calculated found from the projected point.
 #' @slot point_at A function that finds a point on the ellipse at an angle `theta`. If `definitional` is `FALSE` (default), then `theta` is interpreted as an angle. If `TRUE`, then `theta` is the parameter in the definition of the ellipse in polar coordinates.
-#' @slot tangent_at A function that finds a tangent line on the ellipse. Uses `point_at` to find the tangent point at angle `theta` and then returns the tangent line at that point.
+#' @slot tangent_at A function that finds a tangent line on the ellipse. Uses `point_at` to find the tangent point at angle `theta` and then returns the tangent line at that point. If a point is supplied instead of an angle, the point is projected onto the ellipse and then the tangent line is found from there.
 #' @inherit style params
 #' @param style gets and sets style parameters
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object
@@ -225,7 +311,14 @@ ellipse <- new_class(
     }
 
     non_empty_list <- get_non_empty_props(el_style)
-    d <- tibble::tibble(x0 = center@x, y0 = center@y, a = a, b = b, angle = angle@radian, m1 = m1, m2 = m2)
+    d <- tibble::tibble(
+      x0 = center@x,
+      y0 = center@y,
+      a = a,
+      b = b,
+      angle = angle@radian,
+      m1 = m1,
+      m2 = m2)
     if (length(non_empty_list) > 0) {
       d <- dplyr::bind_cols(
         d,
@@ -237,7 +330,8 @@ ellipse <- new_class(
     label <- centerpoint_label(label,
                                center = center,
                                d = d,
-                               shape_name = "ellipse")
+                               shape_name = "ellipse",
+                               angle = angle)
 
 
 
@@ -275,9 +369,11 @@ circle_or_ellipse <- new_union(circle, ellipse)
 method(projection, list(point, circle_or_ellipse)) <- function(p,object, ...) {
   d <- p - object@center
   object@point_at(d@theta, ...)
+  # point(((object@a ^ object@m1) * d@x / object@m1) ^ (1 - object@m1),
+  #       ((object@b ^ object@m2) * d@y / object@m2) ^ (1 - object@m2),)
 }
 
- method(get_tibble, ellipse) <- function(x) {
+method(get_tibble, ellipse) <- function(x) {
   x@tibble
 }
 
@@ -301,6 +397,9 @@ method(`[`, ellipse) <- function(x, y) {
   dl <- as.list(dplyr::select(d, -.data$x0, -.data$y0))
   z <- rlang::inject(ellipse(center = point(d$x0, d$y0), !!!dl))
   z@label <- x@label[y]
+  if (!is.null(dl$angle)) {
+    z@angle <- x@angle[y]
+  }
   z
 }
 
@@ -329,11 +428,181 @@ method(connect, list(line, centerpoint)) <- function(x,y, ...) {
   connect(p1, y, ...)
 }
 
+method(connect, list(class_list, centerpoint)) <- function(x,y, ...) {
+  purrr::map(as.list(x), \(xx) {
+    connect(xx,y,...)
+  }) |>
+    bind()
+
+}
+
+method(variance, centerpoint) <- function(
+    x,
+    where = "north",
+    theta = 50,
+    bend = 0,
+    looseness = 1,
+    arrow_head = arrowheadr::arrow_head_deltoid(),
+    arrow_fins = arrowheadr::arrow_head_deltoid(),
+    resect = 2,
+    ...) {
+  if (!S7_inherits(where, class_angle)) where <- degree(where)
+  if (!S7_inherits(theta, class_angle)) theta <- degree(theta)
+  if (!S7_inherits(bend, class_angle)) bend <- degree(bend)
 
 
+  p <- purrr::pmap(list(el = as.list(x),
+                        th = as.list(theta),
+                        ww = as.list(where),
+                        ll = looseness,
+                        bb = as.list(bend)), \(el, th, ww, ll, bb) {
+
+      start_angle <- ww - (th / 2)
+      end_angle <- ww + (th / 2)
+    s <- el@point_at(start_angle)
+    m <- el@point_at(ww)
+    e <- el@point_at(end_angle)
+    # s_dist <- (s - m)@r * looseness * 2
+    # e_dist <- (e - m)@r * looseness * 2
+    # m_dist <- (s_dist + e_dist) / 2
+    radius <- (s - e)@r  * ll
+
+
+
+    bind(c(
+      s,
+      rotate(
+        el@normal_at(
+          theta = start_angle,
+          distance = (s - el@center)@r * ll),
+        theta = bb,
+        origin = s),
+      el@normal_at(
+        theta = ww,
+        distance = (m - el@center)@r * ll),
+      rotate(
+        el@normal_at(
+          theta = end_angle,
+          distance = (e - el@center)@r * ll),
+        theta = bb * -1,
+             origin = e),
+      e))
+  })
+
+  dots <- rlang::list2(...)
+
+  l <- character(0)
+
+  # if (length(x@length) > 0) {
+  #   l <- x@label
+  # }
+
+  if (!is.null(dots$label)) {
+    l <- dots$label
+    dots$label <- NULL
+  }
+
+  if (is.null(dots$linewidth)) {
+    lw <- .5
+  } else {
+    lw <- dots$linewidth
+    dots$linewidth <- NULL
+  }
+
+  if (is.null(dots$arrowhead_length)) {
+    ahl <- 7
+  } else {
+    ahl <- dots$arrowhead_length
+    dots$arrowhead_length <- NULL
+  }
+
+
+
+  rlang::inject(bzcurve(p = p,
+          label = l,
+          label_sloped = FALSE,
+          arrow_head = arrow_head,
+          arrow_fins = arrow_fins,
+          resect = resect,
+          linewidth = lw,
+          arrowhead_length = ahl,
+          !!!dots))
+}
+
+
+method(covariance, list(centerpoint, centerpoint)) <- function(
+    x,
+    y,
+    where = NULL,
+    bend = 0,
+    looseness = 1,
+    arrow_head = arrowheadr::arrow_head_deltoid(),
+    resect = 2,
+    ...) {
+  if (!S7_inherits(where, class_angle) && !is.null(where)) where <- degree(where)
+  if (!S7_inherits(bend, class_angle)) bend <- degree(bend)
+
+
+
+  p <- purrr::pmap(list(xx = as.list(x), yy = as.list(y), bb = as.list(bend)), \(xx, yy, bb) {
+
+    if (is.null(where)) {
+      d_xy <- yy@center - xx@center
+      x_angle <- d_xy@theta + degree(45)
+      y_angle <- degree(135) + (d_xy@theta)
+    } else {
+      x_angle <- where
+      y_angle <- degree(180) - where
+    }
+    s <- xx@point_at(x_angle)
+    # m <- el@point_at(where)
+    e <- yy@point_at(y_angle)
+    # s_dist <- (s - m)@r * looseness * 2
+    # e_dist <- (e - m)@r * looseness * 2
+    m_dist <- looseness * (s - e)@r / 2
+
+    bind(c(
+      s,
+      rotate(
+        xx@normal_at(
+          theta = x_angle,
+          distance = m_dist),
+        theta = bb,
+        origin = s),
+      rotate(
+        yy@normal_at(
+          theta = y_angle,
+          distance = m_dist),
+        theta = bb * -1,
+        origin = e),
+      e))
+  })
+
+  dots <- rlang::list2(...)
+
+  l <- character(0)
+
+  if (!is.null(dots$label)) {
+    l <- dots$label
+    if (!S7_inherits(l, label)) l <- label(l)
+    dots$label <- NULL
+  }
+
+
+
+
+
+  rlang::inject(bzcurve(p = p,
+                        label = l,
+                        label_sloped = FALSE,
+                        arrow_head = arrow_head,
+                        arrow_fins = arrow_head,
+                        resect = resect,
+                        !!!dots))
+}
 
 # Placing ----
-method(place, list(ellipse, ellipse)) <- function (x, from, where = "right", sep = 1) {
+method(place, list(centerpoint, centerpoint)) <- function(x, from, where = "right", sep = 1) {
   where <- degree(where)
   p <- from@point_at(where)
   p_sep <- polar((p - from@center)@theta, sep)
@@ -372,6 +641,22 @@ method(place, list(line, ellipse)) <- function(x, from, where = "right", sep = 1
   p2 <- from@normal_at(where, distance = sep)
   p3 <- rotate(p1, theta = degree(90), origin = p2)
   segment(p2, p3)@line
+}
+
+
+
+method(shape_array, ellipse) <- function(x, k = 2, sep = 1, where = "east", anchor = "center", ...) {
+
+  sa <- shape_array_helper(x = x, k = k, sep = sep, where = where, anchor = anchor, ...)
+
+  rlang::inject(ellipse(sa$p_center,
+                        a = x@a,
+                        b = x@b,
+                        m1 = x@m1,
+                        m2 = x@m2,
+                        angle = x@angle,
+                        style = x@style,
+                        !!!sa$dots))
 }
 
 

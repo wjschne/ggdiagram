@@ -34,6 +34,8 @@ arc(
   stroke_color = class_missing,
   stroke_width = class_missing,
   style = class_missing,
+  x0 = class_missing,
+  y0 = class_missing,
   ...
 )
 }
@@ -122,7 +124,24 @@ arc class
 }}
 
 \examples{
-# specify center point and radius
-p <- point(0,0)
-arc(p, radius = 6, start = degree(0), end = degree(30))
+library(ggplot2)
+
+# center point
+p_center <- point(0,0)
+
+# 90-degree arc
+a_90 <- arc(
+ center = p_center,
+ radius = 6,
+ start = degree(0),
+ end = degree(90)
+ )
+
+ # Print arc
+ a
+
+# Plot arc and its center point
+ggplot() + coord_equal() + theme_minimal() +
+ p_center +
+ a_90
 }

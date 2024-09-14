@@ -1,6 +1,7 @@
 library(S7)
 
 do_nothing <- function(x) {
+  # Helps devtools:check find packages
   if (FALSE) {
     p1 <- ggforce::geom_circle()
     p2 <- arrowheadr::arrow_head_deltoid()
@@ -162,9 +163,71 @@ c_gg <- function(...) {
 
 # generics ----
 
+## variance ----
+#' create double-headed arrow paths indicating variance
+#'
+#' @param x object
+#' @param where angle or named direction (e.g.,northwest, east, below, left)
+#' @param theta angle width
+#' @param looseness distance of control points as a ratio of the distance to the object's center (e.g., in a circle of radius 1, looseness = 1.5 means that that the control points will be 1.5 units from the start and end points.)
+#' @param bend Angle by which the control points are rotated
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
+#' @export
+variance <- new_generic("variance", dispatch_args = "x", fun = function(
+    x,
+    where = "north",
+    theta = 50,
+    bend = 0,
+    looseness = 1,
+    arrow_head = arrowheadr::arrow_head_deltoid(),
+    resect = 2,
+    ...) {
+  S7_dispatch()
+})
+
+
+## covariance ----
+#' create double-headed arrow paths indicating variance
+#'
+#' @param x object
+#' @param y object
+#' @param where exit angle
+#' @param looseness distance of control points as a ratio of the distance to the object's center (e.g., in a circle of radius 1, looseness = 1.5 means that that the control points will be 1.5 units from the start and end points.)
+#' @param bend Angle by which the control points are rotated
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
+#' @export
+covariance <- new_generic(
+  "covariance",
+  dispatch_args = c("x", "y"),
+  fun = function(x,
+                 y,
+                 where = NULL,
+                 bend = 0,
+                 looseness = 1,
+                 arrow_head = arrowheadr::arrow_head_deltoid(),
+                 resect = 2,
+                 ...) {
+    S7_dispatch()
+  }
+)
+
+## shape array ----
+#' make an array of shapes along a line
+#'
+#' @param x shape
+#' @param k number of duplicate shapes to make
+#' @param sep separation distance between shapes
+#' @param where angle or named direction (e.g.,northwest, east, below, left)
+#' @param anchor bounding box anchor
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to shape
+#' @export
+shape_array <- new_generic(name = "make_array", dispatch_args = "x", fun = function(x, k = 2, sep = 1, where = "east", anchor = "center", ...) {
+  S7_dispatch()
+})
+
 #' bind method
 #' @param x list of objects to bind
-#' @param ... Arguments passed to style
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @examples
 #' bind(c(point(1,2), point(3,4)))
 #' bind(c(circle(point(0,0), radius = 1),
@@ -182,22 +245,23 @@ method(bind, class_list) <- function(x, ...) {
                 bzcurve = bzcurve,
                 circle = circle,
                 ellipse = ellipse,
-                label= label,
+                label = label,
                 line = line,
                 point = point,
                 rectangle = rectangle,
                 segment = segment,
-                style = style)
+                style = style,
+                polar = point)
   o <- rlang::inject(.fn(!!!d))
   dots <- rlang::list2(...)
   rlang::inject(S7::set_props(o, !!!dots))
 }
 
 
-
+## str----
 str <- new_external_generic(package = "utils", name = "str", dispatch_args = "object")
 
-
+## plus----
 method(`+`, list(class_any, class_any)) <- function(e1, e2) {
   .Primitive("+")(e1, e2)
 }
@@ -212,7 +276,7 @@ method(`+`, list(class_character, class_numeric)) <- function(e1, e2) {
   paste0(e1, e2)
 }
 
-
+## get_tibble----
 #' Get object data with styles in a tibble
 #'
 #' @param x object
@@ -298,20 +362,23 @@ class_numeric_or_unit <- new_union(class_numeric, class_unit)
   left = 180,
   `bottom left` = 215,
   bottom = 270,
-  `bottom right` = 315
+  `bottom right` = 315,
+  below = 270,
+  above = 90
 )
 
 #' @keywords internal
 cardinalpoint <- function(x) {
   .namedpositions
   if (!all(x %in% names(.namedpositions))) {
-    stop("Position must be an angle, numeric, or a one of cardinal points:\nnoorth, east, south, west, northeast, northwest, southwest, southeast, east-northest, north-northeast, north-northwest, west-northwest, west-southwest, south-southwest, south-southeast, east-southeast")
+    stop(paste0("Position must be an angle, numeric, or one of these named positions:\n", stringr::str_wrap(paste0(names(.namedpositions), collapse = ", "))))
   }
   unname(.namedpositions[x])
 }
 
 #' @keywords internal
 allsameclass <- function(l, classname) {
+  classname[classname == "polar"] <- "point"
   allsame <- all(sapply(lapply(l, class), function(x)
     classname %in% x))
   if (!allsame) {
@@ -392,6 +459,98 @@ get_non_empty_tibble <- function(d) {
 #' @keywords internal
 replace_na <- function(x, y) {
   ifelse(is.na(x), y, x)
+}
+
+
+#' @keywords internal
+shape_array_helper <- function(x, k = 2, sep = 1, where = "east", anchor = "center", ...) {
+  if (x@length > 1) stop("The shape must start with an object of length 1.")
+
+  dots <- rlang::list2(...)
+
+  p <- as.list(seq(k))
+  p[1] <- as.list(x)
+
+  for (i in seq(2, k)) {
+    p[i] <- as.list(place(x, p[[i - 1]], where = where, sep = sep))
+  }
+  p <- bind(p)
+
+  bb <- p@bounding_box
+  if (anchor == "center") {
+    p_anchor <- bb@center
+  } else {
+    p_anchor <- bb@point_at(anchor)
+  }
+
+  p_center <- p@center - p_anchor + x@center
+
+  l <- character(0)
+
+  if (S7_inherits(x@label, label)) {
+    if (x@label@length == 1) {
+      l <- label(subscript(x@label@label, seq(k)),
+                 style = x@style,
+                 p = p_center)
+    }
+
+    if (x@label@length == k) {
+      l <- label(x@label@label,
+                 style = x@style,
+                 p = p_center)
+    }
+  }
+
+  if (is.null(dots$label)) {
+    if (length(l) > 0) {
+      dots$label <- l
+    }
+  } else {
+    if (S7_inherits(dots$label, label)) {
+      dots$label <- label(p = p_center,
+                          label = dots$label@label,
+                          style = dots$label@style)
+    }
+  }
+
+  list(
+    x = x,
+    k = k,
+    sep = sep,
+    anchor = anchor,
+    p_center = p_center,
+    dots = dots
+  )
+
+}
+
+
+
+#' Create subscripts
+#'
+#' @param x text
+#' @param subscript text
+#'
+#' @return text
+#' @export
+#'
+#' @examples
+#' subscript("X", 1:3)
+#' superscript(c("A", "B"), 2)
+subscript <- function(x, subscript = seq(length(x))) {
+  paste0(x, "<sub>", subscript, "</sub>")
+}
+
+#' Create superscript
+#'
+#' @param x text
+#' @param subscript text
+#'
+#' @return text
+#' @rdname subscript
+#' @export
+superscript <- function(x, superscript = 2) {
+  paste0(x, "<sup>", superscript, "</sup>")
 }
 
 #' Probability rounding
@@ -655,7 +814,6 @@ make_geom_helper <- function(d = NULL,
   # 1 row per unique combination of not mappable arguments
   d_nested <- tidyr::nest(d, .by = dplyr::any_of(aesthetics@not_mappable))
 
-
   # all colnames  but data
   not_mapped_names <- colnames(d_nested)[colnames(d_nested) != "data"]
   d_isunit <- purrr::map_lgl(d_nested, grid::is.unit)
@@ -839,6 +997,7 @@ place <- new_generic("place", c("x", "from"),
                      fun = function(x, from, where = "right", sep = 1, ...) {
                        S7::S7_dispatch()
                      })
+
 
 method(as.list, shape) <- function(x, ...) {
   purrr::map(seq(1, x@length), \(i) x[i])

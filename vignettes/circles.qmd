@@ -13,7 +13,9 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r presetup, include = FALSE}
+```{r}
+#| label: presetup
+#| include: false
 library(ggdiagram)
 library(ggplot2)
 library(dplyr)
@@ -36,7 +38,8 @@ update_geom_defaults("richtext",
 update_geom_defaults("arrow_segment", list(length_head = 1))
 ```
 
-```{r setup}
+```{r}
+#| label: setup
 library(ggdiagram)
 library(ggplot2)
 library(dplyr)
@@ -51,7 +54,8 @@ my_font <- "Roboto Condensed"
 
 To avoid repetitive code, we make a base plot:
 
-```{r baseplot}
+```{r}
+#| label: baseplot
 my_font <- "Roboto Condensed"
 my_text_size <- 20
 my_point_size <- 2.5
@@ -98,14 +102,16 @@ $$
 $$
 
 
-```{r circle}
+```{r}
+#| label: circle
 p <- point(0,0)
 r <- 3
 c1 <-  circle(center = p, radius = 3)
 c1
 ```
 
-```{r fig-circle}
+```{r}
+#| label: fig-circle
 #| fig-cap: A circle can be specified with a center and a radius,
 #| code-fold: true
 bp +
@@ -123,12 +129,14 @@ bp +
 
 ## Point on the circle at a specific angle
 
-```{r ptheta}
+```{r}
+#| label: ptheta
 c1@point_at(degree(60))
 ```
 
 
-```{r fig-ptheta}
+```{r}
+#| label: fig-ptheta
 #| fig-cap: Point on ellipse that is 45&deg; from the x-axis.
 #| code-fold: true
 deg <- degree(60)
@@ -148,7 +156,8 @@ bp +
 
 The `place` function places an object at a specified direction and distance from another object. 
 
-```{r fig-place}
+```{r}
+#| label: fig-place
 #| fig-cap: Place Circle B one unit to the right of Circle A
 bp + 
   {A <- circle(
@@ -169,7 +178,8 @@ The `where` argument can take degrees or named positions:
 
 Multiple circles can be created at once with named directions:
 
-```{r fig-multplace}
+```{r}
+#| label: fig-multplace
 #| fig-cap: Place mutliple circles using named directions
 bp + 
   {c3 <- circle(point(0, 0), radius = 1)} + 
@@ -184,7 +194,8 @@ bp +
 
 Or with numbers (degrees):
 
-```{r fig-multdegree}
+```{r}
+#| label: fig-multdegree
 #| fig-cap: Place mutliple circles using degrees
 bp + 
   c3 + 
@@ -196,7 +207,8 @@ bp +
 
 With styles:
 
-```{r fig-style}
+```{r}
+#| label: fig-style
 #| fig-cap: Place mutliple circles with styling
 bp +
   {c4 <- circle(
@@ -220,7 +232,8 @@ bp +
 
 This works the same as placing circles next to each other. Here we create a point in the center, place six circles around it, and then place 12 points around each circle.
 
-```{r fig-multimulti}
+```{r}
+#| label: fig-multimulti
 #| fig-cap: Place circles around a point, and points around each circle
 bp + 
   {p1 <- point(0,0)} +
@@ -243,7 +256,8 @@ bp +
 
 ## Placing lines next to circles
 
-```{r fig-linecircle}
+```{r}
+#| label: fig-linecircle
 #| fig-cap: Placing a line one unit northeast of a circle
 bp +
   {c7 <- circle()} +
@@ -255,7 +269,8 @@ bp +
 
 Let's make two circles and draw an arrow path between them
 
-```{r fig-connectcircles}
+```{r}
+#| label: fig-connectcircles
 #| fig-cap: Connect two circles
 bp + 
   {c1 <- circle(point(-2, 2), radius = 1)} + 
@@ -265,7 +280,8 @@ bp +
 
 That is fine, but we often need labels and styling to make scientific diagrams. For example:
 
-```{r fig-connectcirclesstyles}
+```{r}
+#| label: fig-connectcirclesstyles
 #| fig-cap: Connect two circles with labels and styles
 bp +
   {cthis <- circle(
@@ -300,7 +316,8 @@ bp +
 
 # Paths between circles and lines
 
-```{r fig-connectcircleline}
+```{r}
+#| label: fig-connectcircleline
 #| fig-cap: Connect a circle to a line and a line to a circle
 bp + 
   c1 +

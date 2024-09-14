@@ -11,6 +11,10 @@ pt_props <- list(
     auto_label = new_property(getter = function(self) {
       label_object(self)
     }),
+    bounding_box = new_property(getter = function(self) {
+      rectangle(southwest = point(x = min(self@x), y = min(self@y)),
+                northeast = point(x = max(self@x), y = max(self@y)))
+    }),
     length = new_property(
       getter = function(self) {
         length(self@x)
@@ -429,4 +433,87 @@ method(nudge, list(point, class_numeric, class_missing)) <- function(object, x, 
 
 method(nudge, list(point, class_missing, class_numeric)) <- function(object, x, y) {
   object + point(0, y)
+}
+
+method(shape_array, point) <- function(x, k = 2, sep = 1, where = "east", anchor = "center", ...) {
+  s <- seq(0, sep * (k - 1), sep)
+  px <- cos(degree(where)) * s
+  py <- sin(degree(where)) * s
+  p <- point(px, py)
+  bb <- p@bounding_box
+  if (anchor == "center") {
+    p_anchor <- bb@center
+  } else {
+    p_anchor <- bb@point_at(anchor)
+  }
+  point((p - p_anchor + x)@xy, x@style, ...)
+}
+
+
+method(covariance, list(point, point)) <- function(
+    x,
+    y,
+    where = NULL,
+    bend = 0,
+    looseness = 1,
+    arrow_head = arrowheadr::arrow_head_deltoid(),
+    resect = 2,
+    ...) {
+  if (!S7_inherits(where, class_angle) && !is.null(where)) where <- degree(where)
+  if (!S7_inherits(bend, class_angle)) bend <- degree(bend)
+
+
+
+  p <- purrr::pmap(list(xx = as.list(x), yy = as.list(y), bb = as.list(bend)), \(xx, yy, bb) {
+
+    if (is.null(where)) {
+      d_xy <- yy@center - xx@center
+      x_angle <- d_xy@theta + degree(45)
+      y_angle <- degree(135) + (d_xy@theta)
+    } else {
+      x_angle <- where
+      y_angle <- degree(180) - where
+    }
+    s <- xx@point_at(x_angle)
+    # m <- el@point_at(where)
+    e <- yy@point_at(y_angle)
+    # s_dist <- (s - m)@r * looseness * 2
+    # e_dist <- (e - m)@r * looseness * 2
+    m_dist <- looseness * (s - e)@r / 2
+
+    bind(c(
+      s,
+      rotate(
+        xx@normal_at(
+          theta = x_angle,
+          distance = m_dist),
+        theta = bb,
+        origin = s),
+      rotate(
+        yy@normal_at(
+          theta = y_angle,
+          distance = m_dist),
+        theta = bb * -1,
+        origin = e),
+      e))
+  })
+
+  dots <- rlang::list2(...)
+
+  l <- character(0)
+
+
+  if (!is.null(dots$label)) {
+    l <- dots$label
+    if (!S7_inherits(l, label)) l <- label(l)
+    dots$label <- NULL
+  }
+
+  rlang::inject(bzcurve(p = p,
+                        label = l,
+                        label_sloped = FALSE,
+                        arrow_head = arrow_head,
+                        arrow_fins = arrow_head,
+                        resect = resect,
+                        !!!dots))
 }

@@ -36,28 +36,15 @@ method(rotate, list(point, class_angle_or_numeric)) <- function(
 
   if (!S7_inherits(theta, class_angle)) theta <- degree(theta)
 
-  d <- tibble::tibble(x0 = x@x - origin@x,
-              y0 = x@y - origin@y,
-              theta = theta@radian)
+  d <- tibble::tibble(
+    x0 = x@x - origin@x,
+    y0 = x@y - origin@y,
+    th = theta@turn,
+    xr = x0 * cospi(th * 2) - y0 * sinpi(th * 2) + origin@x,
+    yr = x0 * sinpi(th * 2) + y0 * cospi(th * 2) + origin@y)
 
 
-
-
-xr <- purrr::map(unique(d$theta), \(th) {
-  cbind(x = d$x0, y = d$y0) |>
-  rotate2columnmatrix(th) |>
-  `colnames<-`(c("x", "y")) |>
-  tibble::as_tibble()}) |>
-  dplyr::bind_rows() |>
-  as.matrix()
-
-
-
-
-dimnames(xr) <- list(NULL, NULL)
-
-
-origin + point(x = xr[,1], y = xr[, 2], style = x@style, ...)
+point(x = d$xr, y = d$yr, style = x@style, ...)
 }
 
 

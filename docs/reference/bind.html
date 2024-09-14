@@ -21,6 +21,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/angles.html">Angles</a></li>
     <li><a class="dropdown-item" href="../articles/arcs.html">Arcs</a></li>
     <li><a class="dropdown-item" href="../articles/bzcurves.html">Bezier Curves</a></li>
+    <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
     <li><a class="dropdown-item" href="../articles/ellipses.html">Ellipses</a></li>
     <li><a class="dropdown-item" href="../articles/lines.html">Lines</a></li>
@@ -74,8 +75,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> @ x: num [1:2] 1 3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> @ y: num [1:2] 2 4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Other props: alpha, color, fill, shape, size, stroke, auto_label,</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              length, r, theta, style, tibble, xy, geom, label,</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              aesthetics</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              bounding_box, length, r, theta, style, tibble, xy,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              geom, label, aesthetics</span>
 <span class="r-in"><span><span class="fu">bind</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="circle.html">circle</a></span><span class="op">(</span><span class="fu"><a href="point.html">point</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>, radius <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>       <span class="fu"><a href="circle.html">circle</a></span><span class="op">(</span><span class="fu"><a href="point.html">point</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span>, radius <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;circle&gt;</span>
@@ -84,8 +85,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  @ y: num [1:2] 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> @ radius: num [1:2] 1 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Other props: label, alpha, color, fill, linewidth, linetype, n,</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              area, circumference, diameter, length, style, tibble,</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              geom, angle_at, tangent_at, point_at, aesthetics</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              area, bounding_box, circumference, diameter, length,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              style, tibble, geom, angle_at, tangent_at, point_at,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              aesthetics</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

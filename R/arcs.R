@@ -69,6 +69,50 @@ arc_props <- list(
   ),
   # derived ----
   derived = list(
+    apothem = new_property(getter = function(self) {
+      self@radius - self@sagitta
+    }),
+    sagitta = new_property(getter = function(self) {
+      l <- self@chord@distance
+      r <- self@radius
+      r - sqrt(r ^ 2 - (l / 2) ^ 2)
+    }),
+    bounding_box = new_property(getter = function(self) {
+
+      d_rect <- self@tibble |>
+        dplyr::mutate(d = purrr::pmap(
+          list(x0 = x0,
+               y0 = y0,
+               r = r,
+               start = start,
+               end = end,
+               n = n), \(x0,y0,r,start,end, n) {
+                 theta <- seq(start, end, length.out = n)
+                 d <- tibble::tibble(
+                   x = x0 + cos(theta) * r,
+                   y = y0 + sin(theta) * r
+                 )
+
+                 if (self@wedge) d <- dplyr::add_row(d, x = x0, y = y0)
+
+                   dplyr::summarise(d, xmin = min(x),
+                                    xmax = max(x),
+                                    ymin = min(y),
+                                    ymax = max(y))
+               })) |>
+        tidyr::unnest(d) |>
+        dplyr::summarise(xmin = min(xmin),
+                         xmax = max(xmax),
+                         ymin = min(ymin),
+                         ymax = max(ymax))
+
+      rectangle(southwest = point(d_rect$xmin, d_rect$ymin),
+                northeast = point(d_rect$xmax, d_rect$ymax))
+
+    }),
+    chord = new_property(getter = function(self) {
+      segment(self@midpoint(0), self@midpoint(1), style = self@style)
+    }),
     length = new_property(
       getter = function(self) {
         length(self@radius)
@@ -263,9 +307,26 @@ arc_props <- list(
 #' @slot theta interior angle (end - start)
 #' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggarrow::geom_arrow`.
 #' @examples
-#' # specify center point and radius
-#' p <- point(0,0)
-#' arc(p, radius = 6, start = degree(0), end = degree(30))
+#' library(ggplot2)
+#'
+#' # center point
+#' p_center <- point(0,0)
+#'
+#' # 90-degree arc
+#' a_90 <- arc(
+#'  center = p_center,
+#'  radius = 6,
+#'  start = degree(0),
+#'  end = degree(90)
+#'  )
+#'
+#'  # Print arc
+#'  a
+#'
+#' # Plot arc and its center point
+#' ggplot() + coord_equal() + theme_minimal() +
+#'  p_center +
+#'  a_90
 #' @export
 arc <- new_class(
   name = "arc",
@@ -573,9 +634,13 @@ method(
   }
 
 method(`[`, arc) <- function(x, y) {
-  d <- as.list(x@tibble[y,])
+  d <- as.list(x@tibble[y,] |>
+                 dplyr::rename(radius = r))
   z <- rlang::inject(arc(!!!d))
+  z@start <- x@start[y]
+  z@end <- x@end[y]
   z@label <- x@label[y]
+  z@wedge <- x@wedge
   z
 }
 

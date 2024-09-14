@@ -10,7 +10,9 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r presetup, include = FALSE}
+```{r}
+#| label: presetup
+#| include: false
 library(ggdiagram)
 library(ggplot2)
 library(dplyr)
@@ -28,7 +30,8 @@ knitr::opts_chunk$set(
 
 # Setup
 
-```{r setup}
+```{r}
+#| label: setup
 library(ggdiagram)
 library(ggplot2)
 library(dplyr)
@@ -45,7 +48,8 @@ library(geomtextpath)
 
 To avoid repetitive code, we make a base plot:
 
-```{r baseplot}
+```{r}
+#| label: baseplot
 my_font <- "Roboto Condensed"
 my_text_size <- 20
 my_point_size <- 2.5
@@ -90,7 +94,8 @@ bp <- ggplot() +
 
 The `bzcurve` function creates an object that specifies the control points for a bezier curve. A bezier curve is an extremely useful way of making elegantly curved lines between points.
 
-```{r fig-bzcurve}
+```{r}
+#| label: fig-bzcurve
 #| fig-cap: Bezier curve with contol points
 p <- point(c(-4,-3,4), c(0,-2, 0), color = "dodgerblue")
 bp + 
@@ -101,7 +106,8 @@ bp +
 I like to set control points using the `polar` function to create points at a certain distance and angle from the starting and ending points. The `c` function creates a list of all the points, and the `bind` function binds the list into a single point object containing all the points.
 
 
-```{r fig-bzlabel}
+```{r}
+#| label: fig-bzlabel
 #| fig-cap: Bezier curve with contol points and label
 p_start <- point(-4,0)
 p_end <- point(4, 0)
@@ -129,7 +135,8 @@ bp +
 
 If multiple point objects are supplied as a list (or concatenated with the `c` function), a bezier curve will be created for each point object in the list.
 
-```{r fig-multbz}
+```{r}
+#| label: fig-multbz
 #| fig-cap: Multiple bezier paths
 bp + 
   bzcurve(
@@ -142,14 +149,5 @@ bp +
     arrow_head = my_arrowhead)
 ```
 
-```{r}
-bzcurve(
-    c(
-      point(c(-4, -3, 4), c(0,  4, 0)),
-      point(c(-4, -3, 4), c(0, -4, 0))
-    ),
-    resect_head = 2, 
-    arrowhead_length = 7,
-    arrow_head = my_arrowhead)[1]
-```
+
 

@@ -24,11 +24,14 @@ label(
   nudge_x = class_missing,
   nudge_y = class_missing,
   size = class_missing,
+  straight = class_missing,
   text.color = class_missing,
   vjust = class_missing,
   style = class_missing,
   plot_point = FALSE,
   position = 0.5,
+  x = class_missing,
+  y = class_missing,
   ...
 )
 }
@@ -70,6 +73,8 @@ label(
 \item{nudge_y}{Vertical adjustment to nudge labels by.}
 
 \item{size}{numeric size}
+
+\item{straight}{logical. If TRUE, make bzpath label text straight instead of curved.}
 
 \item{text.color}{Color of label text.}
 

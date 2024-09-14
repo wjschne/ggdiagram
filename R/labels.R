@@ -1,7 +1,7 @@
 lb_styles <- c("alpha", "angle", "color", "family","fill","fontface",
                "hjust","label.color","label.margin","label.padding",
                "label.r","label.size","lineheight","nudge_x","nudge_y",
-               "polar_just","size","text.color","vjust")
+               "polar_just","size","straight","text.color","vjust")
 
 gtextcurve_aes <- class_aesthetics_list(
   geom = purrr::partial(geomtextpath::geom_labelpath,rich = TRUE, arrow = NULL, text_only = TRUE),
@@ -25,10 +25,11 @@ gtextcurve_aes <- class_aesthetics_list(
   not_mappable = c(
     "halign",
     "label.padding",
-    "label.r"
+    "label.r",
+    "straight"
   ),
   required_aes = c("x", "y", "label"),
-  omit_names = c("position"),
+  omit_names = c("position", "label.margin"),
   inherit.aes = FALSE,
   style = lb_styles
 )
@@ -84,6 +85,7 @@ lb_props <- list(
                 nudge_x = self@nudge_x,
                 nudge_y = self@nudge_y,
                 polar_just = self@polar_just,
+                straight = self@straight,
                 size = self@size,
                 text.color = self@text.color,
                 vjust = self@vjust)
@@ -101,7 +103,7 @@ lb_props <- list(
   ),
   extras = list(
     plot_point = new_property(class_logical, validator = function(value) {
-      if(length(value) !=1 ) {
+      if (length(value) != 1) {
         stop("The plot_point property must be a TRUE/FALSE value of length 1.")
       }
     }),
@@ -135,7 +137,7 @@ lb_props <- list(
           "nudge_y"
         ),
         required_aes = c("x", "y", "label"),
-        omit_names = c("group", "position"),
+        omit_names = c("group", "position", "straight"),
         inherit.aes = FALSE,
         style = lb_styles
       )
@@ -185,17 +187,20 @@ label <- new_class(
                          nudge_x = class_missing,
                          nudge_y = class_missing,
                          size = class_missing,
+                         straight = class_missing,
                          text.color = class_missing,
                          vjust = class_missing,
                          style = class_missing,
                          plot_point = FALSE,
                          position = .5,
+                         x = class_missing,
+                         y = class_missing,
                          ...) {
 
-
-
     if (missing(p)) {
-      p <- point()
+      if (missing(x)) x <- 0
+      if (missing(y)) y <- 0
+      p <- point(x,y)
     }
 
     if (length(label.padding) > 0) {
@@ -263,6 +268,7 @@ label <- new_class(
         nudge_y = nudge_y,
         polar_just = polar_just,
         size = size,
+        straight = straight,
         text.color = as.character(text.color),
         vjust = vjust
       )
@@ -288,8 +294,6 @@ label <- new_class(
                             (p - a@center)@theta + angle(turn = .5),
                             multiplier = 1.15) + style(...)
     }
-
-
 
     non_empty_list <- get_non_empty_props(l_style)
 
@@ -323,6 +327,7 @@ label <- new_class(
       nudge_y = d[["nudge_y"]] %||% nudge_y,
       polar_just = d[["polar_just"]] %||% polar_just,
       size = d[["size"]] %||% size,
+      straight = d[["straight"]] %||% straight,
       text.color = d[["text.color"]] %||% text.color,
       vjust = d[["vjust"]] %||% vjust,
       plot_point = plot_point,
@@ -354,19 +359,27 @@ method(as.geom, centerpoint) <- function(x, ...) {
 }
 
 method(`+`, list(centerpoint, point)) <- function(e1, e2) {
-  circle(e1@center + e2, e1@radius)
+  e1@center <- e1@center + e2
+  if (S7_inherits(e1@label, label)) e1@label@p <- e1@label@p + e2
+  e1
 }
 
 method(`-`, list(centerpoint, point)) <- function(e1, e2) {
-  circle(e1@center - e2, e1@radius)
+  e1@center <- e1@center - e2
+  if (S7_inherits(e1@label, label)) e1@label@p <- e1@label@p - e2
+  e1
 }
 
 method(`+`, list(point, centerpoint)) <- function(e1, e2) {
-  circle(e2@center + e1, e2@radius)
+  e2@center <- e1 + e2@center
+  if (S7_inherits(e2@label, label)) e2@label@p <- e2@label@p + e1
+  e2
 }
 
 method(`-`, list(point, centerpoint)) <- function(e1, e2) {
-  circle(e1 - e2@center, e2@radius)
+  e2@center <- e1 - e2@center
+  if (S7_inherits(e2@label, label)) e2@label@p <- e2@label@p - e1
+  e2
 }
 
 method(`%|-%`, list(centerpoint, point)) <- function(e1,e2) {
@@ -412,9 +425,9 @@ method(get_tibble, label) <- function(x) {
 
 method(get_tibble_defaults, label) <- function(x) {
   sp <- style(
-    alpha = 1,
-    color = "black",
-    angle = degree(0),
+    alpha = replace_na(ggtext::GeomRichText$default_aes$alpha, 1),
+    color = replace_na(ggtext::GeomRichText$default_aes$colour, "black"),
+    angle = replace_na(ggtext::GeomRichText$default_aes$angle, degree(0)),
     family = "sans",
     fill = "fill",
     fontface = "plain",
@@ -466,14 +479,30 @@ method(label_object, label) <- function(object, accuracy = .1) {
   label_object(object@p, accuracy = accuracy)
 }
 
+
+
 method(`[`, label) <- function(x, y) {
   d <- as.list(x@tibble[y,])
-  rlang::inject(label(!!!d))
+  new_x <- rlang::inject(label(!!!d))
+  if (!is.null(d$label.margin)) {
+    new_x@label.margin = x@label.margin[y]
+  }
+  if (!is.null(d$label.padding)) {
+    new_x@label.padding = x@label.padding[y]
+  }
+
+    # new_x@p = x@p[y]
+
+  new_x
+}
+
+method(as.list, label) <- function(x, ...) {
+  purrr::map(seq(1, x@length), \(i) x[i])
 }
 
 centerpoint_label <- function(label, center, d, shape_name = "shape", ...) {
   if (is.character(label) || S7_inherits(label, class_angle) || is.numeric(label)) {
-    label <- label(label = label, p = center, ...)
+    label <- label(label = label, p = center, fill = NA, ...)
   }
 
   if (length(label) > 0) {

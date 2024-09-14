@@ -7,7 +7,7 @@ pgon_styles <- c(
 )
 
 pgon_aesthetics <- class_aesthetics_list(
-  geom = ggplot2::geom_polygon,
+  geom = ggforce::geom_shape,
   mappable_bare = character(0),
   mappable_identity = c(
     "color",
@@ -16,7 +16,7 @@ pgon_aesthetics <- class_aesthetics_list(
     "linetype",
     "alpha"),
   not_mappable = c(
-    character(0)
+    "radius"
   ),
   required_aes = c(
     "x",
@@ -52,12 +52,28 @@ pgon_props <- list(
 
     })
   ),
+  # extra ----
   extra = list(
-    label = label_or_character_or_angle
+    label = label_or_character_or_angle,
+    radius = new_property(class = class_numeric_or_unit, validator = function(value) {
+      if (length(value) > 1) stop("The radius property must be of length 1.")
+    })
   ),
   styles = style@properties[pgon_styles],
   # derived ----
   derived = list(
+    bounding_box = new_property(getter = function(self) {
+
+      d_rect <- self@tibble |>
+        dplyr::summarise(xmin = min(x),
+                         xmax = max(x),
+                         ymin = min(y),
+                         ymax = max(y))
+
+      rectangle(southwest = point(d_rect$xmin, d_rect$ymin),
+                northeast = point(d_rect$xmax, d_rect$ymax))
+
+    }),
     centroid = new_property(point, getter = function(self) {
       d <- self@tibble
       gr <- dplyr::intersect(colnames(d), c("group", pt_styles))
@@ -99,7 +115,8 @@ pgon_props <- list(
         color = self@color,
         fill = self@fill,
         linewidth = self@linewidth,
-        linetype = self@linetype
+        linetype = self@linetype,
+        radius = self@radius
       )
       get_non_empty_tibble(d) |>
         dplyr::mutate(p = purrr::map(p, \(x) {x@tibble |> dplyr::select(x,y)})) |>
@@ -134,6 +151,7 @@ pgon_props <- list(
 #' @export
 #' @param p point object or list of point objects
 #' @param label A character, angle, or label object
+#' @param radius A numeric or unit vector of length one,  specifying the corner radius
 #' @slot length The number of polygons in the pgon object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @param style Gets and sets the styles associated with polygons
@@ -154,6 +172,7 @@ pgon <- new_class(
   ),
   constructor = function(p = class_missing,
                          label = class_missing,
+                         radius = class_missing,
                          alpha = class_missing,
                          color = class_missing,
                          fill = class_missing,
@@ -222,6 +241,7 @@ pgon <- new_class(
     new_object(.parent = S7_object(),
                p =  d$p,
                label = label,
+               radius = radius,
                alpha = d[["alpha"]] %||% alpha,
                color = d[["color"]] %||% color,
                fill = d[["fill"]] %||% fill,

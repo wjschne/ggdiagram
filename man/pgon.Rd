@@ -7,6 +7,7 @@
 pgon(
   p = class_missing,
   label = class_missing,
+  radius = class_missing,
   alpha = class_missing,
   color = class_missing,
   fill = class_missing,
@@ -20,6 +21,8 @@ pgon(
 \item{p}{point object or list of point objects}
 
 \item{label}{A character, angle, or label object}
+
+\item{radius}{A numeric or unit vector of length one,  specifying the corner radius}
 
 \item{alpha}{numeric value for alpha transparency}
 

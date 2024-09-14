@@ -37,6 +37,18 @@ path_props <- list(
   styles = style@properties[path_styles],
   # derived ----
   derived = list(
+    bounding_box = new_property(getter = function(self) {
+
+      d_rect <- self@tibble |>
+        dplyr::summarise(xmin = min(x),
+                         xmax = max(x),
+                         ymin = min(y),
+                         ymax = max(y))
+
+      rectangle(southwest = point(d_rect$xmin, d_rect$ymin),
+                northeast = point(d_rect$xmax, d_rect$ymax))
+
+    }),
     length = new_property(
       getter = function(self) {
         if ("list" %in% class(self@p)) {

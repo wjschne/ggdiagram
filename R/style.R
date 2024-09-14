@@ -87,6 +87,7 @@ prop_polar_just <- new_property(class_numeric, setter = function(self, value) {
 #' @param stroke Width of point border line
 #' @param stroke_color Color of point border line
 #' @param stroke_width Stroke width in arrows
+#' @param straight logical. If TRUE, make bzpath label text straight instead of curved.
 #' @param text.color Color of label text.
 #' @param vjust vertical justification
 #' @param linetype type of lines
@@ -132,6 +133,7 @@ style <- new_class(
     shape = class_numeric_or_character,
     size = class_numeric_or_unit,
     size.unit = class_numeric_or_unit,
+    straight = class_logical,
     stroke = class_numeric,
     stroke_color = class_character,
     stroke_width = class_character,
@@ -175,6 +177,7 @@ style <- new_class(
                          shape = class_missing,
                          size = class_missing,
                          size.unit = class_missing,
+                         straight = class_missing,
                          stroke = class_missing,
                          stroke_color = class_missing,
                          stroke_width = class_missing,
@@ -265,6 +268,7 @@ style <- new_class(
       shape = shape,
       size = size,
       size.unit = size.unit,
+      straight = straight,
       stroke = stroke,
       stroke_color = as.character(stroke_color),
       stroke_width = stroke_width,
@@ -319,6 +323,7 @@ style <- new_class(
       shape = shape,
       size = size,
       size.unit = size.unit,
+      straight = straight,
       stroke = stroke,
       stroke_color = as.character(stroke_color),
       stroke_width = stroke_width,

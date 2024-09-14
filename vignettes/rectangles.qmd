@@ -13,14 +13,16 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r presetup}
+```{r}
+#| label: presetup
 #| include: false
 knitr::opts_chunk$set(
   collapse = TRUE,
   dev = "ragg_png",
   comment = "#>",
   fig.width = 7,
-  fig.height = 7
+  fig.height = 7,
+  cache = TRUE
 )
 
 library(ggdiagram)
@@ -34,7 +36,9 @@ my_font <- "Roboto Condensed"
 # gdtools::addGFontHtmlDependency(family = my_font)
 ```
 
-```{r setup}
+```{r}
+#| label: setup
+#| cache: false
 library(ggdiagram)
 library(ggplot2)
 library(ggtext)
@@ -70,7 +74,8 @@ theme_set(
 
 A rectangle has 4 corners (`northeast`, `northwest`, `southwest`, and `southeast`). It has a center. It has width and height. For the purpose of demonstration, we can specify all these features, though in practice not all of them are necessary.
 
-```{r corners}
+```{r}
+#| label: corners
 # northeast corner
 ne <- point(4,2) 
 # northwest corner
@@ -97,7 +102,8 @@ An easy way to specify a rectangle is to specify its width and height and any of
 ### Center, width, and height
 
 
-```{r centerhw}
+```{r}
+#| label: centerhw
 r1 <- rectangle(
   width = w,
   height = h,
@@ -192,13 +198,15 @@ rc_plot + rc_center + rc_width + rc_height
 
 ### Northeast corner, width, and height
 
-```{r hw_ne}
+```{r}
+#| label: hw_ne
 r1 == rectangle(width = w,
                 height = h,
                 northeast = ne)
 ```
 
-```{r fig-hw_ne}
+```{r}
+#| label: fig-hw_ne
 #| fig-cap: Specify a rectangle with height, width, and the northeast corner
 #| code-fold: true
 #| fig-height: 4.75
@@ -207,14 +215,16 @@ rc_plot + rc_width + rc_height + rc_ne
 
 ### Northwest corner, width, and height
 
-```{r hw_nw}
+```{r}
+#| label: hw_nw 
 r1 == rectangle(width = w,
                 height = h,
                 northwest = nw)
 ```
 
 
-```{r fig-hw_nw}
+```{r}
+#| label: fig-hw_nw
 #| fig-cap: Specify a rectangle with height, width, and the northwest corner
 #| code-fold: true
 #| fig-height: 4.75
@@ -224,14 +234,16 @@ rc_plot + rc_width + rc_height + rc_nw
 ### Southwest corner, width, and height
 
 
-```{r hw_sw}
+```{r}
+#| label: hw_sw
 r1 == rectangle(width = w,
                 height = h,
                 southwest = sw)
 ```
 
 
-```{r fig-hw_sw}
+```{r}
+#| label: fig-hw_sw
 #| fig-cap: Specify a rectangle with height, width, and the southwest corner
 #| code-fold: true
 #| fig-height: 4.75
@@ -240,14 +252,16 @@ rc_plot + rc_width + rc_height + rc_sw
 
 ### Southeast corner, width, and height
 
-```{r hw_se}
+```{r}
+#| label: hw_se
 r1 == rectangle(width = w,
                 height = h,
                 southeast = se)
 ```
 
 
-```{r fig-hw_se}
+```{r}
+#| label: fig-hw_se
 #| fig-cap: Specify a rectangle with height, width, and the southeast corner
 #| code-fold: true
 #| fig-height: 4.75
@@ -263,12 +277,14 @@ A rectangle can be specified with the center and any other corner. The following
 
 ### Northeast corner and center
 
-```{r center_ne}
+```{r}
+#| label: center_ne
 r1 == rectangle(center = cent, 
                 northeast = ne)
 ```
 
-```{r fig-center_ne}
+```{r}
+#| label: fig-center_ne
 #| fig-cap: Specify a rectangle with the center and the northeast corner
 #| code-fold: true
 #| fig-height: 4.75
@@ -277,12 +293,14 @@ rc_plot + rc_center + rc_ne
 
 ### Northwest corner and center
 
-```{r center_nw}
+```{r}
+#| label: center_nw
 r1 == rectangle(center = cent, 
                 northwest = nw)
 ```
 
-```{r fig-center_nw}
+```{r}
+#| label: fig-center_nw
 #| fig-cap: Specify a rectangle with the center and the northwest corner
 #| code-fold: true
 #| fig-height: 4.75
@@ -291,12 +309,14 @@ rc_plot + rc_center + rc_nw
 
 ### Southeast corner and center
 
-```{r center_se}
+```{r}
+#| label: center_se
 r1 == rectangle(center = cent, 
                 southeast = se)
 ```
 
-```{r fig-center_se}
+```{r}
+#| label: fig-center_se
 #| fig-cap: Specify a rectangle with the center and the southeast corner
 #| code-fold: true
 #| fig-height: 4.75
@@ -305,12 +325,14 @@ rc_plot + rc_center + rc_se
 
 ### Southeast corner and center
 
-```{r center_sw}
+```{r}
+#| label: center_sw
 r1 == rectangle(center = cent, 
                 southwest = sw)
 ```
 
-```{r fig-center_sw}
+```{r}
+#| label: fig-center_sw
 #| fig-cap: Specify a rectangle with the center and the southwest corner
 #| code-fold: true
 #| fig-height: 4.75
@@ -324,13 +346,15 @@ A rectangle can be specified with points from opposite corners. These rectangles
 
 ### Northeast and southwest corners
 
-```{r ne_sw}
+```{r}
+#| label: ne_sw 
 r1 == rectangle(
   northeast = ne, 
   southwest = sw)
 ```
 
-```{r fig-ne_sw}
+```{r}
+#| label: fig-ne_sw
 #| fig-cap: Specify a rectangle with the northeast and southwest corners
 #| code-fold: true
 #| fig-height: 4.75
@@ -339,13 +363,15 @@ rc_plot + rc_sw + rc_ne
 
 ### Northwest and southeast corners
 
-```{r nw_se}
+```{r}
+#| label: nw_se
 r1 == rectangle(
   northeast = ne, 
   southwest = sw)
 ```
 
-```{r fig-nw_se}
+```{r}
+#| label: fig-nw_se
 #| fig-cap: Specify a rectangle with the northwest and southeast corners
 #| code-fold: true
 #| fig-height: 4.75
@@ -356,26 +382,30 @@ rc_plot + rc_se + rc_nw
 
 A rectangle can be specified with the width and 2 points from the left or right side. These rectangles are equivalent.
 
-```{r w_nw_sw}
+```{r}
+#| label: w_nw_sw
 r1 == rectangle(width = w,
                 northwest = nw,
                 southwest = sw)
 ```
 
-```{r fig-w_nw_sw}
+```{r}
+#| label: fig-w_nw_sw
 #| fig-cap: Specify a rectangle with the width and the left corners
 #| code-fold: true
 #| fig-height: 4.75
 rc_plot + rc_width + rc_nw + rc_sw
 ```
 
-```{r w_ne_se}
+```{r}
+#| label: w_ne_se
 r1 == rectangle(width = w,
                 northwest = ne,
                 southwest = se)
 ```
 
-```{r fig-w_ne_se}
+```{r}
+#| label: fig-w_ne_se
 #| fig-cap: Specify a rectangle with the width and the right corners
 #| code-fold: true
 #| fig-height: 4.75
@@ -388,13 +418,15 @@ A rectangle can be specified with the height and 2 points from the top or bottom
 
 ## Height and top corners
 
-```{r h_ne_nw}
+```{r}
+#| label: h_ne_nw
 r1 == rectangle(height = h,
                 northwest = nw,
                 northeast = ne)
 ```
 
-```{r fig-h_ne_nw}
+```{r}
+#| label: fig-h_ne_nw
 #| fig-cap: Specify a rectangle with the height and the top corners
 #| code-fold: true
 #| fig-height: 4.75
@@ -403,13 +435,15 @@ rc_plot + rc_height + rc_ne + rc_nw
 
 ## Height and bottom corners
 
-```{r n_sw_se}
+```{r}
+#| label: n_sw_se
 r1 == rectangle(height = h,
                 southwest = sw,
                 southeast = se)
 ```
 
-```{r fig-n_sw_se}
+```{r}
+#| label: fig-n_sw_se
 #| fig-cap: Specify a rectangle with the height and the top corners
 #| code-fold: true
 #| fig-height: 4.75
@@ -421,11 +455,13 @@ rc_plot + rc_sw + rc_se + rc_height
 
 The corners and side midpoints can be extracted. Here is the north point (i.e., the midpoint of the north side):
 
-```{r north}
+```{r}
+#| label: north
 r1@north
 ```
 
-```{r fig-points}
+```{r}
+#| label: fig-points
 #| fig-cap: The named points of a rectangle
 #| code-fold: true
 #| fig-height: 4.75
@@ -479,13 +515,15 @@ rc_plot +
 
 Points at any angle
 
-```{r theta60}
+```{r}
+#| label: theta60
 theta <- degree(60)
 r1@point_at(theta)
 ```
 
 
-```{r fig-theta60}
+```{r}
+#| label: fig-theta60
 #| fig-cap: "The point on a rectangle at angle &theta; = 60&deg;"
 #| code-fold: true
 #| fig-height: 4.75
@@ -510,11 +548,13 @@ rc_plot +
 
 Each side of the rectangle can be extracted. For example, here is the north side segment:
 
-```{r westside}
+```{r}
+#| label: westside
 r1@side@north
 ```
 
-```{r fig-westside}
+```{r}
+#| label: fig-westside
 #| fig-cap: The north side of a rectangle
 #| code-fold: true
 #| fig-height: 4.75
@@ -528,4 +568,66 @@ rc_plot +
 ```
 
 
+# Rounded corners
+
+The `@radius` property controls the radius of the rounded corners. It must be of length 1. It can be given in as a `ggplot2::unit` or as a numeric value. If numeric, it is understood as a proportion of the plot area width. Rounding does not affect the location of corners.
+
+```{r}
+#| label: fig-h_top
+#| fig-cap: Specify a rectangle with the height and the top corners
+ggplot() +
+  coord_equal(xlim = c(-4, 4), 
+              ylim = c(-4, 4)) +
+  rectangle(
+    point(0, 0),
+    width = 6,
+    height = 4,
+    radius = unit(5, "mm")
+  )
+```
+
+# Rotation angle
+
+It is possible to rotate a rectangle.
+
+```{r}
+#| label: fig-rotate
+#| fig-cap: "A rectangle rotated by 30&deg;"
+ggplot() +
+  coord_equal(xlim = c(-4, 4), 
+              ylim = c(-4, 4)) +
+  rectangle(
+    center = point(0, 0),
+    width = 6,
+    height = 2,
+    angle = 30
+  )
+```
+
+Many angles can be specified at once:
+
+```{r}
+#| label: fig-rotatemany
+#| fig-cap: "Many rotated rectangles"
+
+# Angles
+th <- degree(seq(0, 355, 5))
+# Radius of middle space
+r_middle <- sqrt(2)
+# Rectangle width
+w <- 4 - r_middle
+
+ggplot() +
+  coord_equal(xlim = c(-4, 4), 
+              ylim = c(-4, 4)) +
+  rectangle(
+    center = polar(theta = th, 
+                   r = w / 2 + r_middle),
+    width = w,
+    height = .15,
+    angle = th,
+    color = NA,
+    fill = hcl(th@degree)
+  )
+```
 

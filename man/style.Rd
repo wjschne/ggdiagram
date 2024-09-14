@@ -42,6 +42,7 @@ style(
   shape = class_missing,
   size = class_missing,
   size.unit = class_missing,
+  straight = class_missing,
   stroke = class_missing,
   stroke_color = class_missing,
   stroke_width = class_missing,
@@ -124,6 +125,8 @@ style(
 \item{size}{numeric size}
 
 \item{size.unit}{How the size aesthetic is interpreted: as points ("pt"), millimeters ("mm"), centimeters ("cm"), inches ("in"), or picas ("pc").}
+
+\item{straight}{logical. If TRUE, make bzpath label text straight instead of curved.}
 
 \item{stroke}{Width of point border line}
 

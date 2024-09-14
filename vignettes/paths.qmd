@@ -10,7 +10,9 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r presetup, include = FALSE}
+```{r}
+#| label: presetup
+#| include: false
 library(ggdiagram)
 library(ggplot2)
 library(dplyr)
@@ -28,7 +30,8 @@ knitr::opts_chunk$set(
 
 # Setup
 
-```{r setup}
+```{r}
+#| label: setup
 library(ggdiagram)
 library(ggplot2)
 library(dplyr)
@@ -46,7 +49,8 @@ library(geomtextpath)
 
 To avoid repetitive code, we make a base plot:
 
-```{r baseplot}
+```{r}
+#| label: baseplot
 my_font <- "Roboto Condensed"
 my_text_size <- 20
 my_point_size <- 2.5
@@ -91,7 +95,8 @@ bp <- ggplot() +
 
 The `path` function creates an object that connects points along a path.
 
-```{r fig-path}
+```{r}
+#| label: fig-path
 #| fig-cap: Plotting a path.
 p <- point(c(-4,-3,4), c(0,-2, 0), color = "dodgerblue")
 bp + 
@@ -105,7 +110,8 @@ bp +
 The label of a path is created with `geomtextpath::geom_labelpath`, and thus will curve if the path is curved.
 
 
-```{r fig-pathlabel}
+```{r}
+#| label: fig-pathlabel
 #| fig-cap: A path with a curved label
 p_curve <- tibble(x = seq(-4, 4, .1), 
                   y = (pnorm(x) * 8 - 4)) |>
@@ -131,7 +137,8 @@ bp +
 
 You can control the position of the path label with either the label's `position` or `hjust` properties. 
 
-```{r fig-labelposition}
+```{r}
+#| label: fig-labelposition
 #| fig-cap: A path with a curved label at position .1
 bp +
   path(
@@ -153,7 +160,8 @@ bp +
 
 To create multiple paths at once, specify a list or vector of point objects.
 
-```{r fig-multiplepath}
+```{r}
+#| label: fig-multiplepath
 #| fig-cap: Multiple paths
 bp +
   path(c(p_curve, 
