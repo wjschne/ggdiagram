@@ -7,9 +7,9 @@
 connect(x, y, ...)
 }
 \arguments{
-\item{x}{first shape (e.g., point, circle, ellipse, rectangle)}
+\item{x}{first shape object}
 
-\item{y}{second shape}
+\item{y}{second shape object}
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> Arguments passed to style}
 }
