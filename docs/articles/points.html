@@ -45,13 +45,14 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/angles.html">Angles</a></li>
     <li><a class="dropdown-item" href="../articles/arcs.html">Arcs</a></li>
-    <li><a class="dropdown-item" href="../articles/bzcurves.html">Bezier Curves</a></li>
+    <li><a class="dropdown-item" href="../articles/bezier.html">Bézier Curves</a></li>
+    <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
     <li><a class="dropdown-item" href="../articles/ellipses.html">Ellipses</a></li>
     <li><a class="dropdown-item" href="../articles/lines.html">Lines</a></li>
     <li><a class="dropdown-item" href="../articles/paths.html">Paths</a></li>
     <li><a class="dropdown-item" href="../articles/points.html">Points</a></li>
-    <li><a class="dropdown-item" href="../articles/polygons.html">Polygons (pgon)</a></li>
+    <li><a class="dropdown-item" href="../articles/polygons.html">Polygons</a></li>
     <li><a class="dropdown-item" href="../articles/rectangles.html">Rectangles</a></li>
     <li><a class="dropdown-item" href="../articles/segments.html">Segments</a></li>
   </ul>
@@ -125,8 +126,8 @@
 <p>Points have x and y coordinates.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, color <span class="op">=</span> <span class="st">"firebrick"</span><span class="op">)</span></span>
-<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">4</span>, color <span class="op">=</span> <span class="st">"royalblue3"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, color <span class="op">=</span> <span class="st">"firebrick"</span><span class="op">)</span></span>
+<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">4</span>, color <span class="op">=</span> <span class="st">"royalblue3"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">bp</span> <span class="op">+</span> </span>
 <span>  <span class="va">p1</span> <span class="op">+</span> </span>
@@ -154,12 +155,12 @@ Figure 1: Creating points
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p2</span></span>
-<span><span class="co">#&gt; &lt;point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 3</span></span>
 <span><span class="co">#&gt; @ y: num 4</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
-<span><span class="co">#&gt;              length, r, theta, style, tibble, xy, geom, label,</span></span>
-<span><span class="co">#&gt;              aesthetics</span></span>
+<span><span class="co">#&gt;              bounding_box, length, r, theta, style, tibble, xy,</span></span>
+<span><span class="co">#&gt;              geom, label, aesthetics</span></span>
 <span><span class="va">p2</span><span class="op">@</span><span class="va">r</span></span>
 <span><span class="co">#&gt; [1] 5</span></span>
 <span><span class="va">p2</span><span class="op">@</span><span class="va">theta</span></span>
@@ -177,15 +178,15 @@ Figure 1: Creating points
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="op">-</span><span class="fl">10</span><span class="op">:</span><span class="fl">10</span>, </span>
 <span>                     minor_breaks <span class="op">=</span> <span class="cn">NULL</span>, </span>
 <span>                     labels <span class="op">=</span> <span class="fu">signs</span><span class="fu">::</span><span class="va"><a href="https://benjaminwolfe.github.io/signs/reference/signs.html" class="external-link">signs</a></span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/circle.html">circle</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="va">p2</span><span class="op">@</span><span class="va">r</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_circle.html">ob_circle</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="va">p2</span><span class="op">@</span><span class="va">r</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="va">p2</span><span class="op">@</span><span class="va">label</span><span class="op">(</span>plot_point <span class="op">=</span> <span class="cn">TRUE</span>, </span>
-<span>           polar_just <span class="op">=</span> <span class="fu"><a href="../reference/point.html">polar</a></span><span class="op">(</span><span class="va">p2</span><span class="op">@</span><span class="va">theta</span>, r <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/segment.html">segment</a></span><span class="op">(</span>p1 <span class="op">=</span> <span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="op">)</span>, </span>
+<span>           polar_just <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span><span class="va">p2</span><span class="op">@</span><span class="va">theta</span>, r <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_segment.html">ob_segment</a></span><span class="op">(</span>p1 <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="op">)</span>, </span>
 <span>          p2 <span class="op">=</span> <span class="va">p2</span>, </span>
 <span>          label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"*r* = "</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">p2</span><span class="op">@</span><span class="va">r</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/arc.html">arc</a></span><span class="op">(</span>end <span class="op">=</span> <span class="va">p2</span><span class="op">@</span><span class="va">theta</span>, </span>
+<span>  <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span>end <span class="op">=</span> <span class="va">p2</span><span class="op">@</span><span class="va">theta</span>, </span>
 <span>      color <span class="op">=</span> <span class="st">"royalblue3"</span>, </span>
-<span>      label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"&amp;theta; = "</span>, <span class="fu"><a href="../reference/class_angle.html">degree</a></span><span class="op">(</span><span class="va">p2</span><span class="op">@</span><span class="va">theta</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>      label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"&amp;theta; = "</span>, <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="va">p2</span><span class="op">@</span><span class="va">theta</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </details><div class="cell-output-display">
 <div id="fig-polar" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-polar-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -200,20 +201,21 @@ Figure 2: Polar Coordinates
 <p>A point can be created with polar coordinates</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/point.html">polar</a></span><span class="op">(</span>r <span class="op">=</span> <span class="fl">5</span>, theta <span class="op">=</span> <span class="fu"><a href="../reference/class_angle.html">degree</a></span><span class="op">(</span><span class="fl">60</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;polar&gt;</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span>r <span class="op">=</span> <span class="fl">5</span>, theta <span class="op">=</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">60</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; &lt;ob_polar&gt;</span></span>
 <span><span class="co">#&gt; @ x    : num 2.5</span></span>
 <span><span class="co">#&gt; @ y    : num 4.33</span></span>
 <span><span class="co">#&gt; @ r    : num 5</span></span>
 <span><span class="co">#&gt; @ theta: &lt;radian&gt;</span></span>
 <span><span class="co">#&gt;  @ radian: num 1.05</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
-<span><span class="co">#&gt;              length, style, tibble, xy, geom, label, aesthetics</span></span></code></pre></div>
+<span><span class="co">#&gt;              bounding_box, length, style, tibble, xy, geom, label,</span></span>
+<span><span class="co">#&gt;              aesthetics</span></span></code></pre></div>
 </div>
 <p>If the angle is numeric instead of an angle, it is assumed to be in radians.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/point.html">polar</a></span><span class="op">(</span>r <span class="op">=</span> <span class="fl">1</span>, theta <span class="op">=</span> <span class="va">pi</span><span class="op">)</span><span class="op">@</span><span class="va">theta</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span>r <span class="op">=</span> <span class="fl">1</span>, theta <span class="op">=</span> <span class="va">pi</span><span class="op">)</span><span class="op">@</span><span class="va">theta</span></span>
 <span><span class="co">#&gt; π</span></span></code></pre></div>
 </div>
 </section></section><section class="section level2"><h2 id="convert-to-tibble">Convert to tibble<a class="anchor" aria-label="anchor" href="#convert-to-tibble"></a>
@@ -221,7 +223,7 @@ Figure 2: Polar Coordinates
 <p>This will extract any styles that have been set.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_tibble.html">get_tibble</a></span><span class="op">(</span><span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>, </span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/get_tibble.html">get_tibble</a></span><span class="op">(</span><span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>, </span>
 <span>                 color <span class="op">=</span> <span class="st">"red"</span>, </span>
 <span>                 shape <span class="op">=</span> <span class="fl">16</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 1 × 4</span></span>
@@ -232,7 +234,7 @@ Figure 2: Polar Coordinates
 <p>As a convenience, the tibble associated with the point object can be accessed with the <code>@tibble</code> property.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="fl">2</span>, </span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="fl">2</span>, </span>
 <span>      color <span class="op">=</span> <span class="st">"blue"</span>, </span>
 <span>      shape <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span><span class="op">@</span><span class="va">tibble</span></span>
 <span><span class="co">#&gt; # A tibble: 5 × 4</span></span>
@@ -251,59 +253,59 @@ Figure 2: Polar Coordinates
 <p>Points can be added and subtracted:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">p3</span> <span class="op">&lt;-</span> <span class="va">p1</span> <span class="op">+</span> <span class="va">p2</span></span>
 <span><span class="va">p3</span></span>
-<span><span class="co">#&gt; &lt;point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 4</span></span>
 <span><span class="co">#&gt; @ y: num 4</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
-<span><span class="co">#&gt;              length, r, theta, style, tibble, xy, geom, label,</span></span>
-<span><span class="co">#&gt;              aesthetics</span></span>
+<span><span class="co">#&gt;              bounding_box, length, r, theta, style, tibble, xy,</span></span>
+<span><span class="co">#&gt;              geom, label, aesthetics</span></span>
 <span><span class="va">p3</span> <span class="op">-</span> <span class="va">p2</span></span>
-<span><span class="co">#&gt; &lt;point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 2</span></span>
 <span><span class="co">#&gt; @ y: num 3</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
-<span><span class="co">#&gt;              length, r, theta, style, tibble, xy, geom, label,</span></span>
-<span><span class="co">#&gt;              aesthetics</span></span></code></pre></div>
+<span><span class="co">#&gt;              bounding_box, length, r, theta, style, tibble, xy,</span></span>
+<span><span class="co">#&gt;              geom, label, aesthetics</span></span></code></pre></div>
 </div>
 <p>Points can be scaled with constants</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p2</span> <span class="op">*</span> <span class="fl">2</span></span>
-<span><span class="co">#&gt; &lt;point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 4</span></span>
 <span><span class="co">#&gt; @ y: num 2</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
-<span><span class="co">#&gt;              length, r, theta, style, tibble, xy, geom, label,</span></span>
-<span><span class="co">#&gt;              aesthetics</span></span>
+<span><span class="co">#&gt;              bounding_box, length, r, theta, style, tibble, xy,</span></span>
+<span><span class="co">#&gt;              geom, label, aesthetics</span></span>
 <span><span class="va">p3</span> <span class="op">/</span> <span class="fl">4</span></span>
-<span><span class="co">#&gt; &lt;point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 1</span></span>
 <span><span class="co">#&gt; @ y: num 1</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
-<span><span class="co">#&gt;              length, r, theta, style, tibble, xy, geom, label,</span></span>
-<span><span class="co">#&gt;              aesthetics</span></span></code></pre></div>
+<span><span class="co">#&gt;              bounding_box, length, r, theta, style, tibble, xy,</span></span>
+<span><span class="co">#&gt;              geom, label, aesthetics</span></span></code></pre></div>
 </div>
 <p>The <em>x</em> and <em>y</em> coordinates can be scaled separately with other points:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p1</span> <span class="op">/</span> <span class="va">p3</span></span>
-<span><span class="co">#&gt; &lt;point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 0.5</span></span>
 <span><span class="co">#&gt; @ y: num 0.75</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
-<span><span class="co">#&gt;              length, r, theta, style, tibble, xy, geom, label,</span></span>
-<span><span class="co">#&gt;              aesthetics</span></span>
+<span><span class="co">#&gt;              bounding_box, length, r, theta, style, tibble, xy,</span></span>
+<span><span class="co">#&gt;              geom, label, aesthetics</span></span>
 <span><span class="va">p1</span> <span class="op">*</span> <span class="va">p3</span></span>
-<span><span class="co">#&gt; &lt;point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 8</span></span>
 <span><span class="co">#&gt; @ y: num 12</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
-<span><span class="co">#&gt;              length, r, theta, style, tibble, xy, geom, label,</span></span>
-<span><span class="co">#&gt;              aesthetics</span></span></code></pre></div>
+<span><span class="co">#&gt;              bounding_box, length, r, theta, style, tibble, xy,</span></span>
+<span><span class="co">#&gt;              geom, label, aesthetics</span></span></code></pre></div>
 </div>
 </section></section><section class="section level2"><h2 id="distance">Distance<a class="anchor" aria-label="anchor" href="#distance"></a>
 </h2>
@@ -316,7 +318,7 @@ Figure 2: Polar Coordinates
 <p>The shortest distance from a point to a line:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">l1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/line.html">line</a></span><span class="op">(</span>slope <span class="op">=</span> <span class="fl">1</span>, </span>
+<code class="sourceCode R"><span><span class="va">l1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_line.html">ob_line</a></span><span class="op">(</span>slope <span class="op">=</span> <span class="fl">1</span>, </span>
 <span>           intercept <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/distance.html">distance</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">l1</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0.7071068</span></span></code></pre></div>
@@ -324,21 +326,20 @@ Figure 2: Polar Coordinates
 <p>The shortest distance from a point to a circle’s edge:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">c1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/circle.html">circle</a></span><span class="op">(</span>center <span class="op">=</span> <span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>, radius <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="va">c1</span><span class="op">@</span><span class="va">center</span> <span class="op">+</span> <span class="fu"><a href="../reference/point.html">polar</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">c1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_circle.html">ob_circle</a></span><span class="op">(</span>center <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>, radius <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="va">c1</span><span class="op">@</span><span class="va">center</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span></span>
 <span>  r <span class="op">=</span> <span class="va">c1</span><span class="op">@</span><span class="va">radius</span> <span class="op">*</span> <span class="fl">1</span>, </span>
-<span>  theta <span class="op">=</span> <span class="fu"><a href="../reference/class_angle.html">degree</a></span><span class="op">(</span><span class="fl">115</span><span class="op">)</span>, </span>
+<span>  theta <span class="op">=</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">115</span><span class="op">)</span>, </span>
 <span>  color <span class="op">=</span> <span class="st">"royalblue3"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="va">c1</span><span class="op">@</span><span class="va">center</span> <span class="op">+</span> <span class="fu"><a href="../reference/point.html">polar</a></span><span class="op">(</span></span>
+<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="va">c1</span><span class="op">@</span><span class="va">center</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span></span>
 <span>  r <span class="op">=</span> <span class="va">c1</span><span class="op">@</span><span class="va">radius</span> <span class="op">*</span> <span class="fl">2</span>, </span>
-<span>  theta <span class="op">=</span> <span class="fu"><a href="../reference/class_angle.html">degree</a></span><span class="op">(</span><span class="fl">45</span><span class="op">)</span>, </span>
+<span>  theta <span class="op">=</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">45</span><span class="op">)</span>, </span>
 <span>  color <span class="op">=</span> <span class="st">"firebrick4"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">p3</span> <span class="op">&lt;-</span> <span class="va">c1</span><span class="op">@</span><span class="va">center</span> <span class="op">+</span> <span class="fu"><a href="../reference/point.html">polar</a></span><span class="op">(</span></span>
+<span><span class="va">p3</span> <span class="op">&lt;-</span> <span class="va">c1</span><span class="op">@</span><span class="va">center</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span></span>
 <span>  r <span class="op">=</span> <span class="va">c1</span><span class="op">@</span><span class="va">radius</span> <span class="op">*</span> <span class="fl">.3</span>, </span>
-<span>  theta <span class="op">=</span> <span class="fu"><a href="../reference/class_angle.html">degree</a></span><span class="op">(</span><span class="fl">190</span><span class="op">)</span>, </span>
+<span>  theta <span class="op">=</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">190</span><span class="op">)</span>, </span>
 <span>  color <span class="op">=</span> <span class="st">"orchid4"</span><span class="op">)</span></span>
 <span></span>
 <span></span>
@@ -356,14 +357,14 @@ Figure 2: Polar Coordinates
 <details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">intersect_c1_p2</span> <span class="op">&lt;-</span> <span class="va">c1</span><span class="op">@</span><span class="va">point_at</span><span class="op">(</span><span class="op">(</span><span class="va">p2</span> <span class="op">-</span> <span class="va">c1</span><span class="op">@</span><span class="va">center</span><span class="op">)</span><span class="op">@</span><span class="va">theta</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">seg_style</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/style.html">style</a></span><span class="op">(</span></span>
+<span><span class="va">seg_style</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_style.html">ob_style</a></span><span class="op">(</span></span>
 <span>  arrowhead_length <span class="op">=</span> <span class="fl">7</span>,</span>
 <span>  arrow_head <span class="op">=</span> <span class="va">my_arrow_head</span>,</span>
 <span>  arrow_fins <span class="op">=</span> <span class="va">my_arrow_head</span>,</span>
 <span>  resect <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">5</span>, <span class="st">"pt"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">seg_c1_p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/segment.html">segment</a></span><span class="op">(</span></span>
+<span><span class="va">seg_c1_p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_segment.html">ob_segment</a></span><span class="op">(</span></span>
 <span>  <span class="va">intersect_c1_p2</span>,</span>
 <span>  <span class="va">p2</span>, </span>
 <span>  style <span class="op">=</span> <span class="va">seg_style</span>, </span>
@@ -371,7 +372,7 @@ Figure 2: Polar Coordinates
 <span></span>
 <span><span class="va">intersect_c1_p3</span> <span class="op">&lt;-</span> <span class="va">c1</span><span class="op">@</span><span class="va">point_at</span><span class="op">(</span><span class="op">(</span><span class="va">p3</span> <span class="op">-</span> <span class="va">c1</span><span class="op">@</span><span class="va">center</span><span class="op">)</span><span class="op">@</span><span class="va">theta</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">seg_c1_p3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/segment.html">segment</a></span><span class="op">(</span></span>
+<span><span class="va">seg_c1_p3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_segment.html">ob_segment</a></span><span class="op">(</span></span>
 <span>  <span class="va">intersect_c1_p3</span>,</span>
 <span>  <span class="va">p3</span>,</span>
 <span>  color <span class="op">=</span> <span class="va">p3</span><span class="op">@</span><span class="va">color</span>, </span>
@@ -384,19 +385,19 @@ Figure 2: Polar Coordinates
 <span>  <span class="va">c1</span> <span class="op">+</span></span>
 <span>  <span class="va">p1</span><span class="op">@</span><span class="va">label</span><span class="op">(</span>label <span class="op">=</span> <span class="va">p_labels</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, </span>
 <span>           plot_point <span class="op">=</span> <span class="cn">T</span>,</span>
-<span>           polar_just <span class="op">=</span> <span class="fu"><a href="../reference/point.html">polar</a></span><span class="op">(</span></span>
+<span>           polar_just <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span></span>
 <span>             theta <span class="op">=</span> <span class="op">(</span><span class="va">p1</span> <span class="op">-</span> <span class="va">c1</span><span class="op">@</span><span class="va">center</span><span class="op">)</span><span class="op">@</span><span class="va">theta</span>,</span>
 <span>             r <span class="op">=</span> <span class="fl">1.3</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="va">seg_c1_p2</span> <span class="op">+</span></span>
 <span>  <span class="va">seg_c1_p2</span><span class="op">@</span><span class="va">midpoint</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="va">seg_c1_p2</span><span class="op">@</span><span class="va">midpoint</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">@</span><span class="va">label</span><span class="op">(</span></span>
 <span>    label <span class="op">=</span> <span class="va">p_labels</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, </span>
-<span>    polar_just <span class="op">=</span> <span class="fu"><a href="../reference/point.html">polar</a></span><span class="op">(</span>theta <span class="op">=</span> <span class="va">seg_c1_p3</span><span class="op">@</span><span class="va">line</span><span class="op">@</span><span class="va">angle</span>, <span class="fl">1.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    polar_just <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span>theta <span class="op">=</span> <span class="va">seg_c1_p3</span><span class="op">@</span><span class="va">line</span><span class="op">@</span><span class="va">angle</span>, <span class="fl">1.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="va">seg_c1_p3</span> <span class="op">+</span></span>
 <span>  <span class="va">seg_c1_p3</span><span class="op">@</span><span class="va">midpoint</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="va">seg_c1_p3</span><span class="op">@</span><span class="va">midpoint</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">@</span><span class="va">label</span><span class="op">(</span></span>
 <span>    label <span class="op">=</span> <span class="va">p_labels</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span>, </span>
-<span>    polar_just <span class="op">=</span> <span class="fu"><a href="../reference/point.html">polar</a></span><span class="op">(</span>theta <span class="op">=</span> <span class="va">seg_c1_p3</span><span class="op">@</span><span class="va">line</span><span class="op">@</span><span class="va">angle</span>, <span class="fl">1.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>    polar_just <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span>theta <span class="op">=</span> <span class="va">seg_c1_p3</span><span class="op">@</span><span class="va">line</span><span class="op">@</span><span class="va">angle</span>, <span class="fl">1.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </details><div class="cell-output-display">
 <div id="fig-pointcircle" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-pointcircle-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -413,7 +414,7 @@ Figure 3: Point to Circle Distances
 <p>The <code>as.geom</code> function is called implicitly whenever a point object is added to a ggplot.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fl">2</span><span class="op">)</span>, </span>
+<code class="sourceCode R"><span><span class="va">pts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fl">2</span><span class="op">)</span>, </span>
 <span>             y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>,<span class="fl">3</span><span class="op">)</span>, </span>
 <span>             color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"red"</span>, <span class="st">"blue"</span><span class="op">)</span>,</span>
 <span>             size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">6</span><span class="op">)</span><span class="op">)</span></span>
@@ -510,6 +511,26 @@ Figure 7
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-yellowtriangle_geom-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 8
+</figcaption></figure>
+</div>
+</div>
+</div>
+</section><section class="section level2"><h2 id="bounding-box">Bounding box<a class="anchor" aria-label="anchor" href="#bounding-box"></a>
+</h2>
+<p>It is possible to find the rectangle that bounds all the points in an <code>ob_point</code> object</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
+<span>  <span class="op">{</span><span class="va">pts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span>,</span>
+<span>                y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fl">3</span>,<span class="fl">4</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span> </span>
+<span>  <span class="va">pts</span><span class="op">@</span><span class="va">bounding_box</span></span></code></pre></div>
+<div class="cell-output-display">
+<div id="fig-bounding" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-bounding-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="points_files/figure-html/fig-bounding-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bounding-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 9: The bounding box of a set of points
 </figcaption></figure>
 </div>
 </div>
@@ -625,7 +646,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>

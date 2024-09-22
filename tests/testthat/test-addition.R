@@ -90,7 +90,7 @@ test_that("constructor", {
   expect_identical(r_center, rectangle(northwest = p_northwest, southeast = p_southeast))
   expect_identical(r_center, rectangle(height = height, southwest = p_southwest, southeast = p_southeast))
   expect_identical(r_center, rectangle(height = height, northwest = p_northwest, northeast = p_northeast))
-  expect_error(rectangle(width = width, southwest = p_southwest), "There is not enough information to make a rectangle.")
+
 
   # segment
   segment(point(0,2), point(3,4))

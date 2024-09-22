@@ -45,13 +45,14 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/angles.html">Angles</a></li>
     <li><a class="dropdown-item" href="../articles/arcs.html">Arcs</a></li>
-    <li><a class="dropdown-item" href="../articles/bzcurves.html">Bezier Curves</a></li>
+    <li><a class="dropdown-item" href="../articles/bezier.html">Bézier Curves</a></li>
+    <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
     <li><a class="dropdown-item" href="../articles/ellipses.html">Ellipses</a></li>
     <li><a class="dropdown-item" href="../articles/lines.html">Lines</a></li>
     <li><a class="dropdown-item" href="../articles/paths.html">Paths</a></li>
     <li><a class="dropdown-item" href="../articles/points.html">Points</a></li>
-    <li><a class="dropdown-item" href="../articles/polygons.html">Polygons (pgon)</a></li>
+    <li><a class="dropdown-item" href="../articles/polygons.html">Polygons</a></li>
     <li><a class="dropdown-item" href="../articles/rectangles.html">Rectangles</a></li>
     <li><a class="dropdown-item" href="../articles/segments.html">Segments</a></li>
   </ul>
@@ -141,9 +142,9 @@
 <p>Lines can be constructed from a slope and an intercept:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/line.html">line</a></span><span class="op">(</span>slope <span class="op">=</span> <span class="fl">2</span>, intercept <span class="op">=</span> <span class="fl">1</span>, color <span class="op">=</span> <span class="va">my_colors</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_line.html">ob_line</a></span><span class="op">(</span>slope <span class="op">=</span> <span class="fl">2</span>, intercept <span class="op">=</span> <span class="fl">1</span>, color <span class="op">=</span> <span class="va">my_colors</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">l</span></span>
-<span><span class="co">#&gt; &lt;line&gt;</span></span>
+<span><span class="co">#&gt; &lt;ob_line&gt;</span></span>
 <span><span class="co">#&gt; @ slope     : num 2</span></span>
 <span><span class="co">#&gt; @ intercept : num 1</span></span>
 <span><span class="co">#&gt; @ xintercept: num -0.5</span></span></code></pre></div>
@@ -164,12 +165,12 @@ Figure 1: A line with slope of 2 and intercept of 1
 </div>
 </div>
 </div>
-<p>Because the default slope is 0, a horizontal line can be set with just the intercept:</p>
+<p>Because the default slope is 0, a horizontal ob_line can be set with just the intercept:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">h</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/line.html">line</a></span><span class="op">(</span>intercept <span class="op">=</span> <span class="fl">2</span>, color <span class="op">=</span> <span class="va">my_colors</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">h</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_line.html">ob_line</a></span><span class="op">(</span>intercept <span class="op">=</span> <span class="fl">2</span>, color <span class="op">=</span> <span class="va">my_colors</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">h</span></span>
-<span><span class="co">#&gt; &lt;line&gt;</span></span>
+<span><span class="co">#&gt; &lt;ob_line&gt;</span></span>
 <span><span class="co">#&gt; @ slope     : num 0</span></span>
 <span><span class="co">#&gt; @ intercept : num 2</span></span>
 <span><span class="co">#&gt; @ xintercept: num -Inf</span></span></code></pre></div>
@@ -193,9 +194,9 @@ Figure 2: A horizontal line intercept of 2
 <p>A vertical line can be set with the x-intercept:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">v</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/line.html">line</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="op">-</span><span class="fl">2</span>, color <span class="op">=</span> <span class="va">my_colors</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">v</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_line.html">ob_line</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="op">-</span><span class="fl">2</span>, color <span class="op">=</span> <span class="va">my_colors</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">v</span></span>
-<span><span class="co">#&gt; &lt;line&gt;</span></span>
+<span><span class="co">#&gt; &lt;ob_line&gt;</span></span>
 <span><span class="co">#&gt; @ slope     : num -Inf</span></span>
 <span><span class="co">#&gt; @ intercept : num -Inf</span></span>
 <span><span class="co">#&gt; @ xintercept: num -2</span></span></code></pre></div>
@@ -222,7 +223,7 @@ ax+by+c=0
 </annotation></semantics></math></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">l_123</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/line.html">line</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">1</span>, b <span class="op">=</span> <span class="fl">2</span>, c <span class="op">=</span> <span class="fl">3</span>, color <span class="op">=</span> <span class="va">my_colors</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">l_123</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_line.html">ob_line</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">1</span>, b <span class="op">=</span> <span class="fl">2</span>, c <span class="op">=</span> <span class="fl">3</span>, color <span class="op">=</span> <span class="va">my_colors</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
@@ -251,19 +252,19 @@ Figure 4: Line with slope = 0 and intercept = −2
 <p>A point can be “projected” onto a line. Imagine shining a light on the point in a direction perpendicular to the line. The point’s shadow on the line would be the shortest distance between the line and the point.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="fl">3</span>,<span class="op">-</span><span class="fl">2</span>, color <span class="op">=</span> <span class="va">my_colors</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/line.html">line</a></span><span class="op">(</span>slope <span class="op">=</span> <span class="fl">2</span>, intercept <span class="op">=</span> <span class="fl">2</span>, color <span class="op">=</span> <span class="va">my_colors</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">3</span>,<span class="op">-</span><span class="fl">2</span>, color <span class="op">=</span> <span class="va">my_colors</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_line.html">ob_line</a></span><span class="op">(</span>slope <span class="op">=</span> <span class="fl">2</span>, intercept <span class="op">=</span> <span class="fl">2</span>, color <span class="op">=</span> <span class="va">my_colors</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co"># Point p projected onto line l</span></span>
 <span><span class="va">p_projected</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/projection.html">projection</a></span><span class="op">(</span><span class="va">p</span>, <span class="va">l</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Alternately:</span></span>
 <span><span class="va">l</span><span class="op">@</span><span class="va">projection</span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num -1</span></span>
 <span><span class="co">#&gt; @ y: num 0</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
-<span><span class="co">#&gt;              length, r, theta, style, tibble, xy, geom, label,</span></span>
-<span><span class="co">#&gt;              aesthetics</span></span></code></pre></div>
+<span><span class="co">#&gt;              bounding_box, length, r, theta, style, tibble, xy,</span></span>
+<span><span class="co">#&gt;              geom, label, aesthetics</span></span></code></pre></div>
 </div>
 <p>The shortest distance from a point to a line can be calculated.</p>
 <div class="cell">
@@ -273,7 +274,7 @@ Figure 4: Line with slope = 0 and intercept = −2
 <span><span class="co">#&gt; [1] 4.472136</span></span>
 <span></span>
 <span><span class="co"># Equivalently:</span></span>
-<span><span class="fu"><a href="../reference/segment.html">segment</a></span><span class="op">(</span><span class="va">p</span>, <span class="va">l</span><span class="op">@</span><span class="va">projection</span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">)</span><span class="op">@</span><span class="va">distance</span></span>
+<span><span class="fu"><a href="../reference/ob_segment.html">ob_segment</a></span><span class="op">(</span><span class="va">p</span>, <span class="va">l</span><span class="op">@</span><span class="va">projection</span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">)</span><span class="op">@</span><span class="va">distance</span></span>
 <span><span class="co">#&gt; [1] 4.472136</span></span></code></pre></div>
 </div>
 <div class="cell">
@@ -283,7 +284,7 @@ Figure 4: Line with slope = 0 and intercept = −2
 <span>  <span class="va">l</span><span class="op">@</span><span class="va">point_at_x</span><span class="op">(</span><span class="fl">.5</span><span class="op">)</span><span class="op">@</span><span class="va">label</span><span class="op">(</span></span>
 <span>    label <span class="op">=</span> <span class="va">l</span><span class="op">@</span><span class="va">equation</span>, </span>
 <span>    angle <span class="op">=</span> <span class="va">l</span><span class="op">@</span><span class="va">angle</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="op">{</span><span class="va">s_projected</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/segment.html">segment</a></span><span class="op">(</span></span>
+<span>  <span class="op">{</span><span class="va">s_projected</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_segment.html">ob_segment</a></span><span class="op">(</span></span>
 <span>      p1 <span class="op">=</span> <span class="va">l</span><span class="op">@</span><span class="va">projection</span><span class="op">(</span><span class="va">p</span><span class="op">)</span>,</span>
 <span>      p2 <span class="op">=</span> <span class="va">p</span>,</span>
 <span>      linetype <span class="op">=</span> <span class="st">"dashed"</span>,</span>
@@ -292,7 +293,7 @@ Figure 4: Line with slope = 0 and intercept = −2
 <span>                       <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span>digits <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>                       <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span> </span>
 <span>  <span class="va">s_projected</span><span class="op">@</span><span class="va">midpoint</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">@</span><span class="va">label</span><span class="op">(</span></span>
-<span>    polar_just <span class="op">=</span> <span class="fu"><a href="../reference/class_angle.html">degree</a></span><span class="op">(</span><span class="va">s_projected</span><span class="op">@</span><span class="va">line</span><span class="op">@</span><span class="va">angle</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">180</span>, <span class="fl">0</span><span class="op">)</span>,</span>
+<span>    polar_just <span class="op">=</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="va">s_projected</span><span class="op">@</span><span class="va">line</span><span class="op">@</span><span class="va">angle</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">180</span>, <span class="fl">0</span><span class="op">)</span>,</span>
 <span>    plot_point <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>  </span></code></pre></div>
 </details><div class="cell-output-display">
 <div id="fig-point_line" class="quarto-float quarto-figure quarto-figure-center">
@@ -416,7 +417,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>

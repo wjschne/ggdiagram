@@ -28,7 +28,7 @@ ln_props <- list(
     b = new_property(class = class_numeric, default = 0),
     c = new_property(class = class_numeric, default = 0)
   ),
-  styles = style@properties[ln_styles],
+  styles = ob_style@properties[ln_styles],
   # derived ----
   derived = list(
     slope = new_property(
@@ -63,10 +63,10 @@ ln_props <- list(
       getter = function(self) {
         pr <- `names<-`(purrr::map(ln_styles,
                                    prop, object = self), ln_styles)
-        rlang::inject(style(!!!get_non_empty_list(pr)))
+        rlang::inject(ob_style(!!!get_non_empty_list(pr)))
       },
       setter = function(self, value) {
-        line(a = self@a,
+        ob_line(a = self@a,
              b = self@b,
              c = self@c ,
              style = self@style + value)
@@ -99,18 +99,18 @@ ln_props <- list(
     point_at_x = new_property(class_function, getter = function(self) {
       \(x = 0, ...) {
         if (any(self@b == 0)) stop("Not possible with verical lines")
-        point(x = x, y = x * self@slope + self@intercept, style = self@style, ...)
+        ob_point(x = x, y = x * self@slope + self@intercept, style = self@style, ...)
       }
     }),
     point_at_y = new_property(class_function, getter = function(self) {
       \(y = 0, ...) {
         if (any(self@a == 0)) stop("Not possible with horizontal lines")
-        point(x = -1 * y * self@b / self@a - self@c / self@a, y = y, style = self@style, ...)
+        ob_point(x = -1 * y * self@b / self@a - self@c / self@a, y = y, style = self@style, ...)
       }
     }),
     projection = new_property(class_function, getter = function(self) {
-      \(point, ...) {
-        projection(point, self, ...)
+      \(ob_point, ...) {
+        projection(ob_point, self, ...)
       }
     })
 ),
@@ -124,9 +124,9 @@ info = list(
 
 
 
-# Line----
+# ob_line----
 
-#' line class
+#' ob_line class
 #'
 #' Creates a line
 #'
@@ -138,10 +138,10 @@ info = list(
 #' @param xintercept value of x when y is 0
 #' @param style a style list
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
-#' @inherit style params
+#' @inherit ob_style params
 #' @export
-line <- new_class(
-  "line",
+ob_line <- new_class(
+  "ob_line",
   parent = shape,
   properties =  rlang::inject(list(
     !!!ln_props$primary,
@@ -164,14 +164,14 @@ line <- new_class(
                          style = class_missing,
                          ...) {
 
-    l_style <- style + style(
+    l_style <- style + ob_style(
       alpha = alpha,
       color = c(color),
       lineend = lineend,
       linejoin = linejoin,
       linewidth = linewidth,
       linetype = linetype
-    ) + style(...)
+    ) + ob_style(...)
 
     d <- get_non_empty_tibble(list(
       slope = slope,
@@ -248,7 +248,7 @@ line <- new_class(
 )
 
 
-method(str, line) <- function(
+method(str, ob_line) <- function(
   object,
   nest.lev = 0,
   additional = FALSE,
@@ -259,13 +259,13 @@ str_properties(object,
                additional = FALSE)
 }
 
-method(get_tibble, line) <- function(x) {
+method(get_tibble, ob_line) <- function(x) {
   x@tibble |>
     dplyr::mutate(geom = ifelse(is.infinite(slope), "v", "ab"))
 }
 
-method(get_tibble_defaults, line) <- function(x) {
-  sp <- style(
+method(get_tibble_defaults, ob_line) <- function(x) {
+  sp <- ob_style(
     alpha = 1,
     color = "black",
     lineend = "black",
@@ -289,7 +289,7 @@ method(get_tibble_defaults, line) <- function(x) {
 #
 #   make_geom_helper(
 #     d = d,
-#     user_overrides = get_non_empty_props(style(...)),
+#     user_overrides = get_non_empty_props(ob_style(...)),
 #     aesthetics = vline_aesthetics
 #   )
 # }
@@ -297,12 +297,12 @@ method(get_tibble_defaults, line) <- function(x) {
 #   make_geom_helper(
 #     d = d,
 #     aesthetics = abline_aesthetics,
-#     user_overrides = get_non_empty_props(style(...))
+#     user_overrides = get_non_empty_props(ob_style(...))
 #   )
 # }
 
-method(as.geom, line) <- function(x, ...) {
-  overrides <- get_non_empty_props(style(...))
+method(as.geom, ob_line) <- function(x, ...) {
+  overrides <- get_non_empty_props(ob_style(...))
 get_tibble_defaults(x) |>
   tidyr::nest(.by = geom, .key = "d") |>
   dplyr::mutate(a = ifelse(geom == "ab", c(abline_aesthetics_list), c(vline_aesthetics_list)),
@@ -312,7 +312,7 @@ get_tibble_defaults(x) |>
   dplyr::pull(output)
 }
 
-method(equation, line) <- function(
+method(equation, ob_line) <- function(
     x,
     type = c("y", "general", "parametric"),
     digits = 2) {
@@ -361,14 +361,19 @@ method(equation, line) <- function(
 
 
 
-method(projection, list(point, line)) <- function(p,object, ...) {
+method(projection, list(ob_point, ob_line)) <- function(p,object, ...) {
 ab <- object@a * object@a + object@b * object@b
 xp <- (object@b * object@b * p@x - object@b * object@a * p@y - object@a * object@c) / ab
 yp <- (object@a * object@a * p@y - object@a * object@b * p@x - object@b * object@c) / ab
-point(xp, yp, style = p@style, ...)
+ob_point(xp, yp, style = p@style, ...)
 }
 
-method(`[`, line) <- function(x, y) {
+method(`[`, ob_line) <- function(x, y) {
   d <- as.list(x@tibble[y,])
-  rlang::inject(line(!!!d))
+  rlang::inject(ob_line(!!!d))
 }
+
+method(`==`, list(ob_line, ob_line)) <- function(e1, e2) {
+  (e1@a == e2@a) & (e1@b == e2@b) & (e1@c == e2@c)
+}
+

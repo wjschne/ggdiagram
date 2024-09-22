@@ -20,14 +20,14 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/angles.html">Angles</a></li>
     <li><a class="dropdown-item" href="../articles/arcs.html">Arcs</a></li>
-    <li><a class="dropdown-item" href="../articles/bzcurves.html">Bezier Curves</a></li>
+    <li><a class="dropdown-item" href="../articles/bezier.html">Bézier Curves</a></li>
     <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
     <li><a class="dropdown-item" href="../articles/ellipses.html">Ellipses</a></li>
     <li><a class="dropdown-item" href="../articles/lines.html">Lines</a></li>
     <li><a class="dropdown-item" href="../articles/paths.html">Paths</a></li>
     <li><a class="dropdown-item" href="../articles/points.html">Points</a></li>
-    <li><a class="dropdown-item" href="../articles/polygons.html">Polygons (pgon)</a></li>
+    <li><a class="dropdown-item" href="../articles/polygons.html">Polygons</a></li>
     <li><a class="dropdown-item" href="../articles/rectangles.html">Rectangles</a></li>
     <li><a class="dropdown-item" href="../articles/segments.html">Segments</a></li>
   </ul></li>
@@ -57,12 +57,6 @@
 
       <dl><dt>
 
-          <code><a href="arc.html">arc()</a></code>
-
-        </dt>
-        <dd>arc class</dd>
-      </dl><dl><dt>
-
           <code><a href="as.geom.html">as.geom()</a></code>
 
         </dt>
@@ -75,22 +69,10 @@
         <dd>bind method</dd>
       </dl><dl><dt>
 
-          <code><a href="bzcurve.html">bzcurve()</a></code>
+          <code><a href="circle_pie.html">circle_pie()</a></code>
 
         </dt>
-        <dd>The bzcurve (i.e., bezier curve) class</dd>
-      </dl><dl><dt>
-
-          <code><a href="circle.html">circle()</a></code>
-
-        </dt>
-        <dd>circle class</dd>
-      </dl><dl><dt>
-
-          <code><a href="class_angle.html">class_angle()</a></code> <code><a href="class_angle.html">degree()</a></code> <code><a href="class_angle.html">radian()</a></code> <code><a href="class_angle.html">turn()</a></code>
-
-        </dt>
-        <dd>class_angle</dd>
+        <dd>circle_pie</dd>
       </dl><dl><dt>
 
           <code><a href="class_color.html">class_color()</a></code>
@@ -105,16 +87,16 @@
         <dd>Arrow connect one shape to another</dd>
       </dl><dl><dt>
 
+          <code><a href="covariance.html">covariance()</a></code>
+
+        </dt>
+        <dd>create double-headed arrow paths indicating variance</dd>
+      </dl><dl><dt>
+
           <code><a href="distance.html">distance()</a></code>
 
         </dt>
         <dd>Calculate distance between 2 points</dd>
-      </dl><dl><dt>
-
-          <code><a href="ellipse.html">ellipse()</a></code>
-
-        </dt>
-        <dd>ellipse class</dd>
       </dl><dl><dt>
 
           <code><a href="equation.html">equation()</a></code>
@@ -132,7 +114,7 @@
           <code><a href="inside.html">inside()</a></code>
 
         </dt>
-        <dd>is a point inside a shape ?</dd>
+        <dd>is an ob_point inside a shape ?</dd>
       </dl><dl><dt>
 
           <code><a href="intersection.html">intersection()</a></code>
@@ -147,22 +129,10 @@
         <dd>Compute the angle of the intersection of two objects</dd>
       </dl><dl><dt>
 
-          <code><a href="label.html">label()</a></code>
-
-        </dt>
-        <dd>label class</dd>
-      </dl><dl><dt>
-
           <code><a href="label_object.html">label_object()</a></code>
 
         </dt>
         <dd>Automatic label for objects</dd>
-      </dl><dl><dt>
-
-          <code><a href="line.html">line()</a></code>
-
-        </dt>
-        <dd>line class</dd>
       </dl><dl><dt>
 
           <code><a href="midpoint.html">midpoint()</a></code>
@@ -177,10 +147,82 @@
         <dd>Move an object</dd>
       </dl><dl><dt>
 
-          <code><a href="path.html">path()</a></code>
+          <code><a href="ob_angle.html">ob_angle()</a></code> <code><a href="ob_angle.html">degree()</a></code> <code><a href="ob_angle.html">radian()</a></code> <code><a href="ob_angle.html">turn()</a></code>
 
         </dt>
-        <dd>The path class</dd>
+        <dd>ob_angle</dd>
+      </dl><dl><dt>
+
+          <code><a href="ob_arc.html">ob_arc()</a></code>
+
+        </dt>
+        <dd>ob_arc class</dd>
+      </dl><dl><dt>
+
+          <code><a href="ob_bezier.html">ob_bezier()</a></code>
+
+        </dt>
+        <dd>The ob_bezier (i.e., bezier curve) class</dd>
+      </dl><dl><dt>
+
+          <code><a href="ob_circle.html">ob_circle()</a></code>
+
+        </dt>
+        <dd>ob_circle class</dd>
+      </dl><dl><dt>
+
+          <code><a href="ob_ellipse.html">ob_ellipse()</a></code>
+
+        </dt>
+        <dd>ob_ellipse class</dd>
+      </dl><dl><dt>
+
+          <code><a href="ob_label.html">ob_label()</a></code>
+
+        </dt>
+        <dd>ob_label class</dd>
+      </dl><dl><dt>
+
+          <code><a href="ob_line.html">ob_line()</a></code>
+
+        </dt>
+        <dd>ob_line class</dd>
+      </dl><dl><dt>
+
+          <code><a href="ob_path.html">ob_path()</a></code>
+
+        </dt>
+        <dd>The ob_path class</dd>
+      </dl><dl><dt>
+
+          <code><a href="ob_point.html">ob_point()</a></code> <code><a href="ob_point.html">ob_polar()</a></code>
+
+        </dt>
+        <dd>ob_point</dd>
+      </dl><dl><dt>
+
+          <code><a href="ob_polygon.html">ob_polygon()</a></code>
+
+        </dt>
+        <dd>The ob_polygon (polygon) class</dd>
+      </dl><dl><dt>
+
+          <code><a href="ob_rectangle.html">ob_rectangle()</a></code>
+
+        </dt>
+        <dd>ob_rectangle class</dd>
+      </dl><dl><dt>
+
+          <code><a href="ob_segment.html">ob_segment()</a></code>
+
+        </dt>
+        <dd>ob_segment class</dd>
+      </dl><dl><dt>
+
+          <code><a href="ob_style.html">ob_style()</a></code>
+
+        </dt>
+        <dd>ob_style class</dd>
       </dl><dl><dt>
 
           <code><a href="perpendicular_point.html">`%|-%`</a></code> <code><a href="perpendicular_point.html">`%-|%`</a></code>
@@ -189,22 +231,10 @@
         <dd>Find point perpendicular to 2 points</dd>
       </dl><dl><dt>
 
-          <code><a href="pgon.html">pgon()</a></code>
-
-        </dt>
-        <dd>The pgon (polygon) class</dd>
-      </dl><dl><dt>
-
           <code><a href="place.html">place()</a></code>
 
         </dt>
         <dd>Place an object a specified distance from another object</dd>
-      </dl><dl><dt>
-
-          <code><a href="point.html">point()</a></code> <code><a href="point.html">polar()</a></code>
-
-        </dt>
-        <dd>point</dd>
       </dl><dl><dt>
 
           <code><a href="polar2just.html">polar2just()</a></code>
@@ -219,10 +249,10 @@
         <dd>Find projection of a point on an object (e.g., line or segment)</dd>
       </dl><dl><dt>
 
-          <code><a href="rectangle.html">rectangle()</a></code>
+          <code><a href="redefault.html">redefault()</a></code>
 
         </dt>
-        <dd>rectangle class</dd>
+        <dd>Make a variant of a function with alternate defaults</dd>
       </dl><dl><dt>
 
           <code><a href="resect.html">resect()</a></code>
@@ -243,16 +273,22 @@
         <dd>Probability rounding</dd>
       </dl><dl><dt>
 
-          <code><a href="segment.html">segment()</a></code>
+          <code><a href="shape_array.html">shape_array()</a></code>
 
         </dt>
-        <dd>segment class</dd>
+        <dd>make an array of shapes along a line</dd>
       </dl><dl><dt>
 
-          <code><a href="style.html">style()</a></code>
+          <code><a href="subscript.html">subscript()</a></code> <code><a href="subscript.html">superscript()</a></code>
 
         </dt>
-        <dd>style class</dd>
+        <dd>Create subscripts</dd>
+      </dl><dl><dt>
+
+          <code><a href="variance.html">variance()</a></code>
+
+        </dt>
+        <dd>create double-headed arrow paths indicating variance</dd>
       </dl></div>
   </main></div>
 
@@ -262,7 +298,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer></div>

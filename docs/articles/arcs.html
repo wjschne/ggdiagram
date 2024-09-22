@@ -45,13 +45,14 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/angles.html">Angles</a></li>
     <li><a class="dropdown-item" href="../articles/arcs.html">Arcs</a></li>
-    <li><a class="dropdown-item" href="../articles/bzcurves.html">Bezier Curves</a></li>
+    <li><a class="dropdown-item" href="../articles/bezier.html">Bézier Curves</a></li>
+    <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
     <li><a class="dropdown-item" href="../articles/ellipses.html">Ellipses</a></li>
     <li><a class="dropdown-item" href="../articles/lines.html">Lines</a></li>
     <li><a class="dropdown-item" href="../articles/paths.html">Paths</a></li>
     <li><a class="dropdown-item" href="../articles/points.html">Points</a></li>
-    <li><a class="dropdown-item" href="../articles/polygons.html">Polygons (pgon)</a></li>
+    <li><a class="dropdown-item" href="../articles/polygons.html">Polygons</a></li>
     <li><a class="dropdown-item" href="../articles/rectangles.html">Rectangles</a></li>
     <li><a class="dropdown-item" href="../articles/segments.html">Segments</a></li>
   </ul>
@@ -141,62 +142,65 @@
 </section></section><section class="section level2"><h2 id="arcs">Arcs<a class="anchor" aria-label="anchor" href="#arcs"></a>
 </h2>
 <p>Just as a segment is part of a line between two points on the line, an arc is part of a circle between two points (on the circle). Thus, an arc has all the properties a circle, with the addition of starting and ending points. For the sake of simplicity, these starting points are specified as angles.</p>
-<p>Arc starting and points can be specified with any angle unit. If a number is used, it will be interpreted as a degree unit.</p>
+<p>Arc starting and ending points can be specified with any angle unit. If a number is used, it will be interpreted as a degree unit.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/arc.html">arc</a></span><span class="op">(</span>center <span class="op">=</span> <span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span>, </span>
-<span>    start <span class="op">=</span> <span class="fl">20</span>, </span>
-<span>    end <span class="op">=</span> <span class="fl">150</span>, </span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span>center <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span>, </span>
+<span>    start <span class="op">=</span> <span class="fl">25</span>, </span>
+<span>    end <span class="op">=</span> <span class="fl">75</span>, </span>
 <span>    radius <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;arc&gt;</span></span>
-<span><span class="co">#&gt; @ center: &lt;point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ob_arc&gt;</span></span>
+<span><span class="co">#&gt; @ center: &lt;ob_point&gt;</span></span>
 <span><span class="co">#&gt;  @ x: num 1</span></span>
 <span><span class="co">#&gt;  @ y: num 2</span></span>
 <span><span class="co">#&gt; @ radius: num 3</span></span>
 <span><span class="co">#&gt; @ start : &lt;degree&gt;</span></span>
-<span><span class="co">#&gt;  @ degree: num 20</span></span>
+<span><span class="co">#&gt;  @ degree: num 25</span></span>
 <span><span class="co">#&gt; @ end   : &lt;degree&gt;</span></span>
-<span><span class="co">#&gt;  @ degree: num 150</span></span>
+<span><span class="co">#&gt;  @ degree: num 75</span></span>
 <span><span class="co">#&gt; @ theta : &lt;degree&gt;</span></span>
-<span><span class="co">#&gt;  @ degree: num 130</span></span>
+<span><span class="co">#&gt;  @ degree: num 50</span></span>
 <span><span class="co">#&gt; Other props: label, wedge, alpha, arrow_head, arrow_fins,</span></span>
 <span><span class="co">#&gt;              arrowhead_length, length_head, length_fins, color,</span></span>
 <span><span class="co">#&gt;              fill, lineend, linejoin, linewidth, linewidth_fins,</span></span>
 <span><span class="co">#&gt;              linewidth_head, linetype, n, resect, resect_fins,</span></span>
-<span><span class="co">#&gt;              resect_head, stroke_color, stroke_width, length,</span></span>
-<span><span class="co">#&gt;              style, tibble, geom, angle_at, autolabel, midpoint,</span></span>
-<span><span class="co">#&gt;              point_at, tangent_at, aesthetics</span></span></code></pre></div>
+<span><span class="co">#&gt;              resect_head, stroke_color, stroke_width, apothem,</span></span>
+<span><span class="co">#&gt;              sagitta, bounding_box, chord, length, style, tibble,</span></span>
+<span><span class="co">#&gt;              geom, angle_at, autolabel, midpoint, point_at,</span></span>
+<span><span class="co">#&gt;              tangent_at, aesthetics</span></span></code></pre></div>
 </div>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
-<span>  <span class="op">{</span><span class="va">a1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/arc.html">arc</a></span><span class="op">(</span></span>
-<span>    center <span class="op">=</span> <span class="op">{</span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">}</span>,</span>
+<span>  <span class="op">{</span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span> </span>
+<span>  <span class="op">{</span><span class="va">a1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span></span>
+<span>    center <span class="op">=</span> <span class="va">p1</span>,</span>
 <span>    radius <span class="op">=</span> <span class="op">{</span><span class="va">r</span> <span class="op">&lt;-</span> <span class="fl">4</span><span class="op">}</span>,</span>
-<span>    start <span class="op">=</span> <span class="op">{</span><span class="va">ang_start</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/class_angle.html">degree</a></span><span class="op">(</span><span class="fl">25</span><span class="op">)</span><span class="op">}</span>,</span>
-<span>    end <span class="op">=</span> <span class="op">{</span><span class="va">ang_end</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/class_angle.html">degree</a></span><span class="op">(</span><span class="fl">75</span><span class="op">)</span><span class="op">}</span></span>
+<span>    start <span class="op">=</span> <span class="op">{</span><span class="va">ang_start</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">25</span><span class="op">)</span><span class="op">}</span>,</span>
+<span>    end <span class="op">=</span> <span class="op">{</span><span class="va">ang_end</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">75</span><span class="op">)</span><span class="op">}</span></span>
 <span>    <span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/label.html">label</a></span><span class="op">(</span>p <span class="op">=</span> <span class="va">p1</span>, </span>
-<span>        label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Center "</span>, <span class="va">p1</span><span class="op">@</span><span class="va">auto_label</span><span class="op">)</span>, </span>
-<span>        vjust <span class="op">=</span> <span class="fl">1</span>, </span>
-<span>        plot_point <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/connect.html">connect</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">a1</span><span class="op">@</span><span class="va">midpoint</span><span class="op">(</span><span class="op">)</span>, label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Radius = "</span>, <span class="va">r</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/label.html">label</a></span><span class="op">(</span>label <span class="op">=</span> <span class="va">ang_start</span>, </span>
-<span>        p <span class="op">=</span> <span class="va">a1</span><span class="op">@</span><span class="va">midpoint</span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
-<span>        polar_just <span class="op">=</span> <span class="fu"><a href="../reference/point.html">polar</a></span><span class="op">(</span><span class="va">ang_start</span> <span class="op">+</span> <span class="fu"><a href="../reference/class_angle.html">degree</a></span><span class="op">(</span><span class="op">-</span><span class="fl">90</span><span class="op">)</span>, <span class="fl">1.3</span><span class="op">)</span>, </span>
-<span>        plot_point <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/label.html">label</a></span><span class="op">(</span>label <span class="op">=</span> <span class="va">ang_end</span>, </span>
-<span>        p <span class="op">=</span> <span class="va">a1</span><span class="op">@</span><span class="va">midpoint</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>, </span>
-<span>        polar_just <span class="op">=</span> <span class="fu"><a href="../reference/point.html">polar</a></span><span class="op">(</span><span class="va">ang_end</span> <span class="op">+</span> <span class="fu"><a href="../reference/class_angle.html">degree</a></span><span class="op">(</span><span class="fl">90</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span>, </span>
-<span>        plot_point <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span></span>
+<span>    label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Center "</span>, <span class="va">p1</span><span class="op">@</span><span class="va">auto_label</span><span class="op">)</span>, </span>
+<span>    p <span class="op">=</span> <span class="va">p1</span>, </span>
+<span>    vjust <span class="op">=</span> <span class="fl">1.1</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="../reference/connect.html">connect</a></span><span class="op">(</span></span>
+<span>    <span class="va">p1</span>, </span>
+<span>    <span class="va">a1</span><span class="op">@</span><span class="va">midpoint</span><span class="op">(</span><span class="op">)</span>, </span>
+<span>    label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Radius = "</span>, <span class="va">r</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span></span>
+<span>    label <span class="op">=</span> <span class="va">ang_start</span>, </span>
+<span>    p <span class="op">=</span> <span class="va">a1</span><span class="op">@</span><span class="va">midpoint</span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>    polar_just <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span><span class="va">ang_start</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="op">-</span><span class="fl">90</span><span class="op">)</span>, <span class="fl">1.3</span><span class="op">)</span>, </span>
+<span>    plot_point <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span></span>
+<span>    label <span class="op">=</span> <span class="va">ang_end</span>, </span>
+<span>    p <span class="op">=</span> <span class="va">a1</span><span class="op">@</span><span class="va">midpoint</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>, </span>
+<span>    polar_just <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span><span class="va">ang_end</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">90</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span>, </span>
+<span>    plot_point <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </details><div class="cell-output-display">
-<div id="fig-arc" class="quarto-float quarto-figure quarto-figure-center">
-<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-arc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="arcs_files/figure-html/fig-arc-1.png" width="672">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-arc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 1: Arc with starting and ending angles and center point.
-</figcaption></figure>
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="arcs_files/figure-html/fig_arc-1.png" width="672"></p>
+<figcaption>Arc with starting and ending angles and center point.</figcaption></figure>
 </div>
 </div>
 </div>
@@ -206,13 +210,13 @@ Figure 1: Arc with starting and ending angles and center point.
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
-<span>  <span class="op">{</span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/arc.html">arc</a></span><span class="op">(</span>start <span class="op">=</span> <span class="op">-</span><span class="fl">45</span>, </span>
+<span>  <span class="op">{</span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span>start <span class="op">=</span> <span class="op">-</span><span class="fl">45</span>, </span>
 <span>      end <span class="op">=</span> <span class="fl">45</span>, </span>
 <span>      radius <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>      color <span class="op">=</span> <span class="st">"red"</span>, </span>
 <span>      start_point <span class="op">=</span> <span class="va">p1</span><span class="op">)</span>  <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/arc.html">arc</a></span><span class="op">(</span>start <span class="op">=</span> <span class="op">-</span><span class="fl">45</span>, </span>
+<span>  <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span>start <span class="op">=</span> <span class="op">-</span><span class="fl">45</span>, </span>
 <span>      end <span class="op">=</span> <span class="fl">45</span>, </span>
 <span>      radius <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>      color <span class="op">=</span> <span class="st">"blue"</span>, </span>
@@ -223,7 +227,7 @@ Figure 1: Arc with starting and ending angles and center point.
 <img src="arcs_files/figure-html/fig-startpoint-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-startpoint-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 2: Fixing the start and end points of an arc
+Figure 1: Fixing the start and end points of an arc
 </figcaption></figure>
 </div>
 </div>
@@ -242,7 +246,7 @@ Figure 2: Fixing the start and end points of an arc
 <img src="arcs_files/figure-html/fig-midpoint-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-midpoint-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 3: Default midpoint on a arc
+Figure 2: Default midpoint on a arc
 </figcaption></figure>
 </div>
 </div>
@@ -259,7 +263,7 @@ Figure 3: Default midpoint on a arc
 <img src="arcs_files/figure-html/fig-multimidpoints-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-multimidpoints-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 4: Multiple midpoints can be specified
+Figure 3: Multiple midpoints can be specified
 </figcaption></figure>
 </div>
 </div>
@@ -270,17 +274,17 @@ Figure 4: Multiple midpoints can be specified
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/arc.html">arc</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fl">3</span>, </span>
+<span>  <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fl">3</span>, </span>
 <span>      start <span class="op">=</span> <span class="fl">20</span>, </span>
 <span>      end <span class="op">=</span> <span class="fl">120</span>, </span>
-<span>      label <span class="op">=</span> <span class="fu"><a href="../reference/class_angle.html">degree</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
+<span>      label <span class="op">=</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
 <div class="cell-output-display">
 <div id="fig-label" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-label-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="arcs_files/figure-html/fig-label-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-label-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 5: A labelled arc
+Figure 4: A labelled arc
 </figcaption></figure>
 </div>
 </div>
@@ -289,10 +293,10 @@ Figure 5: A labelled arc
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/arc.html">arc</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fl">3</span>, </span>
+<span>  <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fl">3</span>, </span>
 <span>      start <span class="op">=</span> <span class="fl">20</span>, </span>
 <span>      end <span class="op">=</span> <span class="fl">120</span>, </span>
-<span>      label <span class="op">=</span> <span class="fu"><a href="../reference/label.html">label</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Start"</span>, <span class="st">"Middle"</span>, <span class="st">"End"</span><span class="op">)</span>, </span>
+<span>      label <span class="op">=</span> <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Start"</span>, <span class="st">"Middle"</span>, <span class="st">"End"</span><span class="op">)</span>, </span>
 <span>                    position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">.5</span>, <span class="fl">1</span><span class="op">)</span>, </span>
 <span>                    plot_point <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
@@ -301,7 +305,7 @@ Figure 5: A labelled arc
 <img src="arcs_files/figure-html/fig-labelmultiple-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-labelmultiple-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 6: Multiple labels on an arc
+Figure 5: Multiple labels on an arc
 </figcaption></figure>
 </div>
 </div>
@@ -310,10 +314,10 @@ Figure 6: Multiple labels on an arc
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/arc.html">arc</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fl">3</span>, </span>
+<span>  <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fl">3</span>, </span>
 <span>      start <span class="op">=</span> <span class="fl">20</span>, </span>
 <span>      end <span class="op">=</span> <span class="fl">120</span>,</span>
-<span>      label <span class="op">=</span> <span class="fu"><a href="../reference/label.html">label</a></span><span class="op">(</span><span class="st">"A"</span>, </span>
+<span>      label <span class="op">=</span> <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="st">"A"</span>, </span>
 <span>                    vjust <span class="op">=</span> <span class="fl">1.2</span>, </span>
 <span>                    hjust <span class="op">=</span> <span class="fl">.75</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
@@ -322,7 +326,7 @@ Figure 6: Multiple labels on an arc
 <img src="arcs_files/figure-html/fig-labeladjust-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-labeladjust-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 7: The arc’s labels can be adjusted.
+Figure 6: The arc’s labels can be adjusted.
 </figcaption></figure>
 </div>
 </div>
@@ -331,7 +335,7 @@ Figure 7: The arc’s labels can be adjusted.
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
-<span>  <span class="op">{</span><span class="va">a1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/arc.html">arc</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fl">3</span>, </span>
+<span>  <span class="op">{</span><span class="va">a1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fl">3</span>, </span>
 <span>      start <span class="op">=</span> <span class="fl">20</span>, </span>
 <span>      end <span class="op">=</span> <span class="fl">120</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span> </span>
 <span>  <span class="va">a1</span><span class="op">@</span><span class="va">autolabel</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -341,7 +345,7 @@ Figure 7: The arc’s labels can be adjusted.
 <img src="arcs_files/figure-html/fig-autolabel-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-autolabel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 8: Using the arc’s autolabel
+Figure 7: Using the arc’s autolabel
 </figcaption></figure>
 </div>
 </div>
@@ -358,7 +362,7 @@ Figure 8: Using the arc’s autolabel
 <img src="arcs_files/figure-html/fig-autolabeladjust-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-autolabeladjust-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 9: Adjusting the arc’s autolabel
+Figure 8: Adjusting the arc’s autolabel
 </figcaption></figure>
 </div>
 </div>
@@ -371,34 +375,34 @@ Figure 9: Adjusting the arc’s autolabel
 <code class="sourceCode R"><span><span class="va">my_arrow_head</span> <span class="op">&lt;-</span> <span class="fu">arrowheadr</span><span class="fu">::</span><span class="fu"><a href="https://wjschne.github.io/arrowheadr/reference/arrow_head_hypotrochoid.html" class="external-link">arrow_head_deltoid</a></span><span class="op">(</span>d <span class="op">=</span> <span class="fl">2.2</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">bp</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/arc.html">arc</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fl">3</span>, </span>
+<span>  <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fl">3</span>, </span>
 <span>      start <span class="op">=</span> <span class="fl">0</span>, </span>
 <span>      end <span class="op">=</span> <span class="fl">180</span>, </span>
 <span>      arrow_head <span class="op">=</span> <span class="va">my_arrow_head</span>,</span>
 <span>      arrow_fins <span class="op">=</span> <span class="va">my_arrow_head</span>, </span>
 <span>      linewidth <span class="op">=</span> <span class="fl">.75</span>,</span>
-<span>      arrowhead_length <span class="op">=</span> <span class="fl">8</span>,</span>
-<span>      color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span></span></code></pre></div>
+<span>      arrowhead_length <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div id="fig-arcarrow" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-arcarrow-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="arcs_files/figure-html/fig-arcarrow-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-arcarrow-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 10: Arcs with arrowheads
+Figure 9: Arcs with arrowheads
 </figcaption></figure>
 </div>
 </div>
 </div>
 </section><section class="section level2"><h2 id="wedges">Wedges<a class="anchor" aria-label="anchor" href="#wedges"></a>
 </h2>
-<p>If the <code>arc@wedge</code> property is set to <code>TRUE</code>, the <code>arc</code> function will plot a wedge using <code><a href="https://ggplot2.tidyverse.org/reference/geom_polygon.html" class="external-link">ggplot2::geom_polygon</a></code>.</p>
+<p>If the <code>ob_arc@wedge</code> property is set to <code>TRUE</code>, the <code>ob_arc</code> function will plot a wedge using <code><a href="https://ggplot2.tidyverse.org/reference/geom_polygon.html" class="external-link">ggplot2::geom_polygon</a></code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/arc.html">arc</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fl">3</span>, </span>
-<span>      start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">120</span>, <span class="fl">180</span><span class="op">)</span>, </span>
-<span>      end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">120</span>, <span class="fl">180</span>, <span class="fl">360</span><span class="op">)</span>, </span>
+<code class="sourceCode R"><span><span class="va">theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">120</span>, <span class="fl">180</span>, <span class="fl">360</span><span class="op">)</span></span>
+<span><span class="va">bp</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fl">3</span>, </span>
+<span>      start <span class="op">=</span> <span class="va">theta</span><span class="op">[</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">theta</span><span class="op">)</span><span class="op">]</span>, </span>
+<span>      end <span class="op">=</span> <span class="va">theta</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>, </span>
 <span>      wedge <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>      fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dodgerblue4"</span>, <span class="st">"orchid4"</span>, <span class="st">"darkgreen"</span><span class="op">)</span>, </span>
 <span>      color <span class="op">=</span> <span class="st">"white"</span>, </span>
@@ -409,7 +413,7 @@ Figure 10: Arcs with arrowheads
 <img src="arcs_files/figure-html/fig-wedge-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-wedge-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 11: Arc wedges
+Figure 10: Arc wedges
 </figcaption></figure>
 </div>
 </div>
@@ -524,7 +528,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>

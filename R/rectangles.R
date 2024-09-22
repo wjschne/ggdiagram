@@ -9,10 +9,10 @@ find_side <- function(theta, width, height) {
 rectangle_side <- new_class(
   name = "retangle_side",
   properties = list(
-    east = segment,
-    north = segment,
-    west = segment,
-    south = segment))
+    east = ob_segment,
+    north = ob_segment,
+    west = ob_segment,
+    south = ob_segment))
 
 rc_styles <- c(
   "alpha",
@@ -59,7 +59,7 @@ rc_props <- list(
       if (length(value) > 1) stop("The radius property must be of length 1.")
     })
   ),
-  styles = style@properties[rc_styles],
+  styles = ob_style@properties[rc_styles],
   # Derived ----
   derived = list(
     area = new_property(getter = function(self) {
@@ -73,80 +73,80 @@ rc_props <- list(
                          ymin = min(y),
                          ymax = max(y))
 
-      rectangle(southwest = point(d_rect$xmin, d_rect$ymin),
-                northeast = point(d_rect$xmax, d_rect$ymax))
+      ob_rectangle(southwest = ob_point(d_rect$xmin, d_rect$ymin),
+                northeast = ob_point(d_rect$xmax, d_rect$ymax))
 
     }),
     perimeter = new_property(getter = function(self) {
       self@width * 2 + self@height * 2
     }),
     northeast = new_property(
-      point,
+      ob_point,
       getter = function(self) {
-        rotate(point(self@width / 2,
+        rotate(ob_point(self@width / 2,
                      self@height / 2,
                      style = self@style),
                self@angle) + self@center
       }
     ),
     northwest = new_property(
-      point,
+      ob_point,
       getter = function(self) {
-        rotate(point(self@width / -2,
+        rotate(ob_point(self@width / -2,
                      self@height / 2,
                      style = self@style),
                self@angle) + self@center
       }
     ),
     southwest = new_property(
-      point,
+      ob_point,
       getter = function(self) {
-        rotate(point(self@width / -2,
+        rotate(ob_point(self@width / -2,
                      self@height / -2,
                      style = self@style),
                self@angle) + self@center
       }
     ),
     southeast = new_property(
-      point,
+      ob_point,
       getter = function(self) {
-        rotate(point(self@width / 2,
+        rotate(ob_point(self@width / 2,
                      self@height / -2,
                      style = self@style),
                self@angle) + self@center
       }
     ),
     east = new_property(
-      point,
+      ob_point,
       getter = function(self) {
-        rotate(point(self@width / 2,
+        rotate(ob_point(self@width / 2,
                      0,
                      style = self@style),
                self@angle) + self@center
       }
     ),
     north = new_property(
-      point,
+      ob_point,
       getter = function(self) {
-        rotate(point(0,
+        rotate(ob_point(0,
                      self@height / 2,
                      style = self@style),
                self@angle) + self@center
       }
     ),
     west = new_property(
-      point,
+      ob_point,
       getter = function(self) {
-        rotate(point(self@width / -2,
+        rotate(ob_point(self@width / -2,
                      0,
                      style = self@style),
                self@angle) + self@center
       }
     ),
     south = new_property(
-      point,
+      ob_point,
       getter = function(self) {
-        rotate(point(0,
+        rotate(ob_point(0,
                      self@height / -2,
                      style = self@style),
                self@angle) + self@center
@@ -154,10 +154,10 @@ rc_props <- list(
     ),
     side = new_property(rectangle_side, getter = function(self) {
       re = rectangle_side(
-        east = segment(p1 = self@northeast, p2 = self@southeast, style = self@style),
-        north = segment(p1 = self@northwest, p2 = self@northeast, style = self@style),
-        west = segment(p1 = self@northwest, p2 = self@southwest, style = self@style),
-        south = segment(p1 = self@southwest, p2 = self@southeast, style = self@style)
+        east = ob_segment(p1 = self@northeast, p2 = self@southeast, style = self@style),
+        north = ob_segment(p1 = self@northwest, p2 = self@northeast, style = self@style),
+        west = ob_segment(p1 = self@northwest, p2 = self@southwest, style = self@style),
+        south = ob_segment(p1 = self@southwest, p2 = self@southeast, style = self@style)
       )
     }),
     length = new_property(
@@ -170,10 +170,10 @@ rc_props <- list(
         pr <- purrr::map(rc_styles,
                          prop, object = self) |>
           `names<-`(rc_styles)
-        rlang::inject(style(!!!get_non_empty_list(pr)))
+        rlang::inject(ob_style(!!!get_non_empty_list(pr)))
       },
       setter = function(self, value) {
-        rectangle(
+        ob_rectangle(
           center = self@center,
           width = self@width,
           height = self@height,
@@ -195,7 +195,7 @@ rc_props <- list(
           group = rep(seq(1,self@length), 4)
         ) %>%
           tidyr::nest(.by = group) %>%
-          dplyr::mutate(p = purrr::map(data, point)) %>%
+          dplyr::mutate(p = purrr::map(data, ob_point)) %>%
           dplyr::pull(p),
         group = seq(1, self@length),
         alpha = self@alpha,
@@ -234,7 +234,7 @@ rc_props <- list(
     }),
     normal_at = new_property(class_function, getter = function(self) {
       \(theta = degree(0), distance = 1) {
-        if (!S7_inherits(theta, class_angle)) {
+        if (!S7_inherits(theta, ob_angle)) {
           theta <- degree(theta)
         }
         dl <- list(
@@ -280,7 +280,7 @@ rc_props <- list(
           dplyr::bind_cols(dl) %>%
           tidyr::unnest(data)
 
-        rlang::inject(point(!!!d))
+        rlang::inject(ob_point(!!!d))
 
       }
     }),
@@ -288,17 +288,17 @@ rc_props <- list(
       class_function,
       getter = function(self) {
         \(theta = degree(0), ...) {
-          if (!S7_inherits(theta, class_angle)) {
+          if (!S7_inherits(theta, ob_angle)) {
             theta <- degree(theta)
           }
 
           # p <- purrr::map(theta@degree, \(th) {
-          #   s <- segment(self@center,
-          #           self@center + polar(theta = degree(th),
+          #   s <- ob_segment(self@center,
+          #           self@center + ob_polar(theta = degree(th),
           #                               r = distance(self@center,
           #                                            self@northeast)))
           #   pp <- bind(intersection(self, s))
-          #   st <- self@style + style(...)
+          #   st <- self@style + ob_style(...)
           #   pp@style <- st
           #   pp
           # }) |>
@@ -347,7 +347,7 @@ rc_props <- list(
             dplyr::bind_cols(dl) %>%
             tidyr::unnest(data)
 
-            rlang::inject(point(!!!d))
+            rlang::inject(ob_point(!!!d))
 
 
         }
@@ -359,9 +359,9 @@ rc_props <- list(
       rc_aesthetics_list
     })))
 
-# Rectangle ----
+# ob_rectangle ----
 
-#' rectangle class
+#' ob_rectangle class
 #' @param center point at center of the circle
 #' @param width width
 #' @param height height
@@ -372,14 +372,14 @@ rc_props <- list(
 #' @param label A character, angle, or label object
 #' @param style a style object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object
-#' @inherit style params
+#' @inherit ob_style params
 #' @examples
 #' # specify center point and radius
-#' p <- point(0,0)
-#' rectangle(p, width = 2, height = 2)
+#' p <- ob_point(0,0)
+#' ob_rectangle(p, width = 2, height = 2)
 #' @export
-rectangle <- new_class(
-  name = "rectangle",
+ob_rectangle <- new_class(
+  name = "ob_rectangle",
   parent = centerpoint,
   properties = rlang::inject(list(
     !!!rc_props$primary,
@@ -408,7 +408,7 @@ rectangle <- new_class(
                          y = class_missing,
                          ...) {
 
-    if (!S7_inherits(angle, class_angle)) angle <- degree(angle)
+    if (!S7_inherits(angle, ob_angle)) angle <- degree(angle)
 
                           if (length(x) > 0 | length(y) > 0) {
                             if (length(x) == 0) {
@@ -417,7 +417,7 @@ rectangle <- new_class(
                             if (length(y) == 0) {
                               y <- 0
                             }
-                            center <- point(tibble::tibble(x = x, y = y))
+                            center <- ob_point(tibble::tibble(x = x, y = y))
                           }
 
                           hasnorth <- FALSE
@@ -488,16 +488,16 @@ rectangle <- new_class(
                             } else {
                               c.y <- south + height / 2
                             }
-                            center = point(c.x, c.y)
+                            center = ob_point(c.x, c.y)
                           } else {
                             if (length(width)  == 0) width <- 1
                             if (length(height) == 0) height <- 1
-                            if (length(center) == 0) center <- point(0,0)
+                            if (length(center) == 0) center <- ob_point(0,0)
                             # stop("There is not enough information to make a rectangle.")
                           }
 
 
-    rc_style <- style(
+    rc_style <- ob_style(
         alpha = alpha,
         color = color,
         fill = fill,
@@ -505,7 +505,7 @@ rectangle <- new_class(
         linetype = linetype
       ) +
       style +
-      style(...)
+      ob_style(...)
 
 
 
@@ -526,7 +526,7 @@ rectangle <- new_class(
     label <- centerpoint_label(label,
                                center = center,
                                d = d,
-                               shape_name = "rectangle",
+                               shape_name = "ob_rectangle",
                                angle = angle)
 
 
@@ -548,7 +548,7 @@ rectangle <- new_class(
 )
 
 
-method(str, rectangle) <- function(
+method(str, ob_rectangle) <- function(
     object,
     nest.lev = 0,
     additional = FALSE,
@@ -560,7 +560,7 @@ method(str, rectangle) <- function(
 }
 
 
-method(print, rectangle) <- function(x, ...) {
+method(print, ob_rectangle) <- function(x, ...) {
   str(x, ...)
   invisible(x)
 }
@@ -570,13 +570,13 @@ method(print, rectangle) <- function(x, ...) {
 
 
 
-method(get_tibble, rectangle) <- function(x) {
+method(get_tibble, ob_rectangle) <- function(x) {
   x@tibble
 }
 
 
-method(get_tibble_defaults, rectangle) <- function(x) {
-  sp <- style(
+method(get_tibble_defaults, ob_rectangle) <- function(x) {
+  sp <- ob_style(
     alpha = replace_na(as.double(ggforce::GeomShape$default_aes$alpha), 1),
     color = replace_na(ggforce::GeomShape$default_aes$colour, "black"),
     fill = replace_na(ggforce::GeomShape$default_aes$fill, "black"),
@@ -590,7 +590,7 @@ method(get_tibble_defaults, rectangle) <- function(x) {
     required_aes = c(rc_aesthetics_list@required_aes, "radius"))
 }
 
-method(`==`, list(rectangle, rectangle)) <- function(e1, e2) {
+method(`==`, list(ob_rectangle, ob_rectangle)) <- function(e1, e2) {
   (e1@center@x == e2@center@x) &&
     (e1@center@y == e2@center@y) &&
     (e1@width == e2@width) &&
@@ -598,7 +598,7 @@ method(`==`, list(rectangle, rectangle)) <- function(e1, e2) {
     (e1@angle == e2@angle)
 }
 
-method(`[`, rectangle) <- function(x, y) {
+method(`[`, ob_rectangle) <- function(x, y) {
 
   d <- list(
     x = x@center@x,
@@ -616,7 +616,7 @@ method(`[`, rectangle) <- function(x, y) {
   d <- d[y,]
 
   dl <- as.list(dplyr::select(d, -.data$x, -.data$y))
-  z <- rlang::inject(rectangle(center = point(d$x, d$y), !!!dl))
+  z <- rlang::inject(ob_rectangle(center = ob_point(d$x, d$y), !!!dl))
   z@label <- x@label[y]
   if (!is.null(dl$angle)) {
     z@angle <- x@angle[y]
@@ -625,19 +625,19 @@ method(`[`, rectangle) <- function(x, y) {
 }
 
 
-method(place, list(point, rectangle)) <- function(x, from, where = "right", sep = 1) {
+method(place, list(ob_point, ob_rectangle)) <- function(x, from, where = "right", sep = 1) {
   where <- degree(where)
   p <- from@point_at(where)
-  p_sep <- polar((p - from@center)@theta, sep)
+  p_sep <- ob_polar((p - from@center)@theta, sep)
   x@x <- p@x + p_sep@x
   x@y <- p@y + p_sep@y
   x
 
 }
 
-method(place, list(rectangle, point)) <- function(x, from, where = "right", sep = 1) {
+method(place, list(ob_rectangle, ob_point)) <- function(x, from, where = "right", sep = 1) {
   where <- degree(where)
-  p_sep <- polar(where, sep)
+  p_sep <- ob_polar(where, sep)
   p <- x@center - x@point_at(where + degree(180))
   x@center@x <- from@x + p@x + p_sep@x
   x@center@y <- from@y + p@y + p_sep@y

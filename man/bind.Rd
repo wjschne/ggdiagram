@@ -15,7 +15,7 @@ bind(x, ...)
 bind method
 }
 \examples{
-bind(c(point(1,2), point(3,4)))
-bind(c(circle(point(0,0), radius = 1),
-       circle(point(1,1), radius = 2)))
+bind(c(ob_point(1,2), ob_point(3,4)))
+bind(c(ob_circle(ob_point(0,0), radius = 1),
+       ob_circle(ob_point(1,1), radius = 2)))
 }

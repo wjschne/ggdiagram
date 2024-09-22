@@ -19,7 +19,7 @@ nudge(object, x, y, ...)
 Move an object
 }
 \examples{
-circle() |> nudge(x = 2)
+ob_circle() |> nudge(x = 2)
 # Alternative to nudge:
-circle() + point(2, 0)
+ob_circle() + ob_point(2, 0)
 }

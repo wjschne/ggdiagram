@@ -88,7 +88,7 @@ Lines can be constructed from a slope and an intercept:
 
 ```{r}
 #| label: construct_line
-l <- line(slope = 2, intercept = 1, color = my_colors[1])
+l <- ob_line(slope = 2, intercept = 1, color = my_colors[1])
 l
 ```
 
@@ -103,11 +103,11 @@ bp +
 ```
 
 
-Because the default slope is 0, a horizontal line can be set with just the intercept:
+Because the default slope is 0, a horizontal ob_line can be set with just the intercept:
 
 ```{r}
 #| label: hline
-h <- line(intercept = 2, color = my_colors[1])
+h <- ob_line(intercept = 2, color = my_colors[1])
 h
 ```
 
@@ -125,7 +125,7 @@ A vertical line can be set with the x-intercept:
 
 ```{r}
 #| label: vline
-v <- line(xintercept = -2, color = my_colors[1])
+v <- ob_line(xintercept = -2, color = my_colors[1])
 v
 ```
 
@@ -149,7 +149,7 @@ $$
 
 ```{r}
 #| label: abcline
-l_123 <- line(a = 1, b = 2, c = 3, color = my_colors[1])
+l_123 <- ob_line(a = 1, b = 2, c = 3, color = my_colors[1])
 ```
 
 ```{r}
@@ -175,8 +175,8 @@ A point can be "projected" onto a line. Imagine shining a light on the point in 
 
 ```{r}
 #| label: projection
-p <- point(3,-2, color = my_colors[2])
-l <- line(slope = 2, intercept = 2, color = my_colors[1])
+p <- ob_point(3,-2, color = my_colors[2])
+l <- ob_line(slope = 2, intercept = 2, color = my_colors[1])
 # Point p projected onto line l
 p_projected <- projection(p, l)
 
@@ -193,7 +193,7 @@ The shortest distance from a point to a line can be calculated.
 distance(p, l)
 
 # Equivalently:
-segment(p, l@projection(p))@distance
+ob_segment(p, l@projection(p))@distance
 ```
 
 ```{r}
@@ -206,7 +206,7 @@ bp +
   l@point_at_x(.5)@label(
     label = l@equation, 
     angle = l@angle) +
-  {s_projected <- segment(
+  {s_projected <- ob_segment(
       p1 = l@projection(p),
       p2 = p,
       linetype = "dashed",

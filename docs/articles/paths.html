@@ -45,13 +45,14 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/angles.html">Angles</a></li>
     <li><a class="dropdown-item" href="../articles/arcs.html">Arcs</a></li>
-    <li><a class="dropdown-item" href="../articles/bzcurves.html">Bezier Curves</a></li>
+    <li><a class="dropdown-item" href="../articles/bezier.html">Bézier Curves</a></li>
+    <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
     <li><a class="dropdown-item" href="../articles/ellipses.html">Ellipses</a></li>
     <li><a class="dropdown-item" href="../articles/lines.html">Lines</a></li>
     <li><a class="dropdown-item" href="../articles/paths.html">Paths</a></li>
     <li><a class="dropdown-item" href="../articles/points.html">Points</a></li>
-    <li><a class="dropdown-item" href="../articles/polygons.html">Polygons (pgon)</a></li>
+    <li><a class="dropdown-item" href="../articles/polygons.html">Polygons</a></li>
     <li><a class="dropdown-item" href="../articles/rectangles.html">Rectangles</a></li>
     <li><a class="dropdown-item" href="../articles/segments.html">Segments</a></li>
   </ul>
@@ -146,9 +147,9 @@
 <p>The <code>path</code> function creates an object that connects points along a path.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>,<span class="op">-</span><span class="fl">3</span>,<span class="fl">4</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="op">-</span><span class="fl">2</span>, <span class="fl">0</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"dodgerblue"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>,<span class="op">-</span><span class="fl">3</span>,<span class="fl">4</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="op">-</span><span class="fl">2</span>, <span class="fl">0</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"dodgerblue"</span><span class="op">)</span></span>
 <span><span class="va">bp</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/path.html">path</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_path.html">ob_path</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="va">p</span></span></code></pre></div>
 <div class="cell-output-display">
 <div id="fig-path" class="quarto-float quarto-figure quarto-figure-center">
@@ -168,14 +169,14 @@ Figure 1: Plotting a path.
 <div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p_curve</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>, <span class="fl">4</span>, <span class="fl">.1</span><span class="op">)</span>, </span>
 <span>                  y <span class="op">=</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">pnorm</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">*</span> <span class="fl">8</span> <span class="op">-</span> <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span></span>
 <span></span>
 <span><span class="va">bp</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/path.html">path</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/ob_path.html">ob_path</a></span><span class="op">(</span></span>
 <span>    p <span class="op">=</span> <span class="va">p_curve</span>,</span>
-<span>    label <span class="op">=</span> <span class="fu"><a href="../reference/label.html">label</a></span><span class="op">(</span></span>
+<span>    label <span class="op">=</span> <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span></span>
 <span>      <span class="st">"A path label will curve along the path."</span>,</span>
 <span>      vjust <span class="op">=</span> <span class="op">-</span><span class="fl">.1</span>,</span>
 <span>      size <span class="op">=</span> <span class="fl">20</span>,</span>
@@ -199,9 +200,9 @@ Figure 2: A path with a curved label
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/path.html">path</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/ob_path.html">ob_path</a></span><span class="op">(</span></span>
 <span>    p <span class="op">=</span> <span class="va">p_curve</span>,</span>
-<span>    label <span class="op">=</span> <span class="fu"><a href="../reference/label.html">label</a></span><span class="op">(</span></span>
+<span>    label <span class="op">=</span> <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span></span>
 <span>      <span class="st">"A path label will curve along the path."</span>,</span>
 <span>      vjust <span class="op">=</span> <span class="op">-</span><span class="fl">.1</span>,</span>
 <span>      size <span class="op">=</span> <span class="fl">20</span>,</span>
@@ -228,9 +229,9 @@ Figure 3: A path with a curved label at position .1
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/path.html">path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">p_curve</span>, </span>
-<span>         <span class="va">p_curve</span> <span class="op">*</span> <span class="fl">.5</span> <span class="op">+</span> <span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="fl">2</span>,<span class="op">-</span><span class="fl">2</span><span class="op">)</span>,</span>
-<span>         <span class="va">p_curve</span> <span class="op">*</span> <span class="fl">.5</span> <span class="op">+</span> <span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span>, </span>
+<span>  <span class="fu"><a href="../reference/ob_path.html">ob_path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">p_curve</span>, </span>
+<span>         <span class="va">p_curve</span> <span class="op">*</span> <span class="fl">.5</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">2</span>,<span class="op">-</span><span class="fl">2</span><span class="op">)</span>,</span>
+<span>         <span class="va">p_curve</span> <span class="op">*</span> <span class="fl">.5</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span>, </span>
 <span>       color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"orchid4"</span>,</span>
 <span>                 <span class="st">"dodgerblue3"</span>,</span>
 <span>                 <span class="st">"firebrick4"</span><span class="op">)</span>,</span>
@@ -356,7 +357,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>

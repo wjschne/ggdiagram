@@ -93,7 +93,7 @@ Arc starting and ending points can be specified with any angle unit. If a number
 
 ```{r}
 #| label: arc
-arc(center = point(1,2), 
+ob_arc(center = ob_point(1,2), 
     start = 25, 
     end = 75, 
     radius = 3)
@@ -101,18 +101,18 @@ arc(center = point(1,2),
 
 
 ```{r}
-#| label: fig-arc
+#| label: fig_arc
 #| fig-cap: Arc with starting and ending angles and center point.
 #| code-fold: true
 bp +
-  {p1 <- point(0, 0)} + 
-  {a1 <- arc(
+  {p1 <- ob_point(0, 0)} + 
+  {a1 <- ob_arc(
     center = p1,
     radius = {r <- 4},
     start = {ang_start <- degree(25)},
     end = {ang_end <- degree(75)}
     )} +
-  label(
+  ob_label(
     label = paste0("Center ", p1@auto_label), 
     p = p1, 
     vjust = 1.1) + 
@@ -120,15 +120,15 @@ bp +
     p1, 
     a1@midpoint(), 
     label = paste0("Radius = ", r)) + 
-  label(
+  ob_label(
     label = ang_start, 
     p = a1@midpoint(0),
-    polar_just = polar(ang_start + degree(-90), 1.3), 
+    polar_just = ob_polar(ang_start + degree(-90), 1.3), 
     plot_point = TRUE) +
-  label(
+  ob_label(
     label = ang_end, 
     p = a1@midpoint(1), 
-    polar_just = polar(ang_end + degree(90), 1), 
+    polar_just = ob_polar(ang_end + degree(90), 1), 
     plot_point = TRUE)
 ```
 
@@ -142,13 +142,13 @@ Sometimes you do not know where the center of an arc should be. Instead, you wan
 #| fig-cap: Fixing the start and end points of an arc
 
 bp +
-  {p1 <- point(0, 0)} +
-  arc(start = -45, 
+  {p1 <- ob_point(0, 0)} +
+  ob_arc(start = -45, 
       end = 45, 
       radius = 2,
       color = "red", 
       start_point = p1)  +
-  arc(start = -45, 
+  ob_arc(start = -45, 
       end = 45, 
       radius = 2,
       color = "blue", 
@@ -185,12 +185,10 @@ By default, the arc label will appear outside the midpoint of the arc
 #| label: fig-label
 #| fig-cap: "A labelled arc"
 bp +
-  arc(radius = 3, 
+  ob_arc(radius = 3, 
       start = 20, 
       end = 120, 
       label = degree(100)) 
-
-
 ```
 
 If a label is needed elsewhere, it can be set with the `label` function's `position` property.
@@ -199,10 +197,10 @@ If a label is needed elsewhere, it can be set with the `label` function's `posit
 #| label: fig-labelmultiple
 #| fig-cap: "Multiple labels on an arc"
 bp +
-  arc(radius = 3, 
+  ob_arc(radius = 3, 
       start = 20, 
       end = 120, 
-      label = label(c("Start", "Middle", "End"), 
+      label = ob_label(c("Start", "Middle", "End"), 
                     position = c(0,.5, 1), 
                     plot_point = TRUE))
 ```
@@ -213,10 +211,10 @@ If the orientation of the label needs to be changed, it can be set with `vjust`,
 #| label: fig-labeladjust
 #| fig-cap: "The arc's labels can be adjusted."
 bp + 
-  arc(radius = 3, 
+  ob_arc(radius = 3, 
       start = 20, 
       end = 120,
-      label = label("A", 
+      label = ob_label("A", 
                     vjust = 1.2, 
                     hjust = .75))
 ```
@@ -227,7 +225,7 @@ There are cases where the arc is already created and a label is needed. Although
 #| label: fig-autolabel
 #| fig-cap: Using the arc's autolabel
 bp + 
-  {a1 <- arc(radius = 3, 
+  {a1 <- ob_arc(radius = 3, 
       start = 20, 
       end = 120)} + 
   a1@autolabel()
@@ -253,27 +251,26 @@ The arc object is plotted using `ggarrow::arrow`. This means that arrows can be 
 my_arrow_head <- arrowheadr::arrow_head_deltoid(d = 2.2)
 
 bp + 
-  arc(radius = 3, 
+  ob_arc(radius = 3, 
       start = 0, 
       end = 180, 
       arrow_head = my_arrow_head,
       arrow_fins = my_arrow_head, 
       linewidth = .75,
-      arrowhead_length = 8,
-      color = "black")
+      arrowhead_length = 8)
 ```
 
 
 # Wedges
 
-If the `arc@wedge` property is set to `TRUE`, the `arc` function will plot a wedge using `ggplot2::geom_polygon`.
+If the `ob_arc@wedge` property is set to `TRUE`, the `ob_arc` function will plot a wedge using `ggplot2::geom_polygon`.
 
 ```{r}
 #| label: fig-wedge
 #| fig-cap: Arc wedges
 theta <- c(0, 120, 180, 360)
 bp +
-  arc(radius = 3, 
+  ob_arc(radius = 3, 
       start = theta[-length(theta)], 
       end = theta[-1], 
       wedge = TRUE,

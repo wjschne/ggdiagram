@@ -19,7 +19,7 @@ Usually the \code{as.geom} function is not necessary to call explicitly because 
 }
 \examples{
 library(ggplot2)
-c1 <- circle(radius = 3)
+c1 <- ob_circle(radius = 3)
 ggplot() +
   as.geom(c1, fill = "black") +
   coord_equal()

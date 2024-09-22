@@ -8,6 +8,10 @@ class_color(color = class_missing)
 }
 \arguments{
 \item{color}{character (R color or hex code)}
+
+\item{saturation}{get or set the luminance of a color}
+
+\item{luminance}{get or set the luminance of a color}
 }
 \description{
 color class

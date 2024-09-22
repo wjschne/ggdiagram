@@ -45,13 +45,14 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/angles.html">Angles</a></li>
     <li><a class="dropdown-item" href="../articles/arcs.html">Arcs</a></li>
-    <li><a class="dropdown-item" href="../articles/bzcurves.html">Bezier Curves</a></li>
+    <li><a class="dropdown-item" href="../articles/bezier.html">Bézier Curves</a></li>
+    <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
     <li><a class="dropdown-item" href="../articles/ellipses.html">Ellipses</a></li>
     <li><a class="dropdown-item" href="../articles/lines.html">Lines</a></li>
     <li><a class="dropdown-item" href="../articles/paths.html">Paths</a></li>
     <li><a class="dropdown-item" href="../articles/points.html">Points</a></li>
-    <li><a class="dropdown-item" href="../articles/polygons.html">Polygons (pgon)</a></li>
+    <li><a class="dropdown-item" href="../articles/polygons.html">Polygons</a></li>
     <li><a class="dropdown-item" href="../articles/rectangles.html">Rectangles</a></li>
     <li><a class="dropdown-item" href="../articles/segments.html">Segments</a></li>
   </ul>
@@ -127,9 +128,9 @@
 <p>A segment is a portion of a line between two points.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="op">-</span><span class="fl">3</span>,<span class="op">-</span><span class="fl">1</span><span class="op">)</span></span>
-<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fl">3</span><span class="op">)</span></span>
-<span><span class="va">s1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/segment.html">segment</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="op">-</span><span class="fl">3</span>,<span class="op">-</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fl">3</span><span class="op">)</span></span>
+<span><span class="va">s1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_segment.html">ob_segment</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
@@ -161,7 +162,7 @@ Figure 1: Plotting a segment and its endpoints
 <p>Styles can be specified when the segment is created.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">s2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/segment.html">segment</a></span><span class="op">(</span><span class="va">p1</span>,<span class="va">p2</span>, color <span class="op">=</span> <span class="st">"green4"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">s2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_segment.html">ob_segment</a></span><span class="op">(</span><span class="va">p1</span>,<span class="va">p2</span>, color <span class="op">=</span> <span class="st">"green4"</span><span class="op">)</span></span>
 <span><span class="va">bp</span> <span class="op">+</span> <span class="va">s2</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
@@ -263,7 +264,7 @@ Figure 4: The `s1 object has not changed
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">s1</span><span class="op">@</span><span class="va">line</span></span>
-<span><span class="co">#&gt; &lt;line&gt;</span></span>
+<span><span class="co">#&gt; &lt;ob_line&gt;</span></span>
 <span><span class="co">#&gt; @ slope     : num 0.667</span></span>
 <span><span class="co">#&gt; @ intercept : num 1</span></span>
 <span><span class="co">#&gt; @ xintercept: num -1.5</span></span>
@@ -279,9 +280,9 @@ Figure 4: The `s1 object has not changed
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
 <span>  <span class="va">s1</span><span class="op">@</span><span class="va">line</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rconsortium.github.io/S7/reference/props.html" class="external-link">set_props</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"royalblue4"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="va">s1</span><span class="op">@</span><span class="va">midpoint</span><span class="op">(</span>position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">@</span><span class="va">label</span><span class="op">(</span></span>
-<span>    polar_just <span class="op">=</span> <span class="fu"><a href="../reference/point.html">polar</a></span><span class="op">(</span><span class="va">s1</span><span class="op">@</span><span class="va">line</span><span class="op">@</span><span class="va">angle</span> <span class="op">+</span> <span class="fu"><a href="../reference/class_angle.html">degree</a></span><span class="op">(</span><span class="fl">90</span><span class="op">)</span>, <span class="fl">1.5</span><span class="op">)</span>, </span>
+<span>    polar_just <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span><span class="va">s1</span><span class="op">@</span><span class="va">line</span><span class="op">@</span><span class="va">angle</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">90</span><span class="op">)</span>, <span class="fl">1.5</span><span class="op">)</span>, </span>
 <span>    plot_point <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/label.html">label</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="../reference/equation.html">equation</a></span><span class="op">(</span><span class="va">s1</span><span class="op">@</span><span class="va">line</span><span class="op">)</span>, </span>
+<span>  <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="../reference/equation.html">equation</a></span><span class="op">(</span><span class="va">s1</span><span class="op">@</span><span class="va">line</span><span class="op">)</span>, </span>
 <span>          <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Distance = "</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">s1</span><span class="op">@</span><span class="va">distance</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, </span>
 <span>        p <span class="op">=</span> <span class="fu"><a href="../reference/midpoint.html">midpoint</a></span><span class="op">(</span><span class="va">s1</span><span class="op">)</span>, </span>
 <span>        vjust <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">.2</span>, <span class="fl">1.1</span><span class="op">)</span>, </span>
@@ -303,12 +304,12 @@ Figure 5: Line passing through segment
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">s1</span><span class="op">@</span><span class="va">midpoint</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 0</span></span>
 <span><span class="co">#&gt; @ y: num 1</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
-<span><span class="co">#&gt;              length, r, theta, style, tibble, xy, geom, label,</span></span>
-<span><span class="co">#&gt;              aesthetics</span></span></code></pre></div>
+<span><span class="co">#&gt;              bounding_box, length, r, theta, style, tibble, xy,</span></span>
+<span><span class="co">#&gt;              geom, label, aesthetics</span></span></code></pre></div>
 </div>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb17"><pre class="downlit sourceCode r">
@@ -333,12 +334,12 @@ Figure 6: Midpoint of a segment
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">s1</span><span class="op">@</span><span class="va">midpoint</span><span class="op">(</span>position <span class="op">=</span> <span class="fl">.25</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num -1.5</span></span>
 <span><span class="co">#&gt; @ y: num 0</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
-<span><span class="co">#&gt;              length, r, theta, style, tibble, xy, geom, label,</span></span>
-<span><span class="co">#&gt;              aesthetics</span></span></code></pre></div>
+<span><span class="co">#&gt;              bounding_box, length, r, theta, style, tibble, xy,</span></span>
+<span><span class="co">#&gt;              geom, label, aesthetics</span></span></code></pre></div>
 </div>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">
@@ -407,8 +408,8 @@ Figure 9: Selecting a segment’s endpoints via the <code>midpoint</code> prope
 <div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/segment.html">segment</a></span><span class="op">(</span><span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>, <span class="op">-</span><span class="fl">2</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">2</span>,  <span class="fl">4</span><span class="op">)</span>, </span>
-<span>                <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>,  <span class="fl">1</span>, <span class="op">-</span><span class="fl">2</span>, <span class="fl">3</span>, <span class="op">-</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/ob_segment.html">ob_segment</a></span><span class="op">(</span><span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>, <span class="op">-</span><span class="fl">2</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fl">2</span>,  <span class="fl">4</span><span class="op">)</span>, </span>
+<span>                <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>,  <span class="fl">1</span>, <span class="op">-</span><span class="fl">2</span>, <span class="fl">3</span>, <span class="op">-</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
 <div class="cell-output-display">
 <div id="fig-chain" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-chain-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -531,7 +532,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>

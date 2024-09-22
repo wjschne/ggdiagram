@@ -149,3 +149,11 @@ method(str, class_aesthetics_list) <- function(
                  additional = additional)
 }
 
+method(str, class_shape_list) <- function(
+    object,
+    nest.lev = 0,
+    additional = TRUE,
+    omit = "") {
+  cat("<class_shape_list>\n")
+  lapply(S7_data(object), str, nest.lev = nest.lev, additional = additional)
+}

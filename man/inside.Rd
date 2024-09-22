@@ -2,7 +2,7 @@
 % Please edit documentation in R/inside.R
 \name{inside}
 \alias{inside}
-\title{is a point inside a shape ?}
+\title{is an ob_point inside a shape ?}
 \usage{
 inside(x, y)
 }
@@ -12,5 +12,5 @@ inside(x, y)
 \item{y}{object}
 }
 \description{
-is a point inside a shape ?
+is an ob_point inside a shape ?
 }

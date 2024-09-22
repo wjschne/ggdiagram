@@ -7,7 +7,7 @@
 projection(p, object, ...)
 }
 \arguments{
-\item{p}{point}
+\item{p}{ob_point}
 
 \item{object}{object (e.g., line or segment)}
 

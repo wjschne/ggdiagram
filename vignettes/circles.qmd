@@ -104,9 +104,9 @@ $$
 
 ```{r}
 #| label: circle
-p <- point(0,0)
+p <- ob_point(0,0)
 r <- 3
-c1 <-  circle(center = p, radius = 3)
+c1 <-  ob_circle(center = p, radius = 3)
 c1
 ```
 
@@ -117,11 +117,11 @@ c1
 bp +
   c1 +
   c1@center@label(vjust = 1.2, plot_point = T) +
-  segment(
+  ob_segment(
     c1@center,
     c1@point_at(0),
     color = my_colors[1],
-    label = label(paste0("*r* = ", c1@radius), angle = 0, vjust = 0)
+    label = ob_label(paste0("*r* = ", c1@radius), angle = 0, vjust = 0)
   )
 
 ```
@@ -145,8 +145,8 @@ bp +
   c1 +
   {p45 <- c1@point_at(deg)} +
   p45@label(hjust = 0, vjust = 0) +
-  segment(c1@center, p45) +
-  arc(radius = 1, start = degree(0), end = deg, label = deg)
+  ob_segment(c1@center, p45) +
+  ob_arc(radius = 1, start = degree(0), end = deg, label = deg)
 ```
 
 
@@ -160,13 +160,13 @@ The `place` function places an object at a specified direction and distance from
 #| label: fig-place
 #| fig-cap: Place Circle B one unit to the right of Circle A
 bp + 
-  {A <- circle(
-    center = point(-2, 0), 
+  {A <- ob_circle(
+    center = ob_point(-2, 0), 
     radius = 1, 
-    label = label("A", size = 30))} + 
+    label = ob_label("A", size = 30))} + 
   place(
-    circle(radius = 1.5,
-           label = label("B", size = 30)),
+    ob_circle(radius = 1.5,
+           label = ob_label("B", size = 30)),
     from = A,
     where = "right",
     sep = 1)
@@ -182,8 +182,8 @@ Multiple circles can be created at once with named directions:
 #| label: fig-multplace
 #| fig-cap: Place mutliple circles using named directions
 bp + 
-  {c3 <- circle(point(0, 0), radius = 1)} + 
-  place(circle(radius = .5), 
+  {c3 <- ob_circle(ob_point(0, 0), radius = 1)} + 
+  place(ob_circle(radius = .5), 
         from = c3, 
         where = c("northwest", 
                   "northeast", 
@@ -199,7 +199,7 @@ Or with numbers (degrees):
 #| fig-cap: Place mutliple circles using degrees
 bp + 
   c3 + 
-  place(circle(radius = .5), 
+  place(ob_circle(radius = .5), 
         from = c3, 
         where = c(0, 30, -30), 
         sep = 1)
@@ -211,12 +211,12 @@ With styles:
 #| label: fig-style
 #| fig-cap: Place mutliple circles with styling
 bp +
-  {c4 <- circle(
+  {c4 <- ob_circle(
       radius = 1,
       color = NA,
       fill = "gray35")} +
   place(
-    circle(
+    ob_circle(
       color = NA,
       fill = class_color(viridis::viridis(
         n = 6, 
@@ -236,15 +236,15 @@ This works the same as placing circles next to each other. Here we create a poin
 #| label: fig-multimulti
 #| fig-cap: Place circles around a point, and points around each circle
 bp + 
-  {p1 <- point(0,0)} +
-  {c6 <- place(x = circle(radius = .5, 
+  {p1 <- ob_point(0,0)} +
+  {c6 <- place(x = ob_circle(radius = .5, 
                           fill = viridis::viridis(6), 
                           color = NA), 
         from = p1, 
         where = degree(seq(0,300,60)), 
         sep = 2)} +
   purrr::map(as.list(c6), 
-             \(x) point(color = x@fill) |> 
+             \(x) ob_point(color = x@fill) |> 
                place(from = x, 
                      where = degree(seq(0, 330, 30)), 
                      sep = .5) |> 
@@ -260,8 +260,8 @@ bp +
 #| label: fig-linecircle
 #| fig-cap: Placing a line one unit northeast of a circle
 bp +
-  {c7 <- circle()} +
-  place(line(), c7, where = degree(45), sep = 1)
+  {c7 <- ob_circle()} +
+  place(ob_line(), c7, where = degree(45), sep = 1)
 ```
 
 
@@ -273,8 +273,8 @@ Let's make two circles and draw an arrow path between them
 #| label: fig-connectcircles
 #| fig-cap: Connect two circles
 bp + 
-  {c1 <- circle(point(-2, 2), radius = 1)} + 
-  {c2 <- circle(point(1.5,-1.5), radius = 1.5)} +
+  {c1 <- ob_circle(ob_point(-2, 2), radius = 1)} + 
+  {c2 <- ob_circle(ob_point(1.5,-1.5), radius = 1.5)} +
   connect(c1, c2)
 ```
 
@@ -284,24 +284,24 @@ That is fine, but we often need labels and styling to make scientific diagrams. 
 #| label: fig-connectcirclesstyles
 #| fig-cap: Connect two circles with labels and styles
 bp +
-  {cthis <- circle(
-    point(-2, 2),
+  {cthis <- ob_circle(
+    ob_point(-2, 2),
     radius = 1,
     fill = my_colors[1],
     color = NA,
-    label = label(
+    label = ob_label(
       "This",
       color = "white",
       fill = NA,
       size = 35
     )
   )} + 
-  {cthat <- circle(
-    point(1.5, -1.5),
+  {cthat <- ob_circle(
+    ob_point(1.5, -1.5),
     radius = 1.5,
     fill = my_colors[2],
     color = NA,
-    label = label(
+    label = ob_label(
       "That",
       color = "white",
       fill = NA,
@@ -310,7 +310,7 @@ bp +
   )} +
   connect(cthis, cthat, 
        resect = 2, 
-       label = label("Causes", size = 20, vjust = 0),
+       label = ob_label("Causes", size = 20, vjust = 0),
        color = "black")
 ```
 
@@ -321,9 +321,9 @@ bp +
 #| fig-cap: Connect a circle to a line and a line to a circle
 bp + 
   c1 +
-  {l1 <- line(slope = 2, intercept = 0)} +
+  {l1 <- ob_line(slope = 2, intercept = 0)} +
   connect(c1, l1) +
-  {c2 <- circle(point(2, -2))} + 
+  {c2 <- ob_circle(ob_point(2, -2))} + 
   connect(l1, c2)
 ```
 

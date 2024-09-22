@@ -24,6 +24,10 @@ S7::set_props
 S7::props
 
 
+# internal states ----
+the <- new.env(parent = emptyenv())
+the$arrow_head <- arrowheadr::arrow_head_deltoid(n = 101, d = 2.3)
+
 # classes ----
 #' class_aesthetics_list
 #'
@@ -136,6 +140,7 @@ class_arrowhead <- new_class(
   }
 )
 
+class_shape_list <- new_class("class_shape_list", class_list)
 
 has_style <- new_class(name = "has_style", abstract = TRUE)
 method(print, has_style) <- function(x, ...) {
@@ -152,12 +157,8 @@ shape <- new_class(name = "shape",
 xy <- new_class(name = "xy",
                 parent = shape,
                 abstract = TRUE)
-class_shape_list <- new_class("class_shape_list", class_list)
-c_gg <- function(...) {
-  sl <- rlang::list2(...)
-  sl <- Filter(f = \(s) S7_inherits(s), sl)
-  class_shape_list(sl)
-}
+
+
 
 
 
@@ -229,9 +230,9 @@ shape_array <- new_generic(name = "make_array", dispatch_args = "x", fun = funct
 #' @param x list of objects to bind
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @examples
-#' bind(c(point(1,2), point(3,4)))
-#' bind(c(circle(point(0,0), radius = 1),
-#'        circle(point(1,1), radius = 2)))
+#' bind(c(ob_point(1,2), ob_point(3,4)))
+#' bind(c(ob_circle(ob_point(0,0), radius = 1),
+#'        ob_circle(ob_point(1,1), radius = 2)))
 #' @export
 bind <- new_generic(name = "bind", dispatch_args = "x")
 
@@ -239,27 +240,60 @@ method(bind, class_list) <- function(x, ...) {
   .f <- S7_class(x[[1]])@name
   allsame <- allsameclass(x, .f)
   if (length(allsame) > 0) stop(allsame)
-  d <- get_non_empty_list(dplyr::bind_rows(purrr::map(x, \(o) o@tibble)))
+
+    d <- get_non_empty_list(dplyr::bind_rows(purrr::map(x, \(o) {
+      if (S7_inherits(o, ob_style)) {
+        get_tibble(o)
+      } else {
+        o@tibble
+      }
+
+    })))
+
+
   .fn <- switch(.f,
-                arc = arc,
-                bzcurve = bzcurve,
-                circle = circle,
-                ellipse = ellipse,
-                label = label,
-                line = line,
-                point = point,
-                rectangle = rectangle,
-                segment = segment,
-                style = style,
-                polar = point)
+                ob_arc = ob_arc,
+                ob_bezier = ob_bezier,
+                ob_circle = ob_circle,
+                ob_ellipse = ob_ellipse,
+                ob_label = ob_label,
+                ob_line = ob_line,
+                ob_point = ob_point,
+                ob_rectangle = ob_rectangle,
+                ob_segment = ob_segment,
+                ob_style = ob_style,
+                ob_polar = ob_point)
   o <- rlang::inject(.fn(!!!d))
   dots <- rlang::list2(...)
   rlang::inject(S7::set_props(o, !!!dots))
 }
 
 
+method(bind, class_shape_list) <- function(x, ...) {
+  .f <- lapply(x, S7::S7_class) %>% unique()
+
+  csl <- lapply(.f, \(.ff) {
+    Filter(f = \(xx){
+      S7_inherits(xx, .ff)
+    } ,x = S7_data(x)) |>
+      bind()
+  })
+
+  if (length(csl) > 1) {
+    class_shape_list(csl)
+
+  } else {
+    csl[[1]]
+
+  }
+}
+
+
+
 ## str----
 str <- new_external_generic(package = "utils", name = "str", dispatch_args = "object")
+
+
 
 ## plus----
 method(`+`, list(class_any, class_any)) <- function(e1, e2) {
@@ -285,12 +319,6 @@ get_tibble <- new_generic("get_tibble", "x", fun = function(x) {S7::S7_dispatch(
 method(get_tibble, class_list) <- function(x) {
   purrr::map_df(S7_data(x), get_tibble)
 }
-
-#' Get points for making points
-#'
-#' @param x object
-#' @keywords internal
-get_points <- new_generic("get_points", "x")
 
 # Resect ----
 #' resect
@@ -322,9 +350,9 @@ method(get_tibble_defaults, class_any) <- function(x) {
 #' @param y nudge up and down
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @examples
-#' circle() |> nudge(x = 2)
+#' ob_circle() |> nudge(x = 2)
 #' # Alternative to nudge:
-#' circle() + point(2, 0)
+#' ob_circle() + ob_point(2, 0)
 #' @export
 nudge <- new_generic("nudge", c("object", "x", "y"))
 
@@ -334,6 +362,29 @@ as_arrow <- new_generic("as_arrow", c("object"))
 class_numeric_or_character <- new_union(class_numeric, class_character)
 class_numeric_or_unit <- new_union(class_numeric, class_unit)
 
+
+
+#' Make a variant of a function with alternate defaults
+#'
+#' Makes a copy of a function with new defaults. Similar to `purrr::partial` except that arguments with new defaults still accept input.
+#'
+#' @param .f function
+#' @param ... new defaults
+#'
+#' @return function
+#' @export
+#'
+#' @examples
+#' squircle <- redefault(ob_ellipse, m1 = 4)
+#' squircle(a = 3)
+redefault <- function(.f, ...) {
+  # adapted from diversitree::set.defaults
+  new_defs <- rlang::list2(...)
+  att <- attributes(.f)
+  formals(.f)[names(new_defs)] <- new_defs
+  attributes(.f) <- att[names(att) != "srcref"]
+  .f
+}
 
 
 # helpers ----
@@ -378,7 +429,7 @@ cardinalpoint <- function(x) {
 
 #' @keywords internal
 allsameclass <- function(l, classname) {
-  classname[classname == "polar"] <- "point"
+  classname[classname == "ob_polar"] <- "ob_point"
   allsame <- all(sapply(lapply(l, class), function(x)
     classname %in% x))
   if (!allsame) {
@@ -487,15 +538,15 @@ shape_array_helper <- function(x, k = 2, sep = 1, where = "east", anchor = "cent
 
   l <- character(0)
 
-  if (S7_inherits(x@label, label)) {
+  if (S7_inherits(x@label, ob_label)) {
     if (x@label@length == 1) {
-      l <- label(subscript(x@label@label, seq(k)),
+      l <- ob_label(subscript(x@label@label, seq(k)),
                  style = x@style,
                  p = p_center)
     }
 
     if (x@label@length == k) {
-      l <- label(x@label@label,
+      l <- ob_label(x@label@label,
                  style = x@style,
                  p = p_center)
     }
@@ -506,8 +557,8 @@ shape_array_helper <- function(x, k = 2, sep = 1, where = "east", anchor = "cent
       dots$label <- l
     }
   } else {
-    if (S7_inherits(dots$label, label)) {
-      dots$label <- label(p = p_center,
+    if (S7_inherits(dots$label, ob_label)) {
+      dots$label <- ob_label(p = p_center,
                           label = dots$label@label,
                           style = dots$label@style)
     }
@@ -563,7 +614,8 @@ superscript <- function(x, superscript = 2) {
 #' @param max_digits maximum rounding digits
 #' @param remove_leading_zero remove leading zero
 #' @param round_zero_one round 0 and 1
-#'
+#' @param phantom_text invisible text inserted on the right
+#' @param phantom_color color of phantom text
 #' @return a character vector
 #' @export
 #' @examples
@@ -573,7 +625,9 @@ round_probability <- function(p,
                               digits = NULL,
                               max_digits = NULL,
                               remove_leading_zero = TRUE,
-                              round_zero_one = TRUE) {
+                              round_zero_one = TRUE,
+                              phantom_text = NULL,
+                              phantom_color = NULL) {
   if (is.null(digits)) {
     l <- scales::number(p, accuracy = accuracy)
   }
@@ -582,12 +636,15 @@ round_probability <- function(p,
     pgt99 <- p > 0.99
     sig_digits[pgt99] <- abs(ceiling(log10(1 - p[pgt99])) - digits + 1)
 
+
     sig_digits[ceiling(log10(p)) == log10(p) &
                  (-log10(p) >= digits)] <-
       sig_digits[ceiling(log10(p)) == log10(p) &
                    (-log10(p) >= digits)] - 1
 
+
     sig_digits[is.infinite(sig_digits)] <- 0
+
 
     l <- purrr::map2_chr(p, sig_digits,
                          formatC,
@@ -613,10 +670,12 @@ round_probability <- function(p,
         paste0(rep("0", max_digits),
                collapse = ""))
 
+
       l[round(p, digits = max_digits) == 1] <- paste0(
         "1.",
         paste0(rep("0", max_digits),
                collapse = ""))
+
 
       l[round(p, digits = max_digits) == -1] <- paste0(
         "-1.",
@@ -627,6 +686,21 @@ round_probability <- function(p,
   l <- sub(pattern = "-",
            replacement = "\u2212",
            x = l)
+  if (!is.null(phantom_text)) {
+    phantom_text <- paste0(
+      ifelse(p < 0, "\u2212", ""),
+      phantom_text)
+    if (is.null(phantom_color)) phantom_color <- "white"
+    l <- paste0(
+      l,
+      "<span style='color: ",
+      phantom_color,
+      "'>",
+      phantom_text,
+      "</span>")
+  }
+
+
   Encoding(l) <- "UTF-8"
   dim(l) <- dim(p)
   l
@@ -649,69 +723,69 @@ prop_integer_coerce <- function(name) {
   )
 }
 
-prop_props <- list(point = list(
-  required = c("x", "y"),
-  style = c("alpha", "color", "fill", "shape", "size", "stroke")
-),
-label = list(
-  required = c("p", "label"),
-  style = c(
-    "alpha",
-    "color",
-    "angle",
-    "family",
-    "fill",
-    "fontface",
-    "hjust",
-    "label.color",
-    "label.margin",
-    "label.padding",
-    "label.r",
-    "label.size",
-    "lineheight",
-    "nudge_x",
-    "nudge_y",
-    "polar_just",
-    "size",
-    "text.color",
-    "vjust"
-  )
-))
-
-get_prop_length <- function(prop) {
-  if (S7_inherits(prop, has_style)) {
-    get_shape_length(prop)
-  } else {
-    length(prop)
-  }
-}
-
-reclass <- c(polar = "point",
-             point = "point",
-             label = "label")
-
-get_prop_n <- function(object) {
-  check_is_S7(object)
-  object_class <- S7_class(object)@name
-  object_class <- reclass[object_class]
-  required <- prop_props[[object_class]][["required"]]
-  required_ns <- `names<-`(
-    purrr::map_int(required,
-                   \(pr) get_prop_length(prop(object, pr))),
-    required)
-  styles <- prop_props[[object_class]][["style"]]
-  styles_ns <- `names<-`(
-    purrr::map_int(styles,
-                   \(pr) get_prop_length(prop(object, pr))),
-    styles)
-
-  c(required_ns, styles_ns)
-
-}
-
-get_shape_length <- function(object) {
-  max(get_prop_n(object))
-}
+# prop_props <- list(point = list(
+#   required = c("x", "y"),
+#   style = c("alpha", "color", "fill", "shape", "size", "stroke")
+# ),
+# label = list(
+#   required = c("p", "label"),
+#   style = c(
+#     "alpha",
+#     "color",
+#     "angle",
+#     "family",
+#     "fill",
+#     "fontface",
+#     "hjust",
+#     "label.color",
+#     "label.margin",
+#     "label.padding",
+#     "label.r",
+#     "label.size",
+#     "lineheight",
+#     "nudge_x",
+#     "nudge_y",
+#     "polar_just",
+#     "size",
+#     "text.color",
+#     "vjust"
+#   )
+# ))
+#
+# get_prop_length <- function(prop) {
+#   if (S7_inherits(prop, has_style)) {
+#     get_shape_length(prop)
+#   } else {
+#     length(prop)
+#   }
+# }
+#
+# reclass <- c(polar = "point",
+#              point = "point",
+#              label = "label")
+#
+# get_prop_n <- function(object) {
+#   check_is_S7(object)
+#   object_class <- S7_class(object)@name
+#   object_class <- reclass[object_class]
+#   required <- prop_props[[object_class]][["required"]]
+#   required_ns <- `names<-`(
+#     purrr::map_int(required,
+#                    \(pr) get_prop_length(prop(object, pr))),
+#     required)
+#   styles <- prop_props[[object_class]][["style"]]
+#   styles_ns <- `names<-`(
+#     purrr::map_int(styles,
+#                    \(pr) get_prop_length(prop(object, pr))),
+#     styles)
+#
+#   c(required_ns, styles_ns)
+#
+# }
+#
+# get_shape_length <- function(object) {
+#   max(get_prop_n(object))
+# }
 
 .simpleCap <- function(x) {
   s <- strsplit(x, " ")[[1]]
@@ -757,6 +831,8 @@ check_inconsistent <- function(object) {
 
 }
 
+
+
 # as.geom ----
 #' as.geom function
 #'
@@ -770,7 +846,7 @@ check_inconsistent <- function(object) {
 #' @export
 #' @examples
 #' library(ggplot2)
-#' c1 <- circle(radius = 3)
+#' c1 <- ob_circle(radius = 3)
 #' ggplot() +
 #'   as.geom(c1, fill = "black") +
 #'   coord_equal()
@@ -785,10 +861,10 @@ method(`+`, list(class_ggplot, has_style)) <- function(e1, e2) {
   e1 + as.geom(e2)
 }
 
-
 method(`+`, list(class_ggplot, class_shape_list)) <- function(e1, e2) {
   e1 + as.geom(e2)
 }
+
 
 
 #' @keywords internal
@@ -800,7 +876,7 @@ make_geom_helper <- function(d = NULL,
   omit_names <- unique(
     c(aesthetics@omit_names,
       setdiff(
-        names(style@properties),
+        names(ob_style@properties),
         unique(c(
           aesthetics@mappable_bare,
           aesthetics@required_aes,
@@ -932,7 +1008,7 @@ equation <- new_generic(
 # Projection ----
 #' Find projection of a point on an object (e.g., line or segment)
 #'
-#' @param p point
+#' @param p ob_point
 #' @param object object (e.g., line or segment)
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object
 #' @export
@@ -979,15 +1055,15 @@ label_object <- new_generic("label_object", "object")
 
 #' Arrow connect one shape to another
 #'
-#' @param x first shape (e.g., point, circle, ellipse, rectangle)
-#' @param y second shape
+#' @param x first shape object
+#' @param y second shape object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> Arguments passed to style
 #' @export
 connect <- new_generic("connect", c("x", "y"))
 
 #' Place an object a specified distance from another object
 #'
-#' @param x shape (e.g., point, circle, ellipse, rectangle)
+#' @param x shape object
 #' @param from shape that x is placed in relation to
 #' @param where named direction, angle, or number (degrees)
 #' @param sep separation distance

@@ -1,52 +1,52 @@
 # distance----
 #' Calculate distance between 2 points
 #'
-#' @param x a point, line, segment, or circle
-#' @param y a point, line, or circle
+#' @param x a point, line, segment, or circle object
+#' @param y a point, line, or circle object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> Not used
 #' @rdname distance
 #' @return numeric
 #' @examples
 #' # Distance between two objects
-#' p1 <- point(0, 0)
-#' p2 <- point(3, 4)
+#' p1 <- ob_point(0, 0)
+#' p2 <- ob_point(3, 4)
 #' distance(p1, p2)
 #'
 #' # Distance between the endpoints of a segment
-#' s1 <- segment(p1, p2)
+#' s1 <- ob_segment(p1, p2)
 #' distance(s1)
 #'
 #' # Distance between a point and a line
-#' l1 <- line(slope = 0, intercept = 1)
+#' l1 <- ob_line(slope = 0, intercept = 1)
 #' distance(p1, l1)
 #'
 #' # Shortest distance between the edges of 2 circles
-#' c1 <- circle(p1, radius = 1)
-#' c2 <- circle(p2, radius = 2)
+#' c1 <- ob_circle(p1, radius = 1)
+#' c2 <- ob_circle(p2, radius = 2)
 #' distance(c1, c2)
 #' @export
 distance <- new_generic(name = "distance", c("x", "y"))
-method(distance, list(point, point)) <- function(x,y) {
+method(distance, list(ob_point, ob_point)) <- function(x,y) {
   d <- (y - x)
   d@r
 }
-method(distance, list(point, class_missing)) <- function(x,y) {
+method(distance, list(ob_point, class_missing)) <- function(x,y) {
   x@r
 }
-method(distance, list(point, line)) <- function(x,y) {
+method(distance, list(ob_point, ob_line)) <- function(x,y) {
   abs(y@a * x@x + y@b * x@y + y@c) / sqrt(y@a * y@a + y@b * y@b)
 }
-method(distance, list(line, point)) <- function(x,y) {
+method(distance, list(ob_line, ob_point)) <- function(x,y) {
   distance(y, x)
 }
-method(distance, list(segment, class_missing)) <- function(x,y) {
+method(distance, list(ob_segment, class_missing)) <- function(x,y) {
   distance(x@p1, x@p2)
 }
-method(distance, list(circle, circle)) <- function(x,y) {
+method(distance, list(ob_circle, ob_circle)) <- function(x,y) {
   d <- (y@center - x@center)
 
     if (x@radius + y@radius > distance(d)) {
-      d <- point(0,0)
+      d <- ob_point(0,0)
     } else {
       px <- x@point_at(d@theta)
       py <- x@point_at(d@theta + pi)
@@ -56,7 +56,7 @@ method(distance, list(circle, circle)) <- function(x,y) {
 
   d@r
 }
-method(distance, list(point, circle)) <- function(x,y) {
+method(distance, list(ob_point, ob_circle)) <- function(x,y) {
   d <- y@center - x
 
     py <- y@point_at(radian(pi) + d@theta)
@@ -64,6 +64,6 @@ method(distance, list(point, circle)) <- function(x,y) {
 
   d@r
 }
-method(distance, list(circle, point)) <- function(x,y) {
+method(distance, list(ob_circle, ob_point)) <- function(x,y) {
   distance(y, x)
 }

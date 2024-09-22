@@ -4,6 +4,8 @@
 #' @slot transparentize function to return the color with a new transparency (i.e., alpha)
 #' @slot lighten function to return a lighter color
 #' @slot darken function to return a darker color
+#' @param saturation get or set the luminance of a color
+#' @param luminance get or set the luminance of a color
 #' @export
 #' @examples
 #' mycolor <- class_color("blue")
@@ -31,6 +33,27 @@ class_color <- new_class(
       \(amount = 0.2) {
         class_color(tinter::darken(amount = amount, x = S7_data(self)))
       }
+    }),
+    saturation = new_property(class_integer, getter = function(self) {
+      farver::get_channel(c(self), channel = "s", space = "hsv")
+
+    }, setter = function(self, value) {
+     S7_data(self) <- farver::set_channel(c(self), value, channel = "s", space = "hsv")
+     self
+    }),
+    hue = new_property(class_integer, getter = function(self) {
+      farver::get_channel(c(self), channel = "h", space = "hsv")
+
+    }, setter = function(self, value) {
+      S7_data(self) <- farver::set_channel(c(self), value, channel = "h", space = "hsv")
+      self
+    }),
+    brightness = new_property(class_integer, getter = function(self) {
+      farver::get_channel(c(self), channel = "v", space = "hsv")
+
+    }, setter = function(self, value) {
+      S7_data(self) <- farver::set_channel(c(self), value, channel = "v", space = "hsv")
+      self
     })
   ), constructor = function(color = class_missing) {
     decoded <- farver::decode_colour(color, alpha = TRUE)

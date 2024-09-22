@@ -60,10 +60,10 @@ arc_props <- list(
   # primary ----
   primary = list(
     radius = new_property(class = class_numeric, default = 1),
-    start = new_property(class = class_angle_or_numeric, default = 0),
-    end = new_property(class = class_angle_or_numeric, default = 0)
+    start = new_property(class = ob_angle_or_numeric, default = 0),
+    end = new_property(class = ob_angle_or_numeric, default = 0)
   ),
-  styles = style@properties[arc_styles],
+  styles = ob_style@properties[arc_styles],
   extra = list(
     wedge = new_property(class = class_logical)
   ),
@@ -106,12 +106,12 @@ arc_props <- list(
                          ymin = min(ymin),
                          ymax = max(ymax))
 
-      rectangle(southwest = point(d_rect$xmin, d_rect$ymin),
-                northeast = point(d_rect$xmax, d_rect$ymax))
+      ob_rectangle(southwest = ob_point(d_rect$xmin, d_rect$ymin),
+                northeast = ob_point(d_rect$xmax, d_rect$ymax))
 
     }),
     chord = new_property(getter = function(self) {
-      segment(self@midpoint(0), self@midpoint(1), style = self@style)
+      ob_segment(self@midpoint(0), self@midpoint(1), style = self@style)
     }),
     length = new_property(
       getter = function(self) {
@@ -125,10 +125,10 @@ arc_props <- list(
           object = self
         ) |>
           `names<-`(arc_styles)
-        rlang::inject(style(!!!get_non_empty_list(pr)))
+        rlang::inject(ob_style(!!!get_non_empty_list(pr)))
       },
       setter = function(self, value) {
-        point(self@x, self@y, style = self@style + value)
+        ob_point(self@x, self@y, style = self@style + value)
       }
     ),
     theta = new_property(getter = function(self) {
@@ -202,9 +202,9 @@ arc_props <- list(
         polar_just_distance = 1.4,
         ...) {
         mp <- midpoint(self, position = position, ...)
-        label(p = mp,
+        ob_label(p = mp,
               label = label,
-              polar_just = polar(theta = polar_just_angle,
+              polar_just = ob_polar(theta = polar_just_angle,
                                  r = polar_just_distance), ...)
       }
     }),
@@ -214,7 +214,7 @@ arc_props <- list(
     point_at = new_property(
       class_function,
       getter = function(self) {
-        \(theta = degree(0), ...) polar(theta = theta, r = self@radius, style = self@style, ...)
+        \(theta = degree(0), ...) ob_polar(theta = theta, r = self@radius, style = self@style, ...)
       }
     ),
     tangent_at = new_property(
@@ -225,7 +225,7 @@ arc_props <- list(
           y0 <- self@center@y
           x1 <- cos(theta) * self@radius + self@center@x
           y1 <- cos(theta) * self@radius + self@center@y
-          line(
+          ob_line(
             a = x1 - x0,
             b = y1 - y0,
             c = x0^2 - (x1 * x0) + y0^2 - (y1 * y0) - self@radius^2,
@@ -283,10 +283,10 @@ arc_props <- list(
 )
 
 
-# arc----
+# ob_arc----
 
-#' arc class
-#' @param center point at center of the arc (default = point(0,0))
+#' ob_arc class
+#' @param center point at center of the arc (default = ob_point(0,0))
 #' @param radius distance between center and edge arc (default = 1)
 #' @param start start angle (default = 0 degrees)
 #' @param end end angle (default = 0 degrees)
@@ -297,7 +297,7 @@ arc_props <- list(
 #' @param wedge Draw a wedge instead of an arc (default = `FALSE`)
 #' @param style a style object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object
-#' @inherit style params
+#' @inherit ob_style params
 #' @slot aesthetics A list of information about the arc's aesthetic properties
 #' @slot angle_at A function that finds the angle of the specified point in relation to the arc's center
 #' @slot geom A function that converts the object to a geom. Any additional parameters are passed to `ggarrow::geom_arrow`.
@@ -310,10 +310,10 @@ arc_props <- list(
 #' library(ggplot2)
 #'
 #' # center point
-#' p_center <- point(0,0)
+#' p_center <- ob_point(0,0)
 #'
 #' # 90-degree arc
-#' a_90 <- arc(
+#' a_90 <- ob_arc(
 #'  center = p_center,
 #'  radius = 6,
 #'  start = degree(0),
@@ -328,8 +328,8 @@ arc_props <- list(
 #'  p_center +
 #'  a_90
 #' @export
-arc <- new_class(
-  name = "arc",
+ob_arc <- new_class(
+  name = "ob_arc",
   parent = centerpoint,
   properties = rlang::inject(
     list(
@@ -341,7 +341,7 @@ arc <- new_class(
       !!!arc_props$info
     )
   ),
-  constructor = function(center = point(0,0),
+  constructor = function(center = ob_point(0,0),
                          radius = 1,
                          start = 0,
                          end = 0,
@@ -374,11 +374,11 @@ arc <- new_class(
                          y0 = class_missing,
                          ...) {
 
-    if (!S7_inherits(start, class_angle)) {
+    if (!S7_inherits(start, ob_angle)) {
       start <- degree(start)
     }
 
-    if (!S7_inherits(end, class_angle)) {
+    if (!S7_inherits(end, ob_angle)) {
       end <- degree(end)
     }
 
@@ -389,18 +389,18 @@ arc <- new_class(
       if (length(y0) == 0) {
         y0 <- 0
       }
-      center <- point(tibble::tibble(x = x0, y = y0))
+      center <- ob_point(tibble::tibble(x = x0, y = y0))
     }
 
 
 
 
-    if (S7_inherits(start_point, point)) {
-      c1 <- circle(radius = radius)
+    if (S7_inherits(start_point, ob_point)) {
+      c1 <- ob_circle(radius = radius)
       p1 <- c1@point_at(start)
       center <- start_point - p1
-    } else if (S7_inherits(end_point, point)) {
-      c1 <- circle(radius = radius)
+    } else if (S7_inherits(end_point, ob_point)) {
+      c1 <- ob_circle(radius = radius)
       p2 <- c1@point_at(end)
       center <- end_point - p2
     }
@@ -409,7 +409,7 @@ arc <- new_class(
 
 
     arc_style <- center@style + style +
-      style(
+      ob_style(
         alpha = alpha,
         arrow_head = arrow_head,
         arrow_fins = arrow_fins,
@@ -431,14 +431,14 @@ arc <- new_class(
         stroke_color = stroke_color,
         stroke_width = stroke_width
       ) +
-      style(...)
+      ob_style(...)
 
 
 
 
 
-    if (is.character(label) || S7_inherits(label, class_angle)) {
-      label <- label(label = label)
+    if (is.character(label) || S7_inherits(label, ob_angle)) {
+      label <- ob_label(label = label)
     }
 
 
@@ -458,14 +458,14 @@ arc <- new_class(
     label <- centerpoint_label(label,
                                center = center,
                                d = d,
-                               shape_name = "arc")
+                               shape_name = "ob_arc")
 
 
 
-    if (S7_inherits(label, ggdiagram::label)) {
+    if (S7_inherits(label, ob_label)) {
       if (all(label@p@x == 0) && all(label@p@y == 0)) {
         m <- start + ((end - start) * label@position)
-        label@p <- center + polar(theta = m, r = radius)
+        label@p <- center + ob_polar(theta = m, r = radius)
         if (all(length(label@hjust) == 0)) {
           label@hjust <- polar2just(m, 1.4, axis = "h")
         }
@@ -534,7 +534,7 @@ arc <- new_class(
 )
 
 
-method(str, arc) <- function(
+method(str, ob_arc) <- function(
   object,
   nest.lev = 0,
   additional = FALSE,
@@ -544,7 +544,7 @@ str_properties(object,
                    nest.lev = nest.lev)
 }
 
-method(as.geom, arc) <- function(x, ...) {
+method(as.geom, ob_arc) <- function(x, ...) {
 
   d <- get_tibble_defaults(x)
   if ("arrowhead_length" %in% colnames(d)) {
@@ -574,7 +574,7 @@ method(as.geom, arc) <- function(x, ...) {
   tidyr::unnest(xy) |>
   dplyr::select(-c(x0, y0, r, start, end, n))
 
-overrides <- get_non_empty_props(style(...))
+overrides <- get_non_empty_props(ob_style(...))
 
   if (all(x@wedge == TRUE)) {
     arc_aesthetics <- wedge_aesthetics
@@ -592,20 +592,20 @@ overrides <- get_non_empty_props(style(...))
     user_overrides = overrides,
     aesthetics = arc_aesthetics)
 
-  if (S7_inherits(x@label, label)) {
+  if (S7_inherits(x@label, ob_label)) {
     gl <- as.geom(x@label)
     gc <- list(gc, gl)
   }
   gc
 }
 
-method(get_tibble, arc) <- function(x) {
+method(get_tibble, ob_arc) <- function(x) {
   x@tibble
 }
 
 
-method(get_tibble_defaults, arc) <- function(x) {
-  sp <- style(
+method(get_tibble_defaults, ob_arc) <- function(x) {
+  sp <- ob_style(
     alpha = replace_na(as.double(ggarrow::GeomArrow$default_aes$alpha), 1),
     arrow_head = ggarrow::arrow_head_minimal(90),
     arrow_fins = ggarrow::arrow_fins_minimal(90),
@@ -625,18 +625,18 @@ method(get_tibble_defaults, arc) <- function(x) {
 
 method(
   midpoint,
-  list(arc, class_missing)) <- function(x,y, position = .5, ...) {
+  list(ob_arc, class_missing)) <- function(x,y, position = .5, ...) {
   m <- x@start@turn + (x@theta@turn * position)
-  x@center + polar(
+  x@center + ob_polar(
     theta = turn(m),
     r = x@radius,
-    style = x@style + style(...))
+    style = x@style + ob_style(...))
   }
 
-method(`[`, arc) <- function(x, y) {
+method(`[`, ob_arc) <- function(x, y) {
   d <- as.list(x@tibble[y,] |>
                  dplyr::rename(radius = r))
-  z <- rlang::inject(arc(!!!d))
+  z <- rlang::inject(ob_arc(!!!d))
   z@start <- x@start[y]
   z@end <- x@end[y]
   z@label <- x@label[y]
@@ -644,3 +644,100 @@ method(`[`, arc) <- function(x, y) {
   z
 }
 
+
+# method(variance, centerpoint) <- function(
+#     x,
+#     where = "north",
+#     theta = 50,
+#     bend = 0,
+#     label = NULL,
+#     looseness = 1,
+#     nudge = 0,
+#     arrow_head = arrowheadr::arrow_head_deltoid(),
+#     arrow_fins = arrowheadr::arrow_head_deltoid(),
+#     resect = 1,
+#     linewidth = .5,
+#     arrowhead_length = unit(10, "pt"),
+#     ...) {
+#   if (!S7_inherits(where, ob_angle)) where <- degree(where)
+#   if (!S7_inherits(theta, ob_angle)) theta <- degree(theta)
+#   if (!S7_inherits(bend, ob_angle)) bend <- degree(bend)
+#
+#
+#   angle_start <- where - (theta / 2)
+#   angle_end <- where + (theta / 2)
+#   p_start <- x@point_at(angle_start)
+#   p_end <- x@point_at(angle_end)
+#   p_midpoint <- midpoint(p_start, p_end)
+#
+#   tangent_start <- x@tangent_at(angle_start)
+#   tangent_end <- x@tangent_at(angle_end)
+#
+#   c_p <- tangent_start@a * tangent_end@b - tangent_end@a * tangent_start@b
+#   a_p <- (tangent_start@b * tangent_end@c - tangent_end@b * tangent_start@c)
+#   b_p <- (tangent_start@c * tangent_end@a - tangent_end@c * tangent_start@a)
+#   xx <- ifelse(c_p == 0, p_midpoint@x, a_p / c_p)
+#   yy <- ifelse(c_p == 0, p_midpoint@y, b_p / c_p)
+#
+#   p_center <- ob_point(xx, yy) + ob_polar(where, nudge)
+#   v_circle <- ob_circle(p_center,
+#                      radius = distance(p_start, p_center))
+#   v_start <- v_circle@angle_at(p_start)
+#   v_end <- v_circle@angle_at(p_end)
+#   v_end <- v_end + turn((c(v_end) < c(v_start)) * 1)
+#
+#   ob_arc(
+#     center = p_center,
+#     radius = v_circle@radius,
+#     end = v_end,
+#     start = v_start,
+#     resect = resect,
+#     arrow_head = arrow_head,
+#     arrow_fins = arrow_fins,
+#     arrowhead_length = arrowhead_length,
+#     linewidth = linewidth,
+#     label = label,
+#     ...
+#   )
+#
+#
+# }
+
+# circle_pie ----
+
+#' circle_pie
+#'
+#' pie wedges
+#' @param center center point of pie
+#' @param radius length of circle radius
+#' @param start angle at which pie wedges start
+#' @param proportion_list list of proportions
+#' @param color_list color of wedge borders
+#' @param fill_list color of wedge fills
+circle_pie <- new_class(
+  name = "circle_pie",
+  parent = centerpoint,
+  properties = list(
+    radius = class_numeric,
+    start = new_property(class = ob_angle_or_numeric, default = 0),
+    proportion_list = class_list,
+    color_list = class_list,
+    fill_list = class_list
+  ),
+  constructor = function(
+    center = ob_point(0,0),
+    radius = 1,
+    proportion_list = list(c(.5,.5)),
+    start = degree(0)) {
+    if (!S7_inherits(start, ob_angle)) start <- degree(start)
+
+    new_object(parent = centerpoint(center = center),
+               radius = radius,
+               start = start,
+               proportion_list = proportion_list,
+               color_list = color_list,
+               fill_list = fill_list
+               )
+
+  }
+                        )

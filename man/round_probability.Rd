@@ -10,7 +10,9 @@ round_probability(
   digits = NULL,
   max_digits = NULL,
   remove_leading_zero = TRUE,
-  round_zero_one = TRUE
+  round_zero_one = TRUE,
+  phantom_text = NULL,
+  phantom_color = NULL
 )
 }
 \arguments{
@@ -25,6 +27,10 @@ round_probability(
 \item{remove_leading_zero}{remove leading zero}
 
 \item{round_zero_one}{round 0 and 1}
+
+\item{phantom_text}{invisible text inserted on the right}
+
+\item{phantom_color}{color of phantom text}
 }
 \value{
 a character vector

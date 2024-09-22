@@ -7,8 +7,8 @@ ORCID
 Superellipses
 TikZ
 bezier
-bzcurve
-bzcurves
+ob_bezier
+ob_beziers
 cdot
 circ
 foci

@@ -1,4 +1,4 @@
-pgon_styles <- c(
+ob_polygon_styles <- c(
   "alpha",
   "color",
   "fill",
@@ -6,7 +6,7 @@ pgon_styles <- c(
   "linetype"
 )
 
-pgon_aesthetics <- class_aesthetics_list(
+ob_polygon_aesthetics <- class_aesthetics_list(
   geom = ggforce::geom_shape,
   mappable_bare = character(0),
   mappable_identity = c(
@@ -26,19 +26,19 @@ pgon_aesthetics <- class_aesthetics_list(
     "rule",
     "label"),
   inherit.aes = FALSE,
-  style = pgon_styles
+  style = ob_polygon_styles
 )
 
 
-pgon_props <- list(
+ob_polygon_props <- list(
   # primary ----
   primary = list(
     p = new_property(class = point_or_list, validator = function(value) {
       if ("list" %in% class(value)) {
-        allsameclass(value, "point")
+        allsameclass(value, "ob_point")
       }
 
-      if (S7_inherits(value, point)) value <- list(value)
+      if (S7_inherits(value, ob_point)) value <- list(value)
 
       chk_points <- purrr::imap_chr(value, \(x, idx) {
         if (x@length < 3) {
@@ -59,7 +59,7 @@ pgon_props <- list(
       if (length(value) > 1) stop("The radius property must be of length 1.")
     })
   ),
-  styles = style@properties[pgon_styles],
+  styles = ob_style@properties[ob_polygon_styles],
   # derived ----
   derived = list(
     bounding_box = new_property(getter = function(self) {
@@ -70,11 +70,11 @@ pgon_props <- list(
                          ymin = min(y),
                          ymax = max(y))
 
-      rectangle(southwest = point(d_rect$xmin, d_rect$ymin),
-                northeast = point(d_rect$xmax, d_rect$ymax))
+      ob_rectangle(southwest = ob_point(d_rect$xmin, d_rect$ymin),
+                northeast = ob_point(d_rect$xmax, d_rect$ymax))
 
     }),
-    centroid = new_property(point, getter = function(self) {
+    centroid = new_property(ob_point, getter = function(self) {
       d <- self@tibble
       gr <- dplyr::intersect(colnames(d), c("group", pt_styles))
       d <- dplyr::summarise(d, .by = dplyr::any_of(gr),
@@ -82,7 +82,7 @@ pgon_props <- list(
                        y = mean(y, na.rm = TRUE)) |>
         dplyr::select(-.data$group)
 
-      rlang::inject(point(!!!d))
+      rlang::inject(ob_point(!!!d))
     }),
     length = new_property(
       getter = function(self) {
@@ -94,20 +94,20 @@ pgon_props <- list(
     ),
     style = new_property(
       getter = function(self) {
-        pr <- purrr::map(pgon_styles,
+        pr <- purrr::map(ob_polygon_styles,
                          prop,
                          object = self
         ) |>
-          `names<-`(pgon_styles)
-        rlang::inject(style(!!!get_non_empty_list(pr)))
+          `names<-`(ob_polygon_styles)
+        rlang::inject(ob_style(!!!get_non_empty_list(pr)))
       },
       setter = function(self, value) {
-        point(self@x, self@y, style = self@style + value)
+        ob_point(self@x, self@y, style = self@style + value)
       }
     ),
     tibble = new_property(getter = function(self) {
       p <- self@p
-      if (S7_inherits(self@p, point)) p <- list(p)
+      if (S7_inherits(self@p, ob_point)) p <- list(p)
       d <- list(
         p = p,
         group = seq(1, self@length),
@@ -135,39 +135,39 @@ pgon_props <- list(
   # info ----
   info = list(aesthetics = new_property(
     getter = function(self) {
-      pgon_aesthetics
+      ob_polygon_aesthetics
     }
   ))
 )
 
 
-# pgon ----
+# ob_polygon ----
 
-#' The pgon (polygon) class
+#' The ob_polygon (polygon) class
 #'
-#' A polygon is specified with a point object that contains at least 3 points, the start and the end. Any number of intermediate points are possible. The pgon class could not be named 'polygon' because that function name is used in base R graphics.
+#' A polygon is specified with an obpoint that contains at least 3 points, the start and the end. Any number of intermediate points are possible.
 #'
-#' If you wish to specify multiple polygons, you must supply a list of point objects. When plotted, the pgon function uses the ggplot2::geom_polygon function to create the geom.
+#' If you wish to specify multiple polygons, you must supply a list of ob_points. When plotted, the ob_polygon function uses the ggplot2::geom_polygon function to create the geom.
 #' @export
-#' @param p point object or list of point objects
+#' @param p ob_point or list of ob_point objects
 #' @param label A character, angle, or label object
 #' @param radius A numeric or unit vector of length one,  specifying the corner radius
-#' @slot length The number of polygons in the pgon object
+#' @slot length The number of polygons in the ob_polygon object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @param style Gets and sets the styles associated with polygons
 #' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggplot2::geom_polygon`.
-#' @inherit style params
-pgon <- new_class(
-  name = "pgon",
+#' @inherit ob_style params
+ob_polygon <- new_class(
+  name = "ob_polygon",
   parent = has_style,
   properties = rlang::inject(
     list(
-      !!!pgon_props$primary,
-      !!!pgon_props$extra,
-      !!!pgon_props$styles,
-      !!!pgon_props$derived,
-      !!!pgon_props$funs,
-      !!!pgon_props$info
+      !!!ob_polygon_props$primary,
+      !!!ob_polygon_props$extra,
+      !!!ob_polygon_props$styles,
+      !!!ob_polygon_props$derived,
+      !!!ob_polygon_props$funs,
+      !!!ob_polygon_props$info
     )
   ),
   constructor = function(p = class_missing,
@@ -183,19 +183,19 @@ pgon <- new_class(
 
 
 
-    pgon_style <- style +
-      style(
+    ob_polygon_style <- style +
+      ob_style(
         alpha = alpha,
         color = color,
         fill = fill,
         linewidth = linewidth,
         linetype = linetype
       ) +
-      style(...)
+      ob_style(...)
 
-    non_empty_list <- get_non_empty_props(pgon_style)
+    non_empty_list <- get_non_empty_props(ob_polygon_style)
 
-    if (S7_inherits(p, point)) p <- list(p)
+    if (S7_inherits(p, ob_point)) p <- list(p)
 
     d <- tibble::tibble(
       p = p
@@ -222,10 +222,10 @@ pgon <- new_class(
                          x = mean(.data$x),
                          y = mean(.data$y)) |>
         dplyr::select(-.data$group) |>
-        point()
+        ob_point()
 
-      centroid@style <- pgon_style
-      if (S7_inherits(label, ggdiagram::label)) {
+      centroid@style <- ob_polygon_style
+      if (S7_inherits(label, ob_label)) {
         if (all(label@p@x == 0) && all(label@p@y == 0)) {
           label@p <- centroid
         }
@@ -233,7 +233,7 @@ pgon <- new_class(
           label@fill <- d[["fill"]] %||% fill
         }
       } else {
-        label <- label(label, centroid, fill = d[["fill"]] %||% fill)
+        label <- ob_label(label, centroid, fill = d[["fill"]] %||% fill)
       }
 
       }
@@ -251,7 +251,7 @@ pgon <- new_class(
   })
 
 
-method(str, pgon) <- function(
+method(str, ob_polygon) <- function(
     object,
     nest.lev = 0,
     additional = TRUE,
@@ -275,19 +275,19 @@ method(str, pgon) <- function(
 
 }
 
-method(print, pgon) <- function(x, ...) {
+method(print, ob_polygon) <- function(x, ...) {
   str(x, ...)
   invisible(x)
 }
 
-method(get_tibble, pgon) <- function(x) {
+method(get_tibble, ob_polygon) <- function(x) {
   x@tibble
 }
 
 
-method(as.geom, pgon) <- function(x, ...) {
+method(as.geom, ob_polygon) <- function(x, ...) {
   gp <- as.geom(super(x, has_style), ...)
-  if (S7_inherits(x@label, label)) {
+  if (S7_inherits(x@label, ob_label)) {
     gl <- as.geom(x@label)
     gp <- list(gp, gl)
   }
@@ -295,28 +295,28 @@ method(as.geom, pgon) <- function(x, ...) {
 }
 
 
-method(`[`, pgon) <- function(x, y) {
+method(`[`, ob_polygon) <- function(x, y) {
   d <- x@tibble[y,]
   dl <- d %>%
     dplyr::select(-.data$x, -.data$y, -.data$group) %>%
     unique() %>%
     as.list()
-  z <- rlang::inject(pgon(p = x@p[y], !!!dl))
+  z <- rlang::inject(ob_polygon(p = x@p[y], !!!dl))
   z@label <- x@label[y]
   z
 }
 
-method(connect, list(pgon, pgon)) <- function(x,y, ...) {
-  centroid_segment <- segment(x@centroid, y@centroid)
+method(connect, list(ob_polygon, ob_polygon)) <- function(x,y, ...) {
+  centroid_segment <- ob_segment(x@centroid, y@centroid)
   connect(intersection(x, centroid_segment), intersection(y, centroid_segment), ...)
 }
 
-method(connect, list(pgon, point)) <- function(x,y, ...) {
-  centroid_segment <- segment(x@centroid, y)
+method(connect, list(ob_polygon, ob_point)) <- function(x,y, ...) {
+  centroid_segment <- ob_segment(x@centroid, y)
   connect(intersection(x, centroid_segment), y, ...)
 }
 
-method(connect, list(point, pgon)) <- function(x,y, ...) {
-  centroid_segment <- segment(x, y@centroid)
+method(connect, list(ob_point, ob_polygon)) <- function(x,y, ...) {
+  centroid_segment <- ob_segment(x, y@centroid)
   connect(x, intersection(y, centroid_segment), ...)
 }

@@ -13,16 +13,16 @@ e1 \%|-\% e2
 e1 \%-|\% e2
 }
 \arguments{
-\item{e1}{first point}
+\item{e1}{first ob_point}
 
-\item{e2}{second point}
+\item{e2}{second ob_point}
 }
 \description{
 Find point perpendicular to 2 points
 }
 \examples{
-x <- point(0,0)
-y <- point(1,1)
+x <- ob_point(0,0)
+y <- ob_point(1,1)
 # Find point perpendicular to x and y going vertically first
 x \%|-\% y
 # Find point perpendicular to x and y going horizontally first

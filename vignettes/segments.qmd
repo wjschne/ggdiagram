@@ -74,9 +74,9 @@ A segment is a portion of a line between two points.
 
 ```{r}
 #| label: s1
-p1 <- point(-3,-1)
-p2 <- point(3,3)
-s1 <- segment(p1, p2)
+p1 <- ob_point(-3,-1)
+p2 <- ob_point(3,3)
+s1 <- ob_segment(p1, p2)
 ```
 
 ```{r}
@@ -101,7 +101,7 @@ Styles can be specified when the segment is created.
 
 ```{r}
 #| label: segcolor
-s2 <- segment(p1,p2, color = "green4")
+s2 <- ob_segment(p1,p2, color = "green4")
 bp + s2
 ```
 
@@ -186,9 +186,9 @@ s1@line@angle
 bp +
   s1@line |> set_props(color = "royalblue4") +
   s1@midpoint(position = c(0,1))@label(
-    polar_just = polar(s1@line@angle + degree(90), 1.5), 
+    polar_just = ob_polar(s1@line@angle + degree(90), 1.5), 
     plot_point = TRUE) +
-  label(c(equation(s1@line), 
+  ob_label(c(equation(s1@line), 
           paste0("Distance = ", round(s1@distance, 2))), 
         p = midpoint(s1), 
         vjust = c(-.2, 1.1), 
@@ -275,7 +275,7 @@ If a point object with multiple points is placed in the `p1` slot but the `p2` s
 #| label: fig-chain
 #| fig-cap: Chained segments
 bp + 
-  segment(point(c(-4, -2, -1, 2,  4), 
+  ob_segment(ob_point(c(-4, -2, -1, 2,  4), 
                 c(-2,  1, -2, 3, -3))) 
 ```
 

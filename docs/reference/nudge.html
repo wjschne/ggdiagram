@@ -20,14 +20,14 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/angles.html">Angles</a></li>
     <li><a class="dropdown-item" href="../articles/arcs.html">Arcs</a></li>
-    <li><a class="dropdown-item" href="../articles/bzcurves.html">Bezier Curves</a></li>
+    <li><a class="dropdown-item" href="../articles/bezier.html">Bézier Curves</a></li>
     <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
     <li><a class="dropdown-item" href="../articles/ellipses.html">Ellipses</a></li>
     <li><a class="dropdown-item" href="../articles/lines.html">Lines</a></li>
     <li><a class="dropdown-item" href="../articles/paths.html">Paths</a></li>
     <li><a class="dropdown-item" href="../articles/points.html">Points</a></li>
-    <li><a class="dropdown-item" href="../articles/polygons.html">Polygons (pgon)</a></li>
+    <li><a class="dropdown-item" href="../articles/polygons.html">Polygons</a></li>
     <li><a class="dropdown-item" href="../articles/rectangles.html">Rectangles</a></li>
     <li><a class="dropdown-item" href="../articles/segments.html">Segments</a></li>
   </ul></li>
@@ -78,27 +78,27 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="circle.html">circle</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">nudge</span><span class="op">(</span>x <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;circle&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> @ center: &lt;point&gt;</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="ob_circle.html">ob_circle</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">nudge</span><span class="op">(</span>x <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ob_circle&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> @ center: &lt;ob_point&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  @ x: num 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  @ y: num 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> @ radius: num 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Other props: label, alpha, color, fill, linewidth, linetype, n,</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              area, bounding_box, circumference, diameter, length,</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              style, tibble, geom, angle_at, tangent_at, point_at,</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              aesthetics</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              style, tibble, geom, angle_at, normal_at, tangent_at,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              point_at, aesthetics</span>
 <span class="r-in"><span><span class="co"># Alternative to nudge:</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="circle.html">circle</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="point.html">point</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">0</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;circle&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> @ center: &lt;point&gt;</span>
+<span class="r-in"><span><span class="fu"><a href="ob_circle.html">ob_circle</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">0</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ob_circle&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> @ center: &lt;ob_point&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  @ x: num 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  @ y: num 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> @ radius: num 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Other props: label, alpha, color, fill, linewidth, linetype, n,</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              area, bounding_box, circumference, diameter, length,</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              style, tibble, geom, angle_at, tangent_at, point_at,</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              aesthetics</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              style, tibble, geom, angle_at, normal_at, tangent_at,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              point_at, aesthetics</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -110,7 +110,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer></div>

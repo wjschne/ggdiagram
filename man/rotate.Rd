@@ -4,7 +4,7 @@
 \alias{rotate}
 \title{Rotate an object in 2 dimensions}
 \usage{
-rotate(x, theta, ..., origin = point(0, 0))
+rotate(x, theta, ..., origin = ob_point(0, 0))
 }
 \arguments{
 \item{x}{object}

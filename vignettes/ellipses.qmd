@@ -103,8 +103,8 @@ $$\left(\frac{x-c_x}{a}\right)^2+\left(\frac{y-c_y}{b}\right)^2=1$$
 ```{r abellipse}
 a <- 4
 b <- 3
-c1 <- point(0,0)
-e1 <- ellipse(c1, a = a, b = b)
+c1 <- ob_point(0,0)
+e1 <- ob_ellipse(c1, a = a, b = b)
 ```
 
 
@@ -113,10 +113,10 @@ e1 <- ellipse(c1, a = a, b = b)
 #| code-fold: true
 bp + 
   e1 + 
-  segment(c1, 
-          point(c(a, 0), c(0, b)), 
+  ob_segment(c1, 
+          ob_point(c(a, 0), c(0, b)), 
           color = my_colors, 
-          label = label(
+          label = ob_label(
             label = paste0(c("*a* = ", "*b* = "), 
                            c(a, b)), 
             angle = 0)) +
@@ -131,8 +131,8 @@ A circle has one focus, the center. If *a* &ne; *b*, an ellipse has two foci.
 #| fig-cap: An ellipse has two foci
 bp + 
   e1 + 
-  label("*F*~1~", e1@focus_1, plot_point = T, vjust = 1.2) +
-  label("*F*~2~", e1@focus_2, plot_point = T, vjust = 1.2)
+  ob_label("*F*~1~", e1@focus_1, plot_point = T, vjust = 1.2) +
+  ob_label("*F*~2~", e1@focus_2, plot_point = T, vjust = 1.2)
 ```
 
 
@@ -144,22 +144,22 @@ deg <- degree(61.5)
 
 bp + 
   e1 + 
-  label("*F*~1~", e1@focus_1, plot_point = T, vjust = 1.2) +
-  label("*F*~2~", e1@focus_2, plot_point = T, vjust = 1.2) + 
+  ob_label("*F*~1~", e1@focus_1, plot_point = T, vjust = 1.2) +
+  ob_label("*F*~2~", e1@focus_2, plot_point = T, vjust = 1.2) + 
   {P <- e1@point_at(deg)} +
-  P@label("*P*", polar_just = polar(deg, 1.5)) +
-  segment(e1@focus_1, 
+  P@label("*P*", polar_just = ob_polar(deg, 1.5)) +
+  ob_segment(e1@focus_1, 
           P, 
           label = paste0("*PF*~1~ = ",
                          distance(e1@focus_1, P) |>
                            round())) + 
-  segment(P, 
+  ob_segment(P, 
           e1@focus_2, 
           label = paste0("*PF*~2~ = ",
                          distance(e1@focus_2, P) |> 
                            round())) + 
-  label("*PF*~1~ + *PF*~2~ = 2*a* = 8", 
-        p = point(0,4), 
+  ob_label("*PF*~1~ + *PF*~2~ = 2*a* = 8", 
+        p = ob_point(0,4), 
         size = 20)
 
 ```
@@ -168,7 +168,7 @@ bp +
 
 # Point on the ellipse at a specific angle
 
-The `@point_at` property of an `ellipse` object is a function that can find a point at a specific angle.
+The `@point_at` property of an `ob_ellipse` object is a function that can find a point at a specific angle.
 
 ```{r ptheta}
 e1@point_at(degree(60))
@@ -183,9 +183,9 @@ deg <- degree(60)
 bp +
   e1 +
   {p45 <- e1@point_at(deg)} +
-  p45@label(polar_just = polar(deg, 1.5)) +
-  segment(e1@center, p45) +
-  arc(
+  p45@label(polar_just = ob_polar(deg, 1.5)) +
+  ob_segment(e1@center, p45) +
+  ob_arc(
     center = e1@center,
     radius = 1,
     start = degree(0),
@@ -212,14 +212,14 @@ $$
 theta <- degree(seq(0, 350, 30))
 
 bp + 
-  {c1 = circle(radius = 3.6, color = "gray30")} +
-  {e1 <- ellipse(a = 2.8)} +
+  {c1 = ob_circle(radius = 3.6, color = "gray30")} +
+  {e1 <- ob_ellipse(a = 2.8)} +
   {p1 <- c1@point_at(theta)} +
-  label(theta, p1, polar_just = polar(theta, r = 1.5)) +
-  segment(point(), p1, linewidth = .2) +
+  ob_label(theta, p1, polar_just = ob_polar(theta, r = 1.5)) +
+  ob_segment(ob_point(), p1, linewidth = .2) +
   {p2 <- e1@point_at(theta, definitional = T, color = "dodgerblue")} +
-  segment(point(), p2) + 
-  label(theta@degree, p2, polar_just = polar(theta, r = 1.5)) +
+  ob_segment(ob_point(), p2) + 
+  ob_label(theta@degree, p2, polar_just = ob_polar(theta, r = 1.5)) +
   theme_void()
 ```
 
@@ -227,7 +227,7 @@ bp +
 If the definitional point at *t* is desired:
 
 ```{r definitional}
-ellipse(a = 2)@point_at(degree(60), definitional = TRUE)
+ob_ellipse(a = 2)@point_at(degree(60), definitional = TRUE)
 ```
 
 # Tangent lines
@@ -238,7 +238,7 @@ Like the `@point_at` property, the `@tangent` property is a function that will f
 #| label: fig-tangent
 #| fig-cap: Tangent lines on an ellipse
 bp + 
-  {e1 <- ellipse(a = 3, b = 2)} + 
+  {e1 <- ob_ellipse(a = 3, b = 2)} + 
   e1@point_at(60, color = "firebrick4") + 
   e1@tangent_at(60, color = "firebrick4")
 ```
@@ -259,7 +259,7 @@ If the point is not on the ellipse, the tangent will be at the point's projectio
 ```{r}
 bp + 
   e1 + 
-  {p1 <- point(3, 2, color = "firebrick4")} +
+  {p1 <- ob_point(3, 2, color = "firebrick4")} +
   e1@tangent_at(p1) + 
   projection(p1, e1)
 ```
@@ -281,7 +281,7 @@ If *m*~1~ is 4, and *a* and *b* are equal, we can make a *squircle*, which is a 
 ```{r fig-squircle}
 #| fig-cap: A squircle 
 bp + 
-  ellipse(a = 3, 
+  ob_ellipse(a = 3, 
           b = 3, 
           m1 = 4)
 ```
@@ -291,13 +291,13 @@ If we increase *m*~1~ to a high value like 10, we can a rectangle with pleasingl
 ```{r fig-myvariable}
 #| fig-cap: A superellipse can look like a rectangle with rounded corners.
 bp +
-  ellipse(
+  ob_ellipse(
     a = 3,
     b = 3,
     m1 = 10,
     color = NA,
     fill = "dodgerblue",
-    label = label(
+    label = ob_label(
       label = "My<br>Variable",
       fill = NA,
       color = "white",
@@ -312,8 +312,8 @@ bp +
 ```{r fig-connectellipse}
 #| fig-cap: Connections between ellipses
 bp + 
-  {e1 <- ellipse(point(-2,0), a = 2)} +
-  {e2 <- ellipse(point(3,2), b = 2)} +
+  {e1 <- ob_ellipse(ob_point(-2,0), a = 2)} +
+  {e2 <- ob_ellipse(ob_point(3,2), b = 2)} +
   connect(e1, e2, resect = 2)
 ```
 
@@ -325,9 +325,9 @@ The `place` function will set an object at a position and distance from another 
 ```{r fig-placeellipse}
 #| fig-cap: Place an ellipse 2 units to the right of another ellipse.
 bp + 
-  {e1 <- ellipse(center = point(-2, 0), 
+  {e1 <- ob_ellipse(center = ob_point(-2, 0), 
                  a = 2)} +
-  place(ellipse(b = 2), 
+  place(ob_ellipse(b = 2), 
         from = e1, 
         where = "right", 
         sep = 2)
@@ -341,11 +341,11 @@ The `sep` parameter in the `place` function is not necessarily the shortest dist
 deg <- degree(30)
 
 bp + 
-  {e1 <- ellipse(point(-2,-1, 
+  {e1 <- ob_ellipse(ob_point(-2,-1, 
                        color =  "dodgerblue4"), 
                  a = 2, 
                  b = 1.5)} +
-  {e2 <- place(ellipse(point(color = "orchid4"),
+  {e2 <- place(ob_ellipse(ob_point(color = "orchid4"),
                        b = 2), 
                from = e1, 
                where = deg, 
@@ -353,12 +353,12 @@ bp +
   connect(e1, e2, 
        arrow_head = ggarrow::arrow_head_minimal(), 
        linetype = "dashed", 
-       label = label(2, vjust = 0)) +
-  arc(e1@center, end = deg, label = deg) + 
-  segment(e1@center, e1@point_at(deg)) + 
-  segment(e2@center, e2@point_at(deg + degree(180))) + 
-  label("*e*~1~", e1@center) + 
-  label("*e*~2~", e2@center)
+       label = ob_label(2, vjust = 0)) +
+  ob_arc(e1@center, end = deg, label = deg) + 
+  ob_segment(e1@center, e1@point_at(deg)) + 
+  ob_segment(e2@center, e2@point_at(deg + degree(180))) + 
+  ob_label("*e*~1~", e1@center) + 
+  ob_label("*e*~2~", e2@center)
 
 ```
 
@@ -376,18 +376,18 @@ e_fills <- hsv(h = seq(0, 1 - 1 / k, length.out = k),
                v = .6)
 
 bp + 
-  {e_0 <- ellipse(m1 = 6, 
-                 label = label("*e*~0~", 
+  {e_0 <- ob_ellipse(m1 = 6, 
+                 label = ob_label("*e*~0~", 
                                size = 40, 
                                color = "white", 
                                fill = "gray20"),
                  color = NA,
                  fill = "gray20")} + 
   {e_x <- place(
-    x = ellipse(a = .4, 
+    x = ob_ellipse(a = .4, 
                 b = .4, 
                 m1 = 6, 
-                label = label(paste0("*e*~", seq(k), "~"), 
+                label = ob_label(paste0("*e*~", seq(k), "~"), 
                               color = "white", 
                               fill = e_fills),
                 color = NA,
@@ -408,8 +408,8 @@ Lines can be placed in relation to ellipses:
 ```{r fig-placeline}
 #| fig-cap: A line placed 3 units and 45 degrees from a squircle.
 bp + 
-  {e1 <- ellipse(m1 = 4)} +
-  {l1 <- place(x = line(), 
+  {e1 <- ob_ellipse(m1 = 4)} +
+  {l1 <- place(x = ob_line(), 
                from = e1, 
                where = {deg1 <- degree(45)}, 
                sep = {d = 3})} + 
@@ -419,8 +419,8 @@ bp +
           length_fins = 8, 
           length_head = 8, 
           resect = 1) + 
-  label(label = l1@equation, 
-        p = polar(theta = deg1, 
+  ob_label(label = l1@equation, 
+        p = ob_polar(theta = deg1, 
                   r = e1@point_at(deg1)@r + d), 
         angle = l1@angle, 
         vjust = 0)
@@ -431,7 +431,7 @@ bp +
 ```{r}
 n <- 5
 
-e1 <- ellipse(point(runif(n,-2,2), 
+e1 <- ob_ellipse(ob_point(runif(n,-2,2), 
                       runif(n,-2,2)),
                 a = runif(n, .5, 1.5),
                 b = runif(n, .5, 1.5),
@@ -473,8 +473,8 @@ e1 <- ellipse(point(runif(n,-2,2),
 ggplot() + coord_equal() + theme_minimal() +
   e1 + 
   e1@bounding_box 
-  # rectangle(southwest = point(d_rect$xmin, d_rect$ymin),
-  #               northeast = point(d_rect$xmax, d_rect$ymax))
+  # rectangle(southwest = ob_point(d_rect$xmin, d_rect$ymin),
+  #               northeast = ob_point(d_rect$xmax, d_rect$ymax))
 
 
 ```

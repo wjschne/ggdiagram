@@ -7,7 +7,7 @@
 place(x, from, where = "right", sep = 1, ...)
 }
 \arguments{
-\item{x}{shape (e.g., point, circle, ellipse, rectangle)}
+\item{x}{shape object}
 
 \item{from}{shape that x is placed in relation to}
 

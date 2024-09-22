@@ -98,9 +98,9 @@ The `path` function creates an object that connects points along a path.
 ```{r}
 #| label: fig-path
 #| fig-cap: Plotting a path.
-p <- point(c(-4,-3,4), c(0,-2, 0), color = "dodgerblue")
+p <- ob_point(c(-4,-3,4), c(0,-2, 0), color = "dodgerblue")
 bp + 
-  path(p) +
+  ob_path(p) +
   p
 ```
 
@@ -115,14 +115,14 @@ The label of a path is created with `geomtextpath::geom_labelpath`, and thus wil
 #| fig-cap: A path with a curved label
 p_curve <- tibble(x = seq(-4, 4, .1), 
                   y = (pnorm(x) * 8 - 4)) |>
-  point()
+  ob_point()
 
 
 
 bp +
-  path(
+  ob_path(
     p = p_curve,
-    label = label(
+    label = ob_label(
       "A path label will curve along the path.",
       vjust = -.1,
       size = 20,
@@ -141,9 +141,9 @@ You can control the position of the path label with either the label's `position
 #| label: fig-labelposition
 #| fig-cap: A path with a curved label at position .1
 bp +
-  path(
+  ob_path(
     p = p_curve,
-    label = label(
+    label = ob_label(
       "A path label will curve along the path.",
       vjust = -.1,
       size = 20,
@@ -164,9 +164,9 @@ To create multiple paths at once, specify a list or vector of point objects.
 #| label: fig-multiplepath
 #| fig-cap: Multiple paths
 bp +
-  path(c(p_curve, 
-         p_curve * .5 + point(2,-2),
-         p_curve * .5 + point(-2,2)), 
+  ob_path(c(p_curve, 
+         p_curve * .5 + ob_point(2,-2),
+         p_curve * .5 + ob_point(-2,2)), 
        color = c("orchid4",
                  "dodgerblue3",
                  "firebrick4"),

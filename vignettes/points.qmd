@@ -75,8 +75,8 @@ Points have x and y coordinates.
 ```{r}
 #| label: fig-points
 #| fig-cap: Creating points
-p1 <- point(1, 2, color = "firebrick")
-p2 <- point(3, 4, color = "royalblue3")
+p1 <- ob_point(1, 2, color = "firebrick")
+p2 <- ob_point(3, 4, color = "royalblue3")
 
 bp + 
   p1 + 
@@ -115,13 +115,13 @@ ggplot() +
   scale_y_continuous(breaks = -10:10, 
                      minor_breaks = NULL, 
                      labels = signs::signs) +
-  circle(radius = p2@r) +
+  ob_circle(radius = p2@r) +
   p2@label(plot_point = TRUE, 
-           polar_just = polar(p2@theta, r = 1.5)) +
-  segment(p1 = point(), 
+           polar_just = ob_polar(p2@theta, r = 1.5)) +
+  ob_segment(p1 = ob_point(), 
           p2 = p2, 
           label = paste0("*r* = ", round(p2@r, 2))) + 
-  arc(end = p2@theta, 
+  ob_arc(end = p2@theta, 
       color = "royalblue3", 
       label = paste0("&theta; = ", degree(p2@theta)))
 ```
@@ -131,14 +131,14 @@ A point can be created with polar coordinates
 
 ```{r}
 #| label: polar
-polar(r = 5, theta = degree(60))
+ob_polar(r = 5, theta = degree(60))
 ```
 
 If the angle is numeric instead of an angle, it is assumed to be in radians. 
 
 ```{r}
 #| label: radian
-polar(r = 1, theta = pi)@theta
+ob_polar(r = 1, theta = pi)@theta
 ```
 
 
@@ -148,7 +148,7 @@ This will extract any styles that have been set.
 
 ```{r}
 #| label: get_tibble
-get_tibble(point(1,2, 
+get_tibble(ob_point(1,2, 
                  color = "red", 
                  shape = 16))
 ```
@@ -157,7 +157,7 @@ As a convenience, the tibble associated with the point object can be accessed wi
 
 ```{r}
 #| label: at_tibble
-point(1:5,2, 
+ob_point(1:5,2, 
       color = "blue", 
       shape = 1:5)@tibble
 ```
@@ -171,8 +171,8 @@ Points can be added and subtracted:
 
 ```{r}
 #| label: addition
-p1 <- point(2, 3)
-p2 <- point(2, 1)
+p1 <- ob_point(2, 3)
+p2 <- ob_point(2, 1)
 p3 <- p1 + p2
 p3
 p3 - p2
@@ -208,7 +208,7 @@ The shortest distance from a point to a line:
 
 ```{r}
 #| label: point_line_distance
-l1 <- line(slope = 1, 
+l1 <- ob_line(slope = 1, 
            intercept = 2)
 distance(p1, l1)
 ```
@@ -217,18 +217,18 @@ The shortest distance from a point to a circle's edge:
 
 ```{r}
 #| label: point_circle_distance
-c1 <- circle(center = point(2, 2), radius = 2)
-p1 <- c1@center + polar(
+c1 <- ob_circle(center = ob_point(2, 2), radius = 2)
+p1 <- c1@center + ob_polar(
   r = c1@radius * 1, 
   theta = degree(115), 
   color = "royalblue3")
 
-p2 <- c1@center + polar(
+p2 <- c1@center + ob_polar(
   r = c1@radius * 2, 
   theta = degree(45), 
   color = "firebrick4")
 
-p3 <- c1@center + polar(
+p3 <- c1@center + ob_polar(
   r = c1@radius * .3, 
   theta = degree(190), 
   color = "orchid4")
@@ -250,14 +250,14 @@ distance(p3, c1)
 #| fig-height: 7
 intersect_c1_p2 <- c1@point_at((p2 - c1@center)@theta)
 
-seg_style <- style(
+seg_style <- ob_style(
   arrowhead_length = 7,
   arrow_head = my_arrow_head,
   arrow_fins = my_arrow_head,
   resect = unit(5, "pt")
 )
 
-seg_c1_p2 <- segment(
+seg_c1_p2 <- ob_segment(
   intersect_c1_p2,
   p2, 
   style = seg_style, 
@@ -265,7 +265,7 @@ seg_c1_p2 <- segment(
 
 intersect_c1_p3 <- c1@point_at((p3 - c1@center)@theta)
 
-seg_c1_p3 <- segment(
+seg_c1_p3 <- ob_segment(
   intersect_c1_p3,
   p3,
   color = p3@color, 
@@ -278,19 +278,19 @@ bp +
   c1 +
   p1@label(label = p_labels[1], 
            plot_point = T,
-           polar_just = polar(
+           polar_just = ob_polar(
              theta = (p1 - c1@center)@theta,
              r = 1.3)) +
   seg_c1_p2 +
   seg_c1_p2@midpoint(c(0,1)) +
   seg_c1_p2@midpoint(1)@label(
     label = p_labels[2], 
-    polar_just = polar(theta = seg_c1_p3@line@angle, 1.5)) +
+    polar_just = ob_polar(theta = seg_c1_p3@line@angle, 1.5)) +
   seg_c1_p3 +
   seg_c1_p3@midpoint(c(0,1)) +
   seg_c1_p3@midpoint(c(1))@label(
     label = p_labels[3], 
-    polar_just = polar(theta = seg_c1_p3@line@angle, 1.5))
+    polar_just = ob_polar(theta = seg_c1_p3@line@angle, 1.5))
 ```
 
 # Convert points to geoms
@@ -299,7 +299,7 @@ The `as.geom` function is called implicitly whenever a point object is added to 
 
 ```{r}
 #| label: fig-pts
-pts <- point(x = c(3,2), 
+pts <- ob_point(x = c(3,2), 
              y = c(4,3), 
              color = c("red", "blue"),
              size = c(3, 6))
@@ -363,13 +363,13 @@ ggplot() +
 
 # Bounding box
 
-It is possible to find the rectangle that bounds all the points in a point object
+It is possible to find the rectangle that bounds all the points in an `ob_point` object
 
 ```{r}
 #| label: fig-bounding
 #| fig-cap: The bounding box of a set of points
 bp + 
-  {pts <- point(x = 1:4,
+  {pts <- ob_point(x = 1:4,
                 y = c(3,3,4, 2))} + 
   pts@bounding_box
 ```

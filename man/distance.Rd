@@ -7,9 +7,9 @@
 distance(x, y, ...)
 }
 \arguments{
-\item{x}{a point, line, segment, or circle}
+\item{x}{a point, line, segment, or circle object}
 
-\item{y}{a point, line, or circle}
+\item{y}{a point, line, or circle object}
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> Not used}
 }
@@ -21,20 +21,20 @@ Calculate distance between 2 points
 }
 \examples{
 # Distance between two objects
-p1 <- point(0, 0)
-p2 <- point(3, 4)
+p1 <- ob_point(0, 0)
+p2 <- ob_point(3, 4)
 distance(p1, p2)
 
 # Distance between the endpoints of a segment
-s1 <- segment(p1, p2)
+s1 <- ob_segment(p1, p2)
 distance(s1)
 
 # Distance between a point and a line
-l1 <- line(slope = 0, intercept = 1)
+l1 <- ob_line(slope = 0, intercept = 1)
 distance(p1, l1)
 
 # Shortest distance between the edges of 2 circles
-c1 <- circle(p1, radius = 1)
-c2 <- circle(p2, radius = 2)
+c1 <- ob_circle(p1, radius = 1)
+c2 <- ob_circle(p2, radius = 2)
 distance(c1, c2)
 }

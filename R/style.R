@@ -21,10 +21,10 @@ prop_vjust = new_property(
 prop_polar_just <- new_property(class_numeric, setter = function(self, value) {
   if (length(value) > 0) {
   multiplier <- 1.2
-  if (S7_inherits(value, point)) {
+  if (S7_inherits(value, ob_point)) {
     theta = value@theta
     multiplier <- value@r
-  } else if (S7_inherits(value, class_angle)) {
+  } else if (S7_inherits(value, ob_angle)) {
       theta <- value
   } else {
     theta <- degree(value)
@@ -44,8 +44,8 @@ prop_polar_just <- new_property(class_numeric, setter = function(self, value) {
 
 
 
-# style----
-#' style class
+# ob_style----
+#' ob_style class
 #'
 #' @param alpha numeric value for alpha transparency
 #' @param angle angle of text
@@ -93,11 +93,11 @@ prop_polar_just <- new_property(class_numeric, setter = function(self, value) {
 #' @param linetype type of lines
 #' @param ... unused
 #' @export
-style <- new_class(
-  name = "style",
+ob_style <- new_class(
+  name = "ob_style",
   properties = list(
     alpha = class_numeric,
-    angle = class_angle_or_numeric,
+    angle = ob_angle_or_numeric,
     arrow_fins = class_list,
     arrow_head = class_list,
     arrow_mid = class_list,
@@ -203,8 +203,8 @@ style <- new_class(
 
     if (length(polar_just) > 0) {
 
-      if (S7_inherits(polar_just, class_angle) || is.numeric(polar_just)) {
-        polar_just <- polar(theta = degree(polar_just), r = 1.2)
+      if (S7_inherits(polar_just, ob_angle) || is.numeric(polar_just)) {
+        polar_just <- ob_polar(theta = degree(polar_just), r = 1.2)
       }
       hjust <- polar2just(polar_just@theta, polar_just@r, axis = "h")
       vjust <- polar2just(polar_just@theta, polar_just@r, axis = "v")
@@ -224,7 +224,7 @@ style <- new_class(
       arrow_mid <- class_arrowhead(arrow_mid)
     }
 
-    if (S7_inherits(angle, class_angle)) {
+    if (S7_inherits(angle, ob_angle)) {
       angle <- c(angle) * 360
     }
 
@@ -334,7 +334,7 @@ style <- new_class(
 
   })
 
-  method(str, style) <- function(object,
+  method(str, ob_style) <- function(object,
     nest.lev = 0,
     additional = FALSE,
     omit = NULL) {
@@ -351,13 +351,13 @@ style <- new_class(
   }
 
 
-  method(print, style) <- function(x, ...) {
+  method(print, ob_style) <- function(x, ...) {
     str(x, ...)
     invisible(x)
   }
 
 
-method(`+`, list(style, style)) <- function(e1, e2) {
+method(`+`, list(ob_style, ob_style)) <- function(e1, e2) {
   pnames <- Filter(\(x) x != "tibble", prop_names(e1))
   for (p in prop_names(e1)) {
     if (prop_exists(e2,p) && length(prop(e2,p)) > 0) {
@@ -367,38 +367,38 @@ method(`+`, list(style, style)) <- function(e1, e2) {
   e1
 }
 
-method(`+`, list(class_missing, style)) <- function(e1, e2) {
+method(`+`, list(class_missing, ob_style)) <- function(e1, e2) {
   e2
 }
 
-method(`+`, list(style, class_missing)) <- function(e1, e2) {
+method(`+`, list(ob_style, class_missing)) <- function(e1, e2) {
   e1
 }
 
-method(`+`, list(class_any, style)) <- function(e1, e2) {
+method(`+`, list(class_any, ob_style)) <- function(e1, e2) {
   e2
 }
 
-method(`+`, list(style, class_any)) <- function(e1, e2) {
+method(`+`, list(ob_style, class_any)) <- function(e1, e2) {
   e1
 }
 
-method(get_tibble, style) <- function(x) {
+method(get_tibble, ob_style) <- function(x) {
   d <- get_non_empty_props(x)
 
    tibble::tibble(!!!d)
 }
 
-method(`[`, style) <- function(x, y) {
+method(`[`, ob_style) <- function(x, y) {
   d <- as.list(x@tibble[y,])
-  rlang::inject(style(!!!d))
+  rlang::inject(ob_style(!!!d))
 }
 
 method(as.geom, has_style) <- function(x, ...) {
   d <- get_tibble_defaults(x)
   make_geom_helper(
     d = d,
-    user_overrides = get_non_empty_props(style(...)),
+    user_overrides = get_non_empty_props(ob_style(...)),
     aesthetics = x@aesthetics)
 
 }

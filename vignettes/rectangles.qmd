@@ -21,8 +21,7 @@ knitr::opts_chunk$set(
   dev = "ragg_png",
   comment = "#>",
   fig.width = 7,
-  fig.height = 7,
-  cache = TRUE
+  fig.height = 7
 )
 
 library(ggdiagram)
@@ -38,7 +37,6 @@ my_font <- "Roboto Condensed"
 
 ```{r}
 #| label: setup
-#| cache: false
 library(ggdiagram)
 library(ggplot2)
 library(ggtext)
@@ -77,15 +75,15 @@ A rectangle has 4 corners (`northeast`, `northwest`, `southwest`, and `southeast
 ```{r}
 #| label: corners
 # northeast corner
-ne <- point(4,2) 
+ne <- ob_point(4,2) 
 # northwest corner
-nw <- point(0,2)
+nw <- ob_point(0,2)
 # southwest corner
-sw <- point(0,0)
+sw <- ob_point(0,0)
 # southeast corner
-se <- point(4,0)
-# centner point
-cent <- point(2,1)
+se <- ob_point(4,0)
+# center point
+cent <- ob_point(2,1)
 # width
 w <- 4
 # height
@@ -104,7 +102,7 @@ An easy way to specify a rectangle is to specify its width and height and any of
 
 ```{r}
 #| label: centerhw
-r1 <- rectangle(
+r1 <- ob_rectangle(
   width = w,
   height = h,
   center = cent,
@@ -123,7 +121,7 @@ r1
 #| fig-cap: "Center, Width, and Height"
 #| fig-width: 8
 #| fig-height: 4.75
-double_arrowstyle <- style(
+double_arrowstyle <- ob_style(
   arrow_head = arrow_head_deltoid(),
   arrow_fins = arrow_head_deltoid(),
   color = my_colors$secondar
@@ -146,7 +144,7 @@ rc_center <- c(
     fill = my_colors$primary@lighten(.15), 
     vjust = -.15)))
 
-rc_width <- as.geom(s_north |> set_props(label = label(
+rc_width <- as.geom(s_north |> set_props(label = ob_label(
     label = paste0("Width = ", r1@width),
     p = midpoint(s_north),
     color = my_colors$secondary,
@@ -155,7 +153,7 @@ rc_width <- as.geom(s_north |> set_props(label = label(
   )))
 
 rc_height <- as.geom(s_east |> 
-                       set_props(label = label(
+                       set_props(label = ob_label(
     label = paste0("Height = ", r1@height),
     p  = midpoint(s_east),
     vjust = 0,
@@ -200,7 +198,7 @@ rc_plot + rc_center + rc_width + rc_height
 
 ```{r}
 #| label: hw_ne
-r1 == rectangle(width = w,
+r1 == ob_rectangle(width = w,
                 height = h,
                 northeast = ne)
 ```
@@ -217,7 +215,7 @@ rc_plot + rc_width + rc_height + rc_ne
 
 ```{r}
 #| label: hw_nw 
-r1 == rectangle(width = w,
+r1 == ob_rectangle(width = w,
                 height = h,
                 northwest = nw)
 ```
@@ -236,7 +234,7 @@ rc_plot + rc_width + rc_height + rc_nw
 
 ```{r}
 #| label: hw_sw
-r1 == rectangle(width = w,
+r1 == ob_rectangle(width = w,
                 height = h,
                 southwest = sw)
 ```
@@ -254,7 +252,7 @@ rc_plot + rc_width + rc_height + rc_sw
 
 ```{r}
 #| label: hw_se
-r1 == rectangle(width = w,
+r1 == ob_rectangle(width = w,
                 height = h,
                 southeast = se)
 ```
@@ -279,7 +277,7 @@ A rectangle can be specified with the center and any other corner. The following
 
 ```{r}
 #| label: center_ne
-r1 == rectangle(center = cent, 
+r1 == ob_rectangle(center = cent, 
                 northeast = ne)
 ```
 
@@ -295,7 +293,7 @@ rc_plot + rc_center + rc_ne
 
 ```{r}
 #| label: center_nw
-r1 == rectangle(center = cent, 
+r1 == ob_rectangle(center = cent, 
                 northwest = nw)
 ```
 
@@ -311,7 +309,7 @@ rc_plot + rc_center + rc_nw
 
 ```{r}
 #| label: center_se
-r1 == rectangle(center = cent, 
+r1 == ob_rectangle(center = cent, 
                 southeast = se)
 ```
 
@@ -327,7 +325,7 @@ rc_plot + rc_center + rc_se
 
 ```{r}
 #| label: center_sw
-r1 == rectangle(center = cent, 
+r1 == ob_rectangle(center = cent, 
                 southwest = sw)
 ```
 
@@ -348,7 +346,7 @@ A rectangle can be specified with points from opposite corners. These rectangles
 
 ```{r}
 #| label: ne_sw 
-r1 == rectangle(
+r1 == ob_rectangle(
   northeast = ne, 
   southwest = sw)
 ```
@@ -365,7 +363,7 @@ rc_plot + rc_sw + rc_ne
 
 ```{r}
 #| label: nw_se
-r1 == rectangle(
+r1 == ob_rectangle(
   northeast = ne, 
   southwest = sw)
 ```
@@ -384,7 +382,7 @@ A rectangle can be specified with the width and 2 points from the left or right 
 
 ```{r}
 #| label: w_nw_sw
-r1 == rectangle(width = w,
+r1 == ob_rectangle(width = w,
                 northwest = nw,
                 southwest = sw)
 ```
@@ -399,7 +397,7 @@ rc_plot + rc_width + rc_nw + rc_sw
 
 ```{r}
 #| label: w_ne_se
-r1 == rectangle(width = w,
+r1 == ob_rectangle(width = w,
                 northwest = ne,
                 southwest = se)
 ```
@@ -420,7 +418,7 @@ A rectangle can be specified with the height and 2 points from the top or bottom
 
 ```{r}
 #| label: h_ne_nw
-r1 == rectangle(height = h,
+r1 == ob_rectangle(height = h,
                 northwest = nw,
                 northeast = ne)
 ```
@@ -437,7 +435,7 @@ rc_plot + rc_height + rc_ne + rc_nw
 
 ```{r}
 #| label: n_sw_se
-r1 == rectangle(height = h,
+r1 == ob_rectangle(height = h,
                 southwest = sw,
                 southeast = se)
 ```
@@ -530,14 +528,14 @@ r1@point_at(theta)
 r1_theta <- r1@point_at(theta)
 
 rc_plot +
-  segment(r1@center, r1_theta) +
+  ob_segment(r1@center, r1_theta) +
   r1_theta@label(
-    polar_just = polar(theta, 1.5), 
+    polar_just = ob_polar(theta, 1.5), 
     plot_point = T) +
-  arc(center = r1@center,
+  ob_arc(center = r1@center,
       radius = .5,
       end = theta,
-      label = label(theta, 
+      label = ob_label(theta, 
                     fill = my_colors$primary@lighten(.15), 
                     color = my_colors$primary@color)) 
 ```
@@ -578,8 +576,8 @@ The `@radius` property controls the radius of the rounded corners. It must be of
 ggplot() +
   coord_equal(xlim = c(-4, 4), 
               ylim = c(-4, 4)) +
-  rectangle(
-    point(0, 0),
+  ob_rectangle(
+    ob_point(0, 0),
     width = 6,
     height = 4,
     radius = unit(5, "mm")
@@ -596,8 +594,8 @@ It is possible to rotate a rectangle.
 ggplot() +
   coord_equal(xlim = c(-4, 4), 
               ylim = c(-4, 4)) +
-  rectangle(
-    center = point(0, 0),
+  ob_rectangle(
+    center = ob_point(0, 0),
     width = 6,
     height = 2,
     angle = 30
@@ -620,8 +618,8 @@ w <- 4 - r_middle
 ggplot() +
   coord_equal(xlim = c(-4, 4), 
               ylim = c(-4, 4)) +
-  rectangle(
-    center = polar(theta = th, 
+  ob_rectangle(
+    center = ob_polar(theta = th, 
                    r = w / 2 + r_middle),
     width = w,
     height = .15,

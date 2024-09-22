@@ -47,12 +47,12 @@ library(dplyr)
 library(ggtext)
 library(ggarrow)
 my_font <- "Roboto Condensed"
-my_arrow_head <- arrowheadr::arrow_head_deltoid()
+my_arrow_head <- arrowheadr::arrow_head_deltoid(d = 2.3)
 ```
 
 # Angles
 
-Angles have different kinds of units associated with them: degrees, radians, and turns. The `angle` class can take turns (i.e., 1 turn = one full rotation a circle), degrees (1 turn = 360 degrees), or radians (1 turn = $2\pi$ = $\tau$).
+Angles have different kinds of units associated with them: turns (1 turn = one full rotation a circle), degrees (1 turn = 360 degrees), and radians (1 turn = $2\pi$ = $\tau$).
 
 I like &pi; just fine, but I agree with Michael Hartl's [Tau Manifesto](https://tauday.com/tau-manifesto) that we would have been better off if we had recognized that the number of radians to complete a full turn of a circle (&tau; = 2&pi; &asymp; 6.283185) is more fundamental than the number of radians to complete a half turn (&pi;). 
 
@@ -77,7 +77,7 @@ theta <- degree(seq(0,330, 30))
 angle_types <- c("Turns", "Radians", "Degrees")
 theta_list <- lapply(list(turn, radian, degree), \(.f) .f(theta))
 
-p <- polar(theta, r = 1)
+p <- ob_polar(theta, r = 1)
 
 
 r <- seq(1, .5, length.out = length(angle_types))
@@ -88,26 +88,26 @@ my_shades <- (tinter::tinter("royalblue",
 ggplot() +
   coord_equal() +
   theme_void() +
-  circle(
-    center = point(),
+  ob_circle(
+    center = ob_point(),
     radius = r,
     fill = my_shades,
     color = NA,
     linewidth = .25
   ) +
-  segment(point(), p, linewidth = .25) +
+  ob_segment(ob_point(), p, linewidth = .25) +
   purrr::pmap(
     .l = list(r, theta_list, my_shades), 
     .f = \(rs, ts, ss) {
-      as.geom(circle(radius = rs - 1/8)@point_at(ts)@label(ts, fill = ss, size = 16))
+      ob_circle(radius = rs - 1/8)@point_at(ts)@label(ts, fill = ss, size = 16)@geom()
       }) +
-  point(0, y = r - 1/18)@label(angle_types, 
+  ob_point(0, y = r - 1/18)@label(angle_types, 
                                fill = my_shades, 
                                fontface = "bold", 
                                size = 16)
+
+
 ```
-
-
 
 One can create equivalent angles with any of the three metrics.
 
@@ -118,7 +118,7 @@ turn(1 / 4)
 radian(pi / 2)
 ```
 
-Although these methods have convenient printing, under the hood they are still angles with all three properties:
+Although these methods have convenient printing, under the hood they are `ob_angle` objects can retrieve angle in any of the the three metrics.
 
 ```{r}
 #| label: still_angles
@@ -134,6 +134,7 @@ turn(.5)
 turn(.5)@radian
 turn(.5)@degree
 ```
+
 
 
 # Character Printing
@@ -188,10 +189,10 @@ arc_labels[3] <- paste0(arc_labels[1],
                         " = ", 
                         arc_labels[3])
 
-arcs <- arc(radius = r, 
+arcs <- ob_arc(radius = r, 
       start = start_angles, 
       end = end_angles,
-      label = label(arc_labels, color = mycolors),
+      label = ob_label(arc_labels, color = mycolors),
       linewidth = .25,
       length_head = 10,
       arrow_head =  arrowheadr::arrow_head_deltoid(),
@@ -203,9 +204,9 @@ ggplot() +
   theme_void() +
   coord_equal()  +
   arcs +
-  segment(
-    p1 = point(), 
-    p2 = polar(theta = degree(c(0,a[1],sum(a))), r = 1), 
+  ob_segment(
+    p1 = ob_point(), 
+    p2 = ob_polar(theta = degree(c(0,a[1],sum(a))), r = 1), 
     length_head = 5,
     linewidth = .75,
     arrow_head =  arrowheadr::arrow_head_deltoid(),
@@ -317,6 +318,18 @@ $$\begin{align}2\cdot180 &= 360^\circ\\&=0^\circ\end{align}$$
 2 * degree(180)
 ```
 
+# Retrieving the underlying data from a `ob_angle` object
+
+Angles created with the `degree`, `radian`, or `turn` function are `ob_angle` objects. The `ob_angle` function exists but is not meant to be used directly. Its underlying data is a vector of numeric data representing the number or turns. The underlying turn data from any `ob_angle` object can be extracted with the `c` function:
+
+```{r}
+theta <- degree(c(0,180,360, 720))
+# Degrees range: 0<= degree < 360
+theta@degree
+# Underlying data in turns
+c(theta)
+```
+
 ## Trigonometry
 
 Angles can take the three standard trigonometric functions
@@ -337,8 +350,8 @@ tan(theta)
 #| fig-width: 9
 #| fig-height: 6.6
 
-o <- point(0, 0)
-p <- polar(theta, 1)
+o <- ob_point(0, 0)
+p <- ob_polar(theta, 1)
 
 # col <- purrr::map2_chr(scico::scico(6, palette = "hawaii"),
 #                        c(0.01,0.01,0.01,0.01,.15, .4), 
@@ -350,23 +363,23 @@ my_colors <- c("#8C0172", "#944046", "#9B7424",
 ggplot() +
   theme_void() +
   coord_equal() +
-  circle(fill = NA, color = "gray") +
+  ob_circle(fill = NA, color = "gray") +
   # axes
-  line(intercept = 0,
+  ob_line(intercept = 0,
        color = "gray",
        linewidth = .25) +
-  line(xintercept = 0,
+  ob_line(xintercept = 0,
        color = "gray",
        linewidth = .25) +
   # degree arc
-  arc(
+  ob_arc(
     end = theta,
     radius = .25,
     label = theta,
     linewidth = .2
   ) +
   # angle arrow
-  segment(
+  ob_segment(
     o,
     p2 = p,
     label = "*r* = 1",
@@ -375,8 +388,8 @@ ggplot() +
     arrow_head = my_arrow_head
   ) +
   # sin(theta)
-  segment(
-    polar(theta = 0, r = cos(theta)),
+  ob_segment(
+    ob_polar(theta = 0, r = cos(theta)),
     p,
     label = paste0("sin(", 
                    theta,  
@@ -386,10 +399,10 @@ ggplot() +
     linewidth = .5
   ) +
   # cos(theta)
-  segment(
-    point(0, sin(theta)),
-    point(cos(theta), sin(theta)),
-    label = label(
+  ob_segment(
+    ob_point(0, sin(theta)),
+    ob_point(cos(theta), sin(theta)),
+    label = ob_label(
       paste0(
         "cos(",
         theta,
@@ -399,9 +412,9 @@ ggplot() +
     linewidth = .5
   ) +
   # tan(theta)
-  segment(
+  ob_segment(
     p,
-    p + polar(theta - 90, r = tan(theta)),
+    p + ob_polar(theta - 90, r = tan(theta)),
     label = paste0(
       "tan(",
       theta,
@@ -411,10 +424,10 @@ ggplot() +
     linewidth = .5
   ) +
   # sec(theta)
-  segment(
+  ob_segment(
     o,
-    point(1 / cos(theta)),
-    label = label(
+    ob_point(1 / cos(theta)),
+    label = ob_label(
       label = paste0(
         "sec(",
         theta,
@@ -425,8 +438,8 @@ ggplot() +
     color = my_colors[5]
   ) +
   # cot(theta)
-  segment(
-    p + polar(theta + 90, r = 1 / tan(theta)),
+  ob_segment(
+    p + ob_polar(theta + 90, r = 1 / tan(theta)),
     p,
     label = paste0(
       "cot(",
@@ -437,9 +450,9 @@ ggplot() +
     linewidth = .5
   ) +
   # csc(theta)
-  segment(
+  ob_segment(
     o,
-    point(0, 1 / sin(theta)),
+    ob_point(0, 1 / sin(theta)),
     label = paste0(
       "csc(",
       theta,

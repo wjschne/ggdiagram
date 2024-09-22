@@ -27,14 +27,14 @@ path_props <- list(
   primary = list(
     p = new_property(class = point_or_list, validator = function(value) {
       if ("list" %in% class(value)) {
-        allsameclass(value, "point")
+        allsameclass(value, "ob_point")
       }
     })
   ),
   extra = list(
     label = label_or_character_or_angle
   ),
-  styles = style@properties[path_styles],
+  styles = ob_style@properties[path_styles],
   # derived ----
   derived = list(
     bounding_box = new_property(getter = function(self) {
@@ -45,8 +45,8 @@ path_props <- list(
                          ymin = min(y),
                          ymax = max(y))
 
-      rectangle(southwest = point(d_rect$xmin, d_rect$ymin),
-                northeast = point(d_rect$xmax, d_rect$ymax))
+      ob_rectangle(southwest = ob_point(d_rect$xmin, d_rect$ymin),
+                northeast = ob_point(d_rect$xmax, d_rect$ymax))
 
     }),
     length = new_property(
@@ -64,15 +64,15 @@ path_props <- list(
                          object = self
         ) |>
           `names<-`(path_styles)
-        rlang::inject(style(!!!get_non_empty_list(pr)))
+        rlang::inject(ob_style(!!!get_non_empty_list(pr)))
       },
       setter = function(self, value) {
-        point(self@x, self@y, style = self@style + value)
+        ob_point(self@x, self@y, style = self@style + value)
       }
     ),
     tibble = new_property(getter = function(self) {
       p <- self@p
-      if (S7_inherits(self@p, point)) p <- list(p)
+      if (S7_inherits(self@p, ob_point)) p <- list(p)
       d <- list(
         p = p,
         group = seq(1, self@length),
@@ -153,23 +153,23 @@ path_props <- list(
   ))
 )
 
-# path----
+# ob_path----
 
-#' The path class
+#' The ob_path class
 #'
-#' A path is specified with a point object that contains at least 2 points, the start and the end. Any number of intermediate points are possible.
+#' A `ob_path` is specified with an `ob_point` object that contains at least 2 points, the start and the end. Any number of intermediate points are possible.
 #'
-#' If you wish to specify multiple paths, you must supply a list of point objects. When plotted, the path function uses the ggarrow::geom_arrow function to create the geom.
+#' If you wish to specify multiple paths, you must supply a list of `ob_point` objects. When plotted, the `ob_path` function uses the ggarrow::geom_arrow function to create the geom.
 #' @export
-#' @param p object or list of point objects
+#' @param p `ob_point` or list of `ob_point`s
 #' @param label A character, angle, or label object
 #' @param style Gets and sets the styles associated with paths
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
-#' @slot length The number of paths in the path object
+#' @slot length The number of paths in the ob_path object
 #' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggarrow::geom_arrow`.
-#' @inherit style params
-path <- new_class(
-  name = "path",
+#' @inherit ob_style params
+ob_path <- new_class(
+  name = "ob_path",
   parent = has_style,
   properties = rlang::inject(
     list(
@@ -205,10 +205,17 @@ path <- new_class(
                          style = class_missing,
                          ...) {
 
+    if (S7_inherits(p, ob_point)) p <- list(p)
+    p_style <- purrr::map(p, \(x) {
+      purrr::map(as.list(x), \(xx) xx@style) %>%
+        purrr::reduce(`+`)
+    }) %>%
+      bind()
 
 
-    path_style <- style +
-      style(
+
+    path_style <- p_style + style +
+      ob_style(
         alpha = alpha,
         arrow_head = arrow_head,
         arrow_fins = arrow_fins,
@@ -229,11 +236,11 @@ path <- new_class(
         stroke_color = stroke_color,
         stroke_width = stroke_width
       ) +
-      style(...)
+      ob_style(...)
 
     non_empty_list <- get_non_empty_props(path_style)
 
-    if (S7_inherits(p, point)) p <- list(p)
+
 
     d <- tibble::tibble(
       p = p
@@ -250,12 +257,12 @@ path <- new_class(
       } else {
         d_l <- get_tibble(path_style)
         cnames <- dplyr::intersect(colnames(d_l), lb_styles)
-        if (S7_inherits(label, ggdiagram::label)) {
+        if (S7_inherits(label, ob_label)) {
           if ("color" %in% cnames && all(length(label@color) == 0)) {
             label@color <- d_l$color
           }
         } else {
-          label <- rlang::inject(label(label = label, !!!d_l[, cnames]))
+          label <- rlang::inject(ob_label(label = label, !!!d_l[, cnames]))
         }
     }
 
@@ -284,7 +291,7 @@ path <- new_class(
     )
   })
 
-method(str, path) <- function(
+method(str, ob_path) <- function(
     object,
     nest.lev = 0,
     additional = TRUE,
@@ -310,18 +317,17 @@ method(str, path) <- function(
 
 
 
-method(get_tibble, path) <- function(x) {
+method(get_tibble, ob_path) <- function(x) {
   x@tibble
 }
 
-method(as.geom, path) <- function(x, ...) {
-
+method(as.geom, ob_path) <- function(x, ...) {
   d <- get_tibble_defaults(x)
   if ("arrowhead_length" %in% colnames(d)) {
     d <- dplyr::rename(d, length = arrowhead_length)
   }
 
-  overrides <- get_non_empty_props(style(...))
+  overrides <- get_non_empty_props(ob_style(...))
   if (!("arrow_head" %in% c(colnames(d), names(overrides)))) {
     overrides$arrow_head <- ggarrow::arrow_head_minimal(90)
   }
@@ -331,7 +337,7 @@ method(as.geom, path) <- function(x, ...) {
     user_overrides = overrides,
     aesthetics = x@aesthetics)
 
-  if (S7_inherits(x@label, label)) {
+  if (S7_inherits(x@label, ob_label)) {
     d <- tidyr::nest(d |> dplyr::select(x,y,group), .by = group) |>
       dplyr::bind_cols(x@label@tibble |> select(-c(x,y)))
 
@@ -366,13 +372,13 @@ method(as.geom, path) <- function(x, ...) {
 }
 
 
-method(`[`, path) <- function(x, y) {
+method(`[`, ob_path) <- function(x, y) {
   d <- x@tibble[y,]
   dl <- d %>%
     dplyr::select(-.data$x, -.data$y, -.data$group) %>%
     unique() %>%
     as.list()
-  z <- rlang::inject(path(p = x@p[y], !!!dl))
+  z <- rlang::inject(ob_path(p = x@p[y], !!!dl))
   z@label <- x@label[y]
   z
 }

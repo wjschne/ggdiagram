@@ -21,12 +21,12 @@ sg_styles <- c(
 
 sg_props <- list(
   # primary ----
-  primary = list(p1 = new_property(class = point),
-                 p2 = new_property(class = point)),
+  primary = list(p1 = new_property(class = ob_point),
+                 p2 = new_property(class = ob_point)),
   extra = list(
     label = new_property(label_or_character_or_angle)
   ),
-  styles = style@properties[sg_styles],
+  styles = ob_style@properties[sg_styles],
   # derived ----
   derived = list(
     bounding_box = new_property(getter = function(self) {
@@ -37,8 +37,8 @@ sg_props <- list(
                          ymin = min(c(y,yend)),
                          ymax = max(c(y,yend)))
 
-      rectangle(southwest = point(d_rect$xmin, d_rect$ymin),
-                northeast = point(d_rect$xmax, d_rect$ymax))
+      ob_rectangle(southwest = ob_point(d_rect$xmin, d_rect$ymin),
+                northeast = ob_point(d_rect$xmax, d_rect$ymax))
 
     }),
     distance = new_property(
@@ -53,7 +53,7 @@ sg_props <- list(
     ),
     line = new_property(
       getter = function(self) {
-        line(
+        ob_line(
           a = self@p1@y - self@p2@y,
           b = self@p2@x - self@p1@x,
           c = self@p1@x * self@p2@y - self@p2@x * self@p1@y,
@@ -65,10 +65,10 @@ sg_props <- list(
       getter = function(self) {
         pr <- purrr::map(sg_styles, prop, object = self) |>
           `names<-`(sg_styles)
-        rlang::inject(style(!!!get_non_empty_list(pr)))
+        rlang::inject(ob_style(!!!get_non_empty_list(pr)))
       },
       setter = function(self, value) {
-        segment(self@p1, self@p2, style = self@style + value)
+        ob_segment(self@p1, self@p2, style = self@style + value)
       }
     ),
     tibble = new_property(
@@ -116,7 +116,7 @@ sg_props <- list(
           position = .5,
           # offset_angle  = self@angle + degree(90),
           # polar_multiplier = 1.2,
-          # polar_just = polar(self@angle, r = multiplier),
+          # polar_just = ob_polar(self@angle, r = multiplier),
           # hjust = NULL,
           vjust = class_missing,
           angle = self@line@angle,
@@ -191,19 +191,19 @@ sg_props <- list(
   )
 )
 
-# Segment----
+# ob_segment----
 
-#' segment class
+#' ob_segment class
 #'
 #' @param p1 starting point
 #' @param p2 end point
 #' @param label A character, angle, or label object
 #' @param style a style list
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
-#' @inherit style params
+#' @inherit ob_style params
 #' @export
-segment <- new_class(
-  name = "segment",
+ob_segment <- new_class(
+  name = "ob_segment",
   parent = shape,
   properties =  rlang::inject(
     list(
@@ -250,7 +250,7 @@ segment <- new_class(
       if (length(xend) == 0) {
         xend <- 0
       }
-      p1 <- point(tibble::tibble(x = x, y = xend))
+      p1 <- ob_point(tibble::tibble(x = x, y = xend))
     }
 
     if ((length(y) > 0) || (length(yend) > 0)) {
@@ -260,15 +260,15 @@ segment <- new_class(
       if (length(yend) == 0) {
         yend <- 0
       }
-      p2 <- point(tibble::tibble(x = y, y = yend))
+      p2 <- ob_point(tibble::tibble(x = y, y = yend))
     }
 
     if (length(p1) == 0) {
-      stop("p1 must be a point object with one or more points.")
+      stop("p1 must be a ob_point object with one or more points.")
     } else {
       if (length(p2) == 0) {
         if (p1@length == 1) {
-          stop("If p2 is missing, p1 must be a point object with multiple points.")
+          stop("If p2 is missing, p1 must be a ob_point object with multiple points.")
         } else {
           p2 <- p1
           p2 <- set_props(
@@ -299,7 +299,7 @@ segment <- new_class(
 
     user_overrides <- rlang::list2(...)
 
-    s_style <- p1@style + p2@style + style(
+    s_style <- p1@style + p2@style + ob_style(
       alpha = alpha,
       arrow_head = arrow_head,
       arrow_fins = arrow_fins,
@@ -318,7 +318,7 @@ segment <- new_class(
       resect_head = resect_head,
       stroke_color = stroke_color,
       stroke_width = stroke_width
-    ) + style + rlang::inject(style(!!!user_overrides))
+    ) + style + rlang::inject(ob_style(!!!user_overrides))
 
     d <- get_non_empty_tibble(list(
       p1x = p1@x,
@@ -336,9 +336,9 @@ segment <- new_class(
     }
     pos <- .5
 
-    if (S7_inherits(label, ggdiagram::label)) {
+    if (S7_inherits(label, ob_label)) {
       pos <- label@position
-      if (all(label@p == point(0,0))) {
+      if (all(label@p == ob_point(0,0))) {
         label@p <- midpoint(p1,p2, position = pos)
       }
       if (all(length(label@angle) == 0)) {
@@ -351,7 +351,7 @@ segment <- new_class(
       label,
       midpoint(p1,p2, position = pos),
       d,
-      "segment",
+      "ob_segment",
       style = s_style,
       vjust = 0,
       angle = (p2 - p1)@theta)
@@ -389,27 +389,27 @@ segment <- new_class(
 
 )
 
-method(`+`, list(segment, point)) <- function(e1, e2) {
+method(`+`, list(ob_segment, ob_point)) <- function(e1, e2) {
   e1p1 <- e1@p1 + e2
   e1p2 <- e1@p2 + e2
-  segment(e1p1, e1p2, style = e1@style)
+  ob_segment(e1p1, e1p2, style = e1@style)
 }
 
-method(`-`, list(segment, point)) <- function(e1, e2) {
+method(`-`, list(ob_segment, ob_point)) <- function(e1, e2) {
   e1p1 <- e1@p1 - e2
   e1p2 <- e1@p2 - e2
-  segment(e1p1, e1p2, style = e1@style)
+  ob_segment(e1p1, e1p2, style = e1@style)
 }
 
-method(`+`, list(point, segment)) <- function(e1, e2) {
+method(`+`, list(ob_point, ob_segment)) <- function(e1, e2) {
   e2 + e1
 }
 
-method(`-`, list(point, segment)) <- function(e1, e2) {
+method(`-`, list(ob_point, ob_segment)) <- function(e1, e2) {
   e2 - e1
 }
 
-method(str, segment) <- function(object,
+method(str, ob_segment) <- function(object,
                                  nest.lev = 0,
                                  additional = FALSE,
                                  omit = omit_props(object, include = c("p1", "p2"))) {
@@ -419,18 +419,18 @@ method(str, segment) <- function(object,
                  additional = FALSE)
 }
 
-method(midpoint, list(segment, class_missing)) <- function(x, y, position = .5, ...) {
+method(midpoint, list(ob_segment, class_missing)) <- function(x, y, position = .5, ...) {
   x@p1@style <- x@p1@style + x@style
   x@p2@style <- x@p2@style + x@style
   midpoint(x@p1, x@p2, position = position, ...)
 }
 
-method(get_tibble, segment) <- function(x) {
+method(get_tibble, ob_segment) <- function(x) {
   x@tibble
 }
 
-method(get_tibble_defaults, segment) <- function(x) {
-  sp <- style(
+method(get_tibble_defaults, ob_segment) <- function(x) {
+  sp <- ob_style(
     alpha = replace_na(as.double(
       ggarrow::GeomArrowSegment$default_aes$alpha
     ), 1),
@@ -450,7 +450,7 @@ method(get_tibble_defaults, segment) <- function(x) {
 }
 
 
-method(as.geom, segment) <- function(x, ...) {
+method(as.geom, ob_segment) <- function(x, ...) {
   d <- get_tibble_defaults(x)
   if ("arrowhead_length" %in% colnames(d)) {
     d <- dplyr::rename(d, length = arrowhead_length)
@@ -458,11 +458,11 @@ method(as.geom, segment) <- function(x, ...) {
 
    gs <- make_geom_helper(
     d = d,
-    user_overrides = get_non_empty_props(style(...)),
+    user_overrides = get_non_empty_props(ob_style(...)),
     aesthetics = x@aesthetics
   )
 
-   if (S7_inherits(x@label, label)) {
+   if (S7_inherits(x@label, ob_label)) {
      gl <- as.geom(x@label)
      gs <- list(gs, gl)
    }
@@ -471,56 +471,56 @@ method(as.geom, segment) <- function(x, ...) {
 }
 
 
-method(resect, list(segment, class_numeric)) <- function(x, distance, distance_end = distance) {
+method(resect, list(ob_segment, class_numeric)) <- function(x, distance, distance_end = distance) {
   d <- x@p2 - x@p1
-  x@p1 <- x@p1 + polar(theta = d@theta, r = distance)
-  x@p2 <- x@p2 + polar(theta = d@theta + turn(.5), r = distance_end)
+  x@p1 <- x@p1 + ob_polar(theta = d@theta, r = distance)
+  x@p2 <- x@p2 + ob_polar(theta = d@theta + turn(.5), r = distance_end)
   x
 }
 
 
 
-method(nudge, list(segment, class_numeric, class_numeric)) <- function(object, x, y) {
-  object + point(x, y)
+method(nudge, list(ob_segment, class_numeric, class_numeric)) <- function(object, x, y) {
+  object + ob_point(x, y)
 }
 
-method(nudge, list(segment, class_missing, class_numeric)) <- function(object, x, y) {
-  object + point(0, y)
+method(nudge, list(ob_segment, class_missing, class_numeric)) <- function(object, x, y) {
+  object + ob_point(0, y)
 }
 
-method(nudge, list(segment, class_missing, class_missing)) <- function(object, x, y) {
+method(nudge, list(ob_segment, class_missing, class_missing)) <- function(object, x, y) {
   object
 }
 
 
-method(nudge, list(segment, class_numeric, class_missing)) <- function(object, x, y) {
-  object + point(x, 0)
+method(nudge, list(ob_segment, class_numeric, class_missing)) <- function(object, x, y) {
+  object + ob_point(x, 0)
 }
 
-method(nudge, list(segment, point, class_missing)) <- function(object, x, y) {
+method(nudge, list(ob_segment, ob_point, class_missing)) <- function(object, x, y) {
   object + x
 }
 
-method(nudge, list(segment, point, class_numeric)) <- function(object, x, y) {
+method(nudge, list(ob_segment, ob_point, class_numeric)) <- function(object, x, y) {
   object + (x + y)
 }
 
-method(nudge, list(segment, segment, class_missing)) <- function(object, x, y) {
+method(nudge, list(ob_segment, ob_segment, class_missing)) <- function(object, x, y) {
   object + x
 }
 
 
-method(`[`, segment) <- function(x, y) {
+method(`[`, ob_segment) <- function(x, y) {
   d <- x@tibble[y,]
   p1 <- x@p1[y]
   p2 <- x@p2[y]
   d <- as.list(d |> dplyr::select(-.data$x, -.data$y, -.data$xend, -.data$yend))
-  z <- rlang::inject(segment(p1 = p1, p2 = p2, !!!d))
+  z <- rlang::inject(ob_segment(p1 = p1, p2 = p2, !!!d))
   z@label <- x@label[y]
   z
 }
 
 
-method(`==`, list(segment, segment)) <- function(e1, e2) {
+method(`==`, list(ob_segment, ob_segment)) <- function(e1, e2) {
   (e1@p1 == e2@p1) & (e1@p2 == e2@p2)
 }

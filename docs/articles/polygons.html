@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Polygons (pgon) • ggdiagram</title>
+<title>Polygons • ggdiagram</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -19,7 +19,7 @@
 <link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="polygons_files/libs/quarto-html/popper.min.js"></script><script src="polygons_files/libs/quarto-html/tippy.umd.min.js"></script><link href="polygons_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="polygons_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Polygons (pgon)">
+<!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Polygons">
 <meta property="og:image" content="https://wjschne.github.io/ggdiagram/logo.png">
 </head>
 <body>
@@ -45,13 +45,14 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/angles.html">Angles</a></li>
     <li><a class="dropdown-item" href="../articles/arcs.html">Arcs</a></li>
-    <li><a class="dropdown-item" href="../articles/bzcurves.html">Bezier Curves</a></li>
+    <li><a class="dropdown-item" href="../articles/bezier.html">Bézier Curves</a></li>
+    <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
     <li><a class="dropdown-item" href="../articles/ellipses.html">Ellipses</a></li>
     <li><a class="dropdown-item" href="../articles/lines.html">Lines</a></li>
     <li><a class="dropdown-item" href="../articles/paths.html">Paths</a></li>
     <li><a class="dropdown-item" href="../articles/points.html">Points</a></li>
-    <li><a class="dropdown-item" href="../articles/polygons.html">Polygons (pgon)</a></li>
+    <li><a class="dropdown-item" href="../articles/polygons.html">Polygons</a></li>
     <li><a class="dropdown-item" href="../articles/rectangles.html">Rectangles</a></li>
     <li><a class="dropdown-item" href="../articles/segments.html">Segments</a></li>
   </ul>
@@ -70,7 +71,7 @@
 </nav><div class="container template-quarto">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Polygons (pgon)</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Polygons</h1>
 
 
 
@@ -143,13 +144,13 @@
 </div>
 </section></section><section class="section level2"><h2 id="polygons">Polygons<a class="anchor" aria-label="anchor" href="#polygons"></a>
 </h2>
-<p>The <code>pgon</code> function creates an object that connects points to make a polygon.</p>
+<p>The <code>ob_polygon</code> function creates an object that connects points to make a polygon.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>,<span class="op">-</span><span class="fl">3</span>, <span class="fl">4</span>,  <span class="fl">3</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span>, </span>
+<code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>,<span class="op">-</span><span class="fl">3</span>, <span class="fl">4</span>,  <span class="fl">3</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span>, </span>
 <span>           y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span> <span class="fl">0</span>, <span class="fl">4</span>, <span class="fl">3</span>, <span class="op">-</span><span class="fl">3</span>, <span class="op">-</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">bp</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/pgon.html">pgon</a></span><span class="op">(</span><span class="va">p</span>, fill <span class="op">=</span> <span class="st">"dodgerblue3"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/ob_polygon.html">ob_polygon</a></span><span class="op">(</span><span class="va">p</span>, fill <span class="op">=</span> <span class="st">"dodgerblue3"</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div id="fig-path" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-path-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -163,13 +164,13 @@ Figure 1: Plotting a path.
 </div>
 </section><section class="section level2"><h2 id="polygon-labels">Polygon Labels<a class="anchor" aria-label="anchor" href="#polygon-labels"></a>
 </h2>
-<p>The label of a <code>pgon</code> object is placed, by default, at the centroid of the polygon. The centroid is the point whose x coordinate is the average of all the x coordinates of the polygon’s points and whose y coordinate is likewise the average of all the point’s y coordinates.</p>
+<p>The label of a <code>ob_polygon</code> object is placed, by default, at the centroid of the polygon. The centroid is the point whose x coordinate is the average of all the x coordinates of the polygon’s points and whose y coordinate is likewise the average of all the point’s y coordinates.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/pgon.html">pgon</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/ob_polygon.html">ob_polygon</a></span><span class="op">(</span></span>
 <span>    p <span class="op">=</span> <span class="va">p</span>,</span>
-<span>    label <span class="op">=</span> <span class="fu"><a href="../reference/label.html">label</a></span><span class="op">(</span></span>
+<span>    label <span class="op">=</span> <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span></span>
 <span>      <span class="st">"My&lt;br&gt;Polygon"</span>,</span>
 <span>      size <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>      color <span class="op">=</span> <span class="st">"white"</span></span>
@@ -193,9 +194,9 @@ Figure 2: A path with a curved label
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
-<span>  <span class="op">{</span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pgon.html">pgon</a></span><span class="op">(</span><span class="fl">.5</span> <span class="op">*</span> <span class="va">p</span> <span class="op">-</span> <span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="fl">1.9</span>,<span class="fl">1.9</span><span class="op">)</span>, </span>
+<span>  <span class="op">{</span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_polygon.html">ob_polygon</a></span><span class="op">(</span><span class="fl">.5</span> <span class="op">*</span> <span class="va">p</span> <span class="op">-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">1.9</span>,<span class="fl">1.9</span><span class="op">)</span>, </span>
 <span>              fill <span class="op">=</span> <span class="st">"dodgerblue4"</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span> </span>
-<span>  <span class="op">{</span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pgon.html">pgon</a></span><span class="op">(</span><span class="fl">.5</span> <span class="op">*</span> <span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="../reference/point.html">point</a></span><span class="op">(</span><span class="fl">1.9</span>, <span class="fl">1.9</span><span class="op">)</span>, </span>
+<span>  <span class="op">{</span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_polygon.html">ob_polygon</a></span><span class="op">(</span><span class="fl">.5</span> <span class="op">*</span> <span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">1.9</span>, <span class="fl">1.9</span><span class="op">)</span>, </span>
 <span>              fill <span class="op">=</span> <span class="st">"orchid4"</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/connect.html">connect</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span>, </span>
 <span>          resect <span class="op">=</span> <span class="fl">1</span>, </span>
@@ -208,6 +209,20 @@ Figure 2: A path with a curved label
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pgonconnect-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 3: Arrow between two polygons
 </figcaption></figure>
+</div>
+</div>
+</div>
+</section><section class="section level2"><h2 id="rounding-polygons">Rounding polygons<a class="anchor" aria-label="anchor" href="#rounding-polygons"></a>
+</h2>
+<p>The <code>@radius</code> property controls the radius of the rounded corners. It must be of length 1. It can be given in as a <code><a href="https://rdrr.io/r/grid/unit.html" class="external-link">ggplot2::unit</a></code> or as a numeric value. If numeric, it is understood as a proportion of the plot area width.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="../reference/ob_polygon.html">ob_polygon</a></span><span class="op">(</span><span class="va">p</span>, radius <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">5</span>, <span class="st">"mm"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="polygons_files/figure-html/unnamed-chunk-7-1.png" width="672"></p>
+</figure>
 </div>
 </div>
 </div>
@@ -321,7 +336,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>

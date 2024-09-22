@@ -5,15 +5,15 @@ pt_props <- list(
     x = new_property(class = class_numeric, default = 0),
     y = new_property(class = class_numeric, default = 0)
   ),
-  styles = style@properties[pt_styles],
+  styles = ob_style@properties[pt_styles],
   # Derived ----
   derived = list(
     auto_label = new_property(getter = function(self) {
       label_object(self)
     }),
     bounding_box = new_property(getter = function(self) {
-      rectangle(southwest = point(x = min(self@x), y = min(self@y)),
-                northeast = point(x = max(self@x), y = max(self@y)))
+      ob_rectangle(southwest = ob_point(x = min(self@x), y = min(self@y)),
+                northeast = ob_point(x = max(self@x), y = max(self@y)))
     }),
     length = new_property(
       getter = function(self) {
@@ -41,10 +41,10 @@ pt_props <- list(
         pr <- purrr::map(pt_styles,
                          prop, object = self) |>
           `names<-`(pt_styles)
-        rlang::inject(style(!!!get_non_empty_list(pr)))
+        rlang::inject(ob_style(!!!get_non_empty_list(pr)))
       },
       setter = function(self, value) {
-        point(self@x, self@y, style = self@style + value)
+        ob_point(self@x, self@y, style = self@style + value)
       }
     ),
     tibble = new_property(getter = function(self) {
@@ -88,7 +88,7 @@ pt_props <- list(
             label = signs::signs(label, accuracy = accuracy, trim_leading_zeros = TRUE)
           }
         }
-        label(p = self, label = label, ...)
+        ob_label(p = self, label = label, ...)
       }
 
     })
@@ -111,27 +111,27 @@ pt_props <- list(
 
 
 
-# Point----
+# ob_point----
 
-#' point
+#' ob_point
 #'
 #' Points are specified with x and y coordinates.
 #' @export
 #' @param x Vector of coordinates on the x-axis (also can take a tibble/data.frame or 2-column matrix as input.)
 #' @param y Vector of coordinates on the y-axis
-#' @param r Radius = Distance from the origin to the point
-#' @param theta Angle of the vector from the origin to the point
+#' @param r Radius = Distance from the origin to the ob_point
+#' @param theta Angle of the vector from the origin to the ob_point
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @slot auto_label Gets x and y coordinates and makes a label `"(x,y)"`
-#' @slot length The number of points in the point object
+#' @slot length The number of points in the ob_point object
 #' @param style Gets and sets the styles associated with points
 #' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggplot2::geom_point`.
-#' @slot xy Gets a 2-column matrix of the x and y coordinates of the point object.
+#' @slot xy Gets a 2-column matrix of the x and y coordinates of the ob_point object.
 #' @slot geom A function that converts the object to a geom. Any additional parameters are passed to `ggplot2::geom_point`.
-#' @inherit style params
+#' @inherit ob_style params
 #' @export
-point <- new_class(
-  name = "point",
+ob_point <- new_class(
+  name = "ob_point",
   parent = xy,
   properties = rlang::inject(list(
     !!!pt_props$primary,
@@ -151,15 +151,15 @@ point <- new_class(
                          ...) {
 
     if ("data.frame" %in% class(x)) {
-      return(rlang::inject(point(!!!get_non_empty_list(x))))
+      return(rlang::inject(ob_point(!!!get_non_empty_list(x))))
     }
 
     if ("matrix" %in% class(x) && ncol(x) == 2) {
-      return(point(x[,1], x[,2]))
+      return(ob_point(x[,1], x[,2]))
     }
 
     p_style <- style +
-      style(
+      ob_style(
         alpha = alpha,
         color = color,
         fill = fill,
@@ -167,7 +167,7 @@ point <- new_class(
         size = size,
         stroke = stroke
       ) +
-      style(...)
+      ob_style(...)
 
     non_empty_list <- get_non_empty_props(p_style)
     d <- tibble::tibble(x = x, y = y)
@@ -192,15 +192,15 @@ point <- new_class(
 )
 
 
-# Polar Point class ----
-#' polar
+# ob_polar point class ----
+#' ob_polar
 #'
 #' Polar points are ordinary points but are specified with an angle (theta) and a radial distance (r)
-#' @rdname point
+#' @rdname ob_point
 #' @export
-polar <- new_class(
-  name = "polar",
-  parent = point,
+ob_polar <- new_class(
+  name = "ob_polar",
+  parent = ob_point,
   constructor = function(theta = class_missing,
                          r = class_missing,
                          alpha = class_missing,
@@ -215,7 +215,7 @@ polar <- new_class(
     if (is.character(theta)) thata <- degree(theta)
 
 
-    p <- point(x = cos(theta) * r,
+    p <- ob_point(x = cos(theta) * r,
                y = sin(theta) * r,
                alpha = alpha,
                color = color,
@@ -230,7 +230,7 @@ polar <- new_class(
   })
 
 
-method(str, point) <- function(
+method(str, ob_point) <- function(
     object,
     nest.lev = 0,
     additional = TRUE,
@@ -241,7 +241,7 @@ method(str, point) <- function(
                 additional = additional)
 }
 
-method(str, polar) <- function(
+method(str, ob_polar) <- function(
   object,
   nest.lev = 0,
   additional = TRUE,
@@ -252,19 +252,19 @@ str_properties(object,
               additional = additional)
 }
 
-method(print, point) <- function(x, ...) {
+method(print, ob_point) <- function(x, ...) {
   str(x, ...)
     invisible(x)
   }
 
 
-method(get_tibble, point) <- function(x) {
+method(get_tibble, ob_point) <- function(x) {
   x@tibble
 }
 
 
-method(get_tibble_defaults, point) <- function(x) {
-  sp <- style(
+method(get_tibble_defaults, ob_point) <- function(x) {
+  sp <- ob_style(
     alpha = replace_na(ggplot2::GeomPoint$default_aes$alpha, 1),
     color = replace_na(ggplot2::GeomPoint$default_aes$colour, "black"),
     fill = replace_na(ggplot2::GeomPoint$default_aes$fill, "black"),
@@ -300,11 +300,11 @@ method(polar2just, class_numeric) <- function(x, multiplier = 1.2, axis = c("h",
 
 }
 
-method(polar2just, class_angle) <- function(x, multiplier = 1.2, axis = c("h", "v")) {
+method(polar2just, ob_angle) <- function(x, multiplier = 1.2, axis = c("h", "v")) {
   polar2just(x@radian, multiplier, axis)
 }
 
-method(`==`, list(point, point)) <- function(e1, e2) {
+method(`==`, list(ob_point, ob_point)) <- function(e1, e2) {
   (e1@x == e2@x) & (e1@y == e2@y)
 }
 
@@ -312,32 +312,32 @@ method(`==`, list(point, point)) <- function(e1, e2) {
 
 # arithmetic ----
 purrr::walk(list(`+`, `-`, `*`, `/`, `^`), \(.f) {
-  method(.f, list(point, point)) <- function(e1, e2) {
+  method(.f, list(ob_point, ob_point)) <- function(e1, e2) {
     x <- .f(e1@x, e2@x)
     y <- .f(e1@y, e2@y)
     e2@x <- x
     e2@y <- y
     e2
   }
-  method(.f, list(point, class_numeric)) <- function(e1, e2) {
+  method(.f, list(ob_point, class_numeric)) <- function(e1, e2) {
     e1@x <- .f(e1@x, e2)
     e1@y <- .f(e1@y, e2)
     e1
   }
-  method(.f, list(class_numeric, point)) <- function(e1, e2) {
+  method(.f, list(class_numeric, ob_point)) <- function(e1, e2) {
     e2@x <- .f(e1, e2@x)
     e2@y <- .f(e1, e2@y)
     e2
   }
 })
 
-method(midpoint, list(point, point)) <- function(x,y, position = .5, ...) {
+method(midpoint, list(ob_point, ob_point)) <- function(x,y, position = .5, ...) {
   p <- x + ((y - x) * position)
   s <- rlang::list2(...)
   rlang::inject(set_props(p, !!!s))
 }
 
-method(`%*%`, list(point, point)) <- function(x, y) {
+method(`%*%`, list(ob_point, ob_point)) <- function(x, y) {
   x@xy[1, , drop = TRUE] %*% y@xy[1, , drop = TRUE]
 }
 
@@ -346,11 +346,11 @@ method(`%*%`, list(point, point)) <- function(x, y) {
 #' Find point perpendicular to 2 points
 #'
 #' @name perpendicular_point
-#' @param e1 first point
-#' @param e2 second point
+#' @param e1 first ob_point
+#' @param e2 second ob_point
 #' @examples
-#' x <- point(0,0)
-#' y <- point(1,1)
+#' x <- ob_point(0,0)
+#' y <- ob_point(1,1)
 #' # Find point perpendicular to x and y going vertically first
 #' x %|-% y
 #' # Find point perpendicular to x and y going horizontally first
@@ -363,7 +363,7 @@ NULL
 #' @export
 `%|-%` <- new_generic("%|-%", c("e1", "e2"), fun = function(e1,e2) {S7_dispatch()})
 
-method(`%|-%`, list(point, point)) <- function(e1,e2) {
+method(`%|-%`, list(ob_point, ob_point)) <- function(e1,e2) {
   e2@x <- e1@x
   e2
   }
@@ -376,12 +376,12 @@ method(`%|-%`, list(point, point)) <- function(e1,e2) {
 #' @export
 `%-|%` <- new_generic("%-|%", c("e1", "e2"), fun = function(e1,e2) {S7_dispatch()})
 
-method(`%-|%`, list(point, point)) <- function(e1,e2) {
+method(`%-|%`, list(ob_point, ob_point)) <- function(e1,e2) {
   e2@y <- e1@y
   e2
   }
 
-method(label_object, point) <- function(object, accuracy = .1) {
+method(label_object, ob_point) <- function(object, accuracy = .1) {
 
       if (rlang::is_integerish(object@x)) {
         x <- signs::signs(object@x)
@@ -401,56 +401,56 @@ method(label_object, point) <- function(object, accuracy = .1) {
 
 
 
-method(`[`, point) <- function(x, y) {
+method(`[`, ob_point) <- function(x, y) {
   d <- as.list(x@tibble[y,])
-  rlang::inject(point(!!!d))
+  rlang::inject(ob_point(!!!d))
 }
 
-method(connect, list(point, point)) <- function(x,y, arrow_head = arrowheadr::arrow_head_deltoid(2.4), length_head = 7, ...) {
-  s <- segment(x,y, arrow_head = arrow_head, length_head = length_head, ...)
+method(connect, list(ob_point, ob_point)) <- function(x,y, arrow_head = arrowheadr::arrow_head_deltoid(2.4), length_head = 7, ...) {
+  s <- ob_segment(x,y, arrow_head = arrow_head, length_head = length_head, ...)
   s
 
 }
 
-method(place, list(point, point)) <- function(x, from, where = "right", sep = 1) {
+method(place, list(ob_point, ob_point)) <- function(x, from, where = "right", sep = 1) {
   where <- degree(where)
-  p <- polar(where, sep)
+  p <- ob_polar(where, sep)
   x@x <- from@x + p@x
   x@y <- from@y + p@y
   x
 }
 
-point_or_list <- new_union(point, class_list)
+point_or_list <- new_union(ob_point, class_list)
 
 
-method(nudge, list(point, class_numeric, class_numeric)) <- function(object, x, y) {
-  object + point(x, y)
+method(nudge, list(ob_point, class_numeric, class_numeric)) <- function(object, x, y) {
+  object + ob_point(x, y)
 }
 
-method(nudge, list(point, class_numeric, class_missing)) <- function(object, x, y) {
-  object + point(x, 0)
+method(nudge, list(ob_point, class_numeric, class_missing)) <- function(object, x, y) {
+  object + ob_point(x, 0)
 }
 
-method(nudge, list(point, class_missing, class_numeric)) <- function(object, x, y) {
-  object + point(0, y)
+method(nudge, list(ob_point, class_missing, class_numeric)) <- function(object, x, y) {
+  object + ob_point(0, y)
 }
 
-method(shape_array, point) <- function(x, k = 2, sep = 1, where = "east", anchor = "center", ...) {
+method(shape_array, ob_point) <- function(x, k = 2, sep = 1, where = "east", anchor = "center", ...) {
   s <- seq(0, sep * (k - 1), sep)
   px <- cos(degree(where)) * s
   py <- sin(degree(where)) * s
-  p <- point(px, py)
+  p <- ob_point(px, py)
   bb <- p@bounding_box
   if (anchor == "center") {
     p_anchor <- bb@center
   } else {
     p_anchor <- bb@point_at(anchor)
   }
-  point((p - p_anchor + x)@xy, x@style, ...)
+  ob_point((p - p_anchor + x)@xy, x@style, ...)
 }
 
 
-method(covariance, list(point, point)) <- function(
+method(covariance, list(ob_point, ob_point)) <- function(
     x,
     y,
     where = NULL,
@@ -459,8 +459,8 @@ method(covariance, list(point, point)) <- function(
     arrow_head = arrowheadr::arrow_head_deltoid(),
     resect = 2,
     ...) {
-  if (!S7_inherits(where, class_angle) && !is.null(where)) where <- degree(where)
-  if (!S7_inherits(bend, class_angle)) bend <- degree(bend)
+  if (!S7_inherits(where, ob_angle) && !is.null(where)) where <- degree(where)
+  if (!S7_inherits(bend, ob_angle)) bend <- degree(bend)
 
 
 
@@ -505,11 +505,11 @@ method(covariance, list(point, point)) <- function(
 
   if (!is.null(dots$label)) {
     l <- dots$label
-    if (!S7_inherits(l, label)) l <- label(l)
+    if (!S7_inherits(l, ob_label)) l <- ob_label(l)
     dots$label <- NULL
   }
 
-  rlang::inject(bzcurve(p = p,
+  rlang::inject(ob_bezier(p = p,
                         label = l,
                         label_sloped = FALSE,
                         arrow_head = arrow_head,

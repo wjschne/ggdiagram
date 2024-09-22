@@ -1,10 +1,10 @@
 pandoc: '3.2'
-pkgdown: 2.1.0
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   angles: angles.html
   arcs: arcs.html
-  bzcurves: bzcurves.html
+  bezier: bezier.html
   causalpaths: causalpaths.html
   circles: circles.html
   ellipses: ellipses.html
@@ -14,7 +14,7 @@ articles:
   polygons: polygons.html
   rectangles: rectangles.html
   segments: segments.html
-last_built: 2024-08-31T11:51Z
+last_built: 2024-09-22T02:58Z
 urls:
   reference: https://wjschne.github.io/ggdiagram/reference
   article: https://wjschne.github.io/ggdiagram/articles

@@ -1,5 +1,5 @@
 ---
-title: "Polygons (pgon)"
+title: "Polygons"
 format: 
   html:
     toc: true
@@ -93,30 +93,30 @@ bp <- ggplot() +
 
 # Polygons
 
-The `pgon` function creates an object that connects points to make a polygon.
+The `ob_polygon` function creates an object that connects points to make a polygon.
 
 ```{r}
 #| label: fig-path
 #| fig-cap: Plotting a path.
-p <- point(x = c(-4,-3, 4,  3, -1), 
+p <- ob_point(x = c(-4,-3, 4,  3, -1), 
            y = c( 0, 4, 3, -3, -4))
 bp + 
-  pgon(p, fill = "dodgerblue3")
+  ob_polygon(p, fill = "dodgerblue3")
 ```
 
 
 # Polygon Labels
 
-The label of a `pgon` object is placed, by default, at the centroid of the polygon. The centroid is the point whose x coordinate is the average of all the x coordinates of the polygon's points and whose y coordinate is likewise the average of all the point's y coordinates.
+The label of a `ob_polygon` object is placed, by default, at the centroid of the polygon. The centroid is the point whose x coordinate is the average of all the x coordinates of the polygon's points and whose y coordinate is likewise the average of all the point's y coordinates.
 
 
 ```{r}
 #| label: fig-pgonlabel
 #| fig-cap: A path with a curved label
 bp +
-  pgon(
+  ob_polygon(
     p = p,
-    label = label(
+    label = ob_label(
       "My<br>Polygon",
       size = 20,
       color = "white"
@@ -134,9 +134,9 @@ Connections between polygons are arrows that emanate from and point towards the 
 #| label: fig-pgonconnect
 #| fig-cap: Arrow between two polygons
 bp + 
-  {p1 <- pgon(.5 * p - point(1.9,1.9), 
+  {p1 <- ob_polygon(.5 * p - ob_point(1.9,1.9), 
               fill = "dodgerblue4")} + 
-  {p2 <- pgon(.5 * p + point(1.9, 1.9), 
+  {p2 <- ob_polygon(.5 * p + ob_point(1.9, 1.9), 
               fill = "orchid4")} + 
   connect(p1, p2, 
           resect = 1, 
@@ -149,6 +149,6 @@ The `@radius` property controls the radius of the rounded corners. It must be of
 
 ```{r}
 bp + 
-  pgon(p, radius = unit(5, "mm"))
+  ob_polygon(p, radius = unit(5, "mm"))
 ```
 
