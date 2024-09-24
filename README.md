@@ -7,9 +7,9 @@
 [![CRAN status](https://www.r-pkg.org/badges/version/ggdiagram)](https://CRAN.R-project.org/package=ggdiagram)
 <!-- badges: end -->
 
-The ggdiagram package takes an object-oriented approach to making diagrams (using [S7](https://rconsortium.github.io/S7/index.html)) and plots the results using [ggplot2](https://ggplot2.tidyverse.org/).
+The ggdiagram package takes an object-oriented approach to making diagrams and plots the results using [ggplot2](https://ggplot2.tidyverse.org/).
 
-This package is in a very preliminary state. It has some structural beams and a bit of plumbing but is not yet capable of fulfilling its eventual purpose. 
+This package is in the early stages of construction. It has some structural beams and a bit of plumbing but is not yet capable of fulfilling its eventual purpose. 
 
 My motivation in making ggdiagram was to find a way to approach the functionality of TikZ but with the flexibility and convenience of R. The ggdiagram package is built atop [S7](https://rconsortium.github.io/S7/) and is integrated with [ggplot2](https://ggplot2.tidyverse.org/), making heavy use of [ggtext](https://wilkelab.org/ggtext/), [ggforce](https://ggforce.data-imaginist.com/), and [ggarrow](https://teunbrand.github.io/ggarrow/).
 

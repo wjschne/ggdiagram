@@ -2,6 +2,7 @@
 % Please edit documentation in R/arcs.R
 \name{ob_arc}
 \alias{ob_arc}
+\alias{ob_wedge}
 \title{ob_arc class}
 \usage{
 ob_arc(
@@ -38,6 +39,41 @@ ob_arc(
   y0 = class_missing,
   ...
 )
+
+ob_wedge(
+  center = ob_point(0, 0),
+  radius = 1,
+  start = 0,
+  end = 0,
+  label = class_missing,
+  start_point = class_missing,
+  end_point = class_missing,
+  n = 360,
+  wedge = TRUE,
+  alpha = class_missing,
+  arrow_head = class_missing,
+  arrow_fins = class_missing,
+  arrowhead_length = class_missing,
+  length_head = class_missing,
+  length_fins = class_missing,
+  color = NA,
+  fill = "black",
+  lineend = class_missing,
+  linejoin = class_missing,
+  linewidth = 0.25,
+  linewidth_fins = class_missing,
+  linewidth_head = class_missing,
+  linetype = class_missing,
+  resect = class_missing,
+  resect_fins = class_missing,
+  resect_head = class_missing,
+  stroke_color = class_missing,
+  stroke_width = class_missing,
+  style = class_missing,
+  x0 = class_missing,
+  y0 = class_missing,
+  ...
+)
 }
 \arguments{
 \item{center}{point at center of the arc (default = ob_point(0,0))}
@@ -56,7 +92,7 @@ ob_arc(
 
 \item{n}{number of points in arc (default = 360)}
 
-\item{wedge}{Draw a wedge instead of an arc (default = \code{FALSE})}
+\item{wedge}{Draw a wedge instead of an arc when \code{TRUE}}
 
 \item{alpha}{numeric value for alpha transparency}
 
@@ -98,10 +134,14 @@ ob_arc(
 
 \item{style}{a style object}
 
+\item{x0}{x-coordinate of center point. If specified, overrides x-coordinate of \verb{@center}.}
+
+\item{y0}{x-coordinate of center point. If specified, overrides y-coordinate of \verb{@center}.}
+
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> arguments passed to style object}
 }
 \description{
-ob_arc class
+Create arcs and wedges
 }
 \section{Slots}{
 

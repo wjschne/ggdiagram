@@ -69,6 +69,7 @@ lb_props <- list(
       d <- list(x = self@p@x,
                 y = self@p@y,
                 label = self@label,
+                spacing = self@spacing,
                 alpha = self@alpha,
                 color = self@color,
                 angle = self@angle,
@@ -111,7 +112,8 @@ lb_props <- list(
         stop("The plot_point property must be a TRUE/FALSE value of length 1.")
       }
     }),
-    position = new_property(class_numeric)
+    position = new_property(class_numeric),
+    spacing = new_property(class_numeric)
   ),
   info = list(aesthetics = new_property(
     getter = function(self) {
@@ -158,6 +160,7 @@ lb_props <- list(
 #' @param p ob_point
 #' @param style a style list
 #' @param plot_point plot ob_point (default = FALSE)
+#' @param spacing letter spacing for labels used with ob_path and ob_bezier
 #' @param position position (used in conjunction with the `place` function)
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @inherit ob_style params
@@ -197,6 +200,7 @@ ob_label <- new_class(
                          style = class_missing,
                          plot_point = FALSE,
                          position = .5,
+                         spacing = class_missing,
                          x = class_missing,
                          y = class_missing,
                          ...) {
@@ -339,7 +343,8 @@ ob_label <- new_class(
       text.color = d[["text.color"]] %||% text.color,
       vjust = d[["vjust"]] %||% vjust,
       plot_point = plot_point,
-      position = position
+      position = position,
+      spacing = spacing
     )
   }
 )

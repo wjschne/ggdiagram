@@ -118,6 +118,34 @@ arc_props <- list(
         length(self@radius)
       }
     ),
+    polygon = new_property(getter = function(self) {
+      d <- self@tibble
+      if (!("n" %in% colnames(d))) {
+        d$n <- 360
+      }
+      d |>
+        dplyr::mutate(group = factor(dplyr::row_number())) |>
+        dplyr::mutate(xy = purrr::pmap(list(x0, y0, r, start, end, n),
+                                       \(X0, Y0, R, START, END, N) {
+                                         THETA <- seq(c(START), c(END), length.out = N)
+                                         dd <- tibble::tibble(
+                                           x = X0 + cos(THETA) * R,
+                                           y = Y0 + sin(THETA) * R
+                                         )
+
+                                         if (x@wedge) {
+                                           dd <- dplyr::bind_rows(
+                                             dd,
+                                             tibble(x = X0,
+                                                    y = Y0)
+                                           )
+
+                                         }
+                                         dd
+                                       })) |>
+        tidyr::unnest(xy) |>
+        dplyr::select(-c(x0, y0, r, start, end, n))
+    }),
     style = new_property(
       getter = function(self) {
         pr <- purrr::map(arc_styles,
@@ -286,16 +314,20 @@ arc_props <- list(
 # ob_arc----
 
 #' ob_arc class
+#'
+#' Create arcs and wedges
 #' @param center point at center of the arc (default = ob_point(0,0))
 #' @param radius distance between center and edge arc (default = 1)
 #' @param start start angle (default = 0 degrees)
 #' @param end end angle (default = 0 degrees)
+#' @param label A character, angle, or label object
 #' @param start_point Specify where arc starts. Overrides `@center`
 #' @param end_point Specify where arc ends Overrides `@center`
-#' @param label A character, angle, or label object
 #' @param n number of points in arc (default = 360)
-#' @param wedge Draw a wedge instead of an arc (default = `FALSE`)
+#' @param wedge Draw a wedge instead of an arc when `TRUE`
 #' @param style a style object
+#' @param x0 x-coordinate of center point. If specified, overrides x-coordinate of `@center`.
+#' @param y0 x-coordinate of center point. If specified, overrides y-coordinate of `@center`.
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object
 #' @inherit ob_style params
 #' @slot aesthetics A list of information about the arc's aesthetic properties
@@ -702,6 +734,13 @@ method(`[`, ob_arc) <- function(x, y) {
 #
 #
 # }
+
+# ob_wedge ----
+
+#' ob_wedge
+#' @rdname ob_arc
+#' @export
+ob_wedge <- redefault(ob_arc, wedge = TRUE, color = NA, fill = "black")
 
 # circle_pie ----
 

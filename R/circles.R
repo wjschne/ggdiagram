@@ -37,6 +37,19 @@ cr_props <- list(
         nrow(self@tibble)
       }
     ),
+    polygon = new_property(getter = function(self) {
+      d <- self@tibble
+      if (!("n" %in% colnames(d))) {
+        d$n <- 360
+      }
+      d |>
+        dplyr::mutate(group = factor(dplyr::row_number())) |>
+        tidyr::uncount(n, .remove = FALSE) |>
+        dplyr::mutate(theta = 2 * pi * (dplyr::row_number() - 1) / n,
+                      x = x0 + r * cos(theta),
+                      y = y0 + r * sin(theta),
+                      .by = group)
+    }),
     style = new_property(
       getter = function(self) {
         pr <- purrr::map(cr_styles,

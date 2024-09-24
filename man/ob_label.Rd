@@ -30,6 +30,7 @@ ob_label(
   style = class_missing,
   plot_point = FALSE,
   position = 0.5,
+  spacing = class_missing,
   x = class_missing,
   y = class_missing,
   ...
@@ -85,6 +86,8 @@ ob_label(
 \item{plot_point}{plot ob_point (default = FALSE)}
 
 \item{position}{position (used in conjunction with the \code{place} function)}
+
+\item{spacing}{letter spacing for labels used with ob_path and ob_bezier}
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
 }

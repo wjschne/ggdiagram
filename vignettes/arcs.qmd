@@ -1,5 +1,5 @@
 ---
-title: "Arcs"
+title: "Arcs and Wedges"
 format: 
   html:
     toc: true
@@ -263,17 +263,16 @@ bp +
 
 # Wedges
 
-If the `ob_arc@wedge` property is set to `TRUE`, the `ob_arc` function will plot a wedge using `ggplot2::geom_polygon`.
+If the `ob_arc@wedge` property is set to `TRUE`, the `ob_arc` function will plot a wedge using `ggplot2::geom_polygon`. The `ob_wedge` function is a convenient wrapper function for `ob_arc` that sets the `@wedge` property to `TRUE`.
 
 ```{r}
 #| label: fig-wedge
 #| fig-cap: Arc wedges
 theta <- c(0, 120, 180, 360)
 bp +
-  ob_arc(radius = 3, 
+  ob_wedge(radius = 3, 
       start = theta[-length(theta)], 
       end = theta[-1], 
-      wedge = TRUE,
       fill = c("dodgerblue4", "orchid4", "darkgreen"), 
       color = "white", 
       linewidth = 1)

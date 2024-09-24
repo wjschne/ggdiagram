@@ -1078,3 +1078,48 @@ place <- new_generic("place", c("x", "from"),
 method(as.list, shape) <- function(x, ...) {
   purrr::map(seq(1, x@length), \(i) x[i])
 }
+
+
+#' ggdiagram function
+#'
+#' This is a convenient way to specify
+#'
+#' @param family font family
+#'
+#' @export
+#'
+#' @examples
+#' ggdiagram() + ob_circle()
+ggdiagram <- function(
+    base_size = 11,
+    base_family = "sans",
+    base_line_size = base_size/22,
+    base_rect_size = base_size/22,
+    theme_function = ggplot2::theme_void,
+    ...) {
+  require(ggtext)
+  require(geomtextpath)
+  ggplot2::update_geom_defaults(
+    geom = "richtext",
+    new = list(family = base_family,
+               size = base_size / ggplot2::.pt))
+  update_geom_defaults(
+    geom = "line",
+    new = list(linewidth = base_line_size))
+  update_geom_defaults(
+    geom = "segment",
+    new = list(linewidth = base_line_size))
+  update_geom_defaults(
+    geom = "segment",
+    new = list(linewidth = base_line_size))
+  update_geom_defaults(
+    "labelpath",
+    list(
+      family = base_family,
+      size = base_size / ggplot2::.pt))
+
+  ggplot2::ggplot() +
+    theme_function(base_family = family) +
+    ggplot2::coord_equal() +
+    ggplot2::theme(...)
+}

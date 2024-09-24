@@ -21,6 +21,7 @@ library(dplyr)
 library(purrr)
 library(ggtext)
 library(geomtextpath)
+library(ggimage)
 knitr::opts_chunk$set(
   collapse = TRUE,
   dev = "ragg_png",
@@ -57,7 +58,7 @@ library(purrr)
 
 # Path diagrams
 
-Structural equation models are often displayed with path diagrams. The visual vocabulary of path diagrams is fairly simple. An observed variable is square (or rectangular) and a latent variable (i.e., not observed) is circular (or elliptical). Often omitted for clarity, means and intercepts are constants that can be depicted with triangles.
+Structural equation models are often displayed with path diagrams. The visual vocabulary of path diagrams is fairly simple. As seen in @fig-objecttypes, an observed variable is a square or rectangle, and a latent variable is a circle or ellipse. Often omitted for clarity, means and intercepts are constants that can be depicted with triangles.
 
 ```{r}
 #| label: fig-objecttypes
@@ -80,7 +81,7 @@ ggplot() +
 
 ```
 
-
+In @fig-pathtype, two types of relationships are depicted. A single-headed arrow indicates a direct causal influence. A curved double-headed arrow indicates a correlation between two variables but does not specify the causal nature of the relationship.
 
 ```{r}
 #| label: fig-pathtype
@@ -102,68 +103,96 @@ ggplot() +
 
 ```
 
+$$\begin{align}Y&\sim \underbrace{b_0+b_1X}_{\hat{Y}}+e\\
+X&\sim \mathcal{N}(\mu_X,\sigma^2_X)\\
+e&\sim \mathcal{N}(0,\sigma^2_e)\end{align}$$
 
 ```{r}
 #| label: fig-regression
 #| fig-cap: Regression Model
-#| fig-width: 6
-#| fig-height: 5.5
+#| fig-width: 8
+#| fig-height: 4
 #| code-fold: true
-#| out-width: 60%
+#| out-width: 100%
 
+make_equation <- function(
+    x, 
+    filestem,
+    border = 1, 
+    family = "Roboto Condensed") {
+  txt <- paste0(
+  "\\documentclass[border=", 
+  border, 
+  "pt]{standalone}\n\\usepackage{amsmath}\n\\usepackage{fontspec}\n",
+  "\\setmainfont{",
+  family,
+  "}\n\\begin{document}\n$",
+  x,
+  "$\\end{document}")
+  file_tex <- paste0(filestem, ".tex")
+  cat(txt, file = file_tex)
+  tinytex::xelatex(file_tex)
+  paste0(filestem, ".pdf")
+}
+
+sigma2x <- make_equation(r"(\text{\emph{σ}}^{\text{2}}_{\mkern-1.5mu\text{\emph{X}}})", "sigma2x")
+
+sigma2e <- make_equation(r"(\text{\emph{σ}}^{\text{2}}_{\mkern-1.5mu\text{\emph{e}}})", "sigma2e")
+
+observed <- redefault(ob_ellipse, m1 = 15)
+lb_observed <- redefault(ob_label, size = 60, nudge_y = -.15, fill = NA)
+direct <- redefault(connect, resect = 2)
+lb_direct <- redefault(ob_label, angle = 0, position = .47)
 ggplot() + 
   coord_equal() + 
   theme_void() +
-  {X <- ob_ellipse(
-    label = ob_label("*X*", 
-                  size = 60, 
-                  nudge_y = -.15), 
-    m1 = 15)} +
-  {Y <- ob_ellipse(
-    label = ob_label("*Y*", 
-                  size = 60, 
-                  nudge_y = -.15), 
-    m1 = 15) |> 
-    place(X, "right")} +
-  {X_Y <- connect(X,Y, 
+  {X <- observed(label = lb_observed("*X*"))} +
+  {Yhat <- observed(label = lb_observed("*Ŷ*")) |> 
+    place(X, "right", sep = 2)} +
+  {Y <- observed(
+    label = lb_observed("*Y*")) |> 
+    place(Yhat, "right", sep = .75)} +
+  {X_Yhat <- connect(X,
+                  Yhat, 
                   label = ob_label("*b*~1~"), 
                   resect = 2)} + 
+  {X_Y <- direct(Yhat,Y)} + 
+  {e <- ob_circle(radius = .5, 
+                  label = lb_observed("*e*", size = 30, nudge_y = 0)) %>% 
+    place(Y, "right", sep = .75)} +
+  direct(e, Y) +
   {sigma_x <- variance(X, 
                        bend = -20, 
-                       where = degree("south"))} +
-  {sigma_e <- variance(Y, 
-                       bend = -20, 
-                       where = "south")} +
+                       where = degree("west"))} +
+  {sigma_e <- variance(e, 
+                       looseness = 1.8,
+                       theta = degree(60),
+                       where = "east")} +
   {i <- ob_polygon({icenter <- ob_polar(degree(60), 
                                distance(X@center,
-                                        Y@center))} +
-               ob_polar(degree(c(90,210, 330))), 
-             fill = NA, 
+                                        Yhat@center)) + ob_point(0,-.2)} +
+               ob_polar(degree(c(90,210, 330)), r = .8), 
+             fill = NA, linewidth = .5,
              color = "black", 
-             label = ob_label(1, 
-                           size = 40))} +
-  connect(intersection(i, ob_segment(icenter, X@center)), 
-          X, 
-          label = ob_label("*&mu;~X~*", angle = 0), 
+             label = ob_label(1, size = 30))} +
+  direct(intersection(i, ob_segment(icenter, X@center)),
+          X,
+          label = lb_direct("*&mu;~X~*"),
           resect = 2) +
-  connect(intersection(i, ob_segment(icenter, Y@center)), 
-          Y, 
-          label = ob_label("*b*~0~", angle = 0), 
-          resect = 2) 
-  # ggimage::geom_image(
-  #   data = tibble(x = sigma_x@midpoint()@x,
-  #                 y = sigma_x@midpoint()@y),
-  #   aes(x = x,
-  #       y = y,
-  #       image = "sigma2x.pdf"),
-  #   size = .05) +
-  # ggimage::geom_image(
-  #   data = tibble(x = sigma_e@midpoint()@x,
-  #                 y = sigma_e@midpoint()@y),
-  #   aes(x = x,
-  #       y = y,
-  #       image = "sigma2e.pdf"),
-  #   size = .05)
+  direct(intersection(i, ob_segment(icenter, Yhat@center)),
+          Yhat,
+          label = lb_direct("*b*~0~")) +
+  ggimage::geom_image(
+    data = tibble(
+      x = c(sigma_x@midpoint()@x,
+            sigma_e@midpoint()@x),
+      y = c(sigma_x@midpoint()@y,
+            sigma_e@midpoint()@y),
+      image = c(sigma2x, sigma2e)),
+    aes(x = x,
+        y = y,
+        image = image),
+    size = .07)
 
 
 ```
@@ -367,11 +396,13 @@ ggplot() +
 ```
 
 ```{r}
+#| label: fig-wedge
+#| fig-cap: Latent variables with pie wedges to display residual variances
 ggplot() + 
   coord_equal() + 
   theme_void() +
   {g <- latent(label = lb_latent("*g*"), fill = "gray15")} + 
-  var_latent(g, label = lb_path(1), arrow_head = arrowheadr::arrow_head_deltoid() %>% arrowheadr::nudger(c(.5,0)) %>% arrowheadr::rescaler(.5)) +
+  var_latent(g, label = lb_path(1)) +
   {Gx <- place(g, g,where = "below", sep = 3) |> 
     shape_array(k = 3, 
                 sep = 3, 
@@ -392,41 +423,15 @@ ggplot() +
     p = pGx@line@point_at_y(pGx[2]@midpoint(
       position = .47)@y),
     color = Gx@fill)} + 
-  ob_arc(center = Gx@center, 
+  ob_wedge(center = Gx@center, 
          start = turn(.5) + turn(broad_variance) / 2, 
          end = turn(.5) - turn(broad_variance) / 2, 
-         wedge = TRUE, fill = my_fills) + 
+         fill = my_fills) + 
   lb_latent(broad, p = Gx@center, vjust = .6)
 ```
 
 
-```{r}
-ggplot() +
-  coord_equal() +
-  theme_void() +
-  {g <- latent(label = lb_latent("*g*"), fill = "gray15")} +
-  {start <- degree(90 - 25)
-   end <- degree(90 + 25) 
-   p_start <- g@point_at(start)
-   p_end <- g@point_at(end)
-   p_center <- intersection(g@tangent_at(start), g@tangent_at(end))
-   v_circle <- ob_circle(p_center, radius = distance(p_start, p_center))
-   ob_arc(
-    center = p_center,
-    radius = v_circle@radius,
-    end = v_circle@angle_at(p_start),
-    start = v_circle@angle_at(p_end) + degree(360),
-    resect = 2,
-    arrow_head = my_arrowhead,
-    arrow_fins = my_arrowhead,
-    arrowhead_length = 7,
-    linewidth = .5
-   )
-   }
 
-
-  
-```
 
 
 
@@ -490,4 +495,130 @@ ggplot() + coord_equal() + theme_void() +
 ```
 
 
+```{r}
+#| label: fig-hierarchy
+#| fig-cap: A hierarchical model of cognitive abilities in the Cattell-Horn-Carroll tradition [@schneiderCattellHornCarrollTheoryCognitive2018]
+#| fig-width: 8
+#| fig-height: 8
+#| code-fold: true
+black_gradient <- grid::radialGradient(rev(c("gray50", "gray2", "gray2")), stops = c(0,.35, 1))
+my_serif_font <- "Equity Text A"
+black_gradient_rev <- grid::radialGradient(c("gray50", "black"))
+str_narrow <- "Narrow Abilities"
+str_tests <- "Tests"
+str_specifics <- "Specifics"
+ggdiagram() +
+  {g <- ob_circle(
+      radius = 1.33,
+      fill = NA,
+      color = NA
+    )} + 
+  geom_polygon(data = ob_circle(radius = 9)@polygon, aes(x = x, y = y), fill = black_gradient) +
+  geom_polygon(data = g@polygon, aes(x = x, y = y), fill = black_gradient_rev) +
+  {broad_angle <- turn(seq(0, 1, length.out = 9)[-9] + 1 / 16) 
+   broad_color <- hcl(seq(0, 360 - 360 / 8, 360 / 8) + 20, c = 55, l = 60)
+    broad <- place(ob_circle(color = NA, fill = broad_color),
+    g,
+    where = broad_angle,
+    sep = 1)} + 
+  ob_label(
+        "*g*",
+        color = "gray90",
+        fill = NA,
+        size = 60,
+        vjust = .4,
+        family = my_serif_font
+      ) +
+  connect(g, broad, color = broad_color, resect = 1, linewidth = .75, length_head = 5) +
+  purrr::map(as.list(broad), \(b) {
+    geom_polygon(
+      data = b@polygon, 
+      aes(x = x, y = y), 
+      fill = grid::radialGradient(c(tinter::lighten(b@fill, .4), tinter::lighten(b@fill, .8)), stops = c(0,1))) 
+  }) +
+  ob_label(
+    c("Ga", "Gc", "Gf", "Gv", "Gs", "Gr", "Gl", "Gwm"),
+    broad@center + ob_point(0, -.05),
+    fill = NA,
+    family = my_serif_font,
+    size = 20,
+    vjust = .55,
+    angle = broad@center@theta + degree(-90 * sign(broad@center@theta@turn)),
+    color = "gray20"
+  ) +
+  ob_path(purrr::map(as.list(broad %>% set_props(radius = c(rep(.67, 4), rep(.62, 4)))), \(x) x@point_at(
+    x@center@theta + degree(seq(-90, 90, 10)))),
+    label = ob_label(
+      c("Auditory", "Knowledge", "Fluid", "Visual-Spatial", "Speed", "Fluency", "Efficiency", "Memory"),
+            fill = NA,
+            family = my_serif_font,
+            vjust = 1,
+      size = 9.5,
+            spacing = 100
+          ),
+          color = "gray20",
+          alpha = 0
+  ) +
+  ob_path(purrr::map(as.list(broad %>% set_props(radius = c(rep(.62, 4), rep(.67, 4)))), \(x) x@point_at(
+    x@center@theta + degree(-180) + degree(seq(-90, 90, 10)))),
+    label = ob_label(
+      c("Processing", "Comprehension", "Reasoning", "Processing", "Processing", "Retrieval", "Learning", "Working"),
+            fill = NA,
+            family = my_serif_font,
+            vjust = 1,
+      size = 9.5,
+            spacing = 100
+          ),
+          color = "gray20",
+          alpha = 0
+  ) +
+  {narrow <- place(ob_circle(radius = .45, fill = rep(broad@fill, each = 5)), from = g, where = degree(seq(0, 360 - 360/40, 360/40) + 360/80), sep = 4.3)
+    geom_polygon(
+    aes(x = x,y = y, group = group, fill = fill),
+    data = narrow@polygon, 
+               color = NA)} + 
+  {purrr::imap(as.list(broad), \(x, idx) {
+    connect(x, narrow[(idx - 1) * 5 + 1:5], 
+            color = tinter::lighten(x@fill, .5), 
+            linewidth = .5,
+            length_head = 6,
+            resect = 1) %>% 
+      as.geom()
+  })} +
+  {test_theta <- degree(seq(0, 360 - 360/120, 360/120) + 360/240)
+  tests <- place(ob_ellipse(a = .18, m1 = 8, angle = test_theta, fill = rep(tinter::lighten(broad@fill, .2), each = 15), color = NA), from = g, where = test_theta, sep = 6.2)} +
+  {specifics <- place(ob_circle(radius = .2, angle = test_theta, fill = rep(tinter::lighten(broad@fill, .15), each = 15), color = NA), from = g, where = test_theta, sep = 7.0)} +
+  connect(specifics, tests, 
+          color = specifics@fill, 
+          linewidth = .3,
+          length_head = 6, 
+          resect = .5) +
+  {purrr::imap(as.list(narrow), \(x, idx) {
+    connect(x, tests[(idx - 1) * 3 + 1:3], color = tinter::lighten(x@fill, .5), 
+            resect = 1, 
+            linewidth = .3,
+            length_head = 6) %>% 
+      as.geom()
+  })} +
+  scale_fill_manual(values = map(broad@fill, \(fill) grid::radialGradient(c(tinter::lighten(fill, .15), tinter::lighten(fill, .4)), stops = c(0.2, 1), group = F)) %>% `names<-`(broad@fill)) +
+  theme(legend.position = "none") +
+  ob_label(label = rev(strsplit(str_narrow, split = character(0))[[1]]),p = narrow[seq(nchar(str_narrow)) + 2]@center, angle = narrow[seq(nchar(str_narrow)) + 2]@center@theta - degree(90), fill = NA, family = my_serif_font, size = 16, color = "gray30", vjust = .55) +
+  ob_label(label = strsplit(str_narrow, split = character(0))[[1]],p = narrow[seq(nchar(str_narrow)) + 22]@center, angle = narrow[seq(nchar(str_narrow)) + 22]@center@theta + degree(90), fill = NA, family = my_serif_font, size = 16, color = "gray30", vjust = .55) +
+  {purrr::map(65 + c(0,15, 30, 45), \(x) {
+    ob_label(label = strsplit(str_tests, split = character(0))[[1]],p = tests[seq(nchar(str_tests)) + x]@center, angle = tests[seq(nchar(str_tests)) + x]@center@theta + degree(90), fill = NA, family = my_serif_font, size = 10, color = "gray30", vjust = .57)@geom()
+  })} +
+  {purrr::map(5 + c(0,15, 30, 45), \(x) {
+    ob_label(label = rev(strsplit(str_tests, split = character(0))[[1]]),p = tests[seq(nchar(str_tests)) + x]@center, angle = tests[seq(nchar(str_tests)) + x]@center@theta - degree(90), fill = NA, family = my_serif_font, size = 10, color = "gray30", vjust = .57)@geom()
+  })} +
+  {purrr::map(63 + c(0,15, 30, 45), \(x) {
+    ob_label(label = strsplit(str_specifics, split = character(0))[[1]],p = specifics[seq(nchar(str_specifics)) + x]@center, angle = specifics[seq(nchar(str_specifics)) + x]@center@theta + degree(90), fill = NA, family = my_serif_font, size = 9, color = "gray30", vjust = .53)@geom()
+  })} +
+  {purrr::map(3 + c(0,15, 30, 45), \(x) {
+    ob_label(label = rev(strsplit(str_specifics, split = character(0))[[1]]),p = specifics[seq(nchar(str_specifics)) + x]@center, angle = specifics[seq(nchar(str_specifics)) + x]@center@theta - degree(90), fill = NA, family = my_serif_font, size = 9, color = "gray30", vjust = .53)@geom()
+  })}
+
+
+
+
+```
 

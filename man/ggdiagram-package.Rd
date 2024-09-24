@@ -2,7 +2,6 @@
 % Please edit documentation in R/ggdiagram-package.R
 \docType{package}
 \name{ggdiagram-package}
-\alias{ggdiagram}
 \alias{ggdiagram-package}
 \title{ggdiagram: Object-oriented diagram plots with ggplot2}
 \description{
