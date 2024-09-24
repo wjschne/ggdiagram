@@ -28,7 +28,7 @@ knitr::opts_chunk$set(
   comment = "#>",
   fig.width = 7,
   fig.height = 7,
-  cache = T
+  cache = F
 )
 
 my_font <- "Roboto Condensed"

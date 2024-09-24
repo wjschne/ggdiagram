@@ -125,24 +125,20 @@ arc_props <- list(
       }
       d |>
         dplyr::mutate(group = factor(dplyr::row_number())) |>
-        dplyr::mutate(xy = purrr::pmap(list(x0, y0, r, start, end, n),
-                                       \(X0, Y0, R, START, END, N) {
-                                         THETA <- seq(c(START), c(END), length.out = N)
-                                         dd <- tibble::tibble(
-                                           x = X0 + cos(THETA) * R,
-                                           y = Y0 + sin(THETA) * R
-                                         )
-
-                                         if (x@wedge) {
-                                           dd <- dplyr::bind_rows(
-                                             dd,
-                                             tibble(x = X0,
-                                                    y = Y0)
-                                           )
-
-                                         }
-                                         dd
-                                       })) |>
+        dplyr::mutate(xy = purrr::pmap(
+          list(x0, y0, r, start, end, n),
+          \(X0, Y0, R, START, END, N) {
+            THETA <- seq(c(START), c(END), length.out = N)
+            dd <- tibble::tibble(
+              x = X0 + cos(THETA) * R,
+              y = Y0 + sin(THETA) * R)
+            if (self@wedge) {
+              dd <- dplyr::bind_rows(
+                dd,
+                tibble(x = X0,
+                       y = Y0))}
+            dd
+            })) |>
         tidyr::unnest(xy) |>
         dplyr::select(-c(x0, y0, r, start, end, n))
     }),
