@@ -287,19 +287,6 @@ ggdiagram(base_family = my_font, base_size = 16) +
              label = lb_path("*r*~12~", position = .5))
 ```
 
-The model-implied correlations among the four variables is the sum of the direct, indirect (i.e. mediated), spurious (i.e., due to common casuses), and unanalyzed effects (i.e., involving unmodeled correlations):
-
-$$
-\begin{align}
-\color{gray}{r_{12}}\\
-r_{13} &= \color{orchid}{b_{13}}+\color{gray}{r_{12}b_{23}}\\
-r_{14} &= \color{orchid}{b_{14}}+\color{forestgreen}{b_{13}b_{34}}+\color{gray}{r_{12}b_{24}}+\color{gray}{r_{12}b_{23}b_{34}}\\
-r_{23} &= \color{orchid}{b_{23}}+\color{gray}{r_{12}b_{13}}\\
-r_{24} &= \color{orchid}{b_{24}}+\color{forestgreen}{b_{23}b_{34}}+\color{gray}{r_{12}b_{14}}+\color{gray}{r_{12}b_{13}b_{34}}\\
-r_{34} &= \color{orchid}{b_{34}}+\color{dodgerblue}{b_{23}b_{24}}+\color{dodgerblue}{b_{13}b_{14}}+\color{gray}{b_{13}r_{12}b_{24}}+\color{gray}{b_{13}r_{12}b_{23}b_{34}}\\
-\text{Key: }&\color{orchid}{\text{Direct effect}},\, \color{forestgreen}{\text{Indirect effect}},\,\color{dodgerblue}{\text{Spurious effect}},\,\color{gray}{\text{Unanalyzed effect}}
-\end{align}
-$$
 
 ## Path Diagrams for Exploratory Factor Analysis
 
