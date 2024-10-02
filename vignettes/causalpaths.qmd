@@ -3,11 +3,13 @@ title: "Path Diagrams"
 format: 
   html:
     toc: true
-    html-math-method: katex
+    html-math-method: mathjax
 vignette: >
   %\VignetteIndexEntry{pathdiagrams}
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
+bibliography: references.json
+csl: apa.csl
 ---
 
 ```{r}
@@ -28,7 +30,7 @@ knitr::opts_chunk$set(
   comment = "#>",
   fig.width = 7,
   fig.height = 7,
-  cache = F
+  cache = FALSE
 )
 
 my_font <- "Roboto Condensed"
@@ -66,9 +68,7 @@ Structural equation models are often displayed with path diagrams. The visual vo
 #| fig-height: 3
 #| code-fold: true
 
-ggplot() + 
-  coord_equal() + 
-  theme_void() +
+ggdiagram(base_family = my_font, base_size = 16) +
   {lv <- ob_circle(label = "Latent<br>Variable")} +
   {r <- ob_rectangle(width = sqrt(pi),
                   height = sqrt(pi),
@@ -88,9 +88,7 @@ In @fig-pathtype, two types of relationships are depicted. A single-headed arrow
 #| fig-cap: Relationships in a path diagram
 #| code-fold: true
 #| out-width: 70%
-ggplot() + 
-  coord_equal() + 
-  theme_void() +
+ggdiagram(base_family = my_font, base_size = 16) +
   {this <- ob_circle(label = ob_label("This", size = 40))} +
   {that <- ob_circle(label = ob_label("That", size = 40)) |>
     place(this, "right")} +
@@ -99,53 +97,76 @@ ggplot() +
     place(this, "below")} +
   {B <- that |> 
     place(that, "below")} +
-  covariance(A, B, label = ob_label("Correlates with", vjust = 0)) 
+  ob_covariance(A, B, label = ob_label("Correlates with", vjust = 0)) 
 
 ```
 
-$$\begin{align}Y&\sim \underbrace{b_0+b_1X}_{\hat{Y}}+e\\
-X&\sim \mathcal{N}(\mu_X,\sigma^2_X)\\
-e&\sim \mathcal{N}(0,\sigma^2_e)\end{align}$$
+## Path Models for Regression
+
+A regression model can be stated very simply: *X* predicts *Y*. Most of the time, this relationship can be stated with a simplified path diagram like @fig-simpleregression.
 
 ```{r}
-#| label: fig-regression
-#| fig-cap: Regression Model
+#| label: fig-simpleregression
+#| fig-cap: Simplified path diagram of a regression model
+#| code-fold: true
+#| fig-width: 2.5
+#| fig-height: 1
+observed <- redefault(
+  ob_ellipse, 
+  m1 = 15)
+lb_observed <- redefault(
+  ob_label, 
+  size = 48, 
+  nudge_y = -.15, 
+  fill = NA)
+direct <- redefault(
+  connect, 
+  resect = 2)
+lb_direct <- redefault(
+  ob_label, 
+  angle = 0, 
+  position = .47)
+
+ggdiagram(base_family = my_font, base_size = 16) + 
+  {X <- observed(label = lb_observed("X"))} +
+  {Y <- observed(label = lb_observed("Y")) %>% 
+    place(X,where = "right")} +
+  direct(X,Y)
+```
+
+This simple statement skips a large number of details, which can be filled in. The predictor, *X* is a random variable with an unknown distribution *F~X~*. It has a mean of *μ~X~* and a standard deviation of *σ~X~*.
+
+$$X\sim F_X(x; \mu_X,\sigma^2_X)$$
+
+Regression takes *X* and subjects it to a linear transformation to create the variable *Ŷ*:
+
+$$\hat{Y}=b_0+b_1X$$ The regression coefficients *b~0~* and *b~1~* are known as the *intercept* and *slope*, respectively. *Ŷ* is the predicted value of *Y*, given *X*.
+
+The prediction error *e* is the difference between the actual value of *Y* and its predicted value *Ŷ*:
+
+$$e=Y-\hat{Y}$$
+
+The prediction error is assumed to be normally distributed with a standard deviation of *σ~e~*, which is known as the *standard error of the estimate*:
+
+$$e\sim \mathcal{N}(0,\sigma^2_e)$$ Putting it all together:
+
+$$Y=\underbrace{b_0+b_1X}_{\hat{Y}}+e$$
+
+All of this can be communicated succinctly with the path diagram in @fig-fullregression.
+
+```{r}
+#| label: fig-fullregression
+#| fig-cap: Full path diagram of a regression model 
 #| fig-width: 8
 #| fig-height: 4
 #| code-fold: true
 #| out-width: 100%
 
-make_equation <- function(
-    x, 
-    filestem,
-    border = 1, 
-    family = "Roboto Condensed") {
-  txt <- paste0(
-  "\\documentclass[border=", 
-  border, 
-  "pt]{standalone}\n\\usepackage{amsmath}\n\\usepackage{fontspec}\n",
-  "\\setmainfont{",
-  family,
-  "}\n\\begin{document}\n$",
-  x,
-  "$\\end{document}")
-  file_tex <- paste0(filestem, ".tex")
-  cat(txt, file = file_tex)
-  tinytex::xelatex(file_tex)
-  paste0(filestem, ".pdf")
-}
 
-sigma2x <- make_equation(r"(\text{\emph{σ}}^{\text{2}}_{\mkern-1.5mu\text{\emph{X}}})", "sigma2x")
 
-sigma2e <- make_equation(r"(\text{\emph{σ}}^{\text{2}}_{\mkern-1.5mu\text{\emph{e}}})", "sigma2e")
 
-observed <- redefault(ob_ellipse, m1 = 15)
-lb_observed <- redefault(ob_label, size = 60, nudge_y = -.15, fill = NA)
-direct <- redefault(connect, resect = 2)
-lb_direct <- redefault(ob_label, angle = 0, position = .47)
-ggplot() + 
-  coord_equal() + 
-  theme_void() +
+
+ggdiagram(base_family = my_font, base_size = 16) +
   {X <- observed(label = lb_observed("*X*"))} +
   {Yhat <- observed(label = lb_observed("*Ŷ*")) |> 
     place(X, "right", sep = 2)} +
@@ -161,50 +182,374 @@ ggplot() +
                   label = lb_observed("*e*", size = 30, nudge_y = 0)) %>% 
     place(Y, "right", sep = .75)} +
   direct(e, Y) +
-  {sigma_x <- variance(X, 
+  {sigma_x <- ob_variance(X, 
                        bend = -20, 
                        where = degree("west"))} +
-  {sigma_e <- variance(e, 
+  {sigma_e <- ob_variance(e, 
                        looseness = 1.8,
                        theta = degree(60),
                        where = "east")} +
-  {i <- ob_polygon({icenter <- ob_polar(degree(60), 
-                               distance(X@center,
-                                        Yhat@center)) + ob_point(0,-.2)} +
-               ob_polar(degree(c(90,210, 330)), r = .8), 
-             fill = NA, linewidth = .5,
-             color = "black", 
-             label = ob_label(1, size = 30))} +
-  direct(intersection(i, ob_segment(icenter, X@center)),
-          X,
-          label = lb_direct("*&mu;~X~*"),
-          resect = 2) +
-  direct(intersection(i, ob_segment(icenter, Yhat@center)),
-          Yhat,
-          label = lb_direct("*b*~0~")) +
-  ggimage::geom_image(
-    data = tibble(
-      x = c(sigma_x@midpoint()@x,
-            sigma_e@midpoint()@x),
-      y = c(sigma_x@midpoint()@y,
-            sigma_e@midpoint()@y),
-      image = c(sigma2x, sigma2e)),
-    aes(x = x,
-        y = y,
-        image = image),
-    size = .07)
+  {i <- ob_polygon(
+    p = ob_polar(theta = degree(60), distance(X@center,Yhat@center)) + 
+      ob_point(0,-.2) +
+      ob_polar(degree(c(90,210, 330)), r = .8),
+    fill = NA, linewidth = .5,
+    color = "black", 
+    label = ob_label(1, size = 30))} +
+  direct(i, X,  label = lb_direct("*&mu;~X~*")) +
+  direct(i, Yhat, label = lb_direct("*b*~0~")) +
+  ob_latex(tex = c(
+    r"(\text{\emph{σ}}^{\text{2}}_{\mkern-1.5mu\text{\emph{X}}})", 
+    r"(\text{\emph{σ}}^{\text{2}}_{\mkern-1.5mu\text{\emph{e}}})"), 
+    center = bind(c(sigma_x, sigma_e))@midpoint(), 
+    width = .07, 
+    family = my_font)
+  # ggimage::geom_image(
+  #   data = tibble(
+  #     x = c(sigma_x@midpoint()@x,
+  #           sigma_e@midpoint()@x),
+  #     y = c(sigma_x@midpoint()@y,
+  #           sigma_e@midpoint()@y),
+  #     image = c(sigma2x, sigma2e)),
+  #   aes(x = x,
+  #       y = y,
+  #       image = image),
+  #   size = .07)
 
 
 ```
 
+## Path Diagrams for Path Analysis
+
+Path diagrams were created by Sewall Wright [-@wrightRelativeImportanceHeredity1920] to display path analyses---interconnected regression models with sequences of direct and indirect relationships among variables.
+
+For example, these two regression equations combined make up a causal system that shows how variables *X*~1~--*X*~4~ interrelate.
+
+$$
+\begin{align}
+X_3&=b_{13}X_1+b_{23}X_2+e_3\\
+X_4&=b_{14}X_1+b_{24}X_2+b_{34}X_3+e_4
+\end{align}
+$$
+
+```{r}
+#| label: fig-pathanalysis
+#| fig-cap: A path diagram of a path analysis model
+#| fig-width: 8
+#| fig-height: 4.5
+#| code-fold: true
+
+ln_color <- "gray40"
+lb_color <- "gray20"
+observed <- redefault(ob_ellipse,
+                      a = .6,
+                      m1 = 10,
+                      color = ln_color)
+direct <- redefault(connect, resect = 2, color = ln_color)
+error <- redefault(ob_circle, color = ln_color, radius = .5)
+lb_observed <- redefault(ob_label,
+                         size = 40,
+                         nudge_y = -.07,
+                         color = lb_color)
+
+lb_path <- redefault(
+  ob_label,
+  size = 16,
+  color = lb_color,
+  angle = 0,
+  vjust = .5,
+  position = .46
+)
+
+lb_error <- redefault(ob_label, size = 18, color = lb_color)
+covariance <- redefault(
+  ob_covariance,
+  color = ln_color,
+  bend = 45,
+  linewidth = .5,
+  arrowhead_length = 7,
+  looseness = 1.2
+)
+
+ggdiagram(base_family = my_font, base_size = 16) + 
+  {x1 <- observed() 
+   x2 <- observed() %>% 
+    place(x1, "below", sep = 2.25) 
+   x3 <- observed() %>% 
+    place(midpoint(x1@point_at("east"),
+                   x2@point_at("east")), 
+          "right") 
+   x4 <- observed() %>% 
+    place(x3, "right", sep = 1.5)
+   x <- bind(c(x1, x2, x3, x4))} +
+  lb_observed(paste0("*X*~",1:4,"~"), x@center) + 
+  {pred <-    bind(c(x2, x1, x3, x1, x2))
+   outcome <- bind(c(x3, x3, x4, x4, x4))
+   direct(pred,outcome, 
+          label = lb_path(
+            label = c("*b*~23~",
+                      "*b*~13~",
+                      "*b*~34~",
+                      "*b*~14~",
+                      "*b*~24~")))} +
+  {endogenous <- bind(c(x3,x4))
+   e <- error(label = lb_error(paste0("*e*~", 3:4, "~"))) %>% 
+    place(from = endogenous, 
+          where = c("left", "right"),
+          sep = .5)} + 
+  direct(e, endogenous) +
+  covariance(x2@point_at("west"), 
+             x1@point_at("west"),
+             label = lb_path("*r*~12~", position = .5))
+```
+
+The model-implied correlations among the four variables is the sum of the direct, indirect (i.e. mediated), spurious (i.e., due to common casuses), and unanalyzed effects (i.e., involving unmodeled correlations):
+
+$$
+\begin{align}
+\color{gray}{r_{12}}\\
+r_{13} &= \color{orchid}{b_{13}}+\color{gray}{r_{12}b_{23}}\\
+r_{14} &= \color{orchid}{b_{14}}+\color{forestgreen}{b_{13}b_{34}}+\color{gray}{r_{12}b_{24}}+\color{gray}{r_{12}b_{23}b_{34}}\\
+r_{23} &= \color{orchid}{b_{23}}+\color{gray}{r_{12}b_{13}}\\
+r_{24} &= \color{orchid}{b_{24}}+\color{forestgreen}{b_{23}b_{34}}+\color{gray}{r_{12}b_{14}}+\color{gray}{r_{12}b_{13}b_{34}}\\
+r_{34} &= \color{orchid}{b_{34}}+\color{dodgerblue}{b_{23}b_{24}}+\color{dodgerblue}{b_{13}b_{14}}+\color{gray}{b_{13}r_{12}b_{24}}+\color{gray}{b_{13}r_{12}b_{23}b_{34}}\\
+\text{Key: }&\color{orchid}{\text{Direct effect}},\, \color{forestgreen}{\text{Indirect effect}},\,\color{dodgerblue}{\text{Spurious effect}},\,\color{gray}{\text{Unanalyzed effect}}
+\end{align}
+$$
+
+## Path Diagrams for Exploratory Factor Analysis
+
+Exploratory factor analysis (EFA) assumes that observed variables intercorrelate because there is a smaller number of latent variables influence multiple observed variables. In @fig-efa, there are 6 observed variables *x* that intercorrelate because 2 latent factors *f* act as common causes.
+
+EFA will find the loadings from latent to observed variables that best account for the observed correlations among variables. Some portion of the observed variables is independent of the latent factors. These independent influences can be thought of as uniquenesses *u*. Thus, the structural model is:
+
+$$
+x=\Lambda f+u
+$$ where *x* is the vector observed variables, *f* is the vector of latent factors, *u* is the vector of latent uniquenesses, and Λ is the matrix of loadings that quantify the strength of the effects of *f* on *x*.
+
+The observed variables *x*, latent factors *f*, and uniquenesses *u* each have their own covariance matrices:
+
+$$
+\begin{align}
+\Sigma&=\text{cov}(x)\\
+\Phi&=\text{cov}(f)\\
+\Theta&=\text{cov}(u)
+\end{align}
+$$
+
+The model-implied covariance matrix for the observed variables is a function of the loading matrix Λ and the covariance matrices Φ and Θ:
+
+$$
+\begin{align}
+\hat{\Sigma}&=\Lambda\Phi\Lambda'+\Theta\\
+&=\begin{bmatrix}
+\lambda_{11} & \lambda_{21}\\
+\lambda_{12} & \lambda_{22}\\
+\lambda_{13} & \lambda_{23}\\
+\lambda_{14} & \lambda_{24}\\
+\lambda_{15} & \lambda_{25}\\
+\lambda_{16} & \lambda_{26}\\
+\end{bmatrix}\begin{bmatrix}\phi_{11} & \phi_{12}\\ \phi_{12} & \phi_{22}\end{bmatrix}\begin{bmatrix}
+\lambda_{11} & \lambda_{21}\\
+\lambda_{12} & \lambda_{22}\\
+\lambda_{13} & \lambda_{23}\\
+\lambda_{14} & \lambda_{24}\\
+\lambda_{15} & \lambda_{25}\\
+\lambda_{16} & \lambda_{26}\\
+\end{bmatrix}'+\begin{bmatrix}
+\theta_{11} & 0 & 0 & 0 & 0 & 0\\ 
+0 & \theta_{22} & 0 & 0 & 0 & 0\\
+0 & 0 & \theta_{33} & 0 & 0 & 0\\
+0 & 0 & 0 & \theta_{44} & 0 & 0\\
+0 & 0 & 0 & 0 & \theta_{55} & 0\\
+0 & 0 & 0 & 0 & 0 & \theta_{66}
+\end{bmatrix}
+\end{align}
+$$
+
+```{r}
+#| label: fig-efa
+#| fig-height: 9
+#| fig-width: 6.5
+#| fig-cap: "Exploratory Factor Analysis with Two Latent Factors and Six Observed Variables"
+#| code-fold: true
+
+my_fills <- viridis::viridis(n = 3, begin = .3, end = .6) %>% 
+  class_color() %>% 
+  set_props(saturation = .6, brightness = .5) %>% 
+  c()
+
+ggdiagram(base_family = my_font, base_size = 16) +
+  {x <- shape_array(ob_ellipse(m1 = 8, 
+                               color = NA,
+                               fill = my_fills[2]), 
+                    k = 6, 
+                    sep = .25)} +
+  ob_label(label = paste0("*X*~",1:6, "~"),
+           p = x@center,
+           size = 20,
+           fill = NA,
+           nudge_y = -.1,
+           color = "white") +
+  {f1 <- ob_circle(radius = x[1:2]@bounding_box@width / 2, 
+                   fill = my_fills[1],
+                   color = NA,
+                   label = ob_label(
+                     "*f*~1~", 
+                     size = 48,
+                     nudge_y = -.2,
+                     fill = NA, 
+                     color = "white")) %>% 
+    place(from = midpoint(x[1], x[2]), 
+          where = "above", 
+          sep = x[1:4]@bounding_box@width)} +
+  {f2 <- ob_circle(radius = x[5:6]@bounding_box@width / 2, 
+                   fill = my_fills[3],
+                   color = NA,
+                   label = ob_label(
+                     "*f*~2~", 
+                     size = 48,
+                     nudge_y = -.2,
+                     fill = NA, 
+                     color = "white")) %>% 
+    place(midpoint(x[5], x[6]), 
+          where = "above", 
+          sep = x[1:4]@bounding_box@width)} +
+  {f1x <- connect(f1, 
+                  x@point_at("top"), 
+                  resect = 2, 
+                  color = my_fills[1])} + 
+  {f2x <- connect(f2, 
+                  x@point_at("top"), 
+                  resect = 2, 
+                  color = my_fills[3])} +
+  {a <- intersection(f1@tangent_at(45), f2@tangent_at(135))
+   ob_arc(center = a, 
+          radius = distance(a, f1@point_at(45)), 
+          start = (f1@point_at(45) - a)@theta, 
+          end = (f2@point_at(135) - a)@theta,
+          color = my_fills[2],
+          resect = 2, 
+          linewidth = .5,
+          arrowhead_length = 7,
+          arrow_head = arrowheadr::arrow_head_deltoid(),
+          arrow_fins = arrowheadr::arrow_head_deltoid(),
+          label = ob_label("&phi;~12~",
+                           color = my_fills[2],
+                           vjust = .5,
+                           size = 14))} +
+  {ob_label(paste0("*&lambda;*~2", 1:6, "~"), 
+            intersection(f1x[6] + ob_point(1.2,0), f2x), 
+            size = 14,
+            label.padding = margin(),
+            color = my_fills[3])} +
+  {ob_label(paste0("*&lambda;*~1", 1:6, "~"), 
+            intersection(f2x[1] + ob_point(-1.2,0), f1x), 
+            size = 14,
+            label.padding = margin(t = 2, l = 2),
+            color = my_fills[1])} +
+  ob_variance(
+    x = f1,
+    color = my_fills[1],
+    label = ob_label("&phi;~11~", color = my_fills[1], size = 14)
+  ) +
+  ob_variance(
+    x = f2,
+    color = my_fills[3],
+    label = ob_label("&phi;~22~", color = my_fills[3], size = 14)
+  ) +
+  {u <- ob_circle(
+    radius = .75,
+    color = NA,
+    fill = my_fills[2],
+    alpha = .5,
+    label = ob_label(
+      paste0("*u*~", 1:6, "~"),
+      fill = NA,
+      color = "white",
+      size = 14
+    )
+  ) %>% place(x, "below", sep = 1.2)} +
+  connect(u, x, color = my_fills[2], resect = 2) +
+  ob_variance(
+    u,
+    where = "south",
+    color = my_fills[2],
+    theta = 65,
+    looseness = 2.3,
+    label = ob_label(
+      paste0("*&theta;*~", 1:6 * 11, "~"),
+      color = my_fills[2],
+      label.margin = margin(),
+      size = 12
+    )
+  )
+  
+```
+
+## Path Diagrams for Principal Components Analysis
+
+Principal components analysis (PCA) is similar to exploratory factor analysis (EFA) in that it finds latent factors from covariances among observed variables. The underlying model of PCA differs from EFA in that the indicators are *formative* rather than *reflective*. Because the principal components are fully determined by the observed variables, they have no error term. That is, they act as weighted summaries of the observed variables. In general, PCA creates latent variables that better summarize the observed data, and EFA creates latent variables that better approximate the underlying structure of the data.
+
+```{r}
+#| label: fig-pca
+#| fig-cap: A path diagram for a principal components analysis model
+#| code-fold: true
+#| fig-height: 6.5
+
+ggdiagram(base_family = my_font) +
+  # observed variables
+  {o <- ob_ellipse(m1 = 10, a = .6, color = NA) %>%
+      shape_array(5, sep = .2, fill = class_color(my_fills[2])@lighten(seq(.6, .9, length.out = 5)))} +
+  # principal components
+  {pc <- ob_circle(fill = my_fills[c(1,3)], color = NA) %>% 
+    place(o[c(2, 4)], "above", 2)} +
+  # direct effects from o to pc
+  map(
+    as.list(pc), \(pci) {
+      connect(x = o@point_at("north"), 
+              y = pci, 
+              color = pci@fill,
+              resect = 2)@geom()
+    }
+  ) +
+  # covariances among observed variables
+  map(1:4, \(i) {
+    offset <- c(-1.5, -.5, .5, 1.5) * .11
+    ob_covariance(
+      x = o[seq(i + 1, 5)]@point_at("south") + 
+        ob_point(offset[seq(1, 5 - i)], 0),
+      y = o[i]@point_at("south") + 
+        ob_point(-offset[seq(1, 5 - i)], 0),
+      bend = 45,
+      looseness = 1.4,
+      linewidth = .5, 
+      arrowhead_length = 6,
+      color = my_fills[2]
+    )@geom()
+  }) + 
+  # Labels
+  ob_label("Formative<br>Indicators", size = 16, fill = NA) %>% 
+    place(o@bounding_box@east, sep = .8) + 
+  ob_label("Principal<br>Components", size = 24, fill = NA) %>% 
+    place(pc@bounding_box@east, sep = 1.3) +
+  # Invisible point to prevent label from clipping
+  ob_point(o@bounding_box@east@x + 1.2, 1, color = "white")
+
+```
+
+## Path Diagrams for Confirmatory Factor Analysis
+
+@fig-latent3 shows the primary ingredients of a latent variable model. *Latent variables* are not observed directly but are inferred from the correlations among observed variables. Latent variables are displayed as circles or ellipses. Their variances are depicted as curved double-headed arrows that circle back to the same latent variable. The observed variables from which latent variables are inferred are called *indicator variables*. The direct effects from a latent variable to its indicators are called *loadings*. The variability in indicator variables that is not explained by latent variables are explained by latent *residuals* (AKA *errors*). Each residual has its own variance. In some path diagrams, residual variances are affixed directly to observed variables, and the residual variables are omitted.
+
 ```{r}
 #| label: fig-latent3
 #| fig-width: 5
+#| fig-height: 8
 #| fig-cap: "A latent variable with three observed indicators and three latent error terms."
 #| code-fold: true
-ggplot() + 
-  coord_equal() + 
-  theme_void() +
+
+ggdiagram(base_family = my_font, base_size = 16) +
   # Place a latent variable at the top
   {l1 <- ob_circle(radius = 2)} +
   # Place an array of observed variables below the circle
@@ -228,17 +573,34 @@ ggplot() +
   # Connect the error terms to the observed variables
   {e3_o3 <- connect(e3, o3, resect = 2)} +
   # latent variance1
-  {v_l1 <- variance(l1, where = "north")} +
+  {v_l1 <- ob_variance(l1, where = "north")} +
   # label(1, v_l1@midpoint()) + 
-  {v_e3 <- variance(
+  {v_e3 <- ob_variance(
     e3,
     where = "south",
-    looseness = 1.5,
+    looseness = 1.4,
     resect = unit(3, "pt"),
     arrowhead_length = unit(7, "pt"), 
     arrow_head = arrowheadr::arrow_head_deltoid(2.4),
-    arrow_fins = arrowheadr::arrow_head_deltoid(2.4))} 
-  
+    arrow_fins = arrowheadr::arrow_head_deltoid(2.4))} +
+  {lb_indicator <- ob_label("Indicator<br>Variables", 
+                            color = "black") %>%
+    place(o3[1]@point_at("west"), "west", sep = 1.2)} + 
+  ob_point(-5, 0, color = "white") +
+  ob_label("Loadings", 
+           lb_indicator@p %|-% midpoint(l1, o3@bounding_box)) + 
+  ob_label("Residuals", 
+           lb_indicator@p %|-% e3@bounding_box@center) + 
+  ob_label("Latent<br>Variable", lb_indicator@p %|-% l1) + 
+  ob_label("Latent<br>Variance", 
+           lb_indicator@p %|-% l1@normal_at(
+             "north", 
+             distance = .5)) + 
+  ob_label("Residual<br>Variances", 
+           lb_indicator@p %|-% e3[1]@normal_at(
+             "south", 
+             distance = .5))
+
 ```
 
 ```{r}
@@ -256,19 +618,20 @@ my_fills <- viridis::viridis(n = 3, begin = .3, end = .6) %>%
 my_path_color <- "gray40"
 my_resect <- 1
 broad <- c("Gv", "Gf", "Gc")
-my_arrowhead <- arrowheadr::arrow_head_deltoid(2.3)
-# my_arrowhead <- ggarrow::arrow_head_wings()
+my_arrowhead <- arrowheadr::arrow_head_deltoid(2.5)
+
 g2broad <- c(Gv = .84, Gf = .95, Gc = .80)
+
 broad2indicator <- list(Gv = c(.78, .84, .91),
-                     Gf = c(.88, .81, .74),
-                     Gc = c(.74, .91, .93))
+                        Gf = c(.88, .81, .74),
+                        Gc = c(.74, .91, .93))
+
 broad_variance <- 1 - g2broad ^ 2
 
 
 
 latent <- redefault(ob_circle, 
                     color = NA)  
-
 
 lb_latent <- redefault(ob_label, 
                             size = 30, 
@@ -304,7 +667,7 @@ direct <- redefault(
 
 
 var_latent <- redefault(
-  variance, 
+  ob_variance, 
   theta = 40,
   resect = my_resect,
   color = my_path_color, 
@@ -318,9 +681,7 @@ var_latent <- redefault(
 
 
 
-ggplot() + 
-  coord_equal() + 
-  theme_void() +
+ggdiagram(base_size = 16, base_family = my_font) +
   {g <- latent(label = lb_latent("*g*"), fill = "gray15")} + 
   var_latent(g, label = lb_path(1)) +
   {Gx <- place(g, g,where = "below", sep = 1.6) |> 
@@ -368,7 +729,7 @@ ggplot() +
       phantom_text = "."), 
       p = p@line@point_at_y(p[2]@midpoint(position = .47)@y),
       color = b@fill)
-    v <- variance(
+    v <- ob_variance(
       o,
       where = "south",
       bend = -15,
@@ -395,52 +756,118 @@ ggplot() +
 
 ```
 
+In @fig-wedge, the same model from @fig-path is displayed showing variance proportions. The observed and latent variables all have an area of 1. The residual effects have areas proportional to their variances. The pie wedges in the endogenous latent variables and stacked bars in the observed variables have areas equal to the variance portions of their source variables.
+
 ```{r}
 #| label: fig-wedge
-#| fig-cap: Latent variables with pie wedges to display residual variances
-ggplot() + 
-  coord_equal() + 
-  theme_void() +
-  {g <- latent(label = lb_latent("*g*"), fill = "gray15")} + 
-  var_latent(g, label = lb_path(1)) +
-  {Gx <- place(g, g,where = "below", sep = 3) |> 
+#| fig-cap: Latent variable path diagram will all variables scaled to their variance sizes. Pie wedges and stacked bars display variance proportions of source variables.
+#| code-fold: true
+#| fig-width: 8
+#| fig-height: 5.5
+
+ggdiagram(base_family = my_font, base_size = 13) +
+  {g <- latent(label = lb_latent("*g*"), 
+               fill = "gray15", 
+               radius = sqrt(1 / pi))} + 
+  {Gx <- place(g, g,where = "below", sep = 1.2) |> 
     shape_array(k = 3, 
-                sep = 3, 
+                sep = 2.4, 
                 label = lb_latent(broad, 
                                   vjust = .6,
-                                  color = "gray15"),
+                                  color = "gray15",
+                                  size = 28),
                 fill = "gray15")} +
-  var_latent(Gx, "left", 
-             label = lb_path(
-               round_probability(broad_variance, 
-                                 phantom_text = "."),
-               color =  my_fills),
-             color = my_fills) +
-  {pGx <- direct(g, Gx, color = Gx@fill)} +
+  {d_Gx <- ob_circle(
+    color = NA,
+    fill = my_fills,
+    radius = sqrt(broad_variance / pi)) %>% 
+    place(Gx, where = "left", sep = .45)} +
+  direct(d_Gx, 
+          Gx, 
+          color = my_fills, 
+          resect = 1) +
+  {pGx <- direct(g, Gx, color = Gx@fill, resect = 1)} +
   {lb_path(
-    label = round_probability(g2broad, 
-                              phantom_text = "."), 
+    label = round_probability(g2broad,
+                              phantom_text = "."),
     p = pGx@line@point_at_y(pGx[2]@midpoint(
-      position = .47)@y),
-    color = Gx@fill)} + 
+      position = .46)@y),
+    color = Gx@fill)} +
   ob_wedge(center = Gx@center, 
-         start = turn(.5) + turn(broad_variance) / 2, 
-         end = turn(.5) - turn(broad_variance) / 2, 
-         fill = my_fills) + 
-  lb_latent(broad, p = Gx@center, vjust = .6)
+           radius = sqrt(1 / pi),
+           start = turn(.5) + turn(broad_variance) / 2,
+           end = turn(.5) - turn(broad_variance) / 2,
+           fill = my_fills) + 
+  lb_latent(broad, p = Gx@center, vjust = .6) +
+  {map(1:3, \(i) {
+    b <- Gx[i]
+    p2 <- place(ob_point(), from = b, where = "south", sep = 1.2)
+    p1 <- place(ob_point(), from = p2, where = "left", sep = 1.1)
+    p3 <- place(ob_point(), from = p2, where = "right", sep = 1.1)
+    
+    p <- bind(c(p1,p2,p3))
+    
+    b_text <- b@label@label
+    
+    lb_o <- ob_label(paste0(b_text, "~", 1:3, "~"),
+                     p = p - ob_point(0,.55),
+                     color = "white", 
+                     size = 20,
+                     fill = NA)
+    
+    
+    
+    b_p <- direct(b, p, color = my_fills[i], resect = 1)
+    
+    l_b_p <- lb_path(
+      round_probability(broad2indicator[[b_text]], 
+                        phantom_text = "."), 
+      p = b_p@line@point_at_y(b_p[2]@midpoint(.46)@y),
+      color = my_fills[i])
+    
+    r_g <- ob_rectangle(
+      north = p, 
+      fill = g@fill,
+      color = NA,
+      width = 1, 
+      height = (g2broad[b_text] * broad2indicator[[b_text]]) ^ 2)
+    
+    r_broad <- ob_rectangle(
+      north = r_g@south, 
+      fill = my_fills[i],
+      width = 1, 
+      color = NA,
+      height = (sqrt(broad_variance[b_text]) * broad2indicator[[b_text]]) ^ 2)
+    
+    error_variance <- 1 - broad2indicator[[b_text]] ^ 2
+    
+    error_color <- class_color(my_fills[i])@lighten(.5)@color
+    
+    r_unique <- ob_rectangle(
+      north = r_broad@south, 
+      fill = error_color,
+      width = 1, 
+      color = NA,
+      height = error_variance)
+    
+    r <- sqrt(error_variance / pi)
+    
+    error <- ob_circle(r_unique@south - ob_point(0, r + .45), radius = r, color = NA, fill = error_color)
+    
+    error2observed <- direct(error, r_unique, resect = 1, color = error_color)
+    
+    list(r_g, r_broad, r_unique, b_p, l_b_p, error, error2observed, lb_o) %>% lapply(as.geom)
+  })}
 ```
-
-
-
-
-
 
 ```{r}
 #| label: fig-Gc3
 #| fig-cap: A latent variable with 3 indicators
 #| fig-width: 5
 #| code-fold: true
-ggplot() + coord_equal() + theme_void() +
+#| echo: false
+#| eval: false
+ggdiagram(base_family = my_font, base_size = 16) +
   # Latent Variable
   {Gc <- ob_circle(
       fill = "dodgerblue4",
@@ -457,11 +884,11 @@ ggplot() + coord_equal() + theme_void() +
                    b = .5,
                    m1 = 10,
                    fill = "dodgerblue4") |> 
-    place(from = Gc, where = "below", sep = 1.25) |> 
+    place(from = Gc, where = "below", sep = 1.2) |> 
     shape_array(
       k = 3,
       where = 0,
-      sep = .2,
+      sep = .1,
       color = NA,
       alpha = c(.55,.7,.85),
       label = ob_label(subscript("Gc", seq(3)), 
@@ -494,6 +921,8 @@ ggplot() + coord_equal() + theme_void() +
 
 ```
 
+@fig-hierarchy is a demonstration of how ggdiagram can be used to creating complex models with an eye to aesthetics.
+
 
 ```{r}
 #| label: fig-hierarchy
@@ -501,26 +930,47 @@ ggplot() + coord_equal() + theme_void() +
 #| fig-width: 8
 #| fig-height: 8
 #| code-fold: true
-black_gradient <- grid::radialGradient(rev(c("gray50", "gray2", "gray2")), stops = c(0,.35, 1))
+
 my_serif_font <- "Equity Text A"
-black_gradient_rev <- grid::radialGradient(c("gray50", "black"))
 str_narrow <- "Narrow Abilities"
 str_tests <- "Tests"
 str_specifics <- "Specifics"
-ggdiagram() +
+
+# gradient fills
+black_gradient <- grid::radialGradient(
+  colours = rev(c("gray50", "gray2", "gray2")), 
+  stops = c(0, .35, 1))
+black_gradient_rev <- grid::radialGradient(
+  colours = c("gray50", "black"))
+
+ggdiagram(base_family = my_serif_font, base_size = 16) +
   {g <- ob_circle(
       radius = 1.33,
       fill = NA,
       color = NA
     )} + 
-  geom_polygon(data = ob_circle(radius = 9)@polygon, aes(x = x, y = y), fill = black_gradient) +
-  geom_polygon(data = g@polygon, aes(x = x, y = y), fill = black_gradient_rev) +
+  geom_polygon(
+    aes(x = x, y = y), 
+    data = ob_circle(radius = 9)@polygon, 
+    color = NA,
+    fill = black_gradient) +
+  geom_polygon(
+    aes(x = x, y = y), 
+    data = g@polygon,
+    color = NA, 
+    fill = black_gradient_rev) +
   {broad_angle <- turn(seq(0, 1, length.out = 9)[-9] + 1 / 16) 
-   broad_color <- hcl(seq(0, 360 - 360 / 8, 360 / 8) + 20, c = 55, l = 60)
-    broad <- place(ob_circle(color = NA, fill = broad_color),
-    g,
-    where = broad_angle,
-    sep = 1)} + 
+   broad_color <- hcl(
+     h = seq(0, 360 - 360 / 8, 360 / 8) + 20, 
+     c = 55, 
+     l = 60)
+    broad <- ob_circle(
+      color = NA, 
+      fill = broad_color) %>%
+      place(
+        from = g, 
+        where = broad_angle, 
+        sep = 1.15)} + 
   ob_label(
         "*g*",
         color = "gray90",
@@ -529,13 +979,19 @@ ggdiagram() +
         vjust = .4,
         family = my_serif_font
       ) +
-  connect(g, broad, color = broad_color, resect = 1, linewidth = .75, length_head = 5) +
+  connect(g, broad, 
+          color = broad_color, 
+          resect = 1, 
+          linewidth = .75, 
+          length_head = 5) +
   purrr::map(as.list(broad), \(b) {
     geom_polygon(
       data = b@polygon, 
       aes(x = x, y = y), 
-      fill = grid::radialGradient(c(tinter::lighten(b@fill, .4), tinter::lighten(b@fill, .8)), stops = c(0,1))) 
-  }) +
+      fill = grid::radialGradient(
+        colours = c(tinter::lighten(b@fill, .4), 
+                    tinter::lighten(b@fill, .8)), 
+        stops = c(0,1)))}) +
   ob_label(
     c("Ga", "Gc", "Gf", "Gv", "Gs", "Gr", "Gl", "Gwm"),
     broad@center + ob_point(0, -.05),
@@ -546,10 +1002,45 @@ ggdiagram() +
     angle = broad@center@theta + degree(-90 * sign(broad@center@theta@turn)),
     color = "gray20"
   ) +
-  ob_path(purrr::map(as.list(broad %>% set_props(radius = c(rep(.67, 4), rep(.62, 4)))), \(x) x@point_at(
-    x@center@theta + degree(seq(-90, 90, 10)))),
+  ob_path(
+    broad %>% 
+      set_props(radius = c(rep(.66, 4), rep(.59, 4))) %>% 
+      as.list() %>% 
+      purrr::map(\(x) {
+        x@point_at(x@center@theta + degree(seq(-90, 90, 10)))
+        }),
+    color = "gray20",
+    alpha = 0,
     label = ob_label(
-      c("Auditory", "Knowledge", "Fluid", "Visual-Spatial", "Speed", "Fluency", "Efficiency", "Memory"),
+      c("Auditory", 
+        "Knowledge", 
+        "Fluid", 
+        "Visual-Spatial", 
+        "Speed", 
+        "Fluency", 
+        "Efficiency", 
+        "Memory"),
+      fill = NA,
+      family = my_serif_font,
+      vjust = 1,
+      size = 9.5,
+      spacing = 100)) +
+  ob_path(
+    broad %>% 
+      set_props(radius = c(rep(.59, 4), rep(.66, 4))) %>% 
+      as.list() %>% 
+      purrr::map(\(x) {
+        x@point_at(
+          x@center@theta + degree(-180) + degree(seq(-90, 90, 10)))}),
+    label = ob_label(
+      c("Processing", 
+        "Comprehension", 
+        "Reasoning", 
+        "Processing", 
+        "Processing", 
+        "Retrieval", 
+        "Learning", 
+        "Working"),
             fill = NA,
             family = my_serif_font,
             vjust = 1,
@@ -559,24 +1050,21 @@ ggdiagram() +
           color = "gray20",
           alpha = 0
   ) +
-  ob_path(purrr::map(as.list(broad %>% set_props(radius = c(rep(.62, 4), rep(.67, 4)))), \(x) x@point_at(
-    x@center@theta + degree(-180) + degree(seq(-90, 90, 10)))),
-    label = ob_label(
-      c("Processing", "Comprehension", "Reasoning", "Processing", "Processing", "Retrieval", "Learning", "Working"),
-            fill = NA,
-            family = my_serif_font,
-            vjust = 1,
-      size = 9.5,
-            spacing = 100
-          ),
-          color = "gray20",
-          alpha = 0
-  ) +
-  {narrow <- place(ob_circle(radius = .45, fill = rep(broad@fill, each = 5)), from = g, where = degree(seq(0, 360 - 360/40, 360/40) + 360/80), sep = 4.3)
+  {narrow <- ob_circle(
+    radius = .45, 
+    fill = rep(broad@fill, each = 5)
+    ) |>
+    place(from = g, 
+          where = degree(seq(0, 360 - 360/40, 360/40) + 360/80), 
+          sep = 4.3)
+    
     geom_polygon(
-    aes(x = x,y = y, group = group, fill = fill),
-    data = narrow@polygon, 
-               color = NA)} + 
+      aes(x = x,
+          y = y, 
+          group = group, 
+          fill = fill),
+      data = narrow@polygon,
+      color = NA)} + 
   {purrr::imap(as.list(broad), \(x, idx) {
     connect(x, narrow[(idx - 1) * 5 + 1:5], 
             color = tinter::lighten(x@fill, .5), 
@@ -586,39 +1074,298 @@ ggdiagram() +
       as.geom()
   })} +
   {test_theta <- degree(seq(0, 360 - 360/120, 360/120) + 360/240)
-  tests <- place(ob_ellipse(a = .18, m1 = 8, angle = test_theta, fill = rep(tinter::lighten(broad@fill, .2), each = 15), color = NA), from = g, where = test_theta, sep = 6.2)} +
-  {specifics <- place(ob_circle(radius = .2, angle = test_theta, fill = rep(tinter::lighten(broad@fill, .15), each = 15), color = NA), from = g, where = test_theta, sep = 7.0)} +
+    tests <- ob_ellipse(
+      a = .18,    
+      m1 = 8,
+      angle = test_theta,
+      color = NA,
+      fill = rep(tinter::lighten(broad@fill, .2), each = 15)) |>
+      place(from = g, where = test_theta, sep = 6.2)} +
+  {specifics <- ob_circle(
+    radius = .2, 
+    angle = test_theta, 
+    color = NA, 
+    fill = rep(tinter::lighten(broad@fill, .15), each = 15)) |> 
+    place(from = g, where = test_theta, sep = 7.0)} +
   connect(specifics, tests, 
           color = specifics@fill, 
           linewidth = .3,
           length_head = 6, 
           resect = .5) +
   {purrr::imap(as.list(narrow), \(x, idx) {
-    connect(x, tests[(idx - 1) * 3 + 1:3], color = tinter::lighten(x@fill, .5), 
+    connect(x, tests[(idx - 1) * 3 + 1:3], 
+            color = tinter::lighten(x@fill, .5), 
             resect = 1, 
             linewidth = .3,
             length_head = 6) %>% 
       as.geom()
   })} +
-  scale_fill_manual(values = map(broad@fill, \(fill) grid::radialGradient(c(tinter::lighten(fill, .15), tinter::lighten(fill, .4)), stops = c(0.2, 1), group = F)) %>% `names<-`(broad@fill)) +
+  scale_fill_manual(
+    values = map(broad@fill, 
+                 \(fill) { 
+                   grid::radialGradient(c(tinter::lighten(fill, .15), 
+                                          tinter::lighten(fill, .4)), 
+                                        stops = c(0.2, 1), 
+                                        group = F)}) %>% 
+      `names<-`(broad@fill)) +
   theme(legend.position = "none") +
-  ob_label(label = rev(strsplit(str_narrow, split = character(0))[[1]]),p = narrow[seq(nchar(str_narrow)) + 2]@center, angle = narrow[seq(nchar(str_narrow)) + 2]@center@theta - degree(90), fill = NA, family = my_serif_font, size = 16, color = "gray30", vjust = .55) +
-  ob_label(label = strsplit(str_narrow, split = character(0))[[1]],p = narrow[seq(nchar(str_narrow)) + 22]@center, angle = narrow[seq(nchar(str_narrow)) + 22]@center@theta + degree(90), fill = NA, family = my_serif_font, size = 16, color = "gray30", vjust = .55) +
+  ob_label(
+    label = rev(strsplit(str_narrow, split = character(0))[[1]]),
+    p = narrow[seq(nchar(str_narrow)) + 2]@center,
+    angle = narrow[seq(nchar(str_narrow)) + 2]@center@theta - degree(90),
+    fill = NA,
+    family = my_serif_font,
+    size = 16,
+    color = "gray30",
+    vjust = .55
+  ) +
+  ob_label(
+    label = strsplit(str_narrow, split = character(0))[[1]],
+    p = narrow[seq(nchar(str_narrow)) + 22]@center,
+    angle = narrow[seq(nchar(str_narrow)) + 22]@center@theta + degree(90),
+    fill = NA,
+    family = my_serif_font,
+    size = 16,
+    color = "gray30",
+    vjust = .55
+  ) +
   {purrr::map(65 + c(0,15, 30, 45), \(x) {
-    ob_label(label = strsplit(str_tests, split = character(0))[[1]],p = tests[seq(nchar(str_tests)) + x]@center, angle = tests[seq(nchar(str_tests)) + x]@center@theta + degree(90), fill = NA, family = my_serif_font, size = 10, color = "gray30", vjust = .57)@geom()
+    ob_label(
+      label = strsplit(str_tests, split = character(0))[[1]],
+      p = tests[seq(nchar(str_tests)) + x]@center,
+      angle = tests[seq(nchar(str_tests)) + x]@center@theta + degree(90),
+      fill = NA,
+      family = my_serif_font,
+      size = 10,
+      color = "gray30",
+      vjust = .57
+    )@geom()
   })} +
   {purrr::map(5 + c(0,15, 30, 45), \(x) {
-    ob_label(label = rev(strsplit(str_tests, split = character(0))[[1]]),p = tests[seq(nchar(str_tests)) + x]@center, angle = tests[seq(nchar(str_tests)) + x]@center@theta - degree(90), fill = NA, family = my_serif_font, size = 10, color = "gray30", vjust = .57)@geom()
-  })} +
+    ob_label(
+      label = rev(strsplit(str_tests, split = character(0))[[1]]),
+      p = tests[seq(nchar(str_tests)) + x]@center,
+      angle = tests[seq(nchar(str_tests)) + x]@center@theta - degree(90),
+      fill = NA,
+      family = my_serif_font,
+      size = 10,
+      color = "gray30",
+      vjust = .57
+    )@geom()})} +
   {purrr::map(63 + c(0,15, 30, 45), \(x) {
-    ob_label(label = strsplit(str_specifics, split = character(0))[[1]],p = specifics[seq(nchar(str_specifics)) + x]@center, angle = specifics[seq(nchar(str_specifics)) + x]@center@theta + degree(90), fill = NA, family = my_serif_font, size = 9, color = "gray30", vjust = .53)@geom()
-  })} +
+    ob_label(
+      label = strsplit(str_specifics, split = character(0))[[1]],
+      p = specifics[seq(nchar(str_specifics)) + x]@center,
+      angle = specifics[seq(nchar(str_specifics)) + x]@center@theta + degree(90),
+      fill = NA,
+      family = my_serif_font,
+      size = 9,
+      color = "gray30",
+      vjust = .53
+    )@geom()})} +
   {purrr::map(3 + c(0,15, 30, 45), \(x) {
-    ob_label(label = rev(strsplit(str_specifics, split = character(0))[[1]]),p = specifics[seq(nchar(str_specifics)) + x]@center, angle = specifics[seq(nchar(str_specifics)) + x]@center@theta - degree(90), fill = NA, family = my_serif_font, size = 9, color = "gray30", vjust = .53)@geom()
-  })}
+    ob_label(
+      label = rev(strsplit(str_specifics, split = character(0))[[1]]),
+      p = specifics[seq(nchar(str_specifics)) + x]@center,
+      angle = specifics[seq(nchar(str_specifics)) + x]@center@theta - degree(90),
+      fill = NA,
+      family = my_serif_font,
+      size = 9,
+      color = "gray30",
+      vjust = .53
+    )@geom()})}
 
 
 
 
 ```
 
+## Path Diagrams for Multilevel Models
+
+The independence assumption of multiple regression requires that the regression errors are independent of each other. When data are clustered in some way that violates this assumption, a multilevel model can account for the within-cluster similarity of data (i.e., the intraclass correlation). Most multilevel models are displayed with equations like these:
+
+$$
+\begin{align}
+\text{Level 1}\\
+Y_{ij}&=\beta_{0j}+\beta_{1j}X_{1ij}+\beta_{2j}X_{2ij}+e_{ij}\\
+\sigma_e^2&=\text{var}(e)\\
+\text{Level 2}\\
+\beta_{0j} &= \gamma_{00} + \gamma_{01}W_{1j} + u_{0j}\\
+\beta_{1j} &= \gamma_{10} + \gamma_{11}W_{1j} + u_{1j}\\
+\beta_{2j} &= \gamma_{20} + \gamma_{21}W_{1j} + u_{2j}\\
+\tau&=\text{cov}(u)
+\end{align}
+$$
+
+Here we have an outcome (*Y*), 2 level-1 predictors (*X*~1~ and *X*~2~), and 1 level-2 predictor (*W*~1~). The random intercept (*β*~0*j*~) has as fixed component (*&gamma;*~00~&nbsp;+&nbsp;*&gamma;*~01~*W*~1*j*~) and a random component (*u*~0*j*~). The random intercept is partly predicted by the level-2 variable, *W*~1*j*~. The random slopes also have fixed and random components, as well as being predicted by the level-2 variable.
+
+@curranBuildingPathDiagrams2007 developed a set of extensions to path diagrams to incorporate random variables. Their core innovation is to treat random variables as latent variables that sit atop direct paths. @fig-multilevel displays the same information as the equations listed previously, but in terms that are easier to understand and use. 
+
+```{r}
+#| label: fig-multilevel
+#| fig-cap: A path diagram for a multilevel model
+#| code-fold: true
+#| fig-height: 8
+#| fig-width: 10
+
+clr <-   class_color(c("#976A85","#7385A1","#4E9C9B","#66AB7A","#A4AF5A"))@darken(.1)@color
+intercept <- function(center = ob_point(),
+                      r = 1,
+                      rounding = unit(.6, "mm"),
+                      fill = clr[1],
+                      color = NA,
+                      ...) {
+  p <- purrr::map(as.list(center), \(cc) {
+    cc + ob_polar(degree(c(90, 210, 330)), r = r)
+  })
+  ob_polygon(p,
+             radius = rounding,
+             fill = fill,
+             color = color,
+             ...)
+}
+
+observed <- redefault(ob_ellipse, m1 = 10, color = NA)
+lb_observed <- redefault(ob_label, fill = NA, color = "white", size = 24)
+lb_slope <- redefault(ob_label, fill = NA, color = "white", size = 18)
+
+random_slope <- redefault(ob_circle, color = NA, radius = .5)
+tau_covariance <- redefault(ob_covariance, 
+                            linewidth = .5, 
+                            head_length = 4, 
+                            resect = 1)
+
+ggdiagram(base_family = my_font, base_size = 13) + 
+  {i1 <- intercept(label = ob_label(
+    label = "1~1~", 
+    color = "white",
+    fill = NA,
+    size = 24),
+    fill = clr[1])} +
+  {x1 <- observed(label = lb_observed("*X*~1*ij*~"), 
+                  fill = clr[2]) %>%
+    place(bind(i1@segment)@midpoint()[2], "below", 1.5)} + 
+  {x2 <- observed(label = lb_observed("*X*~2*ij*~"),
+                  fill = clr[3]) %>% 
+    place(x1, "below", 1.5)} + 
+  {y = observed(label = lb_observed("*Y*~*ij*~"),
+                fill = clr[4]) %>% 
+    place(x1, "right", sep = 9)} + 
+  {i1_y <- connect(i1, y, resect = 2, color = clr[1])} + 
+  {x1_y <- connect(x1, y, resect = 2, color = clr[2])} + 
+  {x2_y <- connect(x2, y, resect = 2, color = clr[3])} +
+  {latent_slope_line <- ob_line(slope = -.8, intercept = 1.3)
+  b0j <- random_slope(
+    intersection(latent_slope_line, i1_y),
+    fill = clr[1],
+    label = lb_slope("*&beta;*~0*j*~")
+  )} +
+  {b1j <- random_slope(
+    intersection(latent_slope_line, x1_y),
+    fill = clr[2],
+    label = lb_slope("*&beta;*~1*j*~"))} +
+  {b2j <- ob_circle(
+    intersection(latent_slope_line, x2_y),
+    radius = .5,
+    fill = clr[3],
+    color = NA,
+    label = lb_slope("*&beta;*~2*j*~")
+  )} +
+  {i2 <- intercept(
+    rotate(latent_slope_line, degree(90), origin = b0j@center)@point_at_x(b1j@center@x),
+    label = lb_observed("1~2~")
+  )} +
+  {w1 <- observed(
+    center = i2@centroid %-|% y@center,
+    label = lb_observed("*W*~1*j*~"),
+    fill = clr[5]
+  )} +
+  {b <- bind(c(b0j, b1j, b2j))
+   i2b <- connect(
+     i2,
+     b,
+     color = i2@fill,
+     resect = 2,
+     label = ob_label(
+       paste0("*&gamma;*~", 0:2, "0~"),
+       angle = 0,
+       size = 16
+     )
+  )} +
+  {w1b <- connect(
+    w1,
+    b,
+    color = w1@fill,
+    resect = 2,
+    label = ob_label(
+      paste0("*&gamma;*~", 0:2, "1~"),
+      angle = 0,
+      size = 16
+    )
+  )} +
+  {u <- ob_circle(
+    radius = .4,
+    color = NA,
+    fill = b@fill,
+    label = ob_label(
+      paste0("*u*~", 0:2, "*j*~"),
+      color = "white",
+      fill = NA,
+      size = 14
+    )
+  ) %>% place(b, "southwest", .5)} + 
+  connect(
+    u,
+    b,
+    color = b@fill,
+    resect = 1,
+    length_head = 4,
+    linewidth = .5
+  ) +
+  tau_covariance(
+    u[2],
+    u[1],
+    color = mean_color(clr[c(1, 2)]),
+    label = ob_label("*&tau;*~01~", 
+                     color = mean_color(clr[c(1, 2)]))
+  ) +
+  tau_covariance(
+    u[3],
+    u[2],
+    color = mean_color(clr[c(2, 3)]),
+    label = ob_label("*&tau;*~12~", color = mean_color(clr[c(2, 3)]))
+  ) +
+  tau_covariance(
+    u[3]@point_at(210),
+    u[1]@point_at(260),
+    color = mean_color(clr[c(1, 3)]),
+    label = ob_label("*&tau;*~02~", color = mean_color(clr[c(1, 3)])),
+    bend = 10
+  ) + 
+  ob_variance(
+    u,
+    color = u@fill,
+    "east",
+    linewidth = .5,
+    looseness = 1.9,
+    bend = 5,
+    arrowhead_length = 4,
+    resect = 1,
+    label = ob_label(
+      paste0("*&tau;*~", 0:2, 0:2, "~"),
+      label.margin = margin(),
+      label.padding = margin(),
+      color = b@fill
+    ),
+    theta = 60
+  ) +
+  {e <- ob_circle(radius = .6, fill = y@fill, color = NA, label = lb_observed("*e~ij~*")) %>% place(y, "right", .9)} +
+  connect(e, y, color = y@fill, resect = 2) +
+  {e_var <- ob_variance(e, "east", color = e@fill, looseness = 1.7)} +
+  ob_latex(r"(\text{\emph{σ}}^{\text{2}}_{\mkern-1.5mu\text{\emph{e}}})", e_var@midpoint(), width = .035, family = "Roboto Condensed", filename = "sigma_e_2", color = e@fill)
+  
+  
+
+
+
+```

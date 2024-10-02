@@ -20,8 +20,9 @@ method(rotate, list(ob_line, ob_angle_or_numeric)) <- function(
   origin = ob_point(0, 0), ...) {
 # https://math.stackexchange.com/a/2278909
   if (!S7_inherits(theta, ob_angle)) theta = degree(theta)
+
 A <- x@a * cos(theta) + x@b * sin(theta)
-B <- x@b * cos(theta) + x@a * sin(theta)
+B <- x@b * cos(theta) - x@a * sin(theta)
 C <- (x@a - A) * origin@x + (x@b - B) * origin@y + x@c
 ob_line(a = A, b = B, c = C, ...)
 }

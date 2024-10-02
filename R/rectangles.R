@@ -391,6 +391,10 @@ ob_rectangle <- new_class(
   constructor = function(center = class_missing,
                          width = class_missing,
                          height = class_missing,
+                         east = class_missing,
+                         north = class_missing,
+                         west = class_missing,
+                         south = class_missing,
                          northeast = class_missing,
                          northwest = class_missing,
                          southwest = class_missing,
@@ -424,39 +428,108 @@ ob_rectangle <- new_class(
                           hassouth <- FALSE
                           haseast <- FALSE
                           haswest <- FALSE
+
+                          if (length(north) > 0) {
+                            top <- north@y
+                            hasnorth <- TRUE
+                            if (length(width) > 0) {
+                              left <- north@x - width / 2
+                              right <- north@x + width / 2
+                              haswest <- TRUE
+                              haseast <- TRUE
+                            }
+                            if (length(height) > 0) {
+                              bottom <- north@y - height
+                              hassouth <- TRUE
+                            }
+                          }
+
+                          if (length(south) > 0) {
+                            bottom <- south@y
+                            hassouth <- TRUE
+
+                            if (length(width) > 0) {
+                              left <- south@x - width / 2
+                              right <- south@x + width / 2
+                              haswest <- TRUE
+                              haseast <- TRUE
+                            }
+                            if (length(height) > 0) {
+                              top <- south@y + height
+                              hasnorth <- TRUE
+                            }
+
+                          }
+
+                          if (length(west) > 0) {
+                            left <- west@x
+                            haswest <- TRUE
+
+                            if (length(width) > 0) {
+                              right <- west@x + width
+                              haseast <- TRUE
+                            }
+
+                            if (length(height) > 0) {
+                              top <- west@y - height / 2
+                              bottom <- west@y + height / 2
+                              hasnorth <- TRUE
+                              hassouth <- TRUE
+                            }
+
+                            }
+
+                          if (length(east) > 0) {
+                            right <- east@x
+                            haseast <- TRUE
+
+                            if (length(width) > 0) {
+                              left <- east@x + width
+                              haswest <- TRUE
+                            }
+
+                            if (length(height) > 0) {
+                              top <- east@y - height / 2
+                              bottom <- east@y + height / 2
+                              hasnorth <- TRUE
+                              hassouth <- TRUE
+                            }
+                          }
+
+
                           if (length(northeast) > 0) {
-                            north <- northeast@y
-                            east <- northeast@x
+                            top <- northeast@y
+                            right <- northeast@x
                             hasnorth <- TRUE
                             haseast <- TRUE
                           }
                           if (length(northwest) > 0) {
-                            north <- northwest@y
-                            west <- northwest@x
+                            top <- northwest@y
+                            left <- northwest@x
                             hasnorth <- TRUE
                             haswest <- TRUE
                           }
 
                           if (length(southeast) > 0) {
-                            south <- southeast@y
-                            east <- southeast@x
+                            bottom <- southeast@y
+                            right <- southeast@x
                             hassouth <- TRUE
                             haseast <- TRUE
                           }
 
                           if (length(southwest) > 0) {
-                            south <- southwest@y
-                            west <- southwest@x
+                            bottom <- southwest@y
+                            left <- southwest@x
                             hassouth <- TRUE
                             haswest <- TRUE
                           }
 
                           if (hassouth && hasnorth) {
-                            height <- abs(north - south)
+                            height <- abs(top - bottom)
                           }
 
                           if (haswest && haseast) {
-                            width <- abs(west - east)
+                            width <- abs(left - right)
                           }
 
                           if (length(center) > 0 &&
@@ -465,28 +538,28 @@ ob_rectangle <- new_class(
                           } else if (length(center) > 0 &&
                                      (hasnorth || hassouth) && (haswest || haseast)) {
                             if (haseast) {
-                              width <- abs(center@x - east) * 2
+                              width <- abs(center@x - right) * 2
                             } else {
-                              width <- abs(center@x - west) * 2
+                              width <- abs(center@x - left) * 2
                             }
                             if (hasnorth) {
-                              height <- abs(center@y - north) * 2
+                              height <- abs(center@y - top) * 2
                             } else {
-                              height <- abs(center@y - south) * 2
+                              height <- abs(center@y - bottom) * 2
                             }
 
                           } else if (length(width) > 0 &&
                                      length(height) > 0 &&
                                      (hasnorth || hassouth) && (haswest || haseast)) {
                             if (haseast) {
-                              c.x <- east - width / 2
+                              c.x <- right - width / 2
                             } else {
-                              c.x <- west + width / 2
+                              c.x <- left + width / 2
                             }
                             if (hasnorth) {
-                              c.y <- north - height / 2
+                              c.y <- top - height / 2
                             } else {
-                              c.y <- south + height / 2
+                              c.y <- bottom + height / 2
                             }
                             center = ob_point(c.x, c.y)
                           } else {

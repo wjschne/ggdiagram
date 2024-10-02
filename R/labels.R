@@ -514,9 +514,16 @@ method(as.list, ob_label) <- function(x, ...) {
 }
 
 centerpoint_label <- function(label, center, d, shape_name = "shape", ...) {
+
+  if (S7_inherits(label, ob_label)) {
+    label@p <- center
+  }
+
   if (is.character(label) || S7_inherits(label, ob_angle) || is.numeric(label)) {
     label <- ob_label(label = label, p = center, fill = NA, ...)
   }
+
+
 
   if (length(label) > 0) {
     if (nrow(d) > 1) {
@@ -573,3 +580,26 @@ method(nudge, list(centerpoint, class_missing, class_numeric)) <- function(objec
 }
 
 
+method(place, list(ob_label, ob_point)) <- function(
+    x,
+    from,
+    where = "right",
+    sep = 1) {
+  where <- degree(where)
+  p <- ob_polar(where, sep)
+  x@p@x <- from@x + p@x
+  x@p@y <- from@y + p@y
+  x
+}
+
+method(place, list(ob_label, ob_label)) <- function(
+    x,
+    from,
+    where = "right",
+    sep = 1) {
+  where <- degree(where)
+  p <- ob_polar(where@p, sep)
+  x@p@x <- from@p@x + p@x
+  x@p@y <- from@p@y + p@y
+  x
+}

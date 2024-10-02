@@ -60,6 +60,7 @@ Collate:
     'bezier.R'
     'rectangles.R'    
     'polygons.R'
+    'equations.R'
     'distances.R'
     'intersections.R'
     'inside.R'

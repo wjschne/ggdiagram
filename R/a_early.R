@@ -174,7 +174,7 @@ xy <- new_class(name = "xy",
 #' @param bend Angle by which the control points are rotated
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @export
-variance <- new_generic("variance", dispatch_args = "x", fun = function(
+ob_variance <- new_generic("ob_variance", dispatch_args = "x", fun = function(
     x,
     where = "north",
     theta = 50,
@@ -197,8 +197,8 @@ variance <- new_generic("variance", dispatch_args = "x", fun = function(
 #' @param bend Angle by which the control points are rotated
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @export
-covariance <- new_generic(
-  "covariance",
+ob_covariance <- new_generic(
+  "ob_covariance",
   dispatch_args = c("x", "y"),
   fun = function(x,
                  y,

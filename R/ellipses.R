@@ -78,6 +78,13 @@ el_props <- list(
         length(self@a)
       }
     ),
+    perimeter = new_property(getter = function(self) {
+      # Ramanujan's approximation
+      # https://www.johndcook.com/blog/2024/09/22/ellipse-perimeter-approx/
+      ab <- self@a + self@b
+      lamba <- (self@a - self@b) / ab
+      pi * ab * (1 + (3 * lamba ^ 2) / (10 + sqrt(4 - 3 * lamba ^ 2)))
+    }),
     style = new_property(
       getter = function(self) {
         pr <- purrr::map(el_styles,
@@ -327,14 +334,12 @@ ob_ellipse <- new_class(
 
     center = set_props(center, x = d$x0, y = d$y0)
 
-    label <- centerpoint_label(label,
+
+    label <- centerpoint_label(label = label,
                                center = center,
                                d = d,
                                shape_name = "ob_ellipse",
                                angle = angle)
-
-
-
 
 
 
@@ -436,7 +441,11 @@ method(connect, list(class_list, centerpoint)) <- function(x,y, ...) {
 
 }
 
-method(variance, centerpoint) <- function(
+method(midpoint, list(centerpoint, centerpoint)) <- function(x,y, position = .5, ...) {
+  midpoint(connect(x,y), position = position, ...)
+}
+
+method(ob_variance, centerpoint) <- function(
     x,
     where = "north",
     theta = 50,
@@ -530,7 +539,7 @@ method(variance, centerpoint) <- function(
 }
 
 
-method(covariance, list(centerpoint, centerpoint)) <- function(
+method(ob_covariance, list(centerpoint, centerpoint)) <- function(
     x,
     y,
     where = NULL,
@@ -614,7 +623,7 @@ method(place, list(centerpoint, centerpoint)) <- function(x, from, where = "righ
 }
 
 
-method(place, list(ob_point, circle_or_ellipse)) <- function(x, from, where = "right", sep = 1) {
+method(place, list(ob_point, centerpoint)) <- function(x, from, where = "right", sep = 1) {
   where <- degree(where)
   p <- from@point_at(where)
   p_sep <- ob_polar((p - from@center)@theta, sep)
@@ -624,7 +633,7 @@ method(place, list(ob_point, circle_or_ellipse)) <- function(x, from, where = "r
 
 }
 
-method(place, list(circle_or_ellipse, ob_point)) <- function(x, from, where = "right", sep = 1) {
+method(place, list(centerpoint, ob_point)) <- function(x, from, where = "right", sep = 1) {
   where <- degree(where)
   p_sep <- ob_polar(where, sep)
   p <- x@center - x@point_at(where + degree(180))

@@ -40,7 +40,6 @@ library(ggarrow)
 
 # Base Plot
 
-
 ## Base plot
 
 To avoid repetitive code, we make a base plot:
@@ -99,7 +98,6 @@ ob_arc(center = ob_point(1,2),
     radius = 3)
 ```
 
-
 ```{r}
 #| label: fig_arc
 #| fig-cap: Arc with starting and ending angles and center point.
@@ -136,7 +134,6 @@ bp +
 
 Sometimes you do not know where the center of an arc should be. Instead, you want the arc to start or end at a specific point. For example, you might want to specify the start point or the end point.
 
-
 ```{r}
 #| label: fig-startpoint
 #| fig-cap: Fixing the start and end points of an arc
@@ -157,7 +154,7 @@ bp +
 
 # Midpoints
 
-The midpoint function can find one or more midpoints at different positions. The default position is .5. 
+The midpoint function can find one or more midpoints at different positions. The default position is .5.
 
 ```{r}
 #| label: fig-midpoint
@@ -219,7 +216,7 @@ bp +
                     hjust = .75))
 ```
 
-There are cases where the arc is already created and a label is needed. Although the `label` can be added after the arc has been created, the position would have to be set manually (otherwise the position will be at 0,0 by default). In such cases, the `auto_label` function can help place the label correctly. By default, the `auto_label` will show the the `theta` property (i.e., `end` &minus; `start`).
+There are cases where the arc is already created and a label is needed. Although the `label` can be added after the arc has been created, the position would have to be set manually (otherwise the position will be at 0,0 by default). In such cases, the `auto_label` function can help place the label correctly. By default, the `auto_label` will show the the `theta` property (i.e., `end` − `start`).
 
 ```{r}
 #| label: fig-autolabel
@@ -260,7 +257,6 @@ bp +
       arrowhead_length = 8)
 ```
 
-
 # Wedges
 
 If the `ob_arc@wedge` property is set to `TRUE`, the `ob_arc` function will plot a wedge using `ggplot2::geom_polygon`. The `ob_wedge` function is a convenient wrapper function for `ob_arc` that sets the `@wedge` property to `TRUE`.
@@ -277,6 +273,3 @@ bp +
       color = "white", 
       linewidth = 1)
 ```
-
-
-

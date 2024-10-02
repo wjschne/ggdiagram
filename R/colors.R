@@ -26,12 +26,16 @@ class_color <- new_class(
     }),
     lighten = new_property(class_function, getter = function(self) {
       \(amount = 0.2) {
-        class_color(tinter::lighten(amount = amount, x = self))
+        tibble(amount = amount, x = c(self)) %>%
+          purrr::pmap_chr(tinter::lighten) %>%
+          class_color()
       }
     }),
     darken = new_property(class_function, getter = function(self) {
       \(amount = 0.2) {
-        class_color(tinter::darken(amount = amount, x = S7_data(self)))
+        tibble(amount = amount, x = c(self)) %>%
+          purrr::pmap_chr(tinter::darken) %>%
+          class_color()
       }
     }),
     saturation = new_property(class_integer, getter = function(self) {
@@ -53,6 +57,13 @@ class_color <- new_class(
 
     }, setter = function(self, value) {
       S7_data(self) <- farver::set_channel(c(self), value, channel = "v", space = "hsv")
+      self
+    }),
+    alpha = new_property(class_integer, getter = function(self) {
+      farver::get_channel(c(self), channel = "alpha", space = "hsv")
+
+    }, setter = function(self, value) {
+      S7_data(self) <- farver::set_channel(c(self), value, channel = "alpha", space = "hsv")
       self
     })
   ), constructor = function(color = class_missing) {
@@ -84,4 +95,27 @@ method(print, class_color) <- function(x, ...) {
 method(`[`, class_color) <- function(x, y) {
   S7::S7_data(x) <-  c(x)[y]
   x
+}
+
+method(mean, class_color) <- function(x, ...) {
+  y <- class_color("white")
+  y@hue <- mean(x@hue)
+  y@saturation <- mean(x@saturation)
+  y@brightness <- mean(x@brightness)
+  y@alpha <- mean(x@alpha)
+  y
+}
+
+
+#' Average across colors
+#'
+#' @param x color
+#'
+#' @return character
+#' @export
+#'
+#' @examples
+#' mean_color(c("red", "violet"))
+mean_color <- function(x) {
+  colorRampPalette(x, space = "Lab")(3)[2]
 }

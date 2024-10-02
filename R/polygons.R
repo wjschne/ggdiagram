@@ -92,6 +92,13 @@ ob_polygon_props <- list(
         l
       }
     ),
+    segment = new_property(getter = function(self) {
+      self@p |>
+        purrr::map(\(pp) {
+          k <- pp@length
+          ob_segment(pp[c(1:k, 1)])
+        })
+    }),
     style = new_property(
       getter = function(self) {
         pr <- purrr::map(ob_polygon_styles,
@@ -229,7 +236,7 @@ ob_polygon <- new_class(
         if (all(label@p@x == 0) && all(label@p@y == 0)) {
           label@p <- centroid
         }
-        if (length(label@fill) == 0 || all(label@fill == "white")) {
+        if (length(label@fill) == 0 || all(label@fill == "white") && all(!is.na(label@fill))) {
           label@fill <- d[["fill"]] %||% fill
         }
       } else {
@@ -319,4 +326,18 @@ method(connect, list(ob_polygon, ob_point)) <- function(x,y, ...) {
 method(connect, list(ob_point, ob_polygon)) <- function(x,y, ...) {
   centroid_segment <- ob_segment(x, y@centroid)
   connect(x, intersection(y, centroid_segment), ...)
+}
+
+
+method(connect, list(centerpoint, ob_polygon)) <- function(x,y, ...) {
+  centroid_segment <- ob_segment(x@center, y@centroid)
+  p <- intersection(y, centroid_segment)
+  connect(x, p, ...)
+}
+
+
+method(connect, list(ob_polygon, centerpoint)) <- function(x,y, ...) {
+  centroid_segment <- ob_segment(x@centroid, y@center)
+  p <- intersection(x, centroid_segment)
+  connect(p, y, ...)
 }

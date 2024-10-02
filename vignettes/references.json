@@ -1,0 +1,118 @@
+[
+    {
+        "ISBN": "978-1-4625-3578-1",
+        "URL": "https://www.guilford.com/books/Contemporary-Intellectual-Assessment/Flanagan-McDonough/9781462552030",
+        "author": [
+            {
+                "family": "Schneider",
+                "given": "William Joel"
+            },
+            {
+                "family": "McGrew",
+                "given": "Kevin S"
+            }
+        ],
+        "container-title": "Contemporary intellectual assessment: Theories, tests, and issues",
+        "edition": "4",
+        "editor": [
+            {
+                "family": "Flanagan",
+                "given": "Dawn P."
+            },
+            {
+                "family": "McDonough",
+                "given": "Erin M."
+            }
+        ],
+        "id": "schneiderCattellHornCarrollTheoryCognitive2018",
+        "issued": {
+            "date-parts": [
+                [
+                    2018
+                ]
+            ]
+        },
+        "key": "6WZ8MK2K",
+        "libraryid": "1",
+        "page": "73–130",
+        "providerkey": "2509FBBE-5BB0-44C4-B119-6083A81ED673",
+        "pubid": "M0j1y4EgrScC",
+        "publisher": "Guilford Press",
+        "publisher-place": "New York",
+        "title": "The Cattell-Horn-Carroll theory of cognitive abilities",
+        "type": "chapter"
+    },
+    {
+        "DOI": "10.1073/pnas.6.6.320",
+        "ISSN": "0027-8424, 1091-6490",
+        "URL": "https://pnas.org/doi/full/10.1073/pnas.6.6.320",
+        "accessed": {
+            "date-parts": []
+        },
+        "author": [
+            {
+                "family": "Wright",
+                "given": "Sewall"
+            }
+        ],
+        "container-title": "Proceedings of the National Academy of Sciences",
+        "container-title-short": "Proc. Natl. Acad. Sci. U.S.A.",
+        "id": "wrightRelativeImportanceHeredity1920",
+        "issue": "6",
+        "issued": {
+            "date-parts": [
+                [
+                    1920,
+                    6
+                ]
+            ]
+        },
+        "key": "7QCP87MV",
+        "language": "en",
+        "libraryid": "1",
+        "page": "320-332",
+        "providerkey": "2509FBBE-5BB0-44C4-B119-6083A81ED673",
+        "source": "DOI.org (Crossref)",
+        "title": "The relative importance of heredity and environment in determining the piebald pattern of guinea-pigs",
+        "type": "article-journal",
+        "volume": "6"
+    },
+    {
+        "DOI": "10.1037/1082-989X.12.3.283",
+        "ISSN": "1939-1463, 1082-989X",
+        "URL": "http://doi.apa.org/getdoi.cfm?doi=10.1037/1082-989X.12.3.283",
+        "accessed": {
+            "date-parts": []
+        },
+        "author": [
+            {
+                "family": "Curran",
+                "given": "Patrick J."
+            },
+            {
+                "family": "Bauer",
+                "given": "Daniel J."
+            }
+        ],
+        "container-title": "Psychological Methods",
+        "container-title-short": "Psychological Methods",
+        "id": "curranBuildingPathDiagrams2007",
+        "issue": "3",
+        "issued": {
+            "date-parts": [
+                [
+                    2007
+                ]
+            ]
+        },
+        "key": "FFCBCSQ8",
+        "language": "en",
+        "libraryid": "1",
+        "page": "283-297",
+        "providerkey": "2509FBBE-5BB0-44C4-B119-6083A81ED673",
+        "source": "DOI.org (Crossref)",
+        "title": "Building path diagrams for multilevel models.",
+        "type": "article-journal",
+        "volume": "12"
+    }
+]

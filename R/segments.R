@@ -250,7 +250,7 @@ ob_segment <- new_class(
       if (length(xend) == 0) {
         xend <- 0
       }
-      p1 <- ob_point(tibble::tibble(x = x, y = xend))
+      p1 <- ob_point(tibble::tibble(x = x, y = y))
     }
 
     if ((length(y) > 0) || (length(yend) > 0)) {
@@ -260,7 +260,7 @@ ob_segment <- new_class(
       if (length(yend) == 0) {
         yend <- 0
       }
-      p2 <- ob_point(tibble::tibble(x = y, y = yend))
+      p2 <- ob_point(tibble::tibble(x = xend, y = yend))
     }
 
     if (length(p1) == 0) {

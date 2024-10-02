@@ -450,7 +450,7 @@ method(shape_array, ob_point) <- function(x, k = 2, sep = 1, where = "east", anc
 }
 
 
-method(covariance, list(ob_point, ob_point)) <- function(
+method(ob_covariance, list(ob_point, ob_point)) <- function(
     x,
     y,
     where = NULL,
@@ -467,16 +467,16 @@ method(covariance, list(ob_point, ob_point)) <- function(
   p <- purrr::pmap(list(xx = as.list(x), yy = as.list(y), bb = as.list(bend)), \(xx, yy, bb) {
 
     if (is.null(where)) {
-      d_xy <- yy@center - xx@center
+      d_xy <- yy - xx
       x_angle <- d_xy@theta + degree(45)
       y_angle <- degree(135) + (d_xy@theta)
     } else {
       x_angle <- where
       y_angle <- degree(180) - where
     }
-    s <- xx@point_at(x_angle)
+    s <- xx
     # m <- el@point_at(where)
-    e <- yy@point_at(y_angle)
+    e <- yy
     # s_dist <- (s - m)@r * looseness * 2
     # e_dist <- (e - m)@r * looseness * 2
     m_dist <- looseness * (s - e)@r / 2
@@ -484,15 +484,11 @@ method(covariance, list(ob_point, ob_point)) <- function(
     bind(c(
       s,
       rotate(
-        xx@normal_at(
-          theta = x_angle,
-          distance = m_dist),
+        xx + ob_polar(theta = x_angle, r = m_dist),
         theta = bb,
         origin = s),
       rotate(
-        yy@normal_at(
-          theta = y_angle,
-          distance = m_dist),
+        yy + ob_polar(theta = y_angle, r = m_dist),
         theta = bb * -1,
         origin = e),
       e))

@@ -13,7 +13,7 @@ This package is in the early stages of construction. It has some structural beam
 
 My motivation in making ggdiagram was to find a way to approach the functionality of TikZ but with the flexibility and convenience of R. The ggdiagram package is built atop [S7](https://rconsortium.github.io/S7/) and is integrated with [ggplot2](https://ggplot2.tidyverse.org/), making heavy use of [ggtext](https://wilkelab.org/ggtext/), [ggforce](https://ggforce.data-imaginist.com/), and [ggarrow](https://teunbrand.github.io/ggarrow/).
 
-The ggdiagram package is not a replacement for the standard ggplot2 functions. The underlying *grammar* of ggplot2 is well designed for visualizing data. The ggdiagram functions are designed creating a small number of visual objects that interrelate. If anything, they can be thought of as extensions of `ggplot2::annotate`.
+The ggdiagram package is not a replacement for the standard ggplot2 functions. The underlying *grammar* of ggplot2 is well designed for visualizing data. The ggdiagram functions are best suited for creating a small number of visual objects that interrelate. If anything, they can be thought of as extensions of `ggplot2::annotate`.
 
 ## Installation
 
