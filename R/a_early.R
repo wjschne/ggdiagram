@@ -222,7 +222,7 @@ ob_covariance <- new_generic(
 #' @param anchor bounding box anchor
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to shape
 #' @export
-shape_array <- new_generic(name = "make_array", dispatch_args = "x", fun = function(x, k = 2, sep = 1, where = "east", anchor = "center", ...) {
+ob_array <- new_generic(name = "ob_array", dispatch_args = "x", fun = function(x, k = 2, sep = 1, where = "east", anchor = "center", ...) {
   S7_dispatch()
 })
 
@@ -514,7 +514,7 @@ replace_na <- function(x, y) {
 
 
 #' @keywords internal
-shape_array_helper <- function(x, k = 2, sep = 1, where = "east", anchor = "center", ...) {
+ob_array_helper <- function(x, k = 2, sep = 1, where = "east", anchor = "center", ...) {
   if (x@length > 1) stop("The shape must start with an object of length 1.")
 
   dots <- rlang::list2(...)

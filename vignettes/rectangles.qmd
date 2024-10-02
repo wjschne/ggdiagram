@@ -29,6 +29,7 @@ library(ggplot2)
 library(ggtext)
 library(ggarrow)
 library(arrowheadr)
+library(tibble)
 
 my_font <- "Roboto Condensed"
 # gdtools::register_gfont(family = my_font)

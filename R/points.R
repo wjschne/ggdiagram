@@ -435,7 +435,7 @@ method(nudge, list(ob_point, class_missing, class_numeric)) <- function(object, 
   object + ob_point(0, y)
 }
 
-method(shape_array, ob_point) <- function(x, k = 2, sep = 1, where = "east", anchor = "center", ...) {
+method(ob_array, ob_point) <- function(x, k = 2, sep = 1, where = "east", anchor = "center", ...) {
   s <- seq(0, sep * (k - 1), sep)
   px <- cos(degree(where)) * s
   py <- sin(degree(where)) * s

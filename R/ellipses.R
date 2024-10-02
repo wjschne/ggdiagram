@@ -654,9 +654,9 @@ method(place, list(ob_line, ob_ellipse)) <- function(x, from, where = "right", s
 
 
 
-method(shape_array, ob_ellipse) <- function(x, k = 2, sep = 1, where = "east", anchor = "center", ...) {
+method(ob_array, ob_ellipse) <- function(x, k = 2, sep = 1, where = "east", anchor = "center", ...) {
 
-  sa <- shape_array_helper(x = x, k = k, sep = sep, where = where, anchor = anchor, ...)
+  sa <- ob_array_helper(x = x, k = k, sep = sep, where = where, anchor = anchor, ...)
 
   rlang::inject(ob_ellipse(sa$p_center,
                         a = x@a,

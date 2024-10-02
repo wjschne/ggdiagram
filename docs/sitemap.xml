@@ -3,6 +3,7 @@
 <url><loc>https://wjschne.github.io/ggdiagram/articles/angles.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/articles/arcs.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/articles/bezier.html</loc></url>
+<url><loc>https://wjschne.github.io/ggdiagram/articles/causalpaths (DESKTOP-9DAV2E9's conflicted copy 2024-10-02).html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/articles/causalpaths.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/articles/circles.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/articles/ellipses.html</loc></url>
@@ -22,25 +23,28 @@
 <url><loc>https://wjschne.github.io/ggdiagram/reference/class_aesthetics_list.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/class_color.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/connect.html</loc></url>
-<url><loc>https://wjschne.github.io/ggdiagram/reference/covariance.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/distance.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/equation.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/get_tibble.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ggdiagram-package.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ggdiagram.html</loc></url>
+<url><loc>https://wjschne.github.io/ggdiagram/reference/index (DESKTOP-9DAV2E9's conflicted copy 2024-10-02).html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/index.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/inside.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/intersection.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/intersection_angle.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/label_object.html</loc></url>
+<url><loc>https://wjschne.github.io/ggdiagram/reference/mean_color.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/midpoint.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/nudge.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_angle.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_arc.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_bezier.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_circle.html</loc></url>
+<url><loc>https://wjschne.github.io/ggdiagram/reference/ob_covariance.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_ellipse.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_label.html</loc></url>
+<url><loc>https://wjschne.github.io/ggdiagram/reference/ob_latex.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_line.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_path.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_point.html</loc></url>
@@ -48,6 +52,7 @@
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_rectangle.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_segment.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_style.html</loc></url>
+<url><loc>https://wjschne.github.io/ggdiagram/reference/ob_variance.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/perpendicular_point.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/pipe.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/place.html</loc></url>
@@ -60,6 +65,5 @@
 <url><loc>https://wjschne.github.io/ggdiagram/reference/round_probability.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/shape_array.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/subscript.html</loc></url>
-<url><loc>https://wjschne.github.io/ggdiagram/reference/variance.html</loc></url>
 </urlset>
 

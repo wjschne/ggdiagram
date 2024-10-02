@@ -312,7 +312,7 @@ method(place, list(ob_line, ob_circle)) <- function(x, from, where = "right", se
   from@tangent_at(where)
 }
 
-method(shape_array, ob_circle) <- function(x, k = 2, sep = 1, where = "east", anchor = "center", ...) {
+method(ob_array, ob_circle) <- function(x, k = 2, sep = 1, where = "east", anchor = "center", ...) {
   # s <- seq(0, (sep + x@radius) * (k - 1), sep + x@radius)
   # px <- cos(degree(where)) * s
   # py <- sin(degree(where)) * s
@@ -325,7 +325,7 @@ method(shape_array, ob_circle) <- function(x, k = 2, sep = 1, where = "east", an
   # }
   # ob_circle(p@center - p_anchor + x@center, style = x@style, ...)
 
-  sa <- shape_array_helper(x = x, k = k, sep = sep, where = where, anchor = anchor, ...)
+  sa <- ob_array_helper(x = x, k = k, sep = sep, where = where, anchor = anchor, ...)
 
   rlang::inject(ob_circle(center = sa$p_center,
                         radius = x@radius,

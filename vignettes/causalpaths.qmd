@@ -162,10 +162,6 @@ All of this can be communicated succinctly with the path diagram in @fig-fullreg
 #| code-fold: true
 #| out-width: 100%
 
-
-
-
-
 ggdiagram(base_family = my_font, base_size = 16) +
   {X <- observed(label = lb_observed("*X*"))} +
   {Yhat <- observed(label = lb_observed("*Ŷ*")) |> 
@@ -204,18 +200,6 @@ ggdiagram(base_family = my_font, base_size = 16) +
     center = bind(c(sigma_x, sigma_e))@midpoint(), 
     width = .07, 
     family = my_font)
-  # ggimage::geom_image(
-  #   data = tibble(
-  #     x = c(sigma_x@midpoint()@x,
-  #           sigma_e@midpoint()@x),
-  #     y = c(sigma_x@midpoint()@y,
-  #           sigma_e@midpoint()@y),
-  #     image = c(sigma2x, sigma2e)),
-  #   aes(x = x,
-  #       y = y,
-  #       image = image),
-  #   size = .07)
-
 
 ```
 
@@ -380,7 +364,7 @@ my_fills <- viridis::viridis(n = 3, begin = .3, end = .6) %>%
   c()
 
 ggdiagram(base_family = my_font, base_size = 16) +
-  {x <- shape_array(ob_ellipse(m1 = 8, 
+  {x <- ob_array(ob_ellipse(m1 = 8, 
                                color = NA,
                                fill = my_fills[2]), 
                     k = 6, 
@@ -500,7 +484,7 @@ Principal components analysis (PCA) is similar to exploratory factor analysis (E
 ggdiagram(base_family = my_font) +
   # observed variables
   {o <- ob_ellipse(m1 = 10, a = .6, color = NA) %>%
-      shape_array(5, sep = .2, fill = class_color(my_fills[2])@lighten(seq(.6, .9, length.out = 5)))} +
+      ob_array(5, sep = .2, fill = class_color(my_fills[2])@lighten(seq(.6, .9, length.out = 5)))} +
   # principal components
   {pc <- ob_circle(fill = my_fills[c(1,3)], color = NA) %>% 
     place(o[c(2, 4)], "above", 2)} +
@@ -557,7 +541,7 @@ ggdiagram(base_family = my_font, base_size = 16) +
     place(from = l1, 
           where = "below", 
           sep = 2) |> 
-    shape_array(
+    ob_array(
       k = 3,
       where = 0,
       sep = .4)} +
@@ -685,7 +669,7 @@ ggdiagram(base_size = 16, base_family = my_font) +
   {g <- latent(label = lb_latent("*g*"), fill = "gray15")} + 
   var_latent(g, label = lb_path(1)) +
   {Gx <- place(g, g,where = "below", sep = 1.6) |> 
-    shape_array(k = 3, 
+    ob_array(k = 3, 
                 sep = 2, 
                 label = lb_latent(broad, 
                                   vjust = .6),
@@ -711,7 +695,7 @@ ggdiagram(base_size = 16, base_family = my_font) +
                 where = "south",
                 sep = 1.6)
     
-    o <- shape_array(
+    o <- ob_array(
       o1,
       k = 3, 
       sep = .2,
@@ -770,7 +754,7 @@ ggdiagram(base_family = my_font, base_size = 13) +
                fill = "gray15", 
                radius = sqrt(1 / pi))} + 
   {Gx <- place(g, g,where = "below", sep = 1.2) |> 
-    shape_array(k = 3, 
+    ob_array(k = 3, 
                 sep = 2.4, 
                 label = lb_latent(broad, 
                                   vjust = .6,
@@ -885,7 +869,7 @@ ggdiagram(base_family = my_font, base_size = 16) +
                    m1 = 10,
                    fill = "dodgerblue4") |> 
     place(from = Gc, where = "below", sep = 1.2) |> 
-    shape_array(
+    ob_array(
       k = 3,
       where = 0,
       sep = .1,
@@ -1193,13 +1177,20 @@ Y_{ij}&=\beta_{0j}+\beta_{1j}X_{1ij}+\beta_{2j}X_{2ij}+e_{ij}\\
 \beta_{0j} &= \gamma_{00} + \gamma_{01}W_{1j} + u_{0j}\\
 \beta_{1j} &= \gamma_{10} + \gamma_{11}W_{1j} + u_{1j}\\
 \beta_{2j} &= \gamma_{20} + \gamma_{21}W_{1j} + u_{2j}\\
-\tau&=\text{cov}(u)
+\tau&=\text{cov}(\boldsymbol{u})\\
+&=\begin{bmatrix}
+\tau_{00} & \tau_{01} & \tau_{02}\\
+\tau_{01} & \tau_{11} & \tau_{12}\\
+\tau_{02} & \tau_{12} & \tau_{22}
+\end{bmatrix}
 \end{align}
 $$
 
-Here we have an outcome (*Y*), 2 level-1 predictors (*X*~1~ and *X*~2~), and 1 level-2 predictor (*W*~1~). The random intercept (*β*~0*j*~) has as fixed component (*&gamma;*~00~&nbsp;+&nbsp;*&gamma;*~01~*W*~1*j*~) and a random component (*u*~0*j*~). The random intercept is partly predicted by the level-2 variable, *W*~1*j*~. The random slopes also have fixed and random components, as well as being predicted by the level-2 variable.
+Here we have an outcome (*Y*), 2 level-1 predictors (*X*~1~ and *X*~2~), and 1 level-2 predictor (*W*~1~). The random intercept (*β*~0*j*~) has as fixed component (*&gamma;*~00~&nbsp;+&nbsp;*&gamma;*~01~*W*~1*j*~) and a random component (*u*~0*j*~). The random intercept is partly predicted by the level-2 variable, *W*~1*j*~. The random slopes also have fixed and random components, as well as being predicted by the level-2 variable. The *&tau;* matrix is variance-covariance matrix of the level-2 random variables *u* (i.e., *u*~0*j*~, *u*~1*j*~, and *u*~1*j*~).
 
-@curranBuildingPathDiagrams2007 developed a set of extensions to path diagrams to incorporate random variables. Their core innovation is to treat random variables as latent variables that sit atop direct paths. @fig-multilevel displays the same information as the equations listed previously, but in terms that are easier to understand and use. 
+These equations specify the model unambiguously, but it is easy to lose one's way in them. It can facilitate interpretation if they equations are presented in a visual mode.
+
+@curranBuildingPathDiagrams2007 developed a set of extensions to path diagrams to incorporate random slopes and intercepts from multilevel models. Their core innovation is to treat random slopes and intercepts as latent variables that sit atop direct paths. An example of this approach is in @fig-multilevel. It displays the same information as the equations listed previously, but in terms that are easier to understand and use. 
 
 ```{r}
 #| label: fig-multilevel
@@ -1208,7 +1199,13 @@ Here we have an outcome (*Y*), 2 level-1 predictors (*X*~1~ and *X*~2~), and 1 l
 #| fig-height: 8
 #| fig-width: 10
 
-clr <-   class_color(c("#976A85","#7385A1","#4E9C9B","#66AB7A","#A4AF5A"))@darken(.1)@color
+clr <-   class_color(
+  c("#976A85",
+    "#7385A1",
+    "#4E9C9B",
+    "#66AB7A",
+    "#A4AF5A"))@darken(.3)@color
+clr <- c("#6B4B5E", "#515E72", "#376E6E", "#487956", "#747C3F")
 intercept <- function(center = ob_point(),
                       r = 1,
                       rounding = unit(.6, "mm"),

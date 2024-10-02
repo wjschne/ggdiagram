@@ -199,10 +199,10 @@ bp +
 The angle expected by the `@point_at` function is a true angle. However, the parametric equation for ellipses has a parameter *t* that looks like an angle, but actually has no direct geometric interpretation:
 
 $$
-\begin{align}
+\begin{aligned}
 t&=[0,2\pi)\\
 (x,y) &= (a\cos(t),b\sin(t))
-\end{align}
+\end{aligned}
 $$
 
 ```{r fig-definitionalpoints}
@@ -213,7 +213,7 @@ theta <- degree(seq(0, 350, 30))
 
 bp + 
   {c1 = ob_circle(radius = 3.6, color = "gray30")} +
-  {e1 <- ob_ellipse(a = 2.8)} +
+  {e1 <- ob_ellipse(a = 2.8, b = 1)} +
   {p1 <- c1@point_at(theta)} +
   ob_label(theta, p1, polar_just = ob_polar(theta, r = 1.5)) +
   ob_segment(ob_point(), p1, linewidth = .2) +
@@ -341,22 +341,29 @@ The `sep` parameter in the `place` function is not necessarily the shortest dist
 deg <- degree(30)
 
 bp + 
-  {e1 <- ob_ellipse(ob_point(-2,-1, 
-                       color =  "dodgerblue4"), 
-                 a = 2, 
-                 b = 1.5)} +
-  {e2 <- place(ob_ellipse(ob_point(color = "orchid4"),
-                       b = 2), 
-               from = e1, 
-               where = deg, 
-               sep = 2)} + 
-  connect(e1, e2, 
-       arrow_head = ggarrow::arrow_head_minimal(), 
-       linetype = "dashed", 
-       label = ob_label(2, vjust = 0)) +
+  {e1 <- ob_ellipse(
+    center = ob_point(-2,-1, color =  "dodgerblue4"), 
+    a = 2, 
+    b = 1.5)} +
+  {e2 <- place(
+    ob_ellipse(
+      center = ob_point(color = "orchid4"),
+      b = 2),
+    from = e1, 
+    where = deg, 
+    sep = 2)} + 
+  connect(
+    e1,
+    e2,
+    arrow_head = ggarrow::arrow_head_minimal(),
+    linetype = "dashed",
+    label = ob_label(2, vjust = 0)
+  ) +
   ob_arc(e1@center, end = deg, label = deg) + 
-  ob_segment(e1@center, e1@point_at(deg)) + 
-  ob_segment(e2@center, e2@point_at(deg + degree(180))) + 
+  ob_segment(e1@center, 
+             e1@point_at(deg)) + 
+  ob_segment(e2@center, 
+             e2@point_at(deg + degree(180))) + 
   ob_label("*e*~1~", e1@center) + 
   ob_label("*e*~2~", e2@center)
 
@@ -371,35 +378,41 @@ You can place many ellipses at once. In @fig-manyconnections, 12 ellipses are pl
 k <- 12
 
 # Colors
-e_fills <- hsv(h = seq(0, 1 - 1 / k, length.out = k), 
-               s = .4, 
-               v = .6)
+e_fills <- hsv(
+  h = seq(0, 1 - 1 / k, length.out = k), 
+  s = .4, 
+  v = .6)
 
 bp + 
-  {e_0 <- ob_ellipse(m1 = 6, 
-                 label = ob_label("*e*~0~", 
-                               size = 40, 
-                               color = "white", 
-                               fill = "gray20"),
-                 color = NA,
-                 fill = "gray20")} + 
+  {e_0 <- ob_ellipse(
+    m1 = 6,
+    label = ob_label(
+      "*e*~0~",
+      size = 40,
+      color = "white",
+      fill = "gray20"
+    ),
+    color = NA,
+    fill = "gray20"
+  )} + 
   {e_x <- place(
-    x = ob_ellipse(a = .4, 
-                b = .4, 
-                m1 = 6, 
-                label = ob_label(paste0("*e*~", seq(k), "~"), 
-                              color = "white", 
-                              fill = e_fills),
-                color = NA,
-                fill = e_fills),
+    x = ob_ellipse(
+      a = .4,
+      b = .4,
+      m1 = 6,
+      label = ob_label(
+        paste0("*e*~", seq(k), "~"),
+        color = "white",
+        fill = e_fills
+      ),
+      color = NA,
+      fill = e_fills
+    ),
     from = e_0,
     where = degree(seq(0, 360 - 360 / k, 360 / k)),
     sep = 2
   )} +
-  connect(e_0, 
-          e_x, 
-          resect = 2, 
-          color = e_fills) + 
+  connect(e_0, e_x, resect = 2, color = e_fills) + 
   theme_void()
 ```
 
@@ -409,73 +422,25 @@ Lines can be placed in relation to ellipses:
 #| fig-cap: A line placed 3 units and 45 degrees from a squircle.
 bp + 
   {e1 <- ob_ellipse(m1 = 4)} +
-  {l1 <- place(x = ob_line(), 
-               from = e1, 
-               where = {deg1 <- degree(45)}, 
-               sep = {d = 3})} + 
-  connect(e1, l1, 
-          label = paste0("Distance = ", d),           
-          arrow_fins = arrowheadr::arrow_head_deltoid(), 
-          length_fins = 8, 
-          length_head = 8, 
-          resect = 1) + 
-  ob_label(label = l1@equation, 
-        p = ob_polar(theta = deg1, 
-                  r = e1@point_at(deg1)@r + d), 
-        angle = l1@angle, 
-        vjust = 0)
+  {l1 <- place(
+    x = ob_line(),
+    from = e1,
+    where = {deg1 <- degree(45)},
+    sep = {d = 3}
+  )} + 
+  connect(
+    e1,
+    l1,
+    label = paste0("Distance = ", d),
+    arrow_fins = arrowheadr::arrow_head_deltoid(),
+    length_fins = 8,
+    length_head = 8,
+    resect = 1
+  ) + 
+  ob_label(
+    label = l1@equation,
+    p = ob_polar(theta = deg1, r = e1@point_at(deg1)@r + d),
+    angle = l1@angle,
+    vjust = 0
+  )
 ```
-
-
-
-```{r}
-n <- 5
-
-e1 <- ob_ellipse(ob_point(runif(n,-2,2), 
-                      runif(n,-2,2)),
-                a = runif(n, .5, 1.5),
-                b = runif(n, .5, 1.5),
-                m1 = runif(n,2,10),
-                angle = degree(runif(n, 0, 360)))
-
-# d_rect <- e1@tibble |>
-#         dplyr::mutate(group = dplyr::row_number(),
-#                       d = purrr::pmap(list(x0 = x0,
-#                                            y0 = y0,
-#                                            a = a,
-#                                            b = b,
-#                                            angle = angle,
-#                                            m1 = m1,
-#                                            m2 = m2),
-#                                       \(x0, y0,a,b,angle, m1,m2) {
-#                                         th <- degree(seq(0,359.5,.5))
-#                                         cs <- cos(th)
-#                                         sn <- sin(th)
-#                                         x <- a * (abs(cs) ^ (2 / m1)) * sign(cs)
-#                                         y <- b * (abs(sn) ^ (2 / m2)) * sign(sn)
-#                                         xy <- rotate2columnmatrix(
-#                                           cbind(x,y), angle)
-#                                         xr <- xy[,1] + x0
-#                                         yr <- xy[,2] + y0
-#                                         tibble(xmin = min(xr),
-#                                                xmax = max(xr),
-#                                                ymin = min(yr),
-#                                                ymax = max(yr))
-#                                       })) |>
-#         tidyr::unnest(d) %>% 
-#         dplyr::summarise(xmin = min(xmin),
-#                          xmax = max(xmax),
-#                          ymin = min(ymin),
-#                          ymax = max(ymax))
-      
-
-
-ggplot() + coord_equal() + theme_minimal() +
-  e1 + 
-  e1@bounding_box 
-  # rectangle(southwest = ob_point(d_rect$xmin, d_rect$ymin),
-  #               northeast = ob_point(d_rect$xmax, d_rect$ymax))
-
-
-```
-
