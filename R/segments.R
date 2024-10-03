@@ -227,7 +227,7 @@ ob_segment <- new_class(
                          color = class_missing,
                          lineend = class_missing,
                          linejoin = class_missing,
-                         linewidth = .5,
+                         linewidth = class_missing,
                          linewidth_fins = class_missing,
                          linewidth_head = class_missing,
                          linetype = class_missing,

@@ -22,7 +22,7 @@ ob_rectangle(
   alpha = class_missing,
   color = "black",
   fill = NA_character_,
-  linewidth = 0.5,
+  linewidth = class_missing,
   linetype = class_missing,
   style = class_missing,
   x = class_missing,

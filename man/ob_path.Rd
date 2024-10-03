@@ -17,7 +17,7 @@ ob_path(
   fill = class_missing,
   lineend = class_missing,
   linejoin = class_missing,
-  linewidth = 0.75,
+  linewidth = class_missing,
   linewidth_fins = class_missing,
   linewidth_head = class_missing,
   linetype = class_missing,

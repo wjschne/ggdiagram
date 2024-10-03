@@ -59,6 +59,11 @@ update_geom_defaults(geom = "richtext",
 
 update_geom_defaults("point", list(size = my_point_size))
 
+update_geom_defaults("arrow_segment", list(length_head = 5, 
+                                           linewidth = .5))
+update_geom_defaults("arrow", list(length_head = 5, 
+                                   linewidth = .5))
+
 theme_set(
   theme_minimal(
     base_size = my_text_size, 

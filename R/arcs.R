@@ -388,7 +388,7 @@ ob_arc <- new_class(
                          fill = class_missing,
                          lineend = class_missing,
                          linejoin = class_missing,
-                         linewidth = .25,
+                         linewidth = class_missing,
                          linewidth_fins = class_missing,
                          linewidth_head = class_missing,
                          linetype = class_missing,
@@ -671,65 +671,6 @@ method(`[`, ob_arc) <- function(x, y) {
   z@wedge <- x@wedge
   z
 }
-
-
-# method(variance, centerpoint) <- function(
-#     x,
-#     where = "north",
-#     theta = 50,
-#     bend = 0,
-#     label = NULL,
-#     looseness = 1,
-#     nudge = 0,
-#     arrow_head = arrowheadr::arrow_head_deltoid(),
-#     arrow_fins = arrowheadr::arrow_head_deltoid(),
-#     resect = 1,
-#     linewidth = .5,
-#     arrowhead_length = unit(10, "pt"),
-#     ...) {
-#   if (!S7_inherits(where, ob_angle)) where <- degree(where)
-#   if (!S7_inherits(theta, ob_angle)) theta <- degree(theta)
-#   if (!S7_inherits(bend, ob_angle)) bend <- degree(bend)
-#
-#
-#   angle_start <- where - (theta / 2)
-#   angle_end <- where + (theta / 2)
-#   p_start <- x@point_at(angle_start)
-#   p_end <- x@point_at(angle_end)
-#   p_midpoint <- midpoint(p_start, p_end)
-#
-#   tangent_start <- x@tangent_at(angle_start)
-#   tangent_end <- x@tangent_at(angle_end)
-#
-#   c_p <- tangent_start@a * tangent_end@b - tangent_end@a * tangent_start@b
-#   a_p <- (tangent_start@b * tangent_end@c - tangent_end@b * tangent_start@c)
-#   b_p <- (tangent_start@c * tangent_end@a - tangent_end@c * tangent_start@a)
-#   xx <- ifelse(c_p == 0, p_midpoint@x, a_p / c_p)
-#   yy <- ifelse(c_p == 0, p_midpoint@y, b_p / c_p)
-#
-#   p_center <- ob_point(xx, yy) + ob_polar(where, nudge)
-#   v_circle <- ob_circle(p_center,
-#                      radius = distance(p_start, p_center))
-#   v_start <- v_circle@angle_at(p_start)
-#   v_end <- v_circle@angle_at(p_end)
-#   v_end <- v_end + turn((c(v_end) < c(v_start)) * 1)
-#
-#   ob_arc(
-#     center = p_center,
-#     radius = v_circle@radius,
-#     end = v_end,
-#     start = v_start,
-#     resect = resect,
-#     arrow_head = arrow_head,
-#     arrow_fins = arrow_fins,
-#     arrowhead_length = arrowhead_length,
-#     linewidth = linewidth,
-#     label = label,
-#     ...
-#   )
-#
-#
-# }
 
 # ob_wedge ----
 

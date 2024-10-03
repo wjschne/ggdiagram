@@ -74,7 +74,7 @@ ob_polygon_props <- list(
                 northeast = ob_point(d_rect$xmax, d_rect$ymax))
 
     }),
-    centroid = new_property(ob_point, getter = function(self) {
+    center = new_property(ob_point, getter = function(self) {
       d <- self@tibble
       gr <- dplyr::intersect(colnames(d), c("group", pt_styles))
       d <- dplyr::summarise(d, .by = dplyr::any_of(gr),
@@ -183,7 +183,7 @@ ob_polygon <- new_class(
                          alpha = class_missing,
                          color = class_missing,
                          fill = class_missing,
-                         linewidth = .75,
+                         linewidth = class_missing,
                          linetype = class_missing,
                          style = class_missing,
                          ...) {
@@ -220,7 +220,7 @@ ob_polygon <- new_class(
     if (length(label) == 0) {
       label = character(0)
     } else {
-      centroid <- dplyr::bind_rows(
+      center <- dplyr::bind_rows(
         purrr::imap(p, \(pp, idx) {
           tibble::as_tibble(pp@xy) |>
             dplyr::mutate(group = idx)})) |>
@@ -231,16 +231,16 @@ ob_polygon <- new_class(
         dplyr::select(-.data$group) |>
         ob_point()
 
-      centroid@style <- ob_polygon_style
+      center@style <- ob_polygon_style
       if (S7_inherits(label, ob_label)) {
         if (all(label@p@x == 0) && all(label@p@y == 0)) {
-          label@p <- centroid
+          label@p <- center
         }
         if (length(label@fill) == 0 || all(label@fill == "white") && all(!is.na(label@fill))) {
           label@fill <- d[["fill"]] %||% fill
         }
       } else {
-        label <- ob_label(label, centroid, fill = d[["fill"]] %||% fill)
+        label <- ob_label(label, center, fill = d[["fill"]] %||% fill)
       }
 
       }
@@ -314,30 +314,160 @@ method(`[`, ob_polygon) <- function(x, y) {
 }
 
 method(connect, list(ob_polygon, ob_polygon)) <- function(x,y, ...) {
-  centroid_segment <- ob_segment(x@centroid, y@centroid)
+  centroid_segment <- ob_segment(x@center, y@center)
   connect(intersection(x, centroid_segment), intersection(y, centroid_segment), ...)
 }
 
 method(connect, list(ob_polygon, ob_point)) <- function(x,y, ...) {
-  centroid_segment <- ob_segment(x@centroid, y)
+  centroid_segment <- ob_segment(x@center, y)
   connect(intersection(x, centroid_segment), y, ...)
 }
 
 method(connect, list(ob_point, ob_polygon)) <- function(x,y, ...) {
-  centroid_segment <- ob_segment(x, y@centroid)
+  centroid_segment <- ob_segment(x, y@center)
   connect(x, intersection(y, centroid_segment), ...)
 }
 
 
 method(connect, list(centerpoint, ob_polygon)) <- function(x,y, ...) {
-  centroid_segment <- ob_segment(x@center, y@centroid)
+  centroid_segment <- ob_segment(x@center, y@center)
   p <- intersection(y, centroid_segment)
   connect(x, p, ...)
 }
 
 
 method(connect, list(ob_polygon, centerpoint)) <- function(x,y, ...) {
-  centroid_segment <- ob_segment(x@centroid, y@center)
+  centroid_segment <- ob_segment(x@center, y@center)
   p <- intersection(x, centroid_segment)
   connect(p, y, ...)
 }
+
+# Intercepts ----
+#' ob_intercept
+#'
+#' Triangle polygons used in path diagrams.
+#' @param center point at center
+#' @param width length of side
+#' @param rounding rounding of vertices
+#' @param label A character, angle, or label object
+#' @param radius A numeric or unit vector of length one,  specifying the vertex radius
+#' @slot length The number of polygons in the ob_polygon object
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
+#' @param style Gets and sets the styles associated with polygons
+#' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggplot2::geom_polygon`.
+#' @inherit ob_style params
+ob_intercept <- new_class(
+  name = "ob_intercept",
+  parent = has_style,
+  properties = rlang::inject(
+    list(
+      center = ob_point,
+      width = class_numeric,
+      p = new_property(getter = function(self) {
+        purrr::map(as.list(self@center), \(cc) {
+          cc + ob_polar(degree(c(90, 210, 330)),
+                        r = self@width * .5 / cos(degree(30)))
+        })
+      }),
+      top = new_property(getter = function(self) {
+        self@center + ob_polar(degree(90),
+                               r = self@width * .5 / cos(degree(30)))
+      }),
+      left = new_property(getter = function(self) {
+        self@center + ob_polar(degree(210),
+                               r = self@width * .5 / cos(degree(30)))
+      }),
+      right = new_property(getter = function(self) {
+        self@center + ob_polar(degree(330),
+                               r = self@width * .5 / cos(degree(30)))
+      }),
+      !!!ob_polygon_props$extra,
+      !!!ob_polygon_props$styles,
+      !!!ob_polygon_props$derived[!names(ob_polygon_props$derived) %in% c("center")],
+      !!!ob_polygon_props$funs,
+      !!!ob_polygon_props$info
+    )
+  ),
+  constructor = function(center = class_missing,
+                         width = 1,
+                         label = class_missing,
+                         top = class_missing,
+                         left = class_missing,
+                         right = class_missing,
+                         radius = class_missing,
+                         alpha = class_missing,
+                         color = class_missing,
+                         fill = class_missing,
+                         linewidth = class_missing,
+                         linetype = class_missing,
+                         style = class_missing,
+                         ...) {
+
+
+
+    ob_polygon_style <- style +
+      ob_style(
+        alpha = alpha,
+        color = color,
+        fill = fill,
+        linewidth = linewidth,
+        linetype = linetype
+      ) +
+      ob_style(...)
+
+    non_empty_list <- get_non_empty_props(ob_polygon_style)
+
+    if (S7_inherits(p, ob_point)) p <- list(p)
+
+    d <- tibble::tibble(
+      p = p
+    )
+
+
+    if (length(non_empty_list) > 0) {
+      d <- dplyr::bind_cols(d, tibble::tibble(!!!non_empty_list))
+    }
+
+
+
+
+
+    if (length(label) == 0) {
+      label = character(0)
+    } else {
+      center <- dplyr::bind_rows(
+        purrr::imap(p, \(pp, idx) {
+          tibble::as_tibble(pp@xy) |>
+            dplyr::mutate(group = idx)})) |>
+        dplyr::bind_rows() |>
+        dplyr::summarise(.by = .data$group,
+                         x = mean(.data$x),
+                         y = mean(.data$y)) |>
+        dplyr::select(-.data$group) |>
+        ob_point()
+
+      center@style <- ob_polygon_style
+      if (S7_inherits(label, ob_label)) {
+        if (all(label@p@x == 0) && all(label@p@y == 0)) {
+          label@p <- center
+        }
+        if (length(label@fill) == 0 || all(label@fill == "white") && all(!is.na(label@fill))) {
+          label@fill <- d[["fill"]] %||% fill
+        }
+      } else {
+        label <- ob_label(label, center, fill = d[["fill"]] %||% fill)
+      }
+
+    }
+
+    new_object(.parent = S7_object(),
+               p =  d$p,
+               label = label,
+               radius = radius,
+               alpha = d[["alpha"]] %||% alpha,
+               color = d[["color"]] %||% color,
+               fill = d[["fill"]] %||% fill,
+               linewidth = d[["linewidth"]] %||% linewidth,
+               linetype = d[["linetype"]] %||% linetype
+    )
+  })

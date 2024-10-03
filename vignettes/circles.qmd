@@ -35,7 +35,10 @@ update_geom_defaults("richtext",
                      list(family = my_font, 
                           size = .8 * 16 / ggplot2::.pt))
 
-update_geom_defaults("arrow_segment", list(length_head = 1))
+update_geom_defaults("arrow_segment", list(length_head = 5, 
+                                           linewidth = .5))
+update_geom_defaults("arrow", list(length_head = 5, 
+                                   linewidth = .5))
 ```
 
 ```{r}
@@ -116,13 +119,13 @@ c1
 #| code-fold: true
 bp +
   c1 +
-  c1@center@label(vjust = 1.2, plot_point = T) +
   ob_segment(
     c1@center,
     c1@point_at(0),
     color = my_colors[1],
     label = ob_label(paste0("*r* = ", c1@radius), angle = 0, vjust = 0)
-  )
+  ) +
+  c1@center@label(vjust = 1.2, plot_point = T) 
 
 ```
 
@@ -144,7 +147,7 @@ deg <- degree(60)
 bp + 
   c1 +
   {p45 <- c1@point_at(deg)} +
-  p45@label(hjust = 0, vjust = 0) +
+  p45@label(polar_just = ob_polar(deg, 1.5)) +
   ob_segment(c1@center, p45) +
   ob_arc(radius = 1, start = degree(0), end = deg, label = deg)
 ```

@@ -3,7 +3,7 @@ title: "Path Diagrams"
 format: 
   html:
     toc: true
-    html-math-method: mathjax
+    html-math-method: katex
 vignette: >
   %\VignetteIndexEntry{pathdiagrams}
   %\VignetteEngine{quarto::html}
@@ -24,6 +24,7 @@ library(purrr)
 library(ggtext)
 library(geomtextpath)
 library(ggimage)
+library(ggarrow)
 knitr::opts_chunk$set(
   collapse = TRUE,
   dev = "ragg_png",
@@ -37,8 +38,12 @@ my_font <- "Roboto Condensed"
 update_geom_defaults("richtext", 
                      list(family = my_font, 
                           size = 0.8 * 20 / ggplot2::.pt))
-update_geom_defaults("line", list(linewidth = .75))
-update_geom_defaults("segment", list(linewidth = .75))
+update_geom_defaults("line", list(linewidth = .5))
+update_geom_defaults("segment", list(linewidth = .5))
+update_geom_defaults("arrow_segment", list(length_head = 5, 
+                                           linewidth = .5))
+update_geom_defaults("arrow", list(length_head = 5, 
+                                   linewidth = .5))
 update_geom_defaults("point", list(size = 2))
 update_geom_defaults(
   "labelpath", 
@@ -56,6 +61,7 @@ library(ggdiagram)
 library(tibble)
 library(dplyr)
 library(purrr)
+library(ggarrow)
 ```
 
 # Path diagrams
@@ -210,10 +216,10 @@ Path diagrams were created by Sewall Wright [-@wrightRelativeImportanceHeredity1
 For example, these two regression equations combined make up a causal system that shows how variables *X*~1~--*X*~4~ interrelate.
 
 $$
-\begin{align}
+\begin{aligned}
 X_3&=b_{13}X_1+b_{23}X_2+e_3\\
 X_4&=b_{14}X_1+b_{24}X_2+b_{34}X_3+e_4
-\end{align}
+\end{aligned}
 $$
 
 ```{r}
@@ -1159,12 +1165,12 @@ $$
 \begin{align}
 \text{Level 1}\\
 Y_{ij}&=\beta_{0j}+\beta_{1j}X_{1ij}+\beta_{2j}X_{2ij}+e_{ij}\\
-\sigma_e^2&=\text{var}(e)\\
+\sigma_e^2&=\text{var}\left(e\right)\\
 \text{Level 2}\\
 \beta_{0j} &= \gamma_{00} + \gamma_{01}W_{1j} + u_{0j}\\
 \beta_{1j} &= \gamma_{10} + \gamma_{11}W_{1j} + u_{1j}\\
 \beta_{2j} &= \gamma_{20} + \gamma_{21}W_{1j} + u_{2j}\\
-\tau&=\text{cov}(\boldsymbol{u})\\
+\mathbf{\tau} &=\text{cov}\left(u\right)\\
 &=\begin{bmatrix}
 \tau_{00} & \tau_{01} & \tau_{02}\\
 \tau_{01} & \tau_{11} & \tau_{12}\\
@@ -1260,7 +1266,7 @@ ggdiagram(base_family = my_font, base_size = 13) +
     label = lb_observed("1~2~")
   )} +
   {w1 <- observed(
-    center = i2@centroid %-|% y@center,
+    center = i2@center %-|% y@center,
     label = lb_observed("*W*~1*j*~"),
     fill = clr[5]
   )} +

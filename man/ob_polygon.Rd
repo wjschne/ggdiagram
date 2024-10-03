@@ -11,7 +11,7 @@ ob_polygon(
   alpha = class_missing,
   color = class_missing,
   fill = class_missing,
-  linewidth = 0.75,
+  linewidth = class_missing,
   linetype = class_missing,
   style = class_missing,
   ...

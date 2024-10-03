@@ -57,8 +57,8 @@ update_geom_defaults(geom = "richtext",
                                 size = .8 * my_text_size / ggplot2::.pt))
 
 update_geom_defaults("point", list(size = my_point_size))
-update_geom_defaults("arrow_segment", list(length_head = 5))
-update_geom_defaults("arrow", list(linewidth = 1))
+update_geom_defaults("arrow_segment", list(length_head = 5, linewidth = .75))
+update_geom_defaults("arrow", list(length_head = 5, linewidth = .75))
 
 theme_set(
   theme_minimal(

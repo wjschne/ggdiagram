@@ -23,6 +23,7 @@ library(ggdiagram)
 library(ggplot2)
 library(dplyr)
 library(ggtext)
+library(ggarrow)
 my_font <- "Roboto Condensed"
 ```
 
@@ -36,7 +37,7 @@ library(ggdiagram)
 library(ggplot2)
 library(dplyr)
 library(ggtext)
-
+library(ggarrow)
 ```
 
 ## Base plot
@@ -55,7 +56,7 @@ update_geom_defaults(geom = "richtext",
                                 size = .8 * my_text_size / ggplot2::.pt))
 
 update_geom_defaults("point", list(size = my_point_size))
-
+update_geom_defaults("arrow_segment", list(length_head = 5, linewidth = .5))
 
 theme_set(
   theme_minimal(

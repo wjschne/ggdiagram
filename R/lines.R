@@ -270,7 +270,7 @@ method(get_tibble_defaults, ob_line) <- function(x) {
     color = "black",
     lineend = "black",
     linejoin = 16,
-    linewidth = 1.5,
+    linewidth = 0.5,
     linetype = 0.5
   )
   d <- get_tibble(x)

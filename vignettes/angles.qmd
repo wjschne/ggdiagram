@@ -262,10 +262,10 @@ turn(.1) + .2
 When degrees are outside the range of &pm;360, they recalculate:
 
 $$
-\begin{align}
+\begin{aligned}
 80^{\circ} + 300^\circ &= 380^\circ\\
 &= 380^\circ-360^\circ\\
-&=20^\circ\end{align}
+&=20^\circ\end{aligned}
 $$
 
 
@@ -287,7 +287,11 @@ degree(80) + degree(300)
 
 
 
-$$\begin{align}20^\circ - 40^\circ &= -20^\circ\\&=340^\circ\end{align}$$
+$$
+\begin{aligned}
+20^\circ - 40^\circ &= -20^\circ\\&=340^\circ
+\end{aligned}
+$$
 
 ```{r}
 #| label: fig-neg
@@ -311,7 +315,11 @@ $$2\cdot20^\circ=40^\circ$$
 2 * degree(20)
 ```
 
-$$\begin{align}2\cdot180 &= 360^\circ\\&=0^\circ\end{align}$$
+$$
+\begin{aligned}
+2\cdot180 &= 360^\circ\\&=0^\circ
+\end{aligned}
+$$
 
 ```{r}
 #| label: mult180

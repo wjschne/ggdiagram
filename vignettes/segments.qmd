@@ -31,6 +31,7 @@ library(ggtext)
 library(ggdiagram)
 library(ggplot2)
 library(ggtext)
+library(ggarrow)
 ```
 
 For ease of plotting, we will define a base plot:
@@ -45,7 +46,7 @@ update_geom_defaults("line", list(linewidth = .75))
 update_geom_defaults("segment", list(linewidth = .75))
 update_geom_defaults("point", list(size = 2))
 
-
+update_geom_defaults("arrow_segment", list(length_head = 5, linewidth = .5))
 
 bp <- ggplot() +
   theme_minimal(base_size = 20, base_family = my_font) +
