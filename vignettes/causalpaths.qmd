@@ -102,7 +102,7 @@ ggdiagram(font_family = my_font, font_size = 16) +
     place(this, "below")} +
   {B <- that |> 
     place(that, "below")} +
-  ob_covariance(A, B, label = ob_label("Correlates with", vjust = 0)) 
+  ob_covariance(A, B, label = ob_label("Correlates with", vjust = 0), arrowhead_length = 7) 
 
 ```
 
