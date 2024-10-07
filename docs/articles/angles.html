@@ -49,6 +49,7 @@
     <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
     <li><a class="dropdown-item" href="../articles/ellipses.html">Ellipses</a></li>
+    <li><a class="dropdown-item" href="../articles/equations.html">Equations with LaTeX</a></li>
     <li><a class="dropdown-item" href="../articles/lines.html">Lines</a></li>
     <li><a class="dropdown-item" href="../articles/paths.html">Paths</a></li>
     <li><a class="dropdown-item" href="../articles/points.html">Points</a></li>
@@ -340,10 +341,10 @@ Figure 2: 30° + 60° = 90°
 </div>
 <p>When degrees are outside the range of ±360, they recalculate:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msup><mn>80</mn><mo>∘</mo></msup><mo>+</mo><msup><mn>300</mn><mo>∘</mo></msup></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msup><mn>380</mn><mo>∘</mo></msup></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msup><mn>380</mn><mo>∘</mo></msup><mo>−</mo><msup><mn>360</mn><mo>∘</mo></msup></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msup><mn>20</mn><mo>∘</mo></msup></mtd></mtr></mtable><annotation encoding="application/x-tex">
-\begin{align}
+\begin{aligned}
 80^{\circ} + 300^\circ &amp;= 380^\circ\\
 &amp;= 380^\circ-360^\circ\\
-&amp;=20^\circ\end{align}
+&amp;=20^\circ\end{aligned}
 </annotation></semantics></math></p>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
@@ -365,7 +366,11 @@ Figure 3: 80° + 300° = 380° = 20°
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">80</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">300</span><span class="op">)</span></span>
 <span><span class="co">#&gt; 20°</span></span></code></pre></div>
 </div>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msup><mn>20</mn><mo>∘</mo></msup><mo>−</mo><msup><mn>40</mn><mo>∘</mo></msup></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>−</mi><msup><mn>20</mn><mo>∘</mo></msup></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msup><mn>340</mn><mo>∘</mo></msup></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align}20^\circ - 40^\circ &amp;= -20^\circ\\&amp;=340^\circ\end{align}</annotation></semantics></math></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msup><mn>20</mn><mo>∘</mo></msup><mo>−</mo><msup><mn>40</mn><mo>∘</mo></msup></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>−</mi><msup><mn>20</mn><mo>∘</mo></msup></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msup><mn>340</mn><mo>∘</mo></msup></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+20^\circ - 40^\circ &amp;= -20^\circ\\&amp;=340^\circ
+\end{aligned}
+</annotation></semantics></math></p>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">make_angles</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">40</span>, <span class="op">-</span><span class="fl">60</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
@@ -391,7 +396,11 @@ Figure 4: 40° − 60° = −20°
 <code class="sourceCode R"><span><span class="fl">2</span> <span class="op">*</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">20</span><span class="op">)</span></span>
 <span><span class="co">#&gt; 40°</span></span></code></pre></div>
 </div>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mn>2</mn><mo>⋅</mo><mn>180</mn></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msup><mn>360</mn><mo>∘</mo></msup></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msup><mn>0</mn><mo>∘</mo></msup></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align}2\cdot180 &amp;= 360^\circ\\&amp;=0^\circ\end{align}</annotation></semantics></math></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mn>2</mn><mo>⋅</mo><mn>180</mn></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msup><mn>360</mn><mo>∘</mo></msup></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msup><mn>0</mn><mo>∘</mo></msup></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+2\cdot180 &amp;= 360^\circ\\&amp;=0^\circ
+\end{aligned}
+</annotation></semantics></math></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fl">2</span> <span class="op">*</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">180</span><span class="op">)</span></span>

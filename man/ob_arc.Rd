@@ -178,7 +178,7 @@ a_90 <- ob_arc(
  )
 
  # Print arc
- a
+ a_90
 
 # Plot arc and its center point
 ggplot() + coord_equal() + theme_minimal() +

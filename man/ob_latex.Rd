@@ -6,14 +6,19 @@
 \usage{
 ob_latex(
   tex = class_missing,
-  center = class_missing,
+  center = ob_point(0, 0),
   width = class_missing,
   height = class_missing,
+  aspect_ratio = 1,
   border = class_missing,
   family = class_missing,
+  math_mode = TRUE,
   filename = class_missing,
   color = class_missing,
-  force_recompile = class_missing
+  density = 300,
+  latex_packages = class_missing,
+  preamble = class_missing,
+  force_recompile = TRUE
 )
 }
 \arguments{
@@ -25,14 +30,34 @@ ob_latex(
 
 \item{height}{height (specify width or height but not both)}
 
+\item{aspect_ratio}{alters the aspect ratio of the image}
+
 \item{border}{border space (in points) around image}
 
 \item{family}{font family (installed on system) of plain text}
 
+\item{math_mode}{include dollar signs automatically. Set to \code{FALSE} when the latex command is not in math mode}
+
 \item{filename}{bare file name without extension (e.g., \code{myequation})}
+
+\item{color}{set color of equation text}
+
+\item{density}{image quality (dots per inch)}
+
+\item{latex_packages}{load latex packages}
+
+\item{preamble}{additional latex commands to load in preamble}
 
 \item{force_recompile}{Will re-run xelatex even if .pdf file exists already}
 }
 \description{
 make a latex equation
 }
+\section{Slots}{
+
+\describe{
+\item{\code{rectangle}}{gets or sets rectangle that contains the image}
+
+\item{\code{image}}{raster bitmap}
+}}
+

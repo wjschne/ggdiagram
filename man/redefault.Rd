@@ -9,7 +9,7 @@ redefault(.f, ...)
 \arguments{
 \item{.f}{function}
 
-\item{...}{new defaults}
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> new defaults}
 }
 \value{
 function

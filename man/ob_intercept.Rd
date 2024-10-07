@@ -28,7 +28,13 @@ ob_intercept(
 
 \item{label}{A character, angle, or label object}
 
-\item{radius}{A numeric or unit vector of length one,  specifying the vertex radius}
+\item{top}{Top vertex of triangle}
+
+\item{left}{Left vertex of triangle}
+
+\item{right}{Right vertex of triangle}
+
+\item{radius}{A numeric or unit vector of length one, specifying the vertex radius}
 
 \item{alpha}{numeric value for alpha transparency}
 
@@ -43,8 +49,6 @@ ob_intercept(
 \item{style}{Gets and sets the styles associated with polygons}
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
-
-\item{rounding}{rounding of vertices}
 }
 \description{
 Triangle polygons used in path diagrams.

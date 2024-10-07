@@ -4,48 +4,60 @@ Version: 0.0.0.9000
 Authors@R: 
     person("W. Joel", "Schneider", , "w.joel.schneider@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-8393-5316"))
-Description: The ggdiagram package creates path diagrams with an object-oriented approach and plots diagrams with ggplot2.
+Description: The ggdiagram package creates path diagrams with an
+    object-oriented approach and plots diagrams with ggplot2.
 License: CC0
 URL: https://github.com/wjschne/ggdiagram,
     https://wjschne.github.io/ggdiagram/
 BugReports: https://github.com/wjschne/ggdiagram/issues
 Imports: 
     arrowheadr,
-    farver,
+    bezier,
     dplyr,
+    farver,
     geomtextpath,
     ggarrow,
     ggforce,
     ggplot2,
     ggtext,
+    grDevices,
     grid,
+    janitor,
+    magick,
     magrittr,
+    pdftools,
     purrr,
     rlang,
     S7,
+    scales,
+    signs,
     stringr,
     tibble,
-    tidyr
+    tidyr,
+    tinter,
+    tinytex,
+    utils
 Suggests: 
+    ggimage,
     knitr,
-    quarto,
     rmarkdown,
-    scales,
-    ragg,
-    signs,
     spelling,
     testthat (>= 3.0.0),
-    tinter,
     viridis,
     WJSmisc (>= 0.3)
+VignetteBuilder: 
+    quarto
+Remotes: 
+    wjschne/WJSmisc
 Encoding: UTF-8
+Language: en-US
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Collate: 
     'ggdiagram-package.R'
     'utils-pipe.R'
     'a_early.R'
-    'str.R'    
+    'str.R'
     'colors.R'
     'angles.R'
     'style.R'
@@ -58,7 +70,7 @@ Collate:
     'ellipses.R'
     'arcs.R'
     'bezier.R'
-    'rectangles.R'    
+    'rectangles.R'
     'polygons.R'
     'equations.R'
     'distances.R'
@@ -66,6 +78,3 @@ Collate:
     'inside.R'
     'rotate.R'
     'zzz.R'
-VignetteBuilder: quarto
-Remotes:  
-    wjschne/WJSmisc

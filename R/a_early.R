@@ -172,6 +172,7 @@ xy <- new_class(name = "xy",
 #' @param theta angle width
 #' @param looseness distance of control points as a ratio of the distance to the object's center (e.g., in a circle of radius 1, looseness = 1.5 means that that the control points will be 1.5 units from the start and end points.)
 #' @param bend Angle by which the control points are rotated
+#' @inherit ob_style params
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @export
 ob_variance <- new_generic("ob_variance", dispatch_args = "x", fun = function(
@@ -195,6 +196,7 @@ ob_variance <- new_generic("ob_variance", dispatch_args = "x", fun = function(
 #' @param where exit angle
 #' @param looseness distance of control points as a ratio of the distance to the object's center (e.g., in a circle of radius 1, looseness = 1.5 means that that the control points will be 1.5 units from the start and end points.)
 #' @param bend Angle by which the control points are rotated
+#' @inherit ob_style params
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @export
 ob_covariance <- new_generic(
@@ -369,7 +371,7 @@ class_numeric_or_unit <- new_union(class_numeric, class_unit)
 #' Makes a copy of a function with new defaults. Similar to `purrr::partial` except that arguments with new defaults still accept input.
 #'
 #' @param .f function
-#' @param ... new defaults
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> new defaults
 #'
 #' @return function
 #' @export
@@ -580,7 +582,7 @@ ob_array_helper <- function(x, k = 2, sep = 1, where = "east", anchor = "center"
 #' Create subscripts
 #'
 #' @param x text
-#' @param subscript text
+#' @param subscript subscript
 #'
 #' @return text
 #' @export
@@ -595,12 +597,12 @@ subscript <- function(x, subscript = seq(length(x))) {
 #' Create superscript
 #'
 #' @param x text
-#' @param subscript text
+#' @param superscript superscript
 #'
 #' @return text
 #' @rdname subscript
 #' @export
-superscript <- function(x, superscript = 2) {
+superscript <- function(x, superscript = seq(length(x))) {
   paste0(x, "<sup>", superscript, "</sup>")
 }
 
@@ -795,33 +797,33 @@ prop_integer_coerce <- function(name) {
         collapse = " ")
 }
 
-check_inconsistent <- function(object) {
-  prop_n <- get_prop_n(object)
-  max_n <- max(prop_n)
-  prop_inconsistent <- prop_n[!(prop_n %in% unique(c(0, 1, max_n)))]
-  if (length(prop_inconsistent) > 0) {
-    msg <- tibble::enframe(prop_n[!(prop_n %in% unique(c(0, 1)))]) |>
-      dplyr::summarize(.by = .data$value,
-                       name = paste0(.data$name, collapse = ", ")) |>
-      dplyr::mutate(v = paste0(
-        "Size ",
-        .data$value,
-        ": Properties: ",
-        .data$name)) |>
-      dplyr::pull(.data$v) |>
-      paste0(collapse = "\n")
-    object_class <- .simpleCap(S7_class(object)@name)
-
-
-    stop(
-      paste0(
-        object_class,
-        " properties should have 0, 1, or consistently numbered elements.\nInconsistent elements:\n",
-        msg
-      )
-    )
-  }
-}
+# check_inconsistent <- function(object) {
+#   prop_n <- get_prop_n(object)
+#   max_n <- max(prop_n)
+#   prop_inconsistent <- prop_n[!(prop_n %in% unique(c(0, 1, max_n)))]
+#   if (length(prop_inconsistent) > 0) {
+#     msg <- tibble::enframe(prop_n[!(prop_n %in% unique(c(0, 1)))]) |>
+#       dplyr::summarize(.by = .data$value,
+#                        name = paste0(.data$name, collapse = ", ")) |>
+#       dplyr::mutate(v = paste0(
+#         "Size ",
+#         .data$value,
+#         ": Properties: ",
+#         .data$name)) |>
+#       dplyr::pull(.data$v) |>
+#       paste0(collapse = "\n")
+#     object_class <- .simpleCap(S7_class(object)@name)
+#
+#
+#     stop(
+#       paste0(
+#         object_class,
+#         " properties should have 0, 1, or consistently numbered elements.\nInconsistent elements:\n",
+#         msg
+#       )
+#     )
+#   }
+# }
 
 .between <- function(x, lb, ub) {
   b <- cbind(lb = lb, ub = ub)
@@ -1050,7 +1052,7 @@ rotate2columnmatrix <- function(x, theta) {
 #' Automatic label for objects
 #'
 #' @param object object
-#' @param ... additional arguments
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> additional arguments
 label_object <- new_generic("label_object", "object")
 
 #' Arrow connect one shape to another
@@ -1082,44 +1084,57 @@ method(as.list, shape) <- function(x, ...) {
 
 #' ggdiagram function
 #'
-#' This is a convenient way to specify
+#' This is a convenient way to specify geom defaults
 #'
-#' @param family font family
+#' @param font_family font family
+#' @param font_size font size in points
+#' @param linewidth line width
+#' @param rect_linewidth line with of rectangles
+#' @param theme_function ggplot2 theme
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> Arguments sent to ggplot2::theme
 #'
 #' @export
 #'
 #' @examples
 #' ggdiagram() + ob_circle()
 ggdiagram <- function(
-    base_size = 11,
-    base_family = "sans",
-    base_line_size = base_size/22,
-    base_rect_size = base_size/22,
+    font_family = "sans",
+    font_size = 11,
+    linewidth = .5,
+    rect_linewidth = linewidth,
     theme_function = ggplot2::theme_void,
     ...) {
-  require(ggtext)
-  require(geomtextpath)
+
   ggplot2::update_geom_defaults(
-    geom = "richtext",
-    new = list(family = base_family,
-               size = base_size / ggplot2::.pt))
-  update_geom_defaults(
+    geom = ggtext::GeomRichText,
+    new = list(family = font_family,
+               size = font_size / ggplot2::.pt))
+
+  ggplot2::update_geom_defaults(
     geom = "line",
-    new = list(linewidth = base_line_size))
-  update_geom_defaults(
-    geom = "segment",
-    new = list(linewidth = base_line_size))
-  update_geom_defaults(
-    geom = "segment",
-    new = list(linewidth = base_line_size))
-  update_geom_defaults(
-    "labelpath",
+    new = list(linewidth = linewidth))
+
+  ggplot2::update_geom_defaults(
+    geom = ggarrow::GeomArrowSegment,
+    new = list(linewidth = linewidth))
+
+  ggplot2::update_geom_defaults(
+    geom = geomtextpath::GeomLabelpath,
     list(
-      family = base_family,
-      size = base_size / ggplot2::.pt))
+      family = font_family,
+      size = font_size / ggplot2::.pt))
+
+  ggplot2::update_geom_defaults(
+    geom = ggplot2::GeomPolygon,
+    list(linewidth = linewidth))
 
   ggplot2::ggplot() +
-    theme_function(base_family = family) +
-    ggplot2::coord_equal() +
+    theme_function(
+      base_family = font_family,
+      base_size = font_size,
+      base_line_size = linewidth,
+      base_rect_size = rect_linewidth
+    ) +
+    ggplot2::coord_equal(clip = "off") +
     ggplot2::theme(...)
 }

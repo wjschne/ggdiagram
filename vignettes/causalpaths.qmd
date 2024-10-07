@@ -23,7 +23,6 @@ library(dplyr)
 library(purrr)
 library(ggtext)
 library(geomtextpath)
-library(ggimage)
 library(ggarrow)
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -74,7 +73,7 @@ Structural equation models are often displayed with path diagrams. The visual vo
 #| fig-height: 3
 #| code-fold: true
 
-ggdiagram(base_family = my_font, base_size = 16) +
+ggdiagram(font_family = my_font, font_size = 16) +
   {lv <- ob_circle(label = "Latent<br>Variable")} +
   {r <- ob_rectangle(width = sqrt(pi),
                   height = sqrt(pi),
@@ -94,7 +93,7 @@ In @fig-pathtype, two types of relationships are depicted. A single-headed arrow
 #| fig-cap: Relationships in a path diagram
 #| code-fold: true
 #| out-width: 70%
-ggdiagram(base_family = my_font, base_size = 16) +
+ggdiagram(font_family = my_font, font_size = 16) +
   {this <- ob_circle(label = ob_label("This", size = 40))} +
   {that <- ob_circle(label = ob_label("That", size = 40)) |>
     place(this, "right")} +
@@ -133,7 +132,7 @@ lb_direct <- redefault(
   angle = 0, 
   position = .47)
 
-ggdiagram(base_family = my_font, base_size = 16) + 
+ggdiagram(font_family = my_font, font_size = 16) + 
   {X <- observed(label = lb_observed("X"))} +
   {Y <- observed(label = lb_observed("Y")) %>% 
     place(X,where = "right")} +
@@ -168,7 +167,7 @@ All of this can be communicated succinctly with the path diagram in @fig-fullreg
 #| code-fold: true
 #| out-width: 100%
 
-ggdiagram(base_family = my_font, base_size = 16) +
+ggdiagram(font_family = my_font, font_size = 16) +
   {X <- observed(label = lb_observed("*X*"))} +
   {Yhat <- observed(label = lb_observed("*Ŷ*")) |> 
     place(X, "right", sep = 2)} +
@@ -204,7 +203,7 @@ ggdiagram(base_family = my_font, base_size = 16) +
     r"(\text{\emph{σ}}^{\text{2}}_{\mkern-1.5mu\text{\emph{X}}})", 
     r"(\text{\emph{σ}}^{\text{2}}_{\mkern-1.5mu\text{\emph{e}}})"), 
     center = bind(c(sigma_x, sigma_e))@midpoint(), 
-    width = .07, 
+    width = .4, 
     family = my_font)
 
 ```
@@ -261,7 +260,7 @@ covariance <- redefault(
   looseness = 1.2
 )
 
-ggdiagram(base_family = my_font, base_size = 16) + 
+ggdiagram(font_family = my_font, font_size = 16) + 
   {x1 <- observed() 
    x2 <- observed() %>% 
     place(x1, "below", sep = 2.25) 
@@ -356,7 +355,7 @@ my_fills <- viridis::viridis(n = 3, begin = .3, end = .6) %>%
   set_props(saturation = .6, brightness = .5) %>% 
   c()
 
-ggdiagram(base_family = my_font, base_size = 16) +
+ggdiagram(font_family = my_font, font_size = 16) +
   {x <- ob_array(ob_ellipse(m1 = 8, 
                                color = NA,
                                fill = my_fills[2]), 
@@ -474,7 +473,7 @@ Principal components analysis (PCA) is similar to exploratory factor analysis (E
 #| code-fold: true
 #| fig-height: 6.5
 
-ggdiagram(base_family = my_font) +
+ggdiagram(font_family = my_font) +
   # observed variables
   {o <- ob_ellipse(m1 = 10, a = .6, color = NA) %>%
       ob_array(5, sep = .2, fill = class_color(my_fills[2])@lighten(seq(.6, .9, length.out = 5)))} +
@@ -526,7 +525,7 @@ ggdiagram(base_family = my_font) +
 #| fig-cap: "A latent variable with three observed indicators and three latent error terms."
 #| code-fold: true
 
-ggdiagram(base_family = my_font, base_size = 16) +
+ggdiagram(font_family = my_font, font_size = 16) +
   # Place a latent variable at the top
   {l1 <- ob_circle(radius = 2)} +
   # Place an array of observed variables below the circle
@@ -658,7 +657,7 @@ var_latent <- redefault(
 
 
 
-ggdiagram(base_size = 16, base_family = my_font) +
+ggdiagram(font_family = my_font, font_size = 16) +
   {g <- latent(label = lb_latent("*g*"), fill = "gray15")} + 
   var_latent(g, label = lb_path(1)) +
   {Gx <- place(g, g,where = "below", sep = 1.6) |> 
@@ -742,7 +741,7 @@ In @fig-wedge, the same model from @fig-path is displayed showing variance propo
 #| fig-width: 8
 #| fig-height: 5.5
 
-ggdiagram(base_family = my_font, base_size = 13) +
+ggdiagram(font_family = my_font, font_size = 13) +
   {g <- latent(label = lb_latent("*g*"), 
                fill = "gray15", 
                radius = sqrt(1 / pi))} + 
@@ -844,7 +843,7 @@ ggdiagram(base_family = my_font, base_size = 13) +
 #| code-fold: true
 #| echo: false
 #| eval: false
-ggdiagram(base_family = my_font, base_size = 16) +
+ggdiagram(font_family = my_font, font_size = 16) +
   # Latent Variable
   {Gc <- ob_circle(
       fill = "dodgerblue4",
@@ -920,7 +919,7 @@ black_gradient <- grid::radialGradient(
 black_gradient_rev <- grid::radialGradient(
   colours = c("gray50", "black"))
 
-ggdiagram(base_family = my_serif_font, base_size = 16) +
+ggdiagram(font_family = my_serif_font, font_size = 16) +
   {g <- ob_circle(
       radius = 1.33,
       fill = NA,
@@ -1225,7 +1224,7 @@ tau_covariance <- redefault(ob_covariance,
                             head_length = 4, 
                             resect = 1)
 
-ggdiagram(base_family = my_font, base_size = 13) + 
+ggdiagram(font_family = my_font, font_size = 13) + 
   {i1 <- intercept(label = ob_label(
     label = "1~1~", 
     color = "white",
@@ -1352,7 +1351,7 @@ ggdiagram(base_family = my_font, base_size = 13) +
   {e <- ob_circle(radius = .6, fill = y@fill, color = NA, label = lb_observed("*e~ij~*")) %>% place(y, "right", .9)} +
   connect(e, y, color = y@fill, resect = 2) +
   {e_var <- ob_variance(e, "east", color = e@fill, looseness = 1.7)} +
-  ob_latex(r"(\text{\emph{σ}}^{\text{2}}_{\mkern-1.5mu\text{\emph{e}}})", e_var@midpoint(), width = .035, family = "Roboto Condensed", filename = "sigma_e_2", color = e@fill)
+  ob_latex(r"(\text{\emph{σ}}^{\text{2}}_{\mkern-1.5mu\text{\emph{e}}})", e_var@midpoint(), width = .45, family = "Roboto Condensed", filename = "sigma_e_2", color = e@fill)
   
   
 

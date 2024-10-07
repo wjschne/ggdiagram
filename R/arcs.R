@@ -349,7 +349,7 @@ arc_props <- list(
 #'  )
 #'
 #'  # Print arc
-#'  a
+#'  a_90
 #'
 #' # Plot arc and its center point
 #' ggplot() + coord_equal() + theme_minimal() +
@@ -679,41 +679,3 @@ method(`[`, ob_arc) <- function(x, y) {
 #' @export
 ob_wedge <- redefault(ob_arc, wedge = TRUE, color = NA, fill = "black")
 
-# circle_pie ----
-
-#' circle_pie
-#'
-#' pie wedges
-#' @param center center point of pie
-#' @param radius length of circle radius
-#' @param start angle at which pie wedges start
-#' @param proportion_list list of proportions
-#' @param color_list color of wedge borders
-#' @param fill_list color of wedge fills
-circle_pie <- new_class(
-  name = "circle_pie",
-  parent = centerpoint,
-  properties = list(
-    radius = class_numeric,
-    start = new_property(class = ob_angle_or_numeric, default = 0),
-    proportion_list = class_list,
-    color_list = class_list,
-    fill_list = class_list
-  ),
-  constructor = function(
-    center = ob_point(0,0),
-    radius = 1,
-    proportion_list = list(c(.5,.5)),
-    start = degree(0)) {
-    if (!S7_inherits(start, ob_angle)) start <- degree(start)
-
-    new_object(parent = centerpoint(center = center),
-               radius = radius,
-               start = start,
-               proportion_list = proportion_list,
-               color_list = color_list,
-               fill_list = fill_list
-               )
-
-  }
-                        )

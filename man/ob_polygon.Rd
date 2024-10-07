@@ -22,7 +22,7 @@ ob_polygon(
 
 \item{label}{A character, angle, or label object}
 
-\item{radius}{A numeric or unit vector of length one,  specifying the corner radius}
+\item{radius}{A numeric or unit vector of length one, specifying the corner radius}
 
 \item{alpha}{numeric value for alpha transparency}
 

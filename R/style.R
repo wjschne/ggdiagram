@@ -91,7 +91,7 @@ prop_polar_just <- new_property(class_numeric, setter = function(self, value) {
 #' @param text.color Color of label text.
 #' @param vjust vertical justification
 #' @param linetype type of lines
-#' @param ... unused
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> unused
 #' @export
 ob_style <- new_class(
   name = "ob_style",

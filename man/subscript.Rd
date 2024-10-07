@@ -7,12 +7,14 @@
 \usage{
 subscript(x, subscript = seq(length(x)))
 
-superscript(x, superscript = 2)
+superscript(x, superscript = seq(length(x)))
 }
 \arguments{
 \item{x}{text}
 
-\item{subscript}{text}
+\item{subscript}{subscript}
+
+\item{superscript}{superscript}
 }
 \value{
 text

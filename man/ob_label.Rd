@@ -89,6 +89,10 @@ ob_label(
 
 \item{spacing}{letter spacing for labels used with ob_path and ob_bezier}
 
+\item{x}{x-coordinate of center point. If specified, overrides x-coordinate of \verb{@p}.}
+
+\item{y}{x-coordinate of center point. If specified, overrides y-coordinate of \verb{@p}.}
+
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
 }
 \description{

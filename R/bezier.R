@@ -168,6 +168,7 @@ bz_props <- list(
 #' @export
 #' @param p ob_point or list of ob_points
 #' @param label A character, angle, or label object
+#' @param label_sloped A logical value indicating whether the label should be sloped with the curve
 #' @slot length The number of curves in the ob_bezier object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]>  properties passed to style
 #' @param style Gets and sets the styles associated with ob_beziers

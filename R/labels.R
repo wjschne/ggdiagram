@@ -162,8 +162,10 @@ lb_props <- list(
 #' @param plot_point plot ob_point (default = FALSE)
 #' @param spacing letter spacing for labels used with ob_path and ob_bezier
 #' @param position position (used in conjunction with the `place` function)
-#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
+#' @param x x-coordinate of center point. If specified, overrides x-coordinate of `@p`.
+#' @param y x-coordinate of center point. If specified, overrides y-coordinate of `@p`.
 #' @inherit ob_style params
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @export
 ob_label <- new_class(
   name = "ob_label",
@@ -205,11 +207,24 @@ ob_label <- new_class(
                          y = class_missing,
                          ...) {
 
+    # If p is missing, assign x and y
     if (missing(p)) {
       if (missing(x)) x <- 0
       if (missing(y)) y <- 0
       p <- ob_point(x,y)
+    } else {
+      if (!missing(x)) {
+        p@x <- x
+      }
+
+      if (!missing(y)) {
+        p@y <- y
+      }
+
     }
+
+
+
 
     if (length(label.padding) > 0) {
       label.padding <- class_margin(label.padding)

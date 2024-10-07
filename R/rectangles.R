@@ -365,11 +365,18 @@ rc_props <- list(
 #' @param center point at center of the circle
 #' @param width width
 #' @param height height
+#' @param east right middle point
+#' @param north top middle point
+#' @param west left middle point
+#' @param south top middle point
 #' @param northeast upper right point
 #' @param northwest upper left point
 #' @param southwest lower left point
 #' @param southeast lower right point
 #' @param label A character, angle, or label object
+#' @param x overrides x-coordinate in `center@x`
+#' @param y overrides y-coordinate in `center@x`
+#' @param radius A numeric or unit vector of length one, specifying the corner radius
 #' @param style a style object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object
 #' @inherit ob_style params

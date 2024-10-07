@@ -150,8 +150,8 @@ cr_props <- list(
 #' @param center point at center of the circle
 #' @param radius distance between center and edge circle
 #' @param label A character, angle, or label object
-#' @param x0 x-coordinate of circle's center. Overrides `@center@x`
-#' @param y0 y-coordinate of circle's center. Overrides `@center@y
+#' @param x0 x-coordinate of center point. If specified, overrides x-coordinate of `@center`.
+#' @param y0 x-coordinate of center point. If specified, overrides y-coordinate of `@center`.
 #' @param n number of points in circle (default = 360)
 #' @param style an ob_style object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object

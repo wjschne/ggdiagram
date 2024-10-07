@@ -1,0 +1,188 @@
+---
+title: "Equations with LaTeX"
+format: 
+  html:
+    toc: true
+    html-math-method: katex
+vignette: >
+  %\VignetteIndexEntry{equations}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+bibliography: references.json
+csl: apa.csl
+---
+
+```{r}
+#| label: presetup
+#| include: false
+#| cache: false
+library(ggplot2)
+library(ggdiagram)
+library(tibble)
+library(dplyr)
+library(purrr)
+library(ggtext)
+library(geomtextpath)
+library(ggarrow)
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  dev = "ragg_png",
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 7,
+  cache = FALSE
+)
+
+my_font <- "Roboto Condensed"
+update_geom_defaults("richtext", 
+                     list(family = my_font, 
+                          size = 0.8 * 20 / ggplot2::.pt))
+update_geom_defaults("line", list(linewidth = .5))
+update_geom_defaults("segment", list(linewidth = .5))
+update_geom_defaults("arrow_segment", list(length_head = 5, 
+                                           linewidth = .5))
+update_geom_defaults("arrow", list(length_head = 5, 
+                                   linewidth = .5))
+update_geom_defaults("point", list(size = 2))
+update_geom_defaults(
+  "labelpath", 
+  list(
+    family = my_font,
+    size = 0.8 * 20 / ggplot2::.pt))
+```
+
+# Setup
+
+```{r}
+#| label: setup
+library(ggplot2)
+library(ggdiagram)
+library(tibble)
+library(dplyr)
+library(purrr)
+library(ggarrow)
+```
+
+# Advantages of `ob_label` over `ob_latex`
+
+The `ob_label` function uses `ggtext::geom_richtext` to create labels. It's primary advantage is that it is simple and renders quickly. Wherever possible, it is the recommended way to create labels. It understands some markdown formatting (e.g., italics and bolding) and some HTML tags (e.g., `span`, `sub`, `sup`, `img`, and `style`). 
+
+
+# Advantages of `ob_latex` over `ob_label`
+
+If something more elaborate is needed than italics, bolding, subscripts, and superscripts, we can use LaTeX instead. The `ob_latex` function can place an image of a LaTeX equation in a ggplot diagram. 
+
+For example, suppose I want to label a latent variable's variance with the symbol $\sigma_e^2$. This symbol would be difficult to render in HTML, so we can render it in LaTeX instead.
+
+```{r}
+#| label: fig-latent
+#| fig-cap: "Latent variable with variance"
+#| fig-width: 2
+#| fig-height: 3
+ggdiagram(font_family = "Roboto Condensed") +
+  {l <- ob_circle(label = ob_label("*e*", size = 48))} +
+  {lv <- ob_variance(l)} +
+  ob_latex(tex = "\\sigma_e^2",
+           center = lv@midpoint(), 
+           width = .4) 
+```
+
+If we want the symbol to be in the same font as the rest of the figure, we can trick LaTeX into giving us any font we have installed on our system. I often use [Roboto Condensed](https://fonts.google.com/specimen/Roboto+Condensed):
+
+
+```{r}
+#| label: fig-latentroboto
+#| fig-cap: "Latent variable with variance rendered in Roboto Condensed"
+#| fig-width: 2
+#| fig-height: 3
+ggdiagram(font_family = "Roboto Condensed") +
+  {l <- ob_circle(label = ob_label("*e*", size = 48))} +
+  {lv <- ob_variance(l)} +
+  ob_latex(tex = r"(\text{\emph{σ}}_{\text{\emph{e}}}^{\text{2}})",
+           center = lv@midpoint(), 
+           width = .4, 
+           family = "Roboto Condensed") 
+```
+
+If you need an equation in a plot that requires something other than a 1:1 aspect ratio, you can set the aspect ratio of the equation to be the same as the aspect ratio as the plot.
+
+```{r}
+#| label: fig-normal
+#| fig-cap: "Normal distribution's probability density function"
+#| fig-width: 8
+#| fig-height: 5
+ggplot() +
+  coord_fixed(ratio = 1000) +
+  theme_classic() +
+  stat_function(
+    fun = \(x) dnorm(x, mean = 50, sd = 10),
+    geom = "area",
+    n = 1000,
+    fill = "dodgerblue",
+    alpha = .5
+  ) +
+  scale_x_continuous(breaks = seq(10,90,10), limits = c(10, 90)) +
+  scale_y_continuous(NULL, breaks = NULL, limits = c(0, dnorm(50,50,10))) +
+  ob_latex(
+    r"(f(x) = 
+    \frac{1}{\sigma\sqrt{2\pi}}
+    e^{-\frac{1}{2}
+    \left(\frac{x-\mu}{\sigma}\right)^2})", 
+           width = 30,
+           aspect_ratio = 1000,
+           border = 1,
+           filename = "zscore", 
+           density = 600) %>% 
+  place(ob_point(57, dnorm(57, 50, 10)), 
+        where = "right", 
+        sep = 3)
+
+
+```
+
+
+# Image quality
+
+The default density for `ob_latex` images is 300 dots per inch. If a small expression is displayed as a large image, it will appear pixelated.
+
+```{r}
+#| label: fig-pixelated300
+#| fig-cap: A latex expression with poor image quality
+#| fig-width: 4
+#| fig-height: 4
+ggdiagram() +
+  ob_circle(radius = 1) +
+  ob_latex("X_i^2", 
+           width = 1.25)
+```
+
+Setting the density to a higher value will usually create a better image.
+
+```{r}
+#| label: fig-pixelated600
+#| fig-cap: A latex expression with better image quality
+#| fig-width: 4
+#| fig-height: 4
+ggdiagram() +
+  ob_circle(radius = 1) +
+  ob_latex("X_i^2", 
+           width = 1.25,
+           density = 900)
+```
+
+
+Higher densities are not always better. In addition to using more memory and rendering more slowly, images with very high densities will sometimes appear blurry or pixelated.
+
+
+
+# How does `ob_latex` work?
+
+The `ob_latex` function works through these steps:
+
+1. Create a .tex file with content based on the LaTeX [standalone package](https://ctan.org/pkg/standalone).
+2. Create a .pdf file via the `tinytex::xelatex` function, if tinytex is available. Otherwise, use xelatex via a shell command.
+3. Import the .pdf file as raster bitmap via the `magick::image_read_pdf` function. 
+4. Store raster bitmap in the `ob_latex@image` slot.
+
+When rendered in ggplot2, the bitmap is displayed via `ggplot2::annotation_raster`.
+

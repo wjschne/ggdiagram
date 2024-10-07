@@ -17,7 +17,7 @@ The ggdiagram package is not a replacement for the standard ggplot2 functions. T
 
 ## Installation
 
-You can install the development version of ggpathdiagramr like so:
+You can install the development version of ggdiagram like so:
 
 ``` r
 remotes::install_github("wjschne/ggdiagram")

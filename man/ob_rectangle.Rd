@@ -37,6 +37,14 @@ ob_rectangle(
 
 \item{height}{height}
 
+\item{east}{right middle point}
+
+\item{north}{top middle point}
+
+\item{west}{left middle point}
+
+\item{south}{top middle point}
+
 \item{northeast}{upper right point}
 
 \item{northwest}{upper left point}
@@ -46,6 +54,8 @@ ob_rectangle(
 \item{southeast}{lower right point}
 
 \item{angle}{angle of text}
+
+\item{radius}{A numeric or unit vector of length one, specifying the corner radius}
 
 \item{label}{A character, angle, or label object}
 
@@ -60,6 +70,10 @@ ob_rectangle(
 \item{linetype}{type of lines}
 
 \item{style}{a style object}
+
+\item{x}{overrides x-coordinate in \code{center@x}}
+
+\item{y}{overrides y-coordinate in \code{center@x}}
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> arguments passed to style object}
 }

@@ -41,9 +41,9 @@ ob_circle(
 
 \item{style}{an ob_style object}
 
-\item{x0}{x-coordinate of circle's center. Overrides \verb{@center@x}}
+\item{x0}{x-coordinate of center point. If specified, overrides x-coordinate of \verb{@center}.}
 
-\item{y0}{y-coordinate of circle's center. Overrides `@center@y}
+\item{y0}{x-coordinate of center point. If specified, overrides y-coordinate of \verb{@center}.}
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> arguments passed to style object}
 }

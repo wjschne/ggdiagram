@@ -24,6 +24,7 @@
     <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
     <li><a class="dropdown-item" href="../articles/ellipses.html">Ellipses</a></li>
+    <li><a class="dropdown-item" href="../articles/equations.html">Equations with LaTeX</a></li>
     <li><a class="dropdown-item" href="../articles/lines.html">Lines</a></li>
     <li><a class="dropdown-item" href="../articles/paths.html">Paths</a></li>
     <li><a class="dropdown-item" href="../articles/points.html">Points</a></li>
@@ -54,14 +55,19 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ob_latex</span><span class="op">(</span></span>
 <span>  tex <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  center <span class="op">=</span> <span class="va">class_missing</span>,</span>
+<span>  center <span class="op">=</span> <span class="fu"><a href="ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,</span>
 <span>  width <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  height <span class="op">=</span> <span class="va">class_missing</span>,</span>
+<span>  aspect_ratio <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  border <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  family <span class="op">=</span> <span class="va">class_missing</span>,</span>
+<span>  math_mode <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  filename <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  color <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  force_recompile <span class="op">=</span> <span class="va">class_missing</span></span>
+<span>  density <span class="op">=</span> <span class="fl">300</span>,</span>
+<span>  latex_packages <span class="op">=</span> <span class="va">class_missing</span>,</span>
+<span>  preamble <span class="op">=</span> <span class="va">class_missing</span>,</span>
+<span>  force_recompile <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -85,6 +91,10 @@
 <dd><p>height (specify width or height but not both)</p></dd>
 
 
+<dt id="arg-aspect-ratio">aspect_ratio<a class="anchor" aria-label="anchor" href="#arg-aspect-ratio"></a></dt>
+<dd><p>alters the aspect ratio of the image</p></dd>
+
+
 <dt id="arg-border">border<a class="anchor" aria-label="anchor" href="#arg-border"></a></dt>
 <dd><p>border space (in points) around image</p></dd>
 
@@ -93,12 +103,45 @@
 <dd><p>font family (installed on system) of plain text</p></dd>
 
 
+<dt id="arg-math-mode">math_mode<a class="anchor" aria-label="anchor" href="#arg-math-mode"></a></dt>
+<dd><p>include dollar signs automatically. Set to <code>FALSE</code> when the latex command is not in math mode</p></dd>
+
+
 <dt id="arg-filename">filename<a class="anchor" aria-label="anchor" href="#arg-filename"></a></dt>
 <dd><p>bare file name without extension (e.g., <code>myequation</code>)</p></dd>
 
 
+<dt id="arg-color">color<a class="anchor" aria-label="anchor" href="#arg-color"></a></dt>
+<dd><p>set color of equation text</p></dd>
+
+
+<dt id="arg-density">density<a class="anchor" aria-label="anchor" href="#arg-density"></a></dt>
+<dd><p>image quality (dots per inch)</p></dd>
+
+
+<dt id="arg-latex-packages">latex_packages<a class="anchor" aria-label="anchor" href="#arg-latex-packages"></a></dt>
+<dd><p>load latex packages</p></dd>
+
+
+<dt id="arg-preamble">preamble<a class="anchor" aria-label="anchor" href="#arg-preamble"></a></dt>
+<dd><p>additional latex commands to load in preamble</p></dd>
+
+
 <dt id="arg-force-recompile">force_recompile<a class="anchor" aria-label="anchor" href="#arg-force-recompile"></a></dt>
 <dd><p>Will re-run xelatex even if .pdf file exists already</p></dd>
+
+</dl></div>
+    <div class="section level2">
+    <h2 id="slots">Slots<a class="anchor" aria-label="anchor" href="#slots"></a></h2>
+
+
+<dl><dt><code>rectangle</code></dt>
+<dd><p>gets or sets rectangle that contains the image</p></dd>
+
+
+<dt><code>image</code></dt>
+<dd><p>raster bitmap</p></dd>
+
 
 </dl></div>
 

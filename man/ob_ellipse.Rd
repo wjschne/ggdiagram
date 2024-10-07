@@ -53,6 +53,10 @@ ob_ellipse(
 
 \item{style}{gets and sets style parameters}
 
+\item{x0}{x-coordinate of center point. If specified, overrides x-coordinate of \verb{@center}.}
+
+\item{y0}{x-coordinate of center point. If specified, overrides y-coordinate of \verb{@center}.}
+
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> arguments passed to style object}
 }
 \description{

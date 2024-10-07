@@ -5,19 +5,29 @@
 \title{ggdiagram function}
 \usage{
 ggdiagram(
-  base_size = 11,
-  base_family = "sans",
-  base_line_size = base_size/22,
-  base_rect_size = base_size/22,
+  font_family = "sans",
+  font_size = 11,
+  linewidth = 0.5,
+  rect_linewidth = linewidth,
   theme_function = ggplot2::theme_void,
   ...
 )
 }
 \arguments{
-\item{family}{font family}
+\item{font_family}{font family}
+
+\item{font_size}{font size in points}
+
+\item{linewidth}{line width}
+
+\item{rect_linewidth}{line with of rectangles}
+
+\item{theme_function}{ggplot2 theme}
+
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> Arguments sent to ggplot2::theme}
 }
 \description{
-This is a convenient way to specify
+This is a convenient way to specify geom defaults
 }
 \examples{
 ggdiagram() + ob_circle()

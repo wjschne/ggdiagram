@@ -50,12 +50,12 @@ To avoid repetitive code, we make a base plot:
 ```{r}
 #| label: baseplot
 my_font <- "Roboto Condensed"
-my_text_size <- 20
+my_font_size <- 20
 my_point_size <- 3
 my_arrow_head <- arrowheadr::arrow_head_deltoid()
 update_geom_defaults(geom = "richtext", 
                      new = list(family = my_font, 
-                                size = .8 * my_text_size / ggplot2::.pt))
+                                size = .8 * my_font_size / ggplot2::.pt))
 
 update_geom_defaults("point", list(size = my_point_size))
 
@@ -66,7 +66,7 @@ update_geom_defaults("arrow", list(length_head = 5,
 
 theme_set(
   theme_minimal(
-    base_size = my_text_size, 
+    base_size = my_font_size, 
     base_family = my_font) +
     theme(axis.title.y = element_text(angle = 0, vjust = 0.5, face = "italic")))
 bp <- ggplot() +
@@ -277,7 +277,7 @@ seg_c1_p3 <- ob_segment(
   label = scales::number(distance(intersect_c1_p3, p3), .1),
   style = seg_style)
 
-p_labels <- paste0("P<sub>",1:3, "</sub>")
+p_labels <- subscript("P", 1:3)
 
 bp +
   c1 +

@@ -198,6 +198,10 @@ sg_props <- list(
 #' @param p1 starting point
 #' @param p2 end point
 #' @param label A character, angle, or label object
+#' @param x overrides the x-coordinate of p1
+#' @param xend overrides the y-coordinate of p1
+#' @param y overrides the x-coordinate of p2
+#' @param yend overrides the y-coordinate of p2
 #' @param style a style list
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @inherit ob_style params

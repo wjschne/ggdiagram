@@ -24,6 +24,7 @@
     <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
     <li><a class="dropdown-item" href="../articles/ellipses.html">Ellipses</a></li>
+    <li><a class="dropdown-item" href="../articles/equations.html">Equations with LaTeX</a></li>
     <li><a class="dropdown-item" href="../articles/lines.html">Lines</a></li>
     <li><a class="dropdown-item" href="../articles/paths.html">Paths</a></li>
     <li><a class="dropdown-item" href="../articles/points.html">Points</a></li>
@@ -72,7 +73,7 @@
 <span>  fill <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  lineend <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  linejoin <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  linewidth <span class="op">=</span> <span class="fl">0.25</span>,</span>
+<span>  linewidth <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  linewidth_fins <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  linewidth_head <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  linetype <span class="op">=</span> <span class="va">class_missing</span>,</span>
@@ -107,7 +108,7 @@
 <span>  fill <span class="op">=</span> <span class="st">"black"</span>,</span>
 <span>  lineend <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  linejoin <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  linewidth <span class="op">=</span> <span class="fl">0.25</span>,</span>
+<span>  linewidth <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  linewidth_fins <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  linewidth_head <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  linetype <span class="op">=</span> <span class="va">class_missing</span>,</span>
@@ -309,8 +310,26 @@
 <span class="r-in"><span> <span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span> <span class="co"># Print arc</span></span></span>
-<span class="r-in"><span> <span class="va">a</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'a' not found</span>
+<span class="r-in"><span> <span class="va">a_90</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ob_arc&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> @ center: &lt;ob_point&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  @ x: num 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  @ y: num 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> @ radius: num 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> @ start : &lt;degree&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  @ degree: num 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> @ end   : &lt;degree&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  @ degree: num 90</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> @ theta : &lt;degree&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  @ degree: num 90</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Other props: label, wedge, alpha, arrow_head, arrow_fins,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              arrowhead_length, length_head, length_fins, color,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              fill, lineend, linejoin, linewidth, linewidth_fins,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              linewidth_head, linetype, n, resect, resect_fins,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              resect_head, stroke_color, stroke_width, apothem,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              sagitta, bounding_box, chord, length, polygon, style,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              tibble, geom, angle_at, autolabel, midpoint, point_at,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              tangent_at, aesthetics</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Plot arc and its center point</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_equal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>

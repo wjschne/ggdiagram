@@ -4,14 +4,24 @@
 \alias{class_color}
 \title{color class}
 \usage{
-class_color(color = class_missing)
+class_color(
+  color = class_missing,
+  hue = NULL,
+  saturation = NULL,
+  brightness = NULL,
+  alpha = NULL
+)
 }
 \arguments{
 \item{color}{character (R color or hex code)}
 
-\item{saturation}{get or set the luminance of a color}
+\item{hue}{get or set the hue of a color (i.e., the h in the hsv model)}
 
-\item{luminance}{get or set the luminance of a color}
+\item{saturation}{get or set the saturation of a color (i.e., the s in the hsv model)}
+
+\item{brightness}{get or set the brightness of a color (i.e., the v in the hsv model)}
+
+\item{alpha}{get or set the transparency of a color}
 }
 \description{
 color class
@@ -29,8 +39,12 @@ color class
 \examples{
 mycolor <- class_color("blue")
 mycolor
+# Display html hexcode
 c(mycolor)
+# Set transparency
 mycolor@transparentize(.5)
+# Lighten color
 mycolor@lighten(.5)
+# Darken color
 mycolor@darken(.5)
 }

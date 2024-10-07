@@ -6,6 +6,7 @@
 <url><loc>https://wjschne.github.io/ggdiagram/articles/causalpaths.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/articles/circles.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/articles/ellipses.html</loc></url>
+<url><loc>https://wjschne.github.io/ggdiagram/articles/equations.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/articles/index.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/articles/lines.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/articles/paths.html</loc></url>
@@ -38,10 +39,12 @@
 <url><loc>https://wjschne.github.io/ggdiagram/reference/nudge.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_angle.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_arc.html</loc></url>
+<url><loc>https://wjschne.github.io/ggdiagram/reference/ob_array.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_bezier.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_circle.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_covariance.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_ellipse.html</loc></url>
+<url><loc>https://wjschne.github.io/ggdiagram/reference/ob_intercept.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_label.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_latex.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_line.html</loc></url>

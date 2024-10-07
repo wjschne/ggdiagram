@@ -24,6 +24,7 @@
     <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
     <li><a class="dropdown-item" href="../articles/ellipses.html">Ellipses</a></li>
+    <li><a class="dropdown-item" href="../articles/equations.html">Equations with LaTeX</a></li>
     <li><a class="dropdown-item" href="../articles/lines.html">Lines</a></li>
     <li><a class="dropdown-item" href="../articles/paths.html">Paths</a></li>
     <li><a class="dropdown-item" href="../articles/points.html">Points</a></li>
@@ -133,6 +134,14 @@
 <dd><p>gets and sets style parameters</p></dd>
 
 
+<dt id="arg-x-">x0<a class="anchor" aria-label="anchor" href="#arg-x-"></a></dt>
+<dd><p>x-coordinate of center point. If specified, overrides x-coordinate of <code>@center</code>.</p></dd>
+
+
+<dt id="arg-y-">y0<a class="anchor" aria-label="anchor" href="#arg-y-"></a></dt>
+<dd><p>x-coordinate of center point. If specified, overrides y-coordinate of <code>@center</code>.</p></dd>
+
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>&lt;<code><a href="https://rlang.r-lib.org/reference/dyn-dots.html" class="external-link">dynamic-dots</a></code>&gt; arguments passed to style object</p></dd>
 
@@ -173,11 +182,19 @@
 <span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">ob_ellipse</span><span class="op">(</span><span class="va">p</span>, a <span class="op">=</span> <span class="fl">2</span>, b <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ob_ellipse&gt;</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in dplyr::mutate(self@tibble, group = dplyr::row_number(), d = purrr::pmap(list(x0 = x0,     y0 = y0, a = a, b = b, angle = angle, m1 = m1, m2 = m2),     function(x0, y0, a, b, angle, m1, m2) {        th &lt;- degree(seq(0, 359.5, 0.5))        cs &lt;- cos(th)        sn &lt;- sin(th)        x &lt;- a * (abs(cs)^(2/m1)) * sign(cs)        y &lt;- b * (abs(sn)^(2/m2)) * sign(sn)        xy &lt;- rotate2columnmatrix(cbind(x, y), angle)        xr &lt;- xy[, 1] + x0        yr &lt;- xy[, 2] + y0        tibble(xmin = min(xr), xmax = max(xr), ymin = min(yr),             ymax = max(yr))    })):</span> <span style="color: #00BBBB;">ℹ</span> In argument: `d = purrr::pmap(...)`.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `purrr::pmap()`:</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> In index: 1.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `tibble()`:</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> could not find function "tibble"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> @ center: &lt;ob_point&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  @ x: num 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  @ y: num 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> @ a     : num 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> @ b     : num 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> @ angle : &lt;radian&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  @ radian: num 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> @ m1    : num 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> @ m2    : num 2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Other props: label, alpha, color, fill, linewidth, linetype,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              n, area, bounding_box, focus_1, focus_2, length,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              perimeter, style, tibble, angle_at, geom, normal_at,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              point_at, tangent_at, aesthetics</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

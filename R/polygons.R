@@ -158,7 +158,7 @@ ob_polygon_props <- list(
 #' @export
 #' @param p ob_point or list of ob_point objects
 #' @param label A character, angle, or label object
-#' @param radius A numeric or unit vector of length one,  specifying the corner radius
+#' @param radius A numeric or unit vector of length one, specifying the corner radius
 #' @slot length The number of polygons in the ob_polygon object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @param style Gets and sets the styles associated with polygons
@@ -348,9 +348,11 @@ method(connect, list(ob_polygon, centerpoint)) <- function(x,y, ...) {
 #' Triangle polygons used in path diagrams.
 #' @param center point at center
 #' @param width length of side
-#' @param rounding rounding of vertices
 #' @param label A character, angle, or label object
-#' @param radius A numeric or unit vector of length one,  specifying the vertex radius
+#' @param radius A numeric or unit vector of length one, specifying the vertex radius
+#' @param top Top vertex of triangle
+#' @param left Left vertex of triangle
+#' @param right Right vertex of triangle
 #' @slot length The number of polygons in the ob_polygon object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @param style Gets and sets the styles associated with polygons

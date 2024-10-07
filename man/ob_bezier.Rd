@@ -37,6 +37,8 @@ ob_bezier(
 
 \item{label}{A character, angle, or label object}
 
+\item{label_sloped}{A logical value indicating whether the label should be sloped with the curve}
+
 \item{n}{Number of points in a polygon, circle, arc, or ellipse}
 
 \item{alpha}{numeric value for alpha transparency}

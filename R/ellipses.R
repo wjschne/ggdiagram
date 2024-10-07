@@ -42,10 +42,12 @@ el_props <- list(
                                           cbind(x,y), angle)
                                         xr <- xy[,1] + x0
                                         yr <- xy[,2] + y0
-                                        tibble(xmin = min(xr),
-                                               xmax = max(xr),
-                                               ymin = min(yr),
-                                               ymax = max(yr))
+                                        tibble::tibble(
+                                          xmin = min(xr),
+                                          xmax = max(xr),
+                                          ymin = min(yr),
+                                          ymax = max(yr)
+                                        )
                                       })) |>
         tidyr::unnest(d) |>
         dplyr::summarise(xmin = min(xmin),
@@ -255,6 +257,8 @@ el_props <- list(
 #' @slot normal_at A function that finds a point perpendicular to the ellipse at angle `theta` at the specified `distance`. The `definitional` parameter is passed to the `point_at` function. If a point is supplied instead of an angle, the point is projected onto the ellipse and then the normal is calculated found from the projected point.
 #' @slot point_at A function that finds a point on the ellipse at an angle `theta`. If `definitional` is `FALSE` (default), then `theta` is interpreted as an angle. If `TRUE`, then `theta` is the parameter in the definition of the ellipse in polar coordinates.
 #' @slot tangent_at A function that finds a tangent line on the ellipse. Uses `point_at` to find the tangent point at angle `theta` and then returns the tangent line at that point. If a point is supplied instead of an angle, the point is projected onto the ellipse and then the tangent line is found from there.
+#' @param x0 x-coordinate of center point. If specified, overrides x-coordinate of `@center`.
+#' @param y0 x-coordinate of center point. If specified, overrides y-coordinate of `@center`.
 #' @inherit ob_style params
 #' @param style gets and sets style parameters
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object

@@ -9,7 +9,7 @@ label_object(object, ...)
 \arguments{
 \item{object}{object}
 
-\item{...}{additional arguments}
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> additional arguments}
 }
 \description{
 Automatic label for objects

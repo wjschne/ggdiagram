@@ -79,6 +79,14 @@ ob_segment(
 
 \item{style}{a style list}
 
+\item{x}{overrides the x-coordinate of p1}
+
+\item{xend}{overrides the y-coordinate of p1}
+
+\item{y}{overrides the x-coordinate of p2}
+
+\item{yend}{overrides the y-coordinate of p2}
+
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
 }
 \description{

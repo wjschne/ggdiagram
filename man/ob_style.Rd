@@ -138,7 +138,7 @@ ob_style(
 
 \item{vjust}{vertical justification}
 
-\item{...}{unused}
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> unused}
 }
 \description{
 ob_style class
