@@ -6,3 +6,4 @@
 ^LICENSE\.md$
 ^docs$
 ^dev$
+^vignettes/*_files$

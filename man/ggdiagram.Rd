@@ -21,6 +21,8 @@ ggdiagram(
 
 \item{linewidth}{line width}
 
+\item{point_size}{point size}
+
 \item{rect_linewidth}{line with of rectangles}
 
 \item{theme_function}{ggplot2 theme}

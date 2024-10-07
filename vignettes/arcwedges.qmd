@@ -5,7 +5,7 @@ format:
     toc: true
     html-math-method: katex
 vignette: >
-  %\VignetteIndexEntry{arcandwedges}
+  %\VignetteIndexEntry{Arcs and Wedges}
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 ---
@@ -26,6 +26,7 @@ knitr::opts_chunk$set(
   fig.width = 7,
   fig.height = 7
 )
+
 ```
 
 # Setup
@@ -48,7 +49,38 @@ To avoid repetitive code, we make a base plot:
 
 ```{r}
 #| label: baseplot
-#| file: baseplot.R
+
+my_font <- "Roboto Condensed"
+my_font_size <- 20
+my_point_size <- 2
+my_arrowhead <- arrowheadr::arrow_head_deltoid(2.1)
+
+# my_colors <- viridis::viridis(2, begin = .25, end = .5)
+my_colors <- c("#3B528B", "#21908C")
+
+theme_set(
+  theme_minimal(
+    base_size = my_font_size,
+    base_family = my_font) +
+    theme(axis.title.y = element_text(angle = 0, vjust = 0.5)))
+
+bp <- ggdiagram(
+  font_family = my_font,
+  font_size = my_font_size,
+  point_size = my_point_size,
+  linewidth = .5,
+  theme_function = theme_minimal,
+  axis.title.x =  element_text(face = "italic"),
+  axis.title.y = element_text(
+    face = "italic",
+    angle = 0,
+    hjust = .5,
+    vjust = .5)) +
+  scale_x_continuous(labels = WJSmisc::signs_centered,
+                     limits = c(-4, 4)) +
+  scale_y_continuous(labels = signs::signs,
+                     limits = c(-4, 4))
+
 
 ```
 

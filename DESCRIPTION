@@ -44,7 +44,8 @@ Suggests:
     testthat (>= 3.0.0),
     viridis,
     quarto
-VignetteBuilder: quarto
+VignetteBuilder: 
+    quarto
 Encoding: UTF-8
 Language: en-US
 Roxygen: list(markdown = TRUE)

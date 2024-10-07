@@ -353,11 +353,13 @@ method(connect, list(ob_polygon, centerpoint)) <- function(x,y, ...) {
 #' @param top Top vertex of triangle
 #' @param left Left vertex of triangle
 #' @param right Right vertex of triangle
+#' @param x0 overrides x-coordinate in `center@x`
+#' @param y0 overrides x-coordinate in `center@y`
 #' @slot length The number of polygons in the ob_polygon object
-#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @param style Gets and sets the styles associated with polygons
 #' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggplot2::geom_polygon`.
 #' @inherit ob_style params
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @export
 ob_intercept <- new_class(
   name = "ob_intercept",

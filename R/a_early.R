@@ -6,6 +6,8 @@ do_nothing <- function(x) {
     p1 <- ggforce::geom_circle()
     p2 <- arrowheadr::arrow_head_deltoid()
     p3 <- geomtextpath::geom_labelcurve()
+    p4 <- bezier::bezier(t = .5, p = c(0,0, 1,1))
+    p5 <- tinter::tinter("red")
   }
 }
 
@@ -1114,6 +1116,7 @@ method(as.list, shape) <- function(x, ...) {
 #'
 #' @param font_family font family
 #' @param font_size font size in points
+#' @param point_size point size
 #' @param linewidth line width
 #' @param rect_linewidth line with of rectangles
 #' @param theme_function ggplot2 theme

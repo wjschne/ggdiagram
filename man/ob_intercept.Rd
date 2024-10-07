@@ -48,6 +48,10 @@ ob_intercept(
 
 \item{linetype}{type of lines}
 
+\item{x0}{overrides x-coordinate in \code{center@x}}
+
+\item{y0}{overrides x-coordinate in \code{center@y}}
+
 \item{style}{Gets and sets the styles associated with polygons}
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
