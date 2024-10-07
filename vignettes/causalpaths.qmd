@@ -758,7 +758,7 @@ In @fig-wedge, the same model from @fig-path is displayed showing variance propo
 
 ```{r}
 #| label: fig-wedge
-#| fig-cap: Latent variable path diagram will all variables scaled to their variance sizes. Pie wedges and stacked bars display variance proportions of source variables.
+#| fig-cap: Latent variable path diagram with all variables scaled to their variance sizes. Pie wedges and stacked bars display variance proportions of source variables of the same color.
 #| code-fold: true
 #| fig-width: 8
 #| fig-height: 5.5

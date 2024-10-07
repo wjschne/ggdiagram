@@ -1,4 +1,7 @@
 url: https://wjschne.github.io/ggdiagram/
 template:
   bootstrap: 5
+  bootswatch: flatly
+  bslib:
+    base_font: {google: "Roboto Condensed"}
 
