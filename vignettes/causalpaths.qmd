@@ -167,44 +167,102 @@ All of this can be communicated succinctly with the path diagram in @fig-fullreg
 #| code-fold: true
 #| out-width: 100%
 
+ln_color <- "gray40"
+lb_color <- "gray20"
+
+# Observed variable, label, and variance
+observed <- redefault(ob_ellipse,
+                      a = .6,
+                      m1 = 10,
+                      color = ln_color)
+
+lb_observed <- redefault(ob_label,
+                         size = 40,
+                         nudge_y = -.07,
+                         color = lb_color)
+
+var_observed <- redefault(ob_variance,
+                          bend = -20, 
+                          color = ln_color)
+
+
+
+# Error variable, label, and variance
+
+error <- redefault(ob_circle, color = ln_color, radius = .5)
+
+
+lb_error <- redefault(ob_label, 
+                      size = 18, 
+                      color = lb_color)
+
+var_error <- redefault(ob_variance, 
+                       looseness = 1.8,
+                       theta = degree(60),
+                       where = "east",
+                       color = ln_color)
+
+covariance <- redefault(
+  ob_covariance,
+  color = ln_color,
+  bend = 45,
+  linewidth = .5,
+  arrowhead_length = 7,
+  looseness = 1.2
+)
+
+# Direct Effect and label
+direct <- redefault(connect, resect = 2, color = ln_color)
+
+lb_direct <- redefault(
+  ob_label,
+  size = 16,
+  color = lb_color,
+  angle = 0,
+  vjust = .5,
+  position = .46
+)
+
 ggdiagram(font_family = my_font, font_size = 16) +
+  # Predictor Variable
   {X <- observed(label = lb_observed("*X*"))} +
+  # Predicted Value
   {Yhat <- observed(label = lb_observed("*Ŷ*")) |> 
     place(X, "right", sep = 2)} +
+  # Outcome Variable
   {Y <- observed(
     label = lb_observed("*Y*")) |> 
     place(Yhat, "right", sep = .75)} +
-  {X_Yhat <- connect(X,
-                  Yhat, 
-                  label = ob_label("*b*~1~"), 
-                  resect = 2)} + 
-  {X_Y <- direct(Yhat,Y)} + 
-  {e <- ob_circle(radius = .5, 
-                  label = lb_observed("*e*", size = 30, nudge_y = 0)) %>% 
+  # Error
+  {e <- error(label = lb_observed("*e*", nudge_y = 0)) |> 
     place(Y, "right", sep = .75)} +
-  direct(e, Y) +
-  {sigma_x <- ob_variance(X, 
-                       bend = -20, 
-                       where = degree("west"))} +
-  {sigma_e <- ob_variance(e, 
-                       looseness = 1.8,
-                       theta = degree(60),
-                       where = "east")} +
-  {i <- ob_polygon(
-    p = ob_polar(theta = degree(60), distance(X@center,Yhat@center)) + 
-      ob_point(0,-.2) +
-      ob_polar(degree(c(90,210, 330)), r = .8),
-    fill = NA, linewidth = .5,
-    color = "black", 
-    label = ob_label(1, size = 30))} +
-  direct(i, X,  label = lb_direct("*&mu;~X~*")) +
-  direct(i, Yhat, label = lb_direct("*b*~0~")) +
+  # Error Variances and labels
+  {sigma_x <- var_observed(X, where = "west")} +
+  {sigma_e <- var_error(e, where = "east")} +
   ob_latex(tex = c(
     r"(\text{\emph{σ}}^{\text{2}}_{\mkern-1.5mu\text{\emph{X}}})", 
     r"(\text{\emph{σ}}^{\text{2}}_{\mkern-1.5mu\text{\emph{e}}})"), 
+    color = lb_color,
     center = bind(c(sigma_x, sigma_e))@midpoint(), 
     width = .4, 
-    family = my_font)
+    family = my_font) +
+  # Mean / Intercept
+  {i <- ob_intercept(
+    center = ob_polar(theta = degree(60), 
+                      distance(X@center,Yhat@center)) + 
+      ob_point(0,-.2),
+    width = 1.2,
+    radius = unit(2, "pt"),
+    fill = NA, 
+    linewidth = .5,
+    color = ln_color, 
+    label = lb_observed(1, size = 30, nudge_y = 0))} +
+  # Direct paths
+  direct(X, Yhat, label = lb_direct("*b*~1~")) + 
+  direct(i, X,  label = lb_direct("*&mu;~X~*")) +
+  direct(i, Yhat, label = lb_direct("*b*~0~")) +
+  direct(Yhat,Y) +
+  direct(e, Y)
 
 ```
 
@@ -228,37 +286,7 @@ $$
 #| fig-height: 4.5
 #| code-fold: true
 
-ln_color <- "gray40"
-lb_color <- "gray20"
-observed <- redefault(ob_ellipse,
-                      a = .6,
-                      m1 = 10,
-                      color = ln_color)
-direct <- redefault(connect, resect = 2, color = ln_color)
-error <- redefault(ob_circle, color = ln_color, radius = .5)
-lb_observed <- redefault(ob_label,
-                         size = 40,
-                         nudge_y = -.07,
-                         color = lb_color)
 
-lb_path <- redefault(
-  ob_label,
-  size = 16,
-  color = lb_color,
-  angle = 0,
-  vjust = .5,
-  position = .46
-)
-
-lb_error <- redefault(ob_label, size = 18, color = lb_color)
-covariance <- redefault(
-  ob_covariance,
-  color = ln_color,
-  bend = 45,
-  linewidth = .5,
-  arrowhead_length = 7,
-  looseness = 1.2
-)
 
 ggdiagram(font_family = my_font, font_size = 16) + 
   {x1 <- observed() 
@@ -275,7 +303,7 @@ ggdiagram(font_family = my_font, font_size = 16) +
   {pred <-    bind(c(x2, x1, x3, x1, x2))
    outcome <- bind(c(x3, x3, x4, x4, x4))
    direct(pred,outcome, 
-          label = lb_path(
+          label = lb_direct(
             label = c("*b*~23~",
                       "*b*~13~",
                       "*b*~34~",
@@ -289,7 +317,7 @@ ggdiagram(font_family = my_font, font_size = 16) +
   direct(e, endogenous) +
   covariance(x2@point_at("west"), 
              x1@point_at("west"),
-             label = lb_path("*r*~12~", position = .5))
+             label = lb_direct("*r*~12~", position = .5))
 ```
 
 
@@ -626,12 +654,6 @@ lb_observed <- redefault(ob_label,
                             fill = NA, 
                             color = "white",
                             nudge_y = -.04)
-
-lb_path <- redefault(ob_label,
-                          size = 11,
-                          fill = "white",
-                          color = my_path_color)
-
 direct <- redefault(
   connect,
   resect = my_resect,
@@ -659,7 +681,7 @@ var_latent <- redefault(
 
 ggdiagram(font_family = my_font, font_size = 16) +
   {g <- latent(label = lb_latent("*g*"), fill = "gray15")} + 
-  var_latent(g, label = lb_path(1)) +
+  var_latent(g, label = lb_direct(1)) +
   {Gx <- place(g, g,where = "below", sep = 1.6) |> 
     ob_array(k = 3, 
                 sep = 2, 
@@ -669,12 +691,12 @@ ggdiagram(font_family = my_font, font_size = 16) +
   var_latent(Gx, 
              where = "left", 
              color = Gx@fill,
-             label = lb_path(
+             label = lb_direct(
                round_probability(broad_variance, 
                                  phantom_text = "."),
                color = Gx@fill)) +
   {pGx <- direct(g, Gx, color = Gx@fill)} +
-  {lb_path(
+  {lb_direct(
     label = round_probability(g2broad, 
                               phantom_text = "."), 
     p = pGx@line@point_at_y(pGx[2]@midpoint(
@@ -700,7 +722,7 @@ ggdiagram(font_family = my_font, font_size = 16) +
           "~")))
     
     p <- direct(b, o@point_at("north"), color = b@fill)
-    l <- lb_path(round_probability(
+    l <- lb_direct(round_probability(
       broad2indicator[[b@label@label]], 
       phantom_text = "."), 
       p = p@line@point_at_y(p[2]@midpoint(position = .47)@y),
@@ -714,7 +736,7 @@ ggdiagram(font_family = my_font, font_size = 16) +
       color = b@fill,
       theta = 70,
       linewidth = .5,
-      label = lb_path(
+      label = lb_direct(
         round_probability(sqrt(1 - broad2indicator[[b@label@label]] ^ 2)),
         color = b@fill),
       arrow_head = my_arrowhead,
@@ -763,7 +785,7 @@ ggdiagram(font_family = my_font, font_size = 13) +
           color = my_fills, 
           resect = 1) +
   {pGx <- direct(g, Gx, color = Gx@fill, resect = 1)} +
-  {lb_path(
+  {lb_direct(
     label = round_probability(g2broad,
                               phantom_text = "."),
     p = pGx@line@point_at_y(pGx[2]@midpoint(
@@ -795,7 +817,7 @@ ggdiagram(font_family = my_font, font_size = 13) +
     
     b_p <- direct(b, p, color = my_fills[i], resect = 1)
     
-    l_b_p <- lb_path(
+    l_b_p <- lb_direct(
       round_probability(broad2indicator[[b_text]], 
                         phantom_text = "."), 
       p = b_p@line@point_at_y(b_p[2]@midpoint(.46)@y),

@@ -5,7 +5,7 @@
 \title{ob_intercept}
 \usage{
 ob_intercept(
-  center = class_missing,
+  center = ob_point(0, 0),
   width = 1,
   label = class_missing,
   top = class_missing,
@@ -17,6 +17,8 @@ ob_intercept(
   fill = class_missing,
   linewidth = class_missing,
   linetype = class_missing,
+  x0 = class_missing,
+  y0 = class_missing,
   style = class_missing,
   ...
 )

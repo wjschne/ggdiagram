@@ -358,6 +358,7 @@ method(connect, list(ob_polygon, centerpoint)) <- function(x,y, ...) {
 #' @param style Gets and sets the styles associated with polygons
 #' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggplot2::geom_polygon`.
 #' @inherit ob_style params
+#' @export
 ob_intercept <- new_class(
   name = "ob_intercept",
   parent = has_style,
@@ -370,6 +371,9 @@ ob_intercept <- new_class(
           cc + ob_polar(degree(c(90, 210, 330)),
                         r = self@width * .5 / cos(degree(30)))
         })
+      }),
+      polygon = new_property(getter = function(self) {
+        ob_polygon(self@p, style = self@style, radius = self@radius)
       }),
       top = new_property(getter = function(self) {
         self@center + ob_polar(degree(90),
@@ -390,7 +394,7 @@ ob_intercept <- new_class(
       !!!ob_polygon_props$info
     )
   ),
-  constructor = function(center = class_missing,
+  constructor = function(center = ob_point(0,0),
                          width = 1,
                          label = class_missing,
                          top = class_missing,
@@ -402,12 +406,22 @@ ob_intercept <- new_class(
                          fill = class_missing,
                          linewidth = class_missing,
                          linetype = class_missing,
+                         x0 = class_missing,
+                         y0 = class_missing,
                          style = class_missing,
                          ...) {
 
+    if ((length(x0) > 0) || (length(y0) > 0)) {
+      if (length(x0) == 0) {
+        x0 <- 0
+      }
+      if (length(y0) == 0) {
+        y0 <- 0
+      }
+      center <- ob_point(x = x0, y = y0)
+    }
 
-
-    ob_polygon_style <- style +
+    ob_polygon_style <- ob_style() + center@style + style +
       ob_style(
         alpha = alpha,
         color = color,
@@ -417,53 +431,34 @@ ob_intercept <- new_class(
       ) +
       ob_style(...)
 
+
     non_empty_list <- get_non_empty_props(ob_polygon_style)
-
-    if (S7_inherits(p, ob_point)) p <- list(p)
-
-    d <- tibble::tibble(
-      p = p
-    )
-
-
+    d <- tibble::tibble(x0 = center@x, y0 = center@y, width = width)
     if (length(non_empty_list) > 0) {
-      d <- dplyr::bind_cols(d, tibble::tibble(!!!non_empty_list))
+      d <- dplyr::bind_cols(
+        d,
+        tibble::tibble(!!!non_empty_list))
     }
 
 
+    center = set_props(center, x = d$x0, y = d$y0)
 
-
-
-    if (length(label) == 0) {
-      label = character(0)
-    } else {
-      center <- dplyr::bind_rows(
-        purrr::imap(p, \(pp, idx) {
-          tibble::as_tibble(pp@xy) |>
-            dplyr::mutate(group = idx)})) |>
-        dplyr::bind_rows() |>
-        dplyr::summarise(.by = .data$group,
-                         x = mean(.data$x),
-                         y = mean(.data$y)) |>
-        dplyr::select(-.data$group) |>
-        ob_point()
-
-      center@style <- ob_polygon_style
-      if (S7_inherits(label, ob_label)) {
-        if (all(label@p@x == 0) && all(label@p@y == 0)) {
-          label@p <- center
-        }
-        if (length(label@fill) == 0 || all(label@fill == "white") && all(!is.na(label@fill))) {
-          label@fill <- d[["fill"]] %||% fill
-        }
-      } else {
-        label <- ob_label(label, center, fill = d[["fill"]] %||% fill)
+    if (S7_inherits(label, ob_label)) {
+      if (all(label@p == ob_point(0,0))) {
+        label@p <- center
       }
-
     }
+
+    label <- centerpoint_label(label,
+                               center = center,
+                               d = d,
+                               shape_name = "ob_intercept")
+
+
 
     new_object(.parent = S7_object(),
-               p =  d$p,
+               center =  center,
+               width = d$width %||% width,
                label = label,
                radius = radius,
                alpha = d[["alpha"]] %||% alpha,
@@ -473,3 +468,42 @@ ob_intercept <- new_class(
                linetype = d[["linetype"]] %||% linetype
     )
   })
+
+
+method(get_tibble, ob_intercept) <- function(x) {
+  x@tibble
+}
+
+
+method(connect, list(ob_intercept, ob_intercept)) <- function(x,y, ...) {
+  connect(x@polygon, y@polygon, ...)
+}
+
+method(connect, list(ob_intercept, ob_point)) <- function(x,y, ...) {
+  centroid_segment <- ob_segment(x@center, y)
+  connect(x@polygon, y, ...)
+}
+
+method(connect, list(ob_point, ob_intercept)) <- function(x,y, ...) {
+  connect(x, y@polygon, ...)
+}
+
+
+method(connect, list(centerpoint, ob_intercept)) <- function(x,y, ...) {
+  connect(x, y@polygon, ...)
+}
+
+
+method(connect, list(ob_intercept, centerpoint)) <- function(x,y, ...) {
+  connect(x@polygon, y, ...)
+}
+
+
+method(as.geom, ob_intercept) <- function(x, ...) {
+  gp <- as.geom(super(x@polygon, has_style), ...)
+  if (S7_inherits(x@label, ob_label)) {
+    gl <- as.geom(x@label)
+    gp <- list(gp, gl)
+  }
+  gp
+}

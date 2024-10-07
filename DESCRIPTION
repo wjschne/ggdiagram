@@ -45,8 +45,7 @@ Suggests:
     testthat (>= 3.0.0),
     viridis,
     WJSmisc (>= 0.3)
-VignetteBuilder: 
-    quarto
+VignetteBuilder: quarto
 Remotes: 
     wjschne/WJSmisc
 Encoding: UTF-8

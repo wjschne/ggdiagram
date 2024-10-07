@@ -1101,6 +1101,7 @@ ggdiagram <- function(
     font_family = "sans",
     font_size = 11,
     linewidth = .5,
+    point_size = 1.5,
     rect_linewidth = linewidth,
     theme_function = ggplot2::theme_void,
     ...) {
@@ -1115,7 +1116,15 @@ ggdiagram <- function(
     new = list(linewidth = linewidth))
 
   ggplot2::update_geom_defaults(
+    geom = "point",
+    new = list(size = point_size))
+
+  ggplot2::update_geom_defaults(
     geom = ggarrow::GeomArrowSegment,
+    new = list(linewidth = linewidth))
+
+  ggplot2::update_geom_defaults(
+    geom = ggarrow::GeomArrow,
     new = list(linewidth = linewidth))
 
   ggplot2::update_geom_defaults(

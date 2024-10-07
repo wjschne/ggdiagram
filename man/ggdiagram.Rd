@@ -8,6 +8,7 @@ ggdiagram(
   font_family = "sans",
   font_size = 11,
   linewidth = 0.5,
+  point_size = 1.5,
   rect_linewidth = linewidth,
   theme_function = ggplot2::theme_void,
   ...

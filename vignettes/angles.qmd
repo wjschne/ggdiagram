@@ -368,9 +368,7 @@ p <- ob_polar(theta, 1)
 my_colors <- c("#8C0172", "#944046", "#9B7424", 
                "#8EB63B", "#53BD91", "#6C939A")
 
-ggplot() +
-  theme_void() +
-  coord_equal() +
+ggdiagram() +
   ob_circle(fill = NA, color = "gray") +
   # axes
   ob_line(intercept = 0,
@@ -387,14 +385,7 @@ ggplot() +
     linewidth = .2
   ) +
   # angle arrow
-  ob_segment(
-    o,
-    p2 = p,
-    label = "*r* = 1",
-    resect_head = 1,
-    length_head = 8,
-    arrow_head = my_arrow_head
-  ) +
+  connect(o, p, label = "*r* = 1", resect_head = 1) +
   # sin(theta)
   ob_segment(
     ob_polar(theta = 0, r = cos(theta)),

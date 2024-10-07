@@ -36,38 +36,38 @@ my_font <- "Roboto Condensed"
 # gdtools::addGFontHtmlDependency(family = my_font)
 ```
 
+# Setup
+
+## Packages
+
 ```{r}
 #| label: setup
 library(ggdiagram)
 library(ggplot2)
+library(dplyr)
 library(ggtext)
 library(ggarrow)
 library(arrowheadr)
-my_font <- "Roboto Condensed"
-my_font_size <- 20
-my_point_size <- 3
+
+```
+
+## Base Plot
+
+To avoid repetitive code, we make a base plot:
+
+```{r}
+#| label: baseplot
+#| file: baseplot.R
+```
+
+```{r}
+#| label: mycolors
 my_colors <- list(
   primary = class_color("royalblue4"),
   secondary = class_color("firebrick4"),
   tertiary = class_color("orchid4"))
-update_geom_defaults(
-  geom = "richtext", 
-  new = list(family = my_font, 
-             size = .8 * my_font_size / ggplot2::.pt))
-
-update_geom_defaults(
-  geom = "point", 
-  list(size = my_point_size))
-
-
-theme_set(
-  theme_minimal(
-    base_size = my_font_size, 
-    base_family = my_font) +
-    theme(
-      axis.title.y = element_text(angle = 0, vjust = 0.5, face = "italic"),
-      axis.title.x = element_text(face = "italic")))
 ```
+
 
 # Specifying a Rectangle
 

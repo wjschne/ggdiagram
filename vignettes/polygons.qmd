@@ -5,7 +5,7 @@ format:
     toc: true
     html-math-method: katex
 vignette: >
-  %\VignetteIndexEntry{pgons}
+  %\VignetteIndexEntry{polygons}
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 ---
@@ -30,6 +30,8 @@ knitr::opts_chunk$set(
 
 # Setup
 
+## Packages
+
 ```{r}
 #| label: setup
 library(ggdiagram)
@@ -37,60 +39,17 @@ library(ggplot2)
 library(dplyr)
 library(ggtext)
 library(ggarrow)
-library(geomtextpath)
-
+library(arrowheadr)
 
 ```
 
-# Base Plot
-
-
-## Base plot
+## Base Plot
 
 To avoid repetitive code, we make a base plot:
 
 ```{r}
 #| label: baseplot
-my_font <- "Roboto Condensed"
-my_font_size <- 20
-my_point_size <- 2.5
-my_arrowhead <- arrowheadr::arrow_head_deltoid(2.1)
-# my_colors <- viridis::viridis(2, begin = .25, end = .5)
-my_colors <- c("#3B528B", "#21908C")
-update_geom_defaults(geom = "richtext", 
-                     new = list(family = my_font, 
-                                size = .8 * my_font_size / ggplot2::.pt))
-
-update_geom_defaults(geom = "labelpath", 
-                     new = list(family = my_font,
-                                size = .8 * my_font_size / ggplot2::.pt))
-
-update_geom_defaults("point", list(size = my_point_size))
-update_geom_defaults("arrow_segment", list(length_head = 5, 
-                                           linewidth = .5))
-update_geom_defaults("arrow", list(length_head = 5, 
-                                   linewidth = .5))
-
-theme_set(
-  theme_minimal(
-    base_size = my_font_size, 
-    base_family = my_font) +
-    theme(axis.title.y = element_text(angle = 0, vjust = 0.5)))
-
-bp <- ggplot() +
-  coord_equal() +
-  scale_x_continuous(labels = WJSmisc::signs_centered, limits = c(-4, 4)) +
-  scale_y_continuous(labels = signs::signs, limits = c(-4, 4)) +
-  theme_minimal(base_size = 16) +
-  theme(
-    axis.title.x =  element_text(face = "italic"),
-    axis.title.y = element_text(
-      face = "italic",
-      angle = 0,
-      hjust = .5,
-      vjust = .5
-    )
-  )
+#| file: baseplot.R
 ```
 
 # Polygons
@@ -113,7 +72,7 @@ The label of a `ob_polygon` object is placed, by default, at the centroid of the
 
 
 ```{r}
-#| label: fig-pgonlabel
+#| label: fig-polygonlabel
 #| fig-cap: A path with a curved label
 bp +
   ob_polygon(
@@ -133,7 +92,7 @@ bp +
 Connections between polygons are arrows that emanate from and point towards the polygons' centroids.
 
 ```{r}
-#| label: fig-pgonconnect
+#| label: fig-polygonconnect
 #| fig-cap: Arrow between two polygons
 bp + 
   {p1 <- ob_polygon(.5 * p - ob_point(1.9,1.9), 
@@ -147,10 +106,15 @@ bp +
 
 # Rounding polygons
 
-The `@radius` property controls the radius of the rounded corners. It must be of length 1. It can be given in as a `ggplot2::unit` or as a numeric value. If numeric, it is understood as a proportion of the plot area width.
+The `@radius` property controls the radius of the rounded vertices. It must be of length 1. It can be given in as a `ggplot2::unit` or as a numeric value. If numeric, it is understood as a proportion of the plot area width.
 
 ```{r}
+#| label: fig-roundedpolygon
+#| fig-cap: A polygon with rounded vertices
 bp + 
-  ob_polygon(p, radius = unit(5, "mm"))
+  ob_polygon(
+    p, 
+    radius = unit(5, "mm"),
+    fill = "dodgerblue4")
 ```
 

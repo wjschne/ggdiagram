@@ -26,46 +26,26 @@ library(ggtext)
 
 # Setup
 
+## Packages
+
 ```{r}
 #| label: setup
 library(ggdiagram)
 library(ggplot2)
+library(dplyr)
 library(ggtext)
 library(ggarrow)
+library(arrowheadr)
+
 ```
 
-For ease of plotting, we will define a base plot:
+## Base Plot
+
+To avoid repetitive code, we make a base plot:
 
 ```{r}
-#| label: bp
-my_font <- "Roboto Condensed"
-update_geom_defaults("richtext", 
-                     list(family = my_font, 
-                          size = 0.8 * 20 / ggplot2::.pt))
-update_geom_defaults("line", list(linewidth = .75))
-update_geom_defaults("segment", list(linewidth = .75))
-update_geom_defaults("point", list(size = 2))
-
-update_geom_defaults("arrow_segment", list(length_head = 5, linewidth = .5))
-
-bp <- ggplot() +
-  theme_minimal(base_size = 20, base_family = my_font) +
-  theme(axis.title.y = element_text(angle = 0, vjust = 0.5)) +
-  coord_equal(xlim = c(-4, 4), ylim = c(-4, 4)) +
-  scale_x_continuous(labels = WJSmisc::signs_centered, breaks = seq(-4,4)) +
-  scale_y_continuous(labels = signs::signs, breaks = seq(-4,4)) +
-  theme_minimal(base_size = 16) +
-  theme(
-    axis.title.x =  element_text(face = "italic"),
-    axis.title.y = element_text(
-      face = "italic",
-      angle = 0,
-      hjust = .5,
-      vjust = .5
-    )
-  )
-
-
+#| label: baseplot
+#| file: baseplot.R
 ```
 
 # Specifying a segment

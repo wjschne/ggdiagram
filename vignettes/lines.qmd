@@ -24,7 +24,6 @@ library(ggplot2)
 library(dplyr)
 library(ggtext)
 library(ggarrow)
-my_font <- "Roboto Condensed"
 ```
 
 # Setup
@@ -40,47 +39,13 @@ library(ggtext)
 library(ggarrow)
 ```
 
-## Base plot
+## Base Plot
 
-To avoid repetitive code, we make a base plot:
+To avoid repetitive code, we set defaults and make a base plot:
 
 ```{r}
 #| label: baseplot
-my_font <- "Roboto Condensed"
-my_font_size <- 20
-my_point_size <- 2.5
-# my_colors <- viridis::viridis(2, begin = .25, end = .5)
-my_colors <- c("#3B528B", "#21908C")
-update_geom_defaults(geom = "richtext", 
-                     new = list(family = my_font, 
-                                size = .8 * my_font_size / ggplot2::.pt))
-
-update_geom_defaults("point", list(size = my_point_size))
-update_geom_defaults("arrow_segment", list(length_head = 5, linewidth = .5))
-
-theme_set(
-  theme_minimal(
-    base_size = my_font_size, 
-    base_family = my_font) +
-    theme(axis.title.y = element_text(angle = 0, vjust = 0.5)))
-
-
-
-
-bp <- ggplot() +
-  coord_equal() +
-  scale_x_continuous(labels = WJSmisc::signs_centered, limits = c(-4, 4)) +
-  scale_y_continuous(labels = signs::signs, limits = c(-4, 4)) +
-  theme_minimal(base_size = 16) +
-  theme(
-    axis.title.x =  element_text(face = "italic"),
-    axis.title.y = element_text(
-      face = "italic",
-      angle = 0,
-      hjust = .5,
-      vjust = .5
-    )
-  )
+#| file: baseplot.R
 ```
 
 # Making Lines
