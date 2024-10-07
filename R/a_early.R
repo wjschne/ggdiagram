@@ -606,6 +606,32 @@ superscript <- function(x, superscript = seq(length(x))) {
   paste0(x, "<sup>", superscript, "</sup>")
 }
 
+
+#' Centering signed numbers
+#'
+#'
+#' A wrapper function for the signs::signs function. It adds a space to the right side of negative numbers so that it appear as if the minus sign does not affect the number's centering.
+#' @param x a numeric vector
+#' @param space a character to be added to negative numbers (defaults to a UTF-8 figure space)
+#' @param encoding type of encoding (defaults to UTF-8)
+#' @param ... parameters passed to signs:signs
+#'
+#' @return a vector of numbers converted to characters
+#' @export
+#'
+#' @examples
+#' library(ggplot2)
+#' d <- data.frame(x = -4:0, y = -4:0)
+#' # In these 2 plots, Compare the centering of the negative numbers on the x-axis
+#' ggplot(d, aes(x,y))
+#' ggplot(d, aes(x,y)) +
+#'   scale_x_continuous(labels = signs_centered)
+signs_centered <- function(x, space = "\u2007", encoding = "UTF-8", ...) {
+  x_new <- paste0(signs::signs(x, ...), ifelse(x < 0, space, ""))
+  Encoding(x_new) <- encoding
+  x_new
+}
+
 #' Probability rounding
 #'
 #' Rounds to significant digits, removing leading zeros.

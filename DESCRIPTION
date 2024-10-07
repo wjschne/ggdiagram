@@ -43,11 +43,8 @@ Suggests:
     spelling,
     testthat (>= 3.0.0),
     viridis,
-    WJSmisc (>= 0.3)
     quarto
 VignetteBuilder: quarto
-Remotes: 
-    wjschne/WJSmisc
 Encoding: UTF-8
 Language: en-US
 Roxygen: list(markdown = TRUE)

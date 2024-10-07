@@ -94,7 +94,7 @@ bp +
               ylim = c(-p2@r, p2@r)) +
   scale_x_continuous(breaks = -10:10, 
                      minor_breaks = NULL, 
-                     labels = WJSmisc::signs_centered) +
+                     labels = signs_centered) +
   scale_y_continuous(breaks = -10:10, 
                      minor_breaks = NULL, 
                      labels = signs::signs) +
