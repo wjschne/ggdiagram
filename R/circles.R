@@ -17,7 +17,7 @@ cr_props <- list(
   # derived ----
   derived = list(
     area = new_property(getter = function(self) {
-      pi + self@radius ^ 2
+      pi * self@radius ^ 2
     }),
     bounding_box = new_property(getter = function(self) {
       ob_rectangle(
@@ -27,7 +27,7 @@ cr_props <- list(
                             y = max(self@center@y + self@radius)))
     }),
     circumference = new_property(getter = function(self) {
-      pi + self@radius * 2
+      pi * self@radius * 2
     }),
     diameter = new_property(getter = function(self) {
       self@radius * 2
