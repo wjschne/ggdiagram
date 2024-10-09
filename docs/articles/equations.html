@@ -100,12 +100,12 @@
 </section><section class="section level2"><h2 id="advantages-of-ob_label-over-ob_latex">Advantages of <code>ob_label</code> over <code>ob_latex</code>
 <a class="anchor" aria-label="anchor" href="#advantages-of-ob_label-over-ob_latex"></a>
 </h2>
-<p>The <code>ob_label</code> function uses <code><a href="https://wilkelab.org/ggtext/reference/geom_richtext.html" class="external-link">ggtext::geom_richtext</a></code> to create labels. It’s primary advantage is that it is simple and renders quickly. Wherever possible, it is the recommended way to create labels. It understands some markdown formatting (e.g., italics and bolding) and some HTML tags (e.g., <code>span</code>, <code>sub</code>, <code>sup</code>, <code>img</code>, and <code>style</code>).</p>
+<p>The <code>ob_label</code> function uses <code><a href="https://wilkelab.org/ggtext/reference/geom_richtext.html" class="external-link">ggtext::geom_richtext</a></code> to create labels. It’s primary advantage is that it is simple and renders quickly. Wherever possible, it is the recommended way to create labels. It understands basic markdown formatting (e.g., italics, bolding, subscripts, and superscripts) as well as some HTML tags (e.g., <code>span</code> and <code>img</code>).</p>
 </section><section class="section level2"><h2 id="advantages-of-ob_latex-over-ob_label">Advantages of <code>ob_latex</code> over <code>ob_label</code>
 <a class="anchor" aria-label="anchor" href="#advantages-of-ob_latex-over-ob_label"></a>
 </h2>
 <p>If something more elaborate is needed than italics, bolding, subscripts, and superscripts, we can use LaTeX instead. The <code>ob_latex</code> function can place an image of a LaTeX equation in a ggplot diagram.</p>
-<p>For example, suppose I want to label a latent variable’s variance with the symbol <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>σ</mi><mi>e</mi><mn>2</mn></msubsup><annotation encoding="application/x-tex">\sigma_e^2</annotation></semantics></math>. This symbol would be difficult to render in HTML, so we can render it in LaTeX instead.</p>
+<p>For example, suppose I want to label a latent variable’s variance with the symbol <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>σ</mi><mi>e</mi><mn>2</mn></msubsup><annotation encoding="application/x-tex">\sigma_e^2</annotation></semantics></math>. This symbol would be difficult to render in pure HTML, so we can render it in LaTeX instead.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggdiagram.html">ggdiagram</a></span><span class="op">(</span>font_family <span class="op">=</span> <span class="st">"Roboto Condensed"</span><span class="op">)</span> <span class="op">+</span></span>
@@ -224,15 +224,15 @@ Figure 5: A latex expression with better image quality
 </div>
 </div>
 </div>
-<p>Higher densities are not always better. In addition to using more memory and rendering more slowly, images with very high densities will sometimes appear blurry or pixelated.</p>
+<p>Higher densities are not always better, however. In addition to using more memory and rendering more slowly, images with very high densities will sometimes appear blurry or pixelated.</p>
 </section><section class="section level2"><h2 id="how-does-ob_latex-work">How does <code>ob_latex</code> work?<a class="anchor" aria-label="anchor" href="#how-does-ob_latex-work"></a>
 </h2>
 <p>The <code>ob_latex</code> function works through these steps:</p>
 <ol type="1">
 <li>Create a .tex file with content based on the LaTeX <a href="https://ctan.org/pkg/standalone" class="external-link">standalone package</a>.</li>
 <li>Create a .pdf file via the <code><a href="https://rdrr.io/pkg/tinytex/man/latexmk.html" class="external-link">tinytex::xelatex</a></code> function, if tinytex is available. Otherwise, use xelatex via a shell command.</li>
-<li>Import the .pdf file as raster bitmap via the <code><a href="https://docs.ropensci.org/magick/reference/editing.html" class="external-link">magick::image_read_pdf</a></code> function.</li>
-<li>Store raster bitmap in the <code>ob_latex@image</code> slot.</li>
+<li>Import the .pdf file as a raster bitmap via the <code><a href="https://docs.ropensci.org/magick/reference/editing.html" class="external-link">magick::image_read_pdf</a></code> function.</li>
+<li>Store the raster bitmap in the <code>ob_latex@image</code> slot.</li>
 </ol>
 <p>When rendered in ggplot2, the bitmap is displayed via <code><a href="https://ggplot2.tidyverse.org/reference/annotation_raster.html" class="external-link">ggplot2::annotation_raster</a></code>.</p>
 </section><script id="quarto-html-after-body" type="application/javascript">

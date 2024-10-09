@@ -158,9 +158,14 @@ cr_props <- list(
 #' @inherit ob_style params
 #' @slot aesthetics A list of information about the circle's aesthetic properties
 #' @slot angle_at A function that finds the angle of the specified point in relation to the circle's center
+#' @slot area area of the circle
+#' @slot bounding_box a rectangle that contains all the circles
+#' @slot circumference circumference of the circle
 #' @slot geom A function that converts the object to a geom. Any additional parameters are passed to `ggforce::geom_circle`.
 #' @slot length The number of circles in the circle object
+#' @slot normal_at A function that finds a point that is perpendicular from the circle and at a specified distance
 #' @slot point_at A function that finds a point on the circle at the specified angle.
+#' @slot polygon a tibble containing information to create all the polygon points in a circle.
 #' @slot tangent_at A function that finds the tangent line at the specified angle.
 #' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggforce::geom_cirlce`.
 #' @examples

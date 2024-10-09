@@ -57,11 +57,21 @@ ob_circle class
 
 \item{\code{angle_at}}{A function that finds the angle of the specified point in relation to the circle's center}
 
+\item{\code{area}}{area of the circle}
+
+\item{\code{bounding_box}}{a rectangle that contains all the circles}
+
+\item{\code{circumference}}{circumference of the circle}
+
 \item{\code{geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggforce::geom_circle}.}
 
 \item{\code{length}}{The number of circles in the circle object}
 
+\item{\code{normal_at}}{A function that finds a point that is perpendicular from the circle and at a specified distance}
+
 \item{\code{point_at}}{A function that finds a point on the circle at the specified angle.}
+
+\item{\code{polygon}}{a tibble containing information to create all the polygon points in a circle.}
 
 \item{\code{tangent_at}}{A function that finds the tangent line at the specified angle.}
 

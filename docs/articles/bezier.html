@@ -130,7 +130,7 @@
 <span>    angle <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>    hjust <span class="op">=</span> <span class="fl">.5</span>,</span>
 <span>    vjust <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">WJSmisc</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/WJSmisc/man/signs_centered.html" class="external-link">signs_centered</a></span>,</span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="va">signs_centered</span>,</span>
 <span>                     limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">signs</span><span class="fu">::</span><span class="va"><a href="https://benjaminwolfe.github.io/signs/reference/signs.html" class="external-link">signs</a></span>,</span>
 <span>                     limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -211,7 +211,7 @@ Figure 2: Bézier curve with contol points and label
 <span><span class="va">bp</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/ob_bezier.html">ob_bezier</a></span><span class="op">(</span><span class="va">control_point_list</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/ob_path.html">ob_path</a></span><span class="op">(</span><span class="va">control_point_list</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span>, linewidth <span class="op">=</span> <span class="fl">.25</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">control_point_list</span>, <span class="va">as.geom</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/bind.html">bind</a></span><span class="op">(</span><span class="va">control_point_list</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div id="fig-multbz" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-multbz-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">

@@ -131,7 +131,7 @@
 <span>    angle <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>    hjust <span class="op">=</span> <span class="fl">.5</span>,</span>
 <span>    vjust <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">WJSmisc</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/WJSmisc/man/signs_centered.html" class="external-link">signs_centered</a></span>,</span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="va">signs_centered</span>,</span>
 <span>                     limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">signs</span><span class="fu">::</span><span class="va"><a href="https://benjaminwolfe.github.io/signs/reference/signs.html" class="external-link">signs</a></span>,</span>
 <span>                     limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -146,7 +146,7 @@
 <div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span></span>
 <span><span class="va">r</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
-<span><span class="va">c1</span> <span class="op">&lt;-</span>  <span class="fu"><a href="../reference/ob_circle.html">ob_circle</a></span><span class="op">(</span>center <span class="op">=</span> <span class="va">p</span>, radius <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="va">c1</span> <span class="op">&lt;-</span>  <span class="fu"><a href="../reference/ob_circle.html">ob_circle</a></span><span class="op">(</span>center <span class="op">=</span> <span class="va">p</span>, radius <span class="op">=</span> <span class="va">r</span><span class="op">)</span></span>
 <span><span class="va">c1</span></span>
 <span><span class="co">#&gt; &lt;ob_circle&gt;</span></span>
 <span><span class="co">#&gt; @ center: &lt;ob_point&gt;</span></span>
@@ -182,6 +182,7 @@ Figure 1: A circle can be specified with a center and a radius,
 </div>
 <section class="level2"><h3 id="point-on-the-circle-at-a-specific-angle">Point on the circle at a specific angle<a class="anchor" aria-label="anchor" href="#point-on-the-circle-at-a-specific-angle"></a>
 </h3>
+<p>It is common to need one or more points at a specific angle.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">c1</span><span class="op">@</span><span class="va">point_at</span><span class="op">(</span><span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">60</span><span class="op">)</span><span class="op">)</span></span>
@@ -211,8 +212,42 @@ Figure 1: A circle can be specified with a center and a radius,
 <img src="circles_files/figure-html/fig-ptheta-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ptheta-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 2: Point on ellipse that is 45° from the x-axis.
+Figure 2: Point on circle that is 45° from the x-axis.
 </figcaption></figure>
+</div>
+</div>
+</div>
+<p>Multiple points can be specified at once.</p>
+<div class="cell">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
+<span>  <span class="va">c1</span> <span class="op">+</span></span>
+<span>  <span class="va">c1</span><span class="op">@</span><span class="va">point_at</span><span class="op">(</span><span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">340</span>, <span class="fl">20</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  </span></code></pre></div>
+</details><div class="cell-output-display">
+<div id="fig-pthetas" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-pthetas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="circles_files/figure-html/fig-pthetas-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pthetas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 3: Points on circle 20 degrees apart.
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>These can be named points (e.g., north|top|above, south|bottom|below, east|right, west|left, northwest|top left|above left, southeast|bottom right|below right, north-northwest).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">positions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"east"</span>, <span class="st">"southwest"</span>, <span class="st">"north-northeast"</span>, <span class="st">"left"</span>, <span class="st">"top"</span>, <span class="st">"below"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">bp</span> <span class="op">+</span></span>
+<span>  <span class="va">c1</span> <span class="op">+</span></span>
+<span>  <span class="op">{</span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">c1</span><span class="op">@</span><span class="va">point_at</span><span class="op">(</span><span class="va">positions</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="va">positions</span>, <span class="va">p</span>, polar_just <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span><span class="va">p</span><span class="op">@</span><span class="va">theta</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure><p><img src="circles_files/figure-html/fig_namedpoints-1.png" width="672"></p>
+<figcaption>The <code>@point_at</code> property can take angles or named positions</figcaption></figure>
 </div>
 </div>
 </div>
@@ -222,7 +257,7 @@ Figure 2: Point on ellipse that is 45° from the x-axis.
 </h3>
 <p>The <code>place</code> function places an object at a specified direction and distance from another object.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
 <span>  <span class="op">{</span><span class="va">A</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_circle.html">ob_circle</a></span><span class="op">(</span></span>
 <span>    center <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="fl">0</span><span class="op">)</span>, </span>
@@ -240,16 +275,16 @@ Figure 2: Point on ellipse that is 45° from the x-axis.
 <img src="circles_files/figure-html/fig-place-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-place-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 3: Place Circle B one unit to the right of Circle A
+Figure 4: Place Circle B one unit to the right of Circle A
 </figcaption></figure>
 </div>
 </div>
 </div>
 <p>The <code>where</code> argument can take degrees or named positions:</p>
-<p>east, east-northeast, northeast, north-northeast, north, north-northwest, northwest, west-northwest, west, west-southwest, southwest, south-southwest, south, south-southeast, southeast, east-southeast, right, top right, top, top left, left, bottom left, bottom, bottom right, below, above</p>
+<p>east, right, east-northeast, northeast, top right, above right, north-northeast, north, top, above, north-northwest, northwest, top left, above left, west-northwest, west, left, west-southwest, southwest, bottom left, below left, south-southwest, south, bottom, below, south-southeast, southeast, bottom right, below right, east-southeast</p>
 <p>Multiple circles can be created at once with named directions:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
 <span>  <span class="op">{</span><span class="va">c3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_circle.html">ob_circle</a></span><span class="op">(</span><span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>, radius <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/place.html">place</a></span><span class="op">(</span><span class="fu"><a href="../reference/ob_circle.html">ob_circle</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span>, </span>
@@ -265,14 +300,14 @@ Figure 3: Place Circle B one unit to the right of Circle A
 <img src="circles_files/figure-html/fig-multplace-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-multplace-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 4: Place mutliple circles using named directions
+Figure 5: Place mutliple circles using named directions
 </figcaption></figure>
 </div>
 </div>
 </div>
 <p>Or with numbers (degrees):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
 <span>  <span class="va">c3</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/place.html">place</a></span><span class="op">(</span><span class="fu"><a href="../reference/ob_circle.html">ob_circle</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span>, </span>
@@ -285,14 +320,14 @@ Figure 4: Place mutliple circles using named directions
 <img src="circles_files/figure-html/fig-multdegree-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-multdegree-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 5: Place mutliple circles using degrees
+Figure 6: Place mutliple circles using degrees
 </figcaption></figure>
 </div>
 </div>
 </div>
 <p>With styles:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
 <span>  <span class="op">{</span><span class="va">c4</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_circle.html">ob_circle</a></span><span class="op">(</span></span>
 <span>      radius <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -315,7 +350,7 @@ Figure 5: Place mutliple circles using degrees
 <img src="circles_files/figure-html/fig-style-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-style-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 6: Place mutliple circles with styling
+Figure 7: Place mutliple circles with styling
 </figcaption></figure>
 </div>
 </div>
@@ -324,7 +359,7 @@ Figure 6: Place mutliple circles with styling
 </h3>
 <p>This works the same as placing circles next to each other. Here we create a point in the center, place six circles around it, and then place 12 points around each circle.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
 <span>  <span class="op">{</span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
 <span>  <span class="op">{</span><span class="va">c6</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/place.html">place</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="../reference/ob_circle.html">ob_circle</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fl">.5</span>, </span>
@@ -345,7 +380,7 @@ Figure 6: Place mutliple circles with styling
 <img src="circles_files/figure-html/fig-multimulti-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-multimulti-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 7: Place circles around a point, and points around each circle
+Figure 8: Place circles around a point, and points around each circle
 </figcaption></figure>
 </div>
 </div>
@@ -353,7 +388,7 @@ Figure 7: Place circles around a point, and points around each circle
 </section><section class="level2"><h3 id="placing-lines-next-to-circles">Placing lines next to circles<a class="anchor" aria-label="anchor" href="#placing-lines-next-to-circles"></a>
 </h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
 <span>  <span class="op">{</span><span class="va">c7</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_circle.html">ob_circle</a></span><span class="op">(</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/place.html">place</a></span><span class="op">(</span><span class="fu"><a href="../reference/ob_line.html">ob_line</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">c7</span>, where <span class="op">=</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">45</span><span class="op">)</span>, sep <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
@@ -363,7 +398,7 @@ Figure 7: Place circles around a point, and points around each circle
 <img src="circles_files/figure-html/fig-linecircle-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-linecircle-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 8: Placing a line one unit northeast of a circle
+Figure 9: Placing a line one unit northeast of a circle
 </figcaption></figure>
 </div>
 </div>
@@ -372,7 +407,7 @@ Figure 8: Placing a line one unit northeast of a circle
 </h2>
 <p>Let’s make two circles and draw an arrow path between them</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
 <span>  <span class="op">{</span><span class="va">c1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_circle.html">ob_circle</a></span><span class="op">(</span><span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>, radius <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span> </span>
 <span>  <span class="op">{</span><span class="va">c2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_circle.html">ob_circle</a></span><span class="op">(</span><span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">1.5</span>,<span class="op">-</span><span class="fl">1.5</span><span class="op">)</span>, radius <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
@@ -383,14 +418,14 @@ Figure 8: Placing a line one unit northeast of a circle
 <img src="circles_files/figure-html/fig-connectcircles-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-connectcircles-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 9: Connect two circles
+Figure 10: Connect two circles
 </figcaption></figure>
 </div>
 </div>
 </div>
 <p>That is fine, but we often need labels and styling to make scientific diagrams. For example:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
 <span>  <span class="op">{</span><span class="va">cthis</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_circle.html">ob_circle</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>,</span>
@@ -426,7 +461,7 @@ Figure 9: Connect two circles
 <img src="circles_files/figure-html/fig-connectcirclesstyles-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-connectcirclesstyles-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 10: Connect two circles with labels and styles
+Figure 11: Connect two circles with labels and styles
 </figcaption></figure>
 </div>
 </div>
@@ -434,7 +469,7 @@ Figure 10: Connect two circles with labels and styles
 </section><section class="section level2"><h2 id="paths-between-circles-and-lines">Paths between circles and lines<a class="anchor" aria-label="anchor" href="#paths-between-circles-and-lines"></a>
 </h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
 <span>  <span class="va">c1</span> <span class="op">+</span></span>
 <span>  <span class="op">{</span><span class="va">l1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_line.html">ob_line</a></span><span class="op">(</span>slope <span class="op">=</span> <span class="fl">2</span>, intercept <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
@@ -447,7 +482,7 @@ Figure 10: Connect two circles with labels and styles
 <img src="circles_files/figure-html/fig-connectcircleline-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-connectcircleline-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 11: Connect a circle to a line and a line to a circle
+Figure 12: Connect a circle to a line and a line to a circle
 </figcaption></figure>
 </div>
 </div>

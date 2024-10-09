@@ -65,14 +65,14 @@ library(ggarrow)
 
 # Advantages of `ob_label` over `ob_latex`
 
-The `ob_label` function uses `ggtext::geom_richtext` to create labels. It's primary advantage is that it is simple and renders quickly. Wherever possible, it is the recommended way to create labels. It understands some markdown formatting (e.g., italics and bolding) and some HTML tags (e.g., `span`, `sub`, `sup`, `img`, and `style`). 
+The `ob_label` function uses `ggtext::geom_richtext` to create labels. It's primary advantage is that it is simple and renders quickly. Wherever possible, it is the recommended way to create labels. It understands basic markdown formatting (e.g., italics, bolding, subscripts, and superscripts) as well as some HTML tags (e.g., `span` and `img`). 
 
 
 # Advantages of `ob_latex` over `ob_label`
 
 If something more elaborate is needed than italics, bolding, subscripts, and superscripts, we can use LaTeX instead. The `ob_latex` function can place an image of a LaTeX equation in a ggplot diagram. 
 
-For example, suppose I want to label a latent variable's variance with the symbol $\sigma_e^2$. This symbol would be difficult to render in HTML, so we can render it in LaTeX instead.
+For example, suppose I want to label a latent variable's variance with the symbol $\sigma_e^2$. This symbol would be difficult to render in pure HTML, so we can render it in LaTeX instead.
 
 ```{r}
 #| label: fig-latent
@@ -171,7 +171,7 @@ ggdiagram() +
 ```
 
 
-Higher densities are not always better. In addition to using more memory and rendering more slowly, images with very high densities will sometimes appear blurry or pixelated.
+Higher densities are not always better, however. In addition to using more memory and rendering more slowly, images with very high densities will sometimes appear blurry or pixelated.
 
 
 
@@ -181,8 +181,8 @@ The `ob_latex` function works through these steps:
 
 1. Create a .tex file with content based on the LaTeX [standalone package](https://ctan.org/pkg/standalone).
 2. Create a .pdf file via the `tinytex::xelatex` function, if tinytex is available. Otherwise, use xelatex via a shell command.
-3. Import the .pdf file as raster bitmap via the `magick::image_read_pdf` function. 
-4. Store raster bitmap in the `ob_latex@image` slot.
+3. Import the .pdf file as a raster bitmap via the `magick::image_read_pdf` function. 
+4. Store the raster bitmap in the `ob_latex@image` slot.
 
 When rendered in ggplot2, the bitmap is displayed via `ggplot2::annotation_raster`.
 

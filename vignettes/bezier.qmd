@@ -76,7 +76,7 @@ bp <- ggdiagram(
     angle = 0,
     hjust = .5,
     vjust = .5)) +
-  scale_x_continuous(labels = WJSmisc::signs_centered,
+  scale_x_continuous(labels = signs_centered,
                      limits = c(-4, 4)) +
   scale_y_continuous(labels = signs::signs,
                      limits = c(-4, 4))
@@ -150,7 +150,7 @@ control_point_list <- c(
 bp + 
   ob_bezier(control_point_list) +
   ob_path(control_point_list, linetype = "dashed", linewidth = .25) +
-  lapply(control_point_list, as.geom)
+  bind(control_point_list)
 ```
 
 

@@ -90,7 +90,7 @@ bp <- ggdiagram(
     angle = 0,
     hjust = .5,
     vjust = .5)) +
-  scale_x_continuous(labels = WJSmisc::signs_centered,
+  scale_x_continuous(labels = signs_centered,
                      limits = c(-4, 4)) +
   scale_y_continuous(labels = signs::signs,
                      limits = c(-4, 4))
@@ -110,7 +110,7 @@ $$
 #| label: circle
 p <- ob_point(0,0)
 r <- 3
-c1 <-  ob_circle(center = p, radius = 3)
+c1 <-  ob_circle(center = p, radius = r)
 c1
 ```
 
@@ -133,6 +133,9 @@ bp +
 
 ## Point on the circle at a specific angle
 
+It is common to need one or more points at a specific angle.
+
+
 ```{r}
 #| label: ptheta
 c1@point_at(degree(60))
@@ -141,7 +144,7 @@ c1@point_at(degree(60))
 
 ```{r}
 #| label: fig-ptheta
-#| fig-cap: Point on ellipse that is 45&deg; from the x-axis.
+#| fig-cap: Point on circle that is 45&deg; from the x-axis.
 #| code-fold: true
 deg <- degree(60)
 
@@ -152,6 +155,35 @@ bp +
   ob_segment(c1@center, p45) +
   ob_arc(radius = 1, start = degree(0), end = deg, label = deg)
 ```
+
+Multiple points can be specified at once.
+
+```{r}
+#| label: fig-pthetas
+#| fig-cap: Points on circle 20 degrees apart.
+#| code-fold: true
+
+bp + 
+  c1 +
+  c1@point_at(degree(seq(0,340, 20)))
+  
+```
+
+These can be named points (e.g., north|top|above, south|bottom|below, east|right, west|left, northwest|top left|above left, southeast|bottom right|below right, north-northwest).
+
+```{r}
+#| label: fig_namedpoints
+#| fig-cap: The `@point_at` property can take angles or named positions
+
+positions <- c("east", "southwest", "north-northeast", "left", "top", "below")
+
+bp +
+  c1 +
+  {p <- c1@point_at(positions)} +
+  ob_label(positions, p, polar_just = ob_polar(p@theta, 2))
+  
+```
+
 
 
 # Placing circles 

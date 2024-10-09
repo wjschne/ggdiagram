@@ -86,7 +86,7 @@ bp <- ggdiagram(
     angle = 0,
     hjust = .5,
     vjust = .5)) +
-  scale_x_continuous(labels = WJSmisc::signs_centered,
+  scale_x_continuous(labels = signs_centered,
                      limits = c(-4, 4)) +
   scale_y_continuous(labels = signs::signs,
                      limits = c(-4, 4))
