@@ -7,3 +7,4 @@
 ^docs$
 ^dev$
 ^vignettes/*_files$
+^README\.Rmd$

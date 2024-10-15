@@ -876,67 +876,6 @@ ggdiagram(font_family = my_font, font_size = 13) +
   })}
 ```
 
-```{r}
-#| label: fig-Gc3
-#| fig-cap: A latent variable with 3 indicators
-#| fig-width: 5
-#| code-fold: true
-#| echo: false
-#| eval: false
-ggdiagram(font_family = my_font, font_size = 16) +
-  # Latent Variable
-  {Gc <- ob_circle(
-      fill = "dodgerblue4",
-      alpha = .6,
-      color = NA,
-      label = ob_label(
-        "Gc",
-        nudge_y = -.05,
-        fill = NA,
-        color = "white",
-        size = 60))} +
-  # Observed Variables
-  {Gc_3 <- ob_ellipse(a = .5,
-                   b = .5,
-                   m1 = 10,
-                   fill = "dodgerblue4") |> 
-    place(from = Gc, where = "below", sep = 1.2) |> 
-    ob_array(
-      k = 3,
-      where = 0,
-      sep = .1,
-      color = NA,
-      alpha = c(.55,.7,.85),
-      label = ob_label(subscript("Gc", seq(3)), 
-                    size = 24,
-                    nudge_y = -.05,
-                    color = "white", 
-                    fill = NA))} +
-  # Paths from latent to observed
-  {pGc_Gc_3 <- connect(Gc, Gc_3@point_at("north"), 
-                        resect = 2, 
-                        color = "gray30", 
-                        alpha = 1)} + 
-  # Place labels on a horizontal line
-  ob_label(label = round_probability(c(.75, .65, .89)), 
-        p = pGc_Gc_3@line@point_at_y(pGc_Gc_3[2]@midpoint()@y)) +
-  # Place errors below observed variables
-  {e_Gc_3 <- ob_circle(radius = .3, 
-                        fill = "dodgerblue4", 
-                        color = NA,
-                        alpha = c(.55,.7,.85) - .2) |> 
-    place(from = Gc_3, 
-          where = "below", 
-          sep = .4)} + 
-  # Paths from errors to observed variables
-  connect(x = e_Gc_3, 
-          y = Gc_3, 
-          color = "gray30", 
-          resect = 2, 
-          alpha = 1)
-
-```
-
 @fig-hierarchy is a demonstration of how ggdiagram can be used to creating complex models with an eye to aesthetics.
 
 
