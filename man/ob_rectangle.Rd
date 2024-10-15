@@ -17,7 +17,7 @@ ob_rectangle(
   southwest = class_missing,
   southeast = class_missing,
   angle = 0,
-  radius = class_missing,
+  corner_radius = class_missing,
   label = class_missing,
   alpha = class_missing,
   color = "black",
@@ -25,8 +25,8 @@ ob_rectangle(
   linewidth = class_missing,
   linetype = class_missing,
   style = class_missing,
-  x = class_missing,
-  y = class_missing,
+  x0 = class_missing,
+  y0 = class_missing,
   ...
 )
 }
@@ -55,7 +55,7 @@ ob_rectangle(
 
 \item{angle}{angle of text}
 
-\item{radius}{A numeric or unit vector of length one, specifying the corner radius}
+\item{corner_radius}{A numeric or unit vector of length one, specifying the corner radius for rounded corners}
 
 \item{label}{A character, angle, or label object}
 
@@ -71,9 +71,9 @@ ob_rectangle(
 
 \item{style}{a style object}
 
-\item{x}{overrides x-coordinate in \code{center@x}}
+\item{x0}{overrides x-coordinate in \code{center@x}}
 
-\item{y}{overrides y-coordinate in \code{center@x}}
+\item{y0}{overrides y-coordinate in \code{center@x}}
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> arguments passed to style object}
 }
@@ -81,7 +81,7 @@ ob_rectangle(
 ob_rectangle class
 }
 \examples{
-# specify center point and radius
+# specify center point
 p <- ob_point(0,0)
 ob_rectangle(p, width = 2, height = 2)
 }

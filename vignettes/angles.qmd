@@ -47,7 +47,7 @@ library(dplyr)
 library(ggtext)
 library(ggarrow)
 my_font <- "Roboto Condensed"
-my_arrow_head <- arrowheadr::arrow_head_deltoid(d = 2.3)
+my_arrow_head <- arrowheadr::arrow_head_deltoid(d = 2.3, n = 100)
 ```
 
 # Angles

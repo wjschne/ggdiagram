@@ -45,6 +45,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/angles.html">Angles</a></li>
     <li><a class="dropdown-item" href="../articles/arcwedges.html">Arcs and Wedges</a></li>
+    <li><a class="dropdown-item" href="../articles/automation.html">Repetition and Automation</a></li>
     <li><a class="dropdown-item" href="../articles/bezier.html">Bézier Curves</a></li>
     <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
@@ -108,12 +109,12 @@
 <span><span class="va">my_font</span> <span class="op">&lt;-</span> <span class="st">"Roboto Condensed"</span></span>
 <span><span class="va">my_font_size</span> <span class="op">&lt;-</span> <span class="fl">20</span></span>
 <span><span class="va">my_point_size</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
-<span><span class="va">my_arrowhead</span> <span class="op">&lt;-</span> <span class="fu">arrowheadr</span><span class="fu">::</span><span class="fu"><a href="https://wjschne.github.io/arrowheadr/reference/arrow_head_hypotrochoid.html" class="external-link">arrow_head_deltoid</a></span><span class="op">(</span><span class="fl">2.1</span><span class="op">)</span></span>
+<span><span class="va">my_arrowhead</span> <span class="op">&lt;-</span> <span class="fu">arrowheadr</span><span class="fu">::</span><span class="fu"><a href="https://wjschne.github.io/arrowheadr/reference/arrow_head_hypotrochoid.html" class="external-link">arrow_head_deltoid</a></span><span class="op">(</span>d <span class="op">=</span> <span class="fl">2.3</span>, n <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># my_colors &lt;- viridis::viridis(2, begin = .25, end = .5)</span></span>
 <span><span class="va">my_colors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#3B528B"</span>, <span class="st">"#21908C"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/get_theme.html" class="external-link">theme_set</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme_get.html" class="external-link">theme_set</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span></span>
 <span>    base_size <span class="op">=</span> <span class="va">my_font_size</span>,</span>
 <span>    base_family <span class="op">=</span> <span class="va">my_font</span><span class="op">)</span> <span class="op">+</span></span>
@@ -357,23 +358,28 @@ Figure 7: Place mutliple circles with styling
 </div>
 </section><section class="level2"><h3 id="placing-circles-next-to-points-and-points-next-to-circles">Placing circles next to points and points next to circles<a class="anchor" aria-label="anchor" href="#placing-circles-next-to-points-and-points-next-to-circles"></a>
 </h3>
-<p>This works the same as placing circles next to each other. Here we create a point in the center, place six circles around it, and then place 12 points around each circle.</p>
+<p>This works the same as placing circles next to each other. Here we create a point in the center, place six circles around it, and then place 12 points around each circle using the <code>map_ob</code> function to “map” objects like the <code>map_*</code> functions in the purrr package.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
-<span>  <span class="op">{</span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
-<span>  <span class="op">{</span><span class="va">c6</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/place.html">place</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="../reference/ob_circle.html">ob_circle</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fl">.5</span>, </span>
-<span>                          fill <span class="op">=</span> <span class="fu">viridis</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">viridis</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span>, </span>
-<span>                          color <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span>, </span>
-<span>        from <span class="op">=</span> <span class="va">p1</span>, </span>
-<span>        where <span class="op">=</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">300</span>,<span class="fl">60</span><span class="op">)</span><span class="op">)</span>, </span>
-<span>        sep <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
-<span>  <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">as.list</a></span><span class="op">(</span><span class="va">c6</span><span class="op">)</span>, </span>
-<span>             \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">x</span><span class="op">@</span><span class="va">fill</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>               <span class="fu"><a href="../reference/place.html">place</a></span><span class="op">(</span>from <span class="op">=</span> <span class="va">x</span>, </span>
-<span>                     where <span class="op">=</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">330</span>, <span class="fl">30</span><span class="op">)</span><span class="op">)</span>, </span>
-<span>                     sep <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>               <span class="fu"><a href="../reference/as.geom.html">as.geom</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
+<span>  <span class="op">{</span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
+<span>  <span class="op">{</span><span class="va">c6</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/place.html">place</a></span><span class="op">(</span></span>
+<span>      x <span class="op">=</span> <span class="fu"><a href="../reference/ob_circle.html">ob_circle</a></span><span class="op">(</span></span>
+<span>        radius <span class="op">=</span> <span class="fl">.5</span>,</span>
+<span>        fill <span class="op">=</span> <span class="fu">viridis</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">viridis</a></span><span class="op">(</span><span class="fl">6</span><span class="op">)</span>,</span>
+<span>        color <span class="op">=</span> <span class="cn">NA</span></span>
+<span>      <span class="op">)</span>,</span>
+<span>      from <span class="op">=</span> <span class="va">p1</span>,</span>
+<span>      where <span class="op">=</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">300</span>, <span class="fl">60</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>      sep <span class="op">=</span> <span class="fl">2</span></span>
+<span>    <span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/map_ob.html">map_ob</a></span><span class="op">(</span><span class="fu"><a href="../reference/unbind.html">unbind</a></span><span class="op">(</span><span class="va">c6</span><span class="op">)</span>,</span>
+<span>         \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">x</span><span class="op">@</span><span class="va">fill</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>           <span class="fu"><a href="../reference/place.html">place</a></span><span class="op">(</span></span>
+<span>             from <span class="op">=</span> <span class="va">x</span>,</span>
+<span>             where <span class="op">=</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">330</span>, <span class="fl">30</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>             sep <span class="op">=</span> <span class="fl">.5</span></span>
+<span>           <span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div id="fig-multimulti" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-multimulti-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">

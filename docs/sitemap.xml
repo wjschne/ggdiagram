@@ -2,6 +2,7 @@
 <url><loc>https://wjschne.github.io/ggdiagram/404.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/articles/angles.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/articles/arcwedges.html</loc></url>
+<url><loc>https://wjschne.github.io/ggdiagram/articles/automation.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/articles/bezier.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/articles/causalpaths.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/articles/circles.html</loc></url>
@@ -32,6 +33,7 @@
 <url><loc>https://wjschne.github.io/ggdiagram/reference/intersection.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/intersection_angle.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/label_object.html</loc></url>
+<url><loc>https://wjschne.github.io/ggdiagram/reference/map_ob.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/mean_color.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/midpoint.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/nudge.html</loc></url>
@@ -51,6 +53,7 @@
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_polygon.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_rectangle.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_segment.html</loc></url>
+<url><loc>https://wjschne.github.io/ggdiagram/reference/ob_shape_list.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_style.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_variance.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/perpendicular_point.html</loc></url>
@@ -65,5 +68,6 @@
 <url><loc>https://wjschne.github.io/ggdiagram/reference/round_probability.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/signs_centered.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/subscript.html</loc></url>
+<url><loc>https://wjschne.github.io/ggdiagram/reference/unbind.html</loc></url>
 </urlset>
 

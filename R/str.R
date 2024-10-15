@@ -120,21 +120,30 @@ method(str, class_arrowhead) <- function(
   nest.lev = 0,
   additional = TRUE,
   omit = omit_props(object, include = c("x","y"))) {
-str_properties(object,
-               omit = omit,
-               nest.lev = nest.lev,
-              additional = additional)
+
+  cat(if (nest.lev > 0) " ")
+  cat(obj_desc(object))
+
+  cat("\n")
+
+  for (i in S7_data(object)) {
+    print(head(i))
+  }
 }
 
 method(str, class_margin) <- function(
   object,
   nest.lev = 0,
-  additional = TRUE,
+  additional = FALSE,
   omit = "") {
-str_properties(object,
-               omit = omit,
-               nest.lev = nest.lev,
-              additional = additional)
+  cat(if (nest.lev > 0) " ")
+  cat(obj_desc(object))
+
+  cat("\n")
+
+  for (i in S7_data(object)) {
+    print(i)
+  }
 }
 
 
@@ -143,17 +152,21 @@ method(str, class_aesthetics_list) <- function(
     nest.lev = 0,
     additional = TRUE,
     omit = "") {
-  str_properties(object,
-                 omit = omit,
-                 nest.lev = nest.lev,
-                 additional = additional)
+  cat(if (nest.lev > 0) " ")
+  cat(obj_desc(object))
+
+  cat("\n")
+
+  for (i in S7_data(object)) {
+    print(i)
+  }
 }
 
-method(str, class_shape_list) <- function(
+method(str, ob_shape_list) <- function(
     object,
     nest.lev = 0,
     additional = TRUE,
     omit = "") {
-  cat("<class_shape_list>\n")
+  cat("<ob_shape_list>\n")
   lapply(S7_data(object), str, nest.lev = nest.lev, additional = additional)
 }

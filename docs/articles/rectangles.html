@@ -45,6 +45,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/angles.html">Angles</a></li>
     <li><a class="dropdown-item" href="../articles/arcwedges.html">Arcs and Wedges</a></li>
+    <li><a class="dropdown-item" href="../articles/automation.html">Repetition and Automation</a></li>
     <li><a class="dropdown-item" href="../articles/bezier.html">Bézier Curves</a></li>
     <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
@@ -116,12 +117,12 @@
 <span><span class="va">my_font</span> <span class="op">&lt;-</span> <span class="st">"Roboto Condensed"</span></span>
 <span><span class="va">my_font_size</span> <span class="op">&lt;-</span> <span class="fl">20</span></span>
 <span><span class="va">my_point_size</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
-<span><span class="va">my_arrowhead</span> <span class="op">&lt;-</span> <span class="fu">arrowheadr</span><span class="fu">::</span><span class="fu"><a href="https://wjschne.github.io/arrowheadr/reference/arrow_head_hypotrochoid.html" class="external-link">arrow_head_deltoid</a></span><span class="op">(</span><span class="fl">2.1</span><span class="op">)</span></span>
+<span><span class="va">my_arrowhead</span> <span class="op">&lt;-</span> <span class="fu">arrowheadr</span><span class="fu">::</span><span class="fu"><a href="https://wjschne.github.io/arrowheadr/reference/arrow_head_hypotrochoid.html" class="external-link">arrow_head_deltoid</a></span><span class="op">(</span>d <span class="op">=</span> <span class="fl">2.3</span>, n <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># my_colors &lt;- viridis::viridis(2, begin = .25, end = .5)</span></span>
 <span><span class="va">my_colors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#3B528B"</span>, <span class="st">"#21908C"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/get_theme.html" class="external-link">theme_set</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme_get.html" class="external-link">theme_set</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span></span>
 <span>    base_size <span class="op">=</span> <span class="va">my_font_size</span>,</span>
 <span>    base_family <span class="op">=</span> <span class="va">my_font</span><span class="op">)</span> <span class="op">+</span></span>
@@ -192,8 +193,8 @@
 <span><span class="co">#&gt;  @ y: num 1</span></span>
 <span><span class="co">#&gt; @ width : num 4</span></span>
 <span><span class="co">#&gt; @ height: num 2</span></span>
-<span><span class="co">#&gt; Other props: label, radius, alpha, color, fill, linewidth,</span></span>
-<span><span class="co">#&gt;              linetype, angle, area, bounding_box, perimeter,</span></span>
+<span><span class="co">#&gt; Other props: label, angle, corner_radius, alpha, color, fill,</span></span>
+<span><span class="co">#&gt;              linewidth, linetype, area, bounding_box, perimeter,</span></span>
 <span><span class="co">#&gt;              northeast, northwest, southwest, southeast, east,</span></span>
 <span><span class="co">#&gt;              north, west, south, side, length, style, tibble, geom,</span></span>
 <span><span class="co">#&gt;              normal_at, point_at, aesthetics</span></span></code></pre></div>
@@ -217,27 +218,29 @@
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>breaks <span class="op">=</span> <span class="op">-</span><span class="fl">10</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="va">r1</span></span>
 <span></span>
-<span><span class="va">rc_center</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="../reference/as.geom.html">as.geom</a></span><span class="op">(</span><span class="va">r1</span><span class="op">@</span><span class="va">center</span><span class="op">)</span>,</span>
-<span>  <span class="fu"><a href="../reference/as.geom.html">as.geom</a></span><span class="op">(</span><span class="va">r1</span><span class="op">@</span><span class="va">center</span><span class="op">@</span><span class="va">label</span><span class="op">(</span></span>
+<span><span class="va">rc_center</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  <span class="va">r1</span><span class="op">@</span><span class="va">center</span>,</span>
+<span>  <span class="va">r1</span><span class="op">@</span><span class="va">center</span><span class="op">@</span><span class="va">label</span><span class="op">(</span></span>
 <span>    fill <span class="op">=</span> <span class="va">my_colors</span><span class="op">$</span><span class="va">primary</span><span class="op">@</span><span class="va">lighten</span><span class="op">(</span><span class="fl">.15</span><span class="op">)</span>, </span>
-<span>    vjust <span class="op">=</span> <span class="op">-</span><span class="fl">.15</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>    vjust <span class="op">=</span> <span class="op">-</span><span class="fl">.15</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/bind.html">bind</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">rc_width</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as.geom.html">as.geom</a></span><span class="op">(</span><span class="va">s_north</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rconsortium.github.io/S7/reference/props.html" class="external-link">set_props</a></span><span class="op">(</span>label <span class="op">=</span> <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span></span>
+<span><span class="va">rc_width</span> <span class="op">&lt;-</span> <span class="va">s_north</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rconsortium.github.io/S7/reference/props.html" class="external-link">set_props</a></span><span class="op">(</span>label <span class="op">=</span> <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span></span>
 <span>    label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Width = "</span>, <span class="va">r1</span><span class="op">@</span><span class="va">width</span><span class="op">)</span>,</span>
 <span>    p <span class="op">=</span> <span class="fu"><a href="../reference/midpoint.html">midpoint</a></span><span class="op">(</span><span class="va">s_north</span><span class="op">)</span>,</span>
 <span>    color <span class="op">=</span> <span class="va">my_colors</span><span class="op">$</span><span class="va">secondary</span>,</span>
 <span>    vjust <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>    label.margin <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="st">"pt"</span><span class="op">)</span></span>
-<span>  <span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">rc_height</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/as.geom.html">as.geom</a></span><span class="op">(</span><span class="va">s_east</span> <span class="op">|&gt;</span> </span>
-<span>                       <span class="fu"><a href="https://rconsortium.github.io/S7/reference/props.html" class="external-link">set_props</a></span><span class="op">(</span>label <span class="op">=</span> <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span></span>
+<span><span class="va">rc_height</span> <span class="op">&lt;-</span> <span class="va">s_east</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rconsortium.github.io/S7/reference/props.html" class="external-link">set_props</a></span><span class="op">(</span>label <span class="op">=</span> <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span></span>
 <span>    label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Height = "</span>, <span class="va">r1</span><span class="op">@</span><span class="va">height</span><span class="op">)</span>,</span>
 <span>    p  <span class="op">=</span> <span class="fu"><a href="../reference/midpoint.html">midpoint</a></span><span class="op">(</span><span class="va">s_east</span><span class="op">)</span>,</span>
 <span>    vjust <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>    color <span class="op">=</span> <span class="va">my_colors</span><span class="op">$</span><span class="va">secondary</span>,</span>
-<span>    angle <span class="op">=</span> <span class="op">-</span><span class="fl">90</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>    angle <span class="op">=</span> <span class="op">-</span><span class="fl">90</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span></span>
 <span><span class="va">rc_nw</span> <span class="op">&lt;-</span> <span class="va">r1</span><span class="op">@</span><span class="va">northwest</span><span class="op">@</span><span class="va">label</span><span class="op">(</span></span>
@@ -287,7 +290,7 @@ Figure 1: Center, Width, and Height
 <code class="sourceCode R"><span><span class="va">r1</span> <span class="op">==</span> <span class="fu"><a href="../reference/ob_rectangle.html">ob_rectangle</a></span><span class="op">(</span>width <span class="op">=</span> <span class="va">w</span>,</span>
 <span>                height <span class="op">=</span> <span class="va">h</span>,</span>
 <span>                northeast <span class="op">=</span> <span class="va">ne</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 </div>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
@@ -303,88 +306,18 @@ Figure 2: Specify a rectangle with height, width, and the northeast corner
 </div>
 </div>
 </div>
-</section><section class="level3"><h4 id="northwest-corner-width-and-height">Northwest corner, width, and height<a class="anchor" aria-label="anchor" href="#northwest-corner-width-and-height"></a>
-</h4>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">r1</span> <span class="op">==</span> <span class="fu"><a href="../reference/ob_rectangle.html">ob_rectangle</a></span><span class="op">(</span>width <span class="op">=</span> <span class="va">w</span>,</span>
-<span>                height <span class="op">=</span> <span class="va">h</span>,</span>
-<span>                northwest <span class="op">=</span> <span class="va">nw</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
-</div>
-<div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">rc_plot</span> <span class="op">+</span> <span class="va">rc_width</span> <span class="op">+</span> <span class="va">rc_height</span> <span class="op">+</span> <span class="va">rc_nw</span></span></code></pre></div>
-</details><div class="cell-output-display">
-<div id="fig-hw_nw" class="quarto-float quarto-figure quarto-figure-center">
-<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-hw_nw-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="rectangles_files/figure-html/fig-hw_nw-1.png" width="672">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hw_nw-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 3: Specify a rectangle with height, width, and the northwest corner
-</figcaption></figure>
-</div>
-</div>
-</div>
-</section><section class="level3"><h4 id="southwest-corner-width-and-height">Southwest corner, width, and height<a class="anchor" aria-label="anchor" href="#southwest-corner-width-and-height"></a>
-</h4>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">r1</span> <span class="op">==</span> <span class="fu"><a href="../reference/ob_rectangle.html">ob_rectangle</a></span><span class="op">(</span>width <span class="op">=</span> <span class="va">w</span>,</span>
-<span>                height <span class="op">=</span> <span class="va">h</span>,</span>
-<span>                southwest <span class="op">=</span> <span class="va">sw</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
-</div>
-<div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">rc_plot</span> <span class="op">+</span> <span class="va">rc_width</span> <span class="op">+</span> <span class="va">rc_height</span> <span class="op">+</span> <span class="va">rc_sw</span></span></code></pre></div>
-</details><div class="cell-output-display">
-<div id="fig-hw_sw" class="quarto-float quarto-figure quarto-figure-center">
-<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-hw_sw-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="rectangles_files/figure-html/fig-hw_sw-1.png" width="672">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hw_sw-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 4: Specify a rectangle with height, width, and the southwest corner
-</figcaption></figure>
-</div>
-</div>
-</div>
-</section><section class="level3"><h4 id="southeast-corner-width-and-height">Southeast corner, width, and height<a class="anchor" aria-label="anchor" href="#southeast-corner-width-and-height"></a>
-</h4>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">r1</span> <span class="op">==</span> <span class="fu"><a href="../reference/ob_rectangle.html">ob_rectangle</a></span><span class="op">(</span>width <span class="op">=</span> <span class="va">w</span>,</span>
-<span>                height <span class="op">=</span> <span class="va">h</span>,</span>
-<span>                southeast <span class="op">=</span> <span class="va">se</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
-</div>
-<div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">rc_plot</span> <span class="op">+</span> <span class="va">rc_width</span> <span class="op">+</span> <span class="va">rc_height</span> <span class="op">+</span> <span class="va">rc_se</span></span></code></pre></div>
-</details><div class="cell-output-display">
-<div id="fig-hw_se" class="quarto-float quarto-figure quarto-figure-center">
-<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-hw_se-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="rectangles_files/figure-html/fig-hw_se-1.png" width="672">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-hw_se-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 5: Specify a rectangle with height, width, and the southeast corner
-</figcaption></figure>
-</div>
-</div>
-</div>
 </section></section><section class="level2"><h3 id="give-the-center-and-any-of-the-4-corners">Give the center and any of the 4 corners<a class="anchor" aria-label="anchor" href="#give-the-center-and-any-of-the-4-corners"></a>
 </h3>
 <p>A rectangle can be specified with the center and any other corner. The following rectangles are equivalent.</p>
-<section class="level3"><h4 id="northeast-corner-and-center">Northeast corner and center<a class="anchor" aria-label="anchor" href="#northeast-corner-and-center"></a>
-</h4>
+<p>For example:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">r1</span> <span class="op">==</span> <span class="fu"><a href="../reference/ob_rectangle.html">ob_rectangle</a></span><span class="op">(</span>center <span class="op">=</span> <span class="va">cent</span>, </span>
 <span>                northeast <span class="op">=</span> <span class="va">ne</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb15"><pre class="downlit sourceCode r">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rc_plot</span> <span class="op">+</span> <span class="va">rc_center</span> <span class="op">+</span> <span class="va">rc_ne</span></span></code></pre></div>
 </details><div class="cell-output-display">
 <div id="fig-center_ne" class="quarto-float quarto-figure quarto-figure-center">
@@ -392,91 +325,24 @@ Figure 5: Specify a rectangle with height, width, and the southeast corner
 <img src="rectangles_files/figure-html/fig-center_ne-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-center_ne-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 6: Specify a rectangle with the center and the northeast corner
+Figure 3: Specify a rectangle with the center and the northeast corner
 </figcaption></figure>
 </div>
 </div>
 </div>
-</section><section class="level3"><h4 id="northwest-corner-and-center">Northwest corner and center<a class="anchor" aria-label="anchor" href="#northwest-corner-and-center"></a>
-</h4>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">r1</span> <span class="op">==</span> <span class="fu"><a href="../reference/ob_rectangle.html">ob_rectangle</a></span><span class="op">(</span>center <span class="op">=</span> <span class="va">cent</span>, </span>
-<span>                northwest <span class="op">=</span> <span class="va">nw</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
-</div>
-<div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">rc_plot</span> <span class="op">+</span> <span class="va">rc_center</span> <span class="op">+</span> <span class="va">rc_nw</span></span></code></pre></div>
-</details><div class="cell-output-display">
-<div id="fig-center_nw" class="quarto-float quarto-figure quarto-figure-center">
-<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-center_nw-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="rectangles_files/figure-html/fig-center_nw-1.png" width="672">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-center_nw-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 7: Specify a rectangle with the center and the northwest corner
-</figcaption></figure>
-</div>
-</div>
-</div>
-</section><section class="level3"><h4 id="southeast-corner-and-center">Southeast corner and center<a class="anchor" aria-label="anchor" href="#southeast-corner-and-center"></a>
-</h4>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">r1</span> <span class="op">==</span> <span class="fu"><a href="../reference/ob_rectangle.html">ob_rectangle</a></span><span class="op">(</span>center <span class="op">=</span> <span class="va">cent</span>, </span>
-<span>                southeast <span class="op">=</span> <span class="va">se</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
-</div>
-<div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">rc_plot</span> <span class="op">+</span> <span class="va">rc_center</span> <span class="op">+</span> <span class="va">rc_se</span></span></code></pre></div>
-</details><div class="cell-output-display">
-<div id="fig-center_se" class="quarto-float quarto-figure quarto-figure-center">
-<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-center_se-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="rectangles_files/figure-html/fig-center_se-1.png" width="672">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-center_se-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 8: Specify a rectangle with the center and the southeast corner
-</figcaption></figure>
-</div>
-</div>
-</div>
-</section><section class="level3"><h4 id="southeast-corner-and-center-1">Southeast corner and center<a class="anchor" aria-label="anchor" href="#southeast-corner-and-center-1"></a>
-</h4>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">r1</span> <span class="op">==</span> <span class="fu"><a href="../reference/ob_rectangle.html">ob_rectangle</a></span><span class="op">(</span>center <span class="op">=</span> <span class="va">cent</span>, </span>
-<span>                southwest <span class="op">=</span> <span class="va">sw</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
-</div>
-<div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">rc_plot</span> <span class="op">+</span> <span class="va">rc_center</span> <span class="op">+</span> <span class="va">rc_sw</span></span></code></pre></div>
-</details><div class="cell-output-display">
-<div id="fig-center_sw" class="quarto-float quarto-figure quarto-figure-center">
-<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-center_sw-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="rectangles_files/figure-html/fig-center_sw-1.png" width="672">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-center_sw-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 9: Specify a rectangle with the center and the southwest corner
-</figcaption></figure>
-</div>
-</div>
-</div>
-</section></section><section class="level2"><h3 id="give-opposite-corners">Give opposite corners<a class="anchor" aria-label="anchor" href="#give-opposite-corners"></a>
+</section><section class="level2"><h3 id="give-opposite-corners">Give opposite corners<a class="anchor" aria-label="anchor" href="#give-opposite-corners"></a>
 </h3>
 <p>A rectangle can be specified with points from opposite corners. These rectangles are equivalent.</p>
-<section class="level3"><h4 id="northeast-and-southwest-corners">Northeast and southwest corners<a class="anchor" aria-label="anchor" href="#northeast-and-southwest-corners"></a>
-</h4>
+<p>For example,</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">r1</span> <span class="op">==</span> <span class="fu"><a href="../reference/ob_rectangle.html">ob_rectangle</a></span><span class="op">(</span></span>
 <span>  northeast <span class="op">=</span> <span class="va">ne</span>, </span>
 <span>  southwest <span class="op">=</span> <span class="va">sw</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb23"><pre class="downlit sourceCode r">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rc_plot</span> <span class="op">+</span> <span class="va">rc_sw</span> <span class="op">+</span> <span class="va">rc_ne</span></span></code></pre></div>
 </details><div class="cell-output-display">
 <div id="fig-ne_sw" class="quarto-float quarto-figure quarto-figure-center">
@@ -484,46 +350,23 @@ Figure 9: Specify a rectangle with the center and the southwest corner
 <img src="rectangles_files/figure-html/fig-ne_sw-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ne_sw-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 10: Specify a rectangle with the northeast and southwest corners
+Figure 4: Specify a rectangle with the northeast and southwest corners
 </figcaption></figure>
 </div>
 </div>
 </div>
-</section><section class="level3"><h4 id="northwest-and-southeast-corners">Northwest and southeast corners<a class="anchor" aria-label="anchor" href="#northwest-and-southeast-corners"></a>
-</h4>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">r1</span> <span class="op">==</span> <span class="fu"><a href="../reference/ob_rectangle.html">ob_rectangle</a></span><span class="op">(</span></span>
-<span>  northeast <span class="op">=</span> <span class="va">ne</span>, </span>
-<span>  southwest <span class="op">=</span> <span class="va">sw</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
-</div>
-<div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">rc_plot</span> <span class="op">+</span> <span class="va">rc_se</span> <span class="op">+</span> <span class="va">rc_nw</span></span></code></pre></div>
-</details><div class="cell-output-display">
-<div id="fig-nw_se" class="quarto-float quarto-figure quarto-figure-center">
-<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-nw_se-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="rectangles_files/figure-html/fig-nw_se-1.png" width="672">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-nw_se-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 11: Specify a rectangle with the northwest and southeast corners
-</figcaption></figure>
-</div>
-</div>
-</div>
-</section></section><section class="level2"><h3 id="give-width-and-two-points-on-either-side">Give width and two points on either side<a class="anchor" aria-label="anchor" href="#give-width-and-two-points-on-either-side"></a>
+</section><section class="level2"><h3 id="give-width-and-two-points-on-either-side">Give width and two points on either side<a class="anchor" aria-label="anchor" href="#give-width-and-two-points-on-either-side"></a>
 </h3>
 <p>A rectangle can be specified with the width and 2 points from the left or right side. These rectangles are equivalent.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">r1</span> <span class="op">==</span> <span class="fu"><a href="../reference/ob_rectangle.html">ob_rectangle</a></span><span class="op">(</span>width <span class="op">=</span> <span class="va">w</span>,</span>
 <span>                northwest <span class="op">=</span> <span class="va">nw</span>,</span>
 <span>                southwest <span class="op">=</span> <span class="va">sw</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb27"><pre class="downlit sourceCode r">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rc_plot</span> <span class="op">+</span> <span class="va">rc_width</span> <span class="op">+</span> <span class="va">rc_nw</span> <span class="op">+</span> <span class="va">rc_sw</span></span></code></pre></div>
 </details><div class="cell-output-display">
 <div id="fig-w_nw_sw" class="quarto-float quarto-figure quarto-figure-center">
@@ -531,28 +374,7 @@ Figure 11: Specify a rectangle with the northwest and southeast corners
 <img src="rectangles_files/figure-html/fig-w_nw_sw-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-w_nw_sw-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 12: Specify a rectangle with the width and the left corners
-</figcaption></figure>
-</div>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">r1</span> <span class="op">==</span> <span class="fu"><a href="../reference/ob_rectangle.html">ob_rectangle</a></span><span class="op">(</span>width <span class="op">=</span> <span class="va">w</span>,</span>
-<span>                northwest <span class="op">=</span> <span class="va">ne</span>,</span>
-<span>                southwest <span class="op">=</span> <span class="va">se</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
-</div>
-<div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb29"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">rc_plot</span> <span class="op">+</span> <span class="va">rc_width</span> <span class="op">+</span> <span class="va">rc_ne</span> <span class="op">+</span> <span class="va">rc_se</span></span></code></pre></div>
-</details><div class="cell-output-display">
-<div id="fig-w_ne_se" class="quarto-float quarto-figure quarto-figure-center">
-<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-w_ne_se-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="rectangles_files/figure-html/fig-w_ne_se-1.png" width="672">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-w_ne_se-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 13: Specify a rectangle with the width and the right corners
+Figure 5: Specify a rectangle with the width and the left corners
 </figcaption></figure>
 </div>
 </div>
@@ -560,17 +382,16 @@ Figure 13: Specify a rectangle with the width and the right corners
 </section><section class="level2"><h3 id="give-height-and-two-points-on-top-or-bottom">Give height and two points on top or bottom<a class="anchor" aria-label="anchor" href="#give-height-and-two-points-on-top-or-bottom"></a>
 </h3>
 <p>A rectangle can be specified with the height and 2 points from the top or bottom side. These rectangles are equivalent.</p>
-</section><section class="level2"><h3 id="height-and-top-corners">Height and top corners<a class="anchor" aria-label="anchor" href="#height-and-top-corners"></a>
-</h3>
+<p>For example,</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">r1</span> <span class="op">==</span> <span class="fu"><a href="../reference/ob_rectangle.html">ob_rectangle</a></span><span class="op">(</span>height <span class="op">=</span> <span class="va">h</span>,</span>
 <span>                northwest <span class="op">=</span> <span class="va">nw</span>,</span>
 <span>                northeast <span class="op">=</span> <span class="va">ne</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb31"><pre class="downlit sourceCode r">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rc_plot</span> <span class="op">+</span> <span class="va">rc_height</span> <span class="op">+</span> <span class="va">rc_ne</span> <span class="op">+</span> <span class="va">rc_nw</span></span></code></pre></div>
 </details><div class="cell-output-display">
 <div id="fig-h_ne_nw" class="quarto-float quarto-figure quarto-figure-center">
@@ -578,30 +399,7 @@ Figure 13: Specify a rectangle with the width and the right corners
 <img src="rectangles_files/figure-html/fig-h_ne_nw-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-h_ne_nw-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 14: Specify a rectangle with the height and the top corners
-</figcaption></figure>
-</div>
-</div>
-</div>
-</section><section class="level2"><h3 id="height-and-bottom-corners">Height and bottom corners<a class="anchor" aria-label="anchor" href="#height-and-bottom-corners"></a>
-</h3>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">r1</span> <span class="op">==</span> <span class="fu"><a href="../reference/ob_rectangle.html">ob_rectangle</a></span><span class="op">(</span>height <span class="op">=</span> <span class="va">h</span>,</span>
-<span>                southwest <span class="op">=</span> <span class="va">sw</span>,</span>
-<span>                southeast <span class="op">=</span> <span class="va">se</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
-</div>
-<div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">rc_plot</span> <span class="op">+</span> <span class="va">rc_sw</span> <span class="op">+</span> <span class="va">rc_se</span> <span class="op">+</span> <span class="va">rc_height</span></span></code></pre></div>
-</details><div class="cell-output-display">
-<div id="fig-n_sw_se" class="quarto-float quarto-figure quarto-figure-center">
-<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-n_sw_se-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="rectangles_files/figure-html/fig-n_sw_se-1.png" width="672">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-n_sw_se-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 15: Specify a rectangle with the height and the top corners
+Figure 6: Specify a rectangle with the height and the top corners
 </figcaption></figure>
 </div>
 </div>
@@ -610,7 +408,7 @@ Figure 15: Specify a rectangle with the height and the top corners
 </h2>
 <p>The corners and side midpoints can be extracted. Here is the north point (i.e., the midpoint of the north side):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">r1</span><span class="op">@</span><span class="va">north</span></span>
 <span><span class="co">#&gt; &lt;ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 2</span></span>
@@ -620,7 +418,7 @@ Figure 15: Specify a rectangle with the height and the top corners
 <span><span class="co">#&gt;              geom, label, aesthetics</span></span></code></pre></div>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb35"><pre class="downlit sourceCode r">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rc_plot</span> <span class="op">+</span></span>
 <span>  <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
@@ -670,14 +468,14 @@ Figure 15: Specify a rectangle with the height and the top corners
 <img src="rectangles_files/figure-html/fig-points-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-points-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 16: The named points of a rectangle
+Figure 7: The named points of a rectangle
 </figcaption></figure>
 </div>
 </div>
 </div>
 <p>Points at any angle</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">60</span><span class="op">)</span></span>
 <span><span class="va">r1</span><span class="op">@</span><span class="va">point_at</span><span class="op">(</span><span class="va">theta</span><span class="op">)</span></span>
 <span><span class="co">#&gt; &lt;ob_point&gt;</span></span>
@@ -688,7 +486,7 @@ Figure 16: The named points of a rectangle
 <span><span class="co">#&gt;              geom, label, aesthetics</span></span></code></pre></div>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb37"><pre class="downlit sourceCode r">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">r1_theta</span> <span class="op">&lt;-</span> <span class="va">r1</span><span class="op">@</span><span class="va">point_at</span><span class="op">(</span><span class="va">theta</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">rc_plot</span> <span class="op">+</span></span>
@@ -708,7 +506,7 @@ Figure 16: The named points of a rectangle
 <img src="rectangles_files/figure-html/fig-theta60-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-theta60-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 17: The point on a rectangle at angle θ = 60°
+Figure 8: The point on a rectangle at angle θ = 60°
 </figcaption></figure>
 </div>
 </div>
@@ -717,7 +515,7 @@ Figure 17: The point on a rectangle at angle θ = 60°
 </h2>
 <p>Each side of the rectangle can be extracted. For example, here is the north side segment:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">r1</span><span class="op">@</span><span class="va">side</span><span class="op">@</span><span class="va">north</span></span>
 <span><span class="co">#&gt; &lt;ob_segment&gt;</span></span>
 <span><span class="co">#&gt; @ p1: &lt;ob_point&gt;</span></span>
@@ -728,7 +526,7 @@ Figure 17: The point on a rectangle at angle θ = 60°
 <span><span class="co">#&gt;  @ y: num 2</span></span></code></pre></div>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb39"><pre class="downlit sourceCode r">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rc_plot</span> <span class="op">+</span> </span>
 <span>  <span class="va">r1</span><span class="op">@</span><span class="va">side</span><span class="op">@</span><span class="va">north</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rconsortium.github.io/S7/reference/props.html" class="external-link">set_props</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">my_colors</span><span class="op">$</span><span class="va">secondary</span><span class="op">@</span><span class="va">color</span>, linewidth <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
@@ -742,7 +540,7 @@ Figure 17: The point on a rectangle at angle θ = 60°
 <img src="rectangles_files/figure-html/fig-westside-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-westside-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 18: The north side of a rectangle
+Figure 9: The north side of a rectangle
 </figcaption></figure>
 </div>
 </div>
@@ -751,7 +549,7 @@ Figure 18: The north side of a rectangle
 </h2>
 <p>The <code>@radius</code> property controls the radius of the rounded corners. It must be of length 1. It can be given in as a <code><a href="https://rdrr.io/r/grid/unit.html" class="external-link">ggplot2::unit</a></code> or as a numeric value. If numeric, it is understood as a proportion of the plot area width. Rounding does not affect the location of corners.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_equal</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>, <span class="fl">4</span><span class="op">)</span>, </span>
 <span>              ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -762,12 +560,12 @@ Figure 18: The north side of a rectangle
 <span>    radius <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">5</span>, <span class="st">"mm"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div id="fig-h_top" class="quarto-float quarto-figure quarto-figure-center">
-<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-h_top-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="rectangles_files/figure-html/fig-h_top-1.png" width="672">
+<div id="fig-rounded" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-rounded-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="rectangles_files/figure-html/fig-rounded-1.png" width="672">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-h_top-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 19: Specify a rectangle with the height and the top corners
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rounded-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 10: Specify a rectangle rounded corners
 </figcaption></figure>
 </div>
 </div>
@@ -776,7 +574,7 @@ Figure 19: Specify a rectangle with the height and the top corners
 </h2>
 <p>It is possible to rotate a rectangle.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_equal</a></span><span class="op">(</span>xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>, <span class="fl">4</span><span class="op">)</span>, </span>
 <span>              ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -784,7 +582,8 @@ Figure 19: Specify a rectangle with the height and the top corners
 <span>    center <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,</span>
 <span>    width <span class="op">=</span> <span class="fl">6</span>,</span>
 <span>    height <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>    angle <span class="op">=</span> <span class="fl">30</span></span>
+<span>    angle <span class="op">=</span> <span class="fl">30</span>,</span>
+<span>    radius <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">3</span>, <span class="st">"mm"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div id="fig-rotate" class="quarto-float quarto-figure quarto-figure-center">
@@ -792,14 +591,14 @@ Figure 19: Specify a rectangle with the height and the top corners
 <img src="rectangles_files/figure-html/fig-rotate-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rotate-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 20: A rectangle rotated by 30°
+Figure 11: A rectangle rotated by 30°
 </figcaption></figure>
 </div>
 </div>
 </div>
 <p>Many angles can be specified at once:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Angles</span></span>
 <span><span class="va">th</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">355</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Radius of middle space</span></span>
@@ -825,7 +624,7 @@ Figure 20: A rectangle rotated by 30°
 <img src="rectangles_files/figure-html/fig-rotatemany-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rotatemany-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 21: Many rotated rectangles
+Figure 12: Many rotated rectangles
 </figcaption></figure>
 </div>
 </div>

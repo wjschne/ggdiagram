@@ -92,17 +92,6 @@ method(intersection, list(ob_segment, ob_segment)) <- function(x,y, ...) {
   } else {
     p <- list()
   }
-  # p <- list()
-  # if (length(i_line) > 0) {
-  #   A <- t(rbind((x@p2 - x@p1)@xy,
-  #                (y@p1 - y@p2)@xy))
-  #   print(A)
-  #   B <- t((y@p1 - x@p1)@xy)
-  #   C <- solve(A, B)
-  #   if (all(C >= 0 & C <= 1)) {
-  #     p <- i_line
-  #   }
-  # }
   p
 }
 
@@ -148,66 +137,10 @@ method(intersection, list(ob_circle, ob_line)) <- function(x,y, ...) {
   intersection(y,x, ...)
 }
 
-
 method(intersection, list(ob_segment, ob_circle)) <- function(x, y, ...) {
-  # https://raw.org/book/computer-graphics/line-segment-ellipse-intersection/
-
-  # A <- x@p1 - y@center
-  # B <- x@p2 - y@center
-  #
-  # V <- B - A
-  #
-  # r2 <- y@radius ^ 2
-  #
-  # aa <- r2 * (V@x ^ 2 + V@y ^ 2)
-  # bb <- 2 * r2 * (A@y * V@y + A@x + V@x)
-  # cc <- r2 * (A@y ^ 2 + A@x ^ 2 - r2)
-  #
-  # D <- bb ^ 2 - 4 * aa * cc
-  #
-  #
-  # # Ax <- A@x
-  # # Ay <- A@y
-  # # Bx <- B@x
-  # # By <- B@y
-  # # r2 <- y@radius ^ 2
-  # #
-  # # aa <- r2 * ((By - Ay) ^ 2) + r2 * ((Bx - Ax) ^ 2)
-  # # bb <- 2 * r2 * Ay * (By - Ay) + 2 * r2 * Ax * (Bx - Ax)
-  # # cc <- r2 * (Ay ^ 2) + r2 * (Ax ^ 2) - r2 * r2
-  # # D <- (bb ^ 2) - 4 * aa * cc
-  #
-  # D[D < 0] <- NA
-  # print(D)
-  # postt <- (-bb + sqrt(D)) / (2 * aa)
-  # print(postt)
-  # negtt <- (-bb - sqrt(D)) / (2 * aa)
-  # print(negtt)
-  #
-  # same <- abs(postt - negtt) < .Machine$double.eps
-  # print(same)
-  # negtt[same] <- NULL
-  # tt <- c(postt, negtt)
-  # tt <- tt[tt <= 1 & tt >= 0]
-  #
-  # if (length(tt) == 0) {
-  #   message("There are no points of intersections with this ellipse.")
-  #   return(NULL)
-  # }
-  #
-  #
-  #
-  #
-  # P <- A + ((B - A) * tt)
-  # y@center + P
-
   p <- intersection(x@line, y, ...)
   betweenx <- .between(p@x, x@p1@x, x@p2@x)
-
   p[betweenx]
-
-
-
 }
 
 method(intersection, list(ob_circle, ob_segment)) <- function(x,y, ...) {
@@ -520,8 +453,8 @@ method(intersection, list(ob_circle, ob_circle)) <- function(x,y, ...) {
   }
 
   d <- tibble::tibble(
-    P0 = as.list(x@center),
-    P1 = as.list(y@center),
+    P0 = unbind(x@center),
+    P1 = unbind(y@center),
     xr = x@radius,
     yr = y@radius,
     d = distance(x@center,
@@ -548,7 +481,7 @@ method(intersection, list(ob_polygon, ob_segment)) <- function(x,y, ...) {
     x@p <- list(x@p)
   }
     i <- purrr::map(x@p, \(p) {
-      l <- as.list(ob_segment(ob_point(tibble::as_tibble(rbind(p@xy, p@xy[1,]))))) |>
+      l <- unbind(ob_segment(ob_point(tibble::as_tibble(rbind(p@xy, p@xy[1,]))))) |>
         purrr::map(\(s) intersection(s, y))
 
       l <- Filter(\(x) S7_inherits(x, ob_point), l)

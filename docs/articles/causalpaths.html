@@ -45,6 +45,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/angles.html">Angles</a></li>
     <li><a class="dropdown-item" href="../articles/arcwedges.html">Arcs and Wedges</a></li>
+    <li><a class="dropdown-item" href="../articles/automation.html">Repetition and Automation</a></li>
     <li><a class="dropdown-item" href="../articles/bezier.html">Bézier Curves</a></li>
     <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
@@ -367,15 +368,15 @@ x=\Lambda f+u
 </annotation></semantics></math> where <em>x</em> is the vector observed variables, <em>f</em> is the vector of latent factors, <em>u</em> is the vector of latent uniquenesses, and Λ is the matrix of loadings that quantify the strength of the effects of <em>f</em> on <em>x</em>.</p>
 <p>The observed variables <em>x</em>, latent factors <em>f</em>, and uniquenesses <em>u</em> each have their own covariance matrices:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mi>Σ</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mtext mathvariant="normal">cov</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>Φ</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mtext mathvariant="normal">cov</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>Θ</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mtext mathvariant="normal">cov</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>u</mi><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">
-\begin{align}
+\begin{aligned}
 \Sigma&amp;=\text{cov}(x)\\
 \Phi&amp;=\text{cov}(f)\\
 \Theta&amp;=\text{cov}(u)
-\end{align}
+\end{aligned}
 </annotation></semantics></math></p>
 <p>The model-implied covariance matrix for the observed variables is a function of the loading matrix Λ and the covariance matrices Φ and Θ:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mover><mi>Σ</mi><mo accent="true">̂</mo></mover></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>Λ</mi><mi>Φ</mi><mi>Λ</mi><mi>′</mi><mo>+</mo><mi>Θ</mi></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>λ</mi><mn>11</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>λ</mi><mn>21</mn></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>λ</mi><mn>12</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>λ</mi><mn>22</mn></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>λ</mi><mn>13</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>λ</mi><mn>23</mn></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>λ</mi><mn>14</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>λ</mi><mn>24</mn></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>λ</mi><mn>15</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>λ</mi><mn>25</mn></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>λ</mi><mn>16</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>λ</mi><mn>26</mn></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>ϕ</mi><mn>11</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>ϕ</mi><mn>12</mn></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>ϕ</mi><mn>12</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>ϕ</mi><mn>22</mn></msub></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>λ</mi><mn>11</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>λ</mi><mn>21</mn></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>λ</mi><mn>12</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>λ</mi><mn>22</mn></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>λ</mi><mn>13</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>λ</mi><mn>23</mn></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>λ</mi><mn>14</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>λ</mi><mn>24</mn></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>λ</mi><mn>15</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>λ</mi><mn>25</mn></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>λ</mi><mn>16</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>λ</mi><mn>26</mn></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow><mi>′</mi><mo>+</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>θ</mi><mn>11</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>θ</mi><mn>22</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>θ</mi><mn>33</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>θ</mi><mn>44</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>θ</mi><mn>55</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><mn>0</mn></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>θ</mi><mn>66</mn></msub></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">
-\begin{align}
+\begin{aligned}
 \hat{\Sigma}&amp;=\Lambda\Phi\Lambda'+\Theta\\
 &amp;=\begin{bmatrix}
 \lambda_{11} &amp; \lambda_{21}\\
@@ -399,7 +400,7 @@ x=\Lambda f+u
 0 &amp; 0 &amp; 0 &amp; 0 &amp; \theta_{55} &amp; 0\\
 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; \theta_{66}
 \end{bmatrix}
-\end{align}
+\end{aligned}
 </annotation></semantics></math></p>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
@@ -539,7 +540,7 @@ Figure 6: Exploratory Factor Analysis with Two Latent Factors and Six Observed 
 <span>    <span class="fu"><a href="../reference/place.html">place</a></span><span class="op">(</span><span class="va">o</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">4</span><span class="op">)</span><span class="op">]</span>, <span class="st">"above"</span>, <span class="fl">2</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
 <span>  <span class="co"># direct effects from o to pc</span></span>
 <span>  <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">as.list</a></span><span class="op">(</span><span class="va">pc</span><span class="op">)</span>, \<span class="op">(</span><span class="va">pci</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu"><a href="../reference/unbind.html">unbind</a></span><span class="op">(</span><span class="va">pc</span><span class="op">)</span>, \<span class="op">(</span><span class="va">pci</span><span class="op">)</span> <span class="op">{</span></span>
 <span>      <span class="fu"><a href="../reference/connect.html">connect</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">o</span><span class="op">@</span><span class="va">point_at</span><span class="op">(</span><span class="st">"north"</span><span class="op">)</span>, </span>
 <span>              y <span class="op">=</span> <span class="va">pci</span>, </span>
 <span>              color <span class="op">=</span> <span class="va">pci</span><span class="op">@</span><span class="va">fill</span>,</span>
@@ -666,8 +667,6 @@ Figure 8: A latent variable with three observed indicators and three latent err
 <span></span>
 <span><span class="va">broad_variance</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">-</span> <span class="va">g2broad</span> <span class="op">^</span> <span class="fl">2</span></span>
 <span></span>
-<span></span>
-<span></span>
 <span><span class="va">latent</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/redefault.html">redefault</a></span><span class="op">(</span><span class="va">ob_circle</span>, </span>
 <span>                    color <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span>  </span>
 <span></span>
@@ -683,11 +682,13 @@ Figure 8: A latent variable with three observed indicators and three latent err
 <span>                           <span class="co"># fill = my_fill,</span></span>
 <span>                           color <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">lb_observed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/redefault.html">redefault</a></span><span class="op">(</span><span class="va">ob_label</span>, </span>
-<span>                            size <span class="op">=</span> <span class="fl">15</span>, </span>
-<span>                            fill <span class="op">=</span> <span class="cn">NA</span>, </span>
-<span>                            color <span class="op">=</span> <span class="st">"white"</span>,</span>
-<span>                            nudge_y <span class="op">=</span> <span class="op">-</span><span class="fl">.04</span><span class="op">)</span></span>
+<span><span class="va">lb_observed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/redefault.html">redefault</a></span><span class="op">(</span></span>
+<span>  <span class="va">ob_label</span>, </span>
+<span>  size <span class="op">=</span> <span class="fl">15</span>, </span>
+<span>  fill <span class="op">=</span> <span class="cn">NA</span>, </span>
+<span>  color <span class="op">=</span> <span class="st">"white"</span>,</span>
+<span>  nudge_y <span class="op">=</span> <span class="op">-</span><span class="fl">.04</span><span class="op">)</span></span>
+<span></span>
 <span><span class="va">direct</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/redefault.html">redefault</a></span><span class="op">(</span></span>
 <span>  <span class="va">connect</span>,</span>
 <span>  resect <span class="op">=</span> <span class="va">my_resect</span>,</span>
@@ -697,6 +698,15 @@ Figure 8: A latent variable with three observed indicators and three latent err
 <span>  length_head <span class="op">=</span> <span class="fl">6</span></span>
 <span><span class="op">)</span></span>
 <span></span>
+<span><span class="va">lb_direct</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/redefault.html">redefault</a></span><span class="op">(</span></span>
+<span>  <span class="va">ob_label</span>,</span>
+<span>  size <span class="op">=</span> <span class="fl">16</span>,</span>
+<span>  color <span class="op">=</span> <span class="va">lb_color</span>,</span>
+<span>  angle <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  vjust <span class="op">=</span> <span class="fl">.5</span>,</span>
+<span>  position <span class="op">=</span> <span class="fl">.46</span>,</span>
+<span>  label.padding <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span>t <span class="op">=</span> <span class="fl">3</span>, r <span class="op">=</span> <span class="fl">2</span>, b <span class="op">=</span> <span class="fl">0</span>, l <span class="op">=</span> <span class="fl">2</span>, unit <span class="op">=</span> <span class="st">"pt"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">var_latent</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/redefault.html">redefault</a></span><span class="op">(</span></span>
 <span>  <span class="va">ob_variance</span>, </span>
@@ -709,13 +719,15 @@ Figure 8: A latent variable with three observed indicators and three latent err
 <span>  arrow_fins <span class="op">=</span> <span class="va">my_arrowhead</span>,</span>
 <span>  arrowhead_length <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span>
 <span></span>
-<span></span>
-<span></span>
-<span></span>
+<span><span class="va">lb_variance</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/redefault.html">redefault</a></span><span class="op">(</span></span>
+<span>  <span class="va">lb_direct</span>,</span>
+<span>  position <span class="op">=</span> <span class="fl">.5</span>,</span>
+<span>  straight <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/ggdiagram.html">ggdiagram</a></span><span class="op">(</span>font_family <span class="op">=</span> <span class="va">my_font</span>, font_size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="op">{</span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu">latent</span><span class="op">(</span>label <span class="op">=</span> <span class="fu">lb_latent</span><span class="op">(</span><span class="st">"*g*"</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">"gray15"</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span> </span>
-<span>  <span class="fu">var_latent</span><span class="op">(</span><span class="va">g</span>, label <span class="op">=</span> <span class="fu">lb_direct</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">var_latent</span><span class="op">(</span><span class="va">g</span>, label <span class="op">=</span> <span class="fu">lb_variance</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="op">{</span><span class="va">Gx</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/place.html">place</a></span><span class="op">(</span><span class="va">g</span>, <span class="va">g</span>,where <span class="op">=</span> <span class="st">"below"</span>, sep <span class="op">=</span> <span class="fl">1.6</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>    <span class="fu"><a href="../reference/ob_array.html">ob_array</a></span><span class="op">(</span>k <span class="op">=</span> <span class="fl">3</span>, </span>
 <span>                sep <span class="op">=</span> <span class="fl">2</span>, </span>
@@ -725,7 +737,7 @@ Figure 8: A latent variable with three observed indicators and three latent err
 <span>  <span class="fu">var_latent</span><span class="op">(</span><span class="va">Gx</span>, </span>
 <span>             where <span class="op">=</span> <span class="st">"left"</span>, </span>
 <span>             color <span class="op">=</span> <span class="va">Gx</span><span class="op">@</span><span class="va">fill</span>,</span>
-<span>             label <span class="op">=</span> <span class="fu">lb_direct</span><span class="op">(</span></span>
+<span>             label <span class="op">=</span> <span class="fu">lb_variance</span><span class="op">(</span></span>
 <span>               <span class="fu"><a href="../reference/round_probability.html">round_probability</a></span><span class="op">(</span><span class="va">broad_variance</span>, </span>
 <span>                                 phantom_text <span class="op">=</span> <span class="st">"."</span><span class="op">)</span>,</span>
 <span>               color <span class="op">=</span> <span class="va">Gx</span><span class="op">@</span><span class="va">fill</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -737,7 +749,7 @@ Figure 8: A latent variable with three observed indicators and three latent err
 <span>      position <span class="op">=</span> <span class="fl">.47</span><span class="op">)</span><span class="op">@</span><span class="va">y</span><span class="op">)</span>,</span>
 <span>    color <span class="op">=</span> <span class="va">Gx</span><span class="op">@</span><span class="va">fill</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
 <span>  <span class="co"># list----</span></span>
-<span>  <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">as.list</a></span><span class="op">(</span><span class="va">Gx</span><span class="op">)</span>, \<span class="op">(</span><span class="va">b</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="op">{</span><span class="va">vv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/map_ob.html">map_ob</a></span><span class="op">(</span><span class="va">Gx</span>, \<span class="op">(</span><span class="va">b</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">o1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/place.html">place</a></span><span class="op">(</span><span class="fu">observed</span><span class="op">(</span>fill <span class="op">=</span> <span class="va">b</span><span class="op">@</span><span class="va">fill</span><span class="op">)</span>, </span>
 <span>                from <span class="op">=</span> <span class="va">b</span>, </span>
 <span>                where <span class="op">=</span> <span class="st">"south"</span>,</span>
@@ -754,13 +766,15 @@ Figure 8: A latent variable with three observed indicators and three latent err
 <span>          <span class="st">"~"</span>, </span>
 <span>          <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, </span>
 <span>          <span class="st">"~"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span>    </span>
 <span>    <span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">direct</span><span class="op">(</span><span class="va">b</span>, <span class="va">o</span><span class="op">@</span><span class="va">point_at</span><span class="op">(</span><span class="st">"north"</span><span class="op">)</span>, color <span class="op">=</span> <span class="va">b</span><span class="op">@</span><span class="va">fill</span><span class="op">)</span></span>
-<span>    <span class="va">l</span> <span class="op">&lt;-</span> <span class="fu">lb_direct</span><span class="op">(</span><span class="fu"><a href="../reference/round_probability.html">round_probability</a></span><span class="op">(</span></span>
-<span>      <span class="va">broad2indicator</span><span class="op">[[</span><span class="va">b</span><span class="op">@</span><span class="va">label</span><span class="op">@</span><span class="va">label</span><span class="op">]</span><span class="op">]</span>, </span>
-<span>      phantom_text <span class="op">=</span> <span class="st">"."</span><span class="op">)</span>, </span>
+<span>    </span>
+<span>    <span class="va">l</span> <span class="op">&lt;-</span> <span class="fu">lb_direct</span><span class="op">(</span></span>
+<span>      <span class="fu"><a href="../reference/round_probability.html">round_probability</a></span><span class="op">(</span></span>
+<span>        <span class="va">broad2indicator</span><span class="op">[[</span><span class="va">b</span><span class="op">@</span><span class="va">label</span><span class="op">@</span><span class="va">label</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>        phantom_text <span class="op">=</span> <span class="st">"."</span><span class="op">)</span>, </span>
 <span>      p <span class="op">=</span> <span class="va">p</span><span class="op">@</span><span class="va">line</span><span class="op">@</span><span class="va">point_at_y</span><span class="op">(</span><span class="va">p</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">@</span><span class="va">midpoint</span><span class="op">(</span>position <span class="op">=</span> <span class="fl">.47</span><span class="op">)</span><span class="op">@</span><span class="va">y</span><span class="op">)</span>,</span>
 <span>      color <span class="op">=</span> <span class="va">b</span><span class="op">@</span><span class="va">fill</span><span class="op">)</span></span>
+<span>    </span>
 <span>    <span class="va">v</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_variance.html">ob_variance</a></span><span class="op">(</span></span>
 <span>      <span class="va">o</span>,</span>
 <span>      where <span class="op">=</span> <span class="st">"south"</span>,</span>
@@ -770,21 +784,15 @@ Figure 8: A latent variable with three observed indicators and three latent err
 <span>      color <span class="op">=</span> <span class="va">b</span><span class="op">@</span><span class="va">fill</span>,</span>
 <span>      theta <span class="op">=</span> <span class="fl">70</span>,</span>
 <span>      linewidth <span class="op">=</span> <span class="fl">.5</span>,</span>
-<span>      label <span class="op">=</span> <span class="fu">lb_direct</span><span class="op">(</span></span>
+<span>      label <span class="op">=</span> <span class="fu">lb_variance</span><span class="op">(</span></span>
 <span>        <span class="fu"><a href="../reference/round_probability.html">round_probability</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">broad2indicator</span><span class="op">[[</span><span class="va">b</span><span class="op">@</span><span class="va">label</span><span class="op">@</span><span class="va">label</span><span class="op">]</span><span class="op">]</span> <span class="op">^</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>        color <span class="op">=</span> <span class="va">b</span><span class="op">@</span><span class="va">fill</span><span class="op">)</span>,</span>
 <span>      arrow_head <span class="op">=</span> <span class="va">my_arrowhead</span>,</span>
 <span>      arrow_fins <span class="op">=</span> <span class="va">my_arrowhead</span>,</span>
 <span>      arrowhead_length <span class="op">=</span> <span class="fl">6</span></span>
 <span>    <span class="op">)</span></span>
-<span>    </span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">o</span>, <span class="va">p</span>, <span class="va">v</span>, <span class="va">l</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">as.geom</span><span class="op">)</span></span>
-<span>  <span class="op">}</span><span class="op">)</span> </span>
-<span>  </span>
-<span>  </span>
-<span></span>
-<span>  </span></code></pre></div>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">o</span>, <span class="va">p</span>, <span class="va">v</span>, <span class="va">l</span><span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span> <span class="op">}</span></span></code></pre></div>
 </details><div class="cell-output-display">
 <div id="fig-path" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-path-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -890,7 +898,15 @@ Figure 9: A structural equation path diagram
 <span>    </span>
 <span>    <span class="va">error2observed</span> <span class="op">&lt;-</span> <span class="fu">direct</span><span class="op">(</span><span class="va">error</span>, <span class="va">r_unique</span>, resect <span class="op">=</span> <span class="fl">1</span>, color <span class="op">=</span> <span class="va">error_color</span><span class="op">)</span></span>
 <span>    </span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">r_g</span>, <span class="va">r_broad</span>, <span class="va">r_unique</span>, <span class="va">b_p</span>, <span class="va">l_b_p</span>, <span class="va">error</span>, <span class="va">error2observed</span>, <span class="va">lb_o</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">as.geom</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">r_g</span>, </span>
+<span>         <span class="va">r_broad</span>, </span>
+<span>         <span class="va">r_unique</span>, </span>
+<span>         <span class="va">b_p</span>, </span>
+<span>         <span class="va">l_b_p</span>, </span>
+<span>         <span class="va">error</span>, </span>
+<span>         <span class="va">error2observed</span>, </span>
+<span>         <span class="va">lb_o</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">as.geom</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span><span class="op">}</span></span></code></pre></div>
 </details><div class="cell-output-display">
 <div id="fig-wedge" class="quarto-float quarto-figure quarto-figure-center">
@@ -959,7 +975,7 @@ Figure 10: Latent variable path diagram with all variables scaled to their vari
 <span>          resect <span class="op">=</span> <span class="fl">1</span>, </span>
 <span>          linewidth <span class="op">=</span> <span class="fl">.75</span>, </span>
 <span>          length_head <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">as.list</a></span><span class="op">(</span><span class="va">broad</span><span class="op">)</span>, \<span class="op">(</span><span class="va">b</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="fu"><a href="../reference/unbind.html">unbind</a></span><span class="op">(</span><span class="va">broad</span><span class="op">)</span>, \<span class="op">(</span><span class="va">b</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_polygon.html" class="external-link">geom_polygon</a></span><span class="op">(</span></span>
 <span>      data <span class="op">=</span> <span class="va">b</span><span class="op">@</span><span class="va">polygon</span>, </span>
 <span>      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span>, </span>
@@ -980,7 +996,7 @@ Figure 10: Latent variable path diagram with all variables scaled to their vari
 <span>  <span class="fu"><a href="../reference/ob_path.html">ob_path</a></span><span class="op">(</span></span>
 <span>    <span class="va">broad</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>      <span class="fu"><a href="https://rconsortium.github.io/S7/reference/props.html" class="external-link">set_props</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">.66</span>, <span class="fl">4</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">.59</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">as.list</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>      <span class="fu"><a href="../reference/unbind.html">unbind</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>      <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span>\<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
 <span>        <span class="va">x</span><span class="op">@</span><span class="va">point_at</span><span class="op">(</span><span class="va">x</span><span class="op">@</span><span class="va">center</span><span class="op">@</span><span class="va">theta</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">90</span>, <span class="fl">90</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span>        <span class="op">}</span><span class="op">)</span>,</span>
@@ -1003,7 +1019,7 @@ Figure 10: Latent variable path diagram with all variables scaled to their vari
 <span>  <span class="fu"><a href="../reference/ob_path.html">ob_path</a></span><span class="op">(</span></span>
 <span>    <span class="va">broad</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>      <span class="fu"><a href="https://rconsortium.github.io/S7/reference/props.html" class="external-link">set_props</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">.59</span>, <span class="fl">4</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">.66</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
-<span>      <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">as.list</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>      <span class="fu"><a href="../reference/unbind.html">unbind</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>      <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span>\<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
 <span>        <span class="va">x</span><span class="op">@</span><span class="va">point_at</span><span class="op">(</span></span>
 <span>          <span class="va">x</span><span class="op">@</span><span class="va">center</span><span class="op">@</span><span class="va">theta</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="op">-</span><span class="fl">180</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">90</span>, <span class="fl">90</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">}</span><span class="op">)</span>,</span>
@@ -1040,7 +1056,7 @@ Figure 10: Latent variable path diagram with all variables scaled to their vari
 <span>          fill <span class="op">=</span> <span class="va">fill</span><span class="op">)</span>,</span>
 <span>      data <span class="op">=</span> <span class="va">narrow</span><span class="op">@</span><span class="va">polygon</span>,</span>
 <span>      color <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span> </span>
-<span>  <span class="op">{</span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/imap.html" class="external-link">imap</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">as.list</a></span><span class="op">(</span><span class="va">broad</span><span class="op">)</span>, \<span class="op">(</span><span class="va">x</span>, <span class="va">idx</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="op">{</span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/imap.html" class="external-link">imap</a></span><span class="op">(</span><span class="fu"><a href="../reference/unbind.html">unbind</a></span><span class="op">(</span><span class="va">broad</span><span class="op">)</span>, \<span class="op">(</span><span class="va">x</span>, <span class="va">idx</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu"><a href="../reference/connect.html">connect</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">narrow</span><span class="op">[</span><span class="op">(</span><span class="va">idx</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fl">5</span> <span class="op">+</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>, </span>
 <span>            color <span class="op">=</span> <span class="fu">tinter</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tinter/man/lighten.html" class="external-link">lighten</a></span><span class="op">(</span><span class="va">x</span><span class="op">@</span><span class="va">fill</span>, <span class="fl">.5</span><span class="op">)</span>, </span>
 <span>            linewidth <span class="op">=</span> <span class="fl">.5</span>,</span>
@@ -1067,7 +1083,7 @@ Figure 10: Latent variable path diagram with all variables scaled to their vari
 <span>          linewidth <span class="op">=</span> <span class="fl">.3</span>,</span>
 <span>          length_head <span class="op">=</span> <span class="fl">6</span>, </span>
 <span>          resect <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="op">{</span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/imap.html" class="external-link">imap</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">as.list</a></span><span class="op">(</span><span class="va">narrow</span><span class="op">)</span>, \<span class="op">(</span><span class="va">x</span>, <span class="va">idx</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="op">{</span><span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/imap.html" class="external-link">imap</a></span><span class="op">(</span><span class="fu"><a href="../reference/unbind.html">unbind</a></span><span class="op">(</span><span class="va">narrow</span><span class="op">)</span>, \<span class="op">(</span><span class="va">x</span>, <span class="va">idx</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu"><a href="../reference/connect.html">connect</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">tests</span><span class="op">[</span><span class="op">(</span><span class="va">idx</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="fl">3</span> <span class="op">+</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span>, </span>
 <span>            color <span class="op">=</span> <span class="fu">tinter</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tinter/man/lighten.html" class="external-link">lighten</a></span><span class="op">(</span><span class="va">x</span><span class="op">@</span><span class="va">fill</span>, <span class="fl">.5</span><span class="op">)</span>, </span>
 <span>            resect <span class="op">=</span> <span class="fl">1</span>, </span>
@@ -1164,7 +1180,7 @@ Figure 11: A hierarchical model of cognitive abilities in the Cattell-Horn-Carr
 </h3>
 <p>The independence assumption of multiple regression requires that the regression errors are independent of each other. When data are clustered in some way that violates this assumption, a multilevel model can account for the within-cluster similarity of data (i.e., the intraclass correlation). Most multilevel models are displayed with equations like these:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mtext mathvariant="normal">Level 1</mtext></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>Y</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msub><mi>β</mi><mrow><mn>0</mn><mi>j</mi></mrow></msub><mo>+</mo><msub><mi>β</mi><mrow><mn>1</mn><mi>j</mi></mrow></msub><msub><mi>X</mi><mrow><mn>1</mn><mi>i</mi><mi>j</mi></mrow></msub><mo>+</mo><msub><mi>β</mi><mrow><mn>2</mn><mi>j</mi></mrow></msub><msub><mi>X</mi><mrow><mn>2</mn><mi>i</mi><mi>j</mi></mrow></msub><mo>+</mo><msub><mi>e</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><msubsup><mi>σ</mi><mi>e</mi><mn>2</mn></msubsup></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mtext mathvariant="normal">var</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>e</mi><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mtext mathvariant="normal">Level 2</mtext></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>β</mi><mrow><mn>0</mn><mi>j</mi></mrow></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msub><mi>γ</mi><mn>00</mn></msub><mo>+</mo><msub><mi>γ</mi><mn>01</mn></msub><msub><mi>W</mi><mrow><mn>1</mn><mi>j</mi></mrow></msub><mo>+</mo><msub><mi>u</mi><mrow><mn>0</mn><mi>j</mi></mrow></msub></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>β</mi><mrow><mn>1</mn><mi>j</mi></mrow></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msub><mi>γ</mi><mn>10</mn></msub><mo>+</mo><msub><mi>γ</mi><mn>11</mn></msub><msub><mi>W</mi><mrow><mn>1</mn><mi>j</mi></mrow></msub><mo>+</mo><msub><mi>u</mi><mrow><mn>1</mn><mi>j</mi></mrow></msub></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>β</mi><mrow><mn>2</mn><mi>j</mi></mrow></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msub><mi>γ</mi><mn>20</mn></msub><mo>+</mo><msub><mi>γ</mi><mn>21</mn></msub><msub><mi>W</mi><mrow><mn>1</mn><mi>j</mi></mrow></msub><mo>+</mo><msub><mi>u</mi><mrow><mn>2</mn><mi>j</mi></mrow></msub></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>𝛕</mi></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mtext mathvariant="normal">cov</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>u</mi><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><mtable><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>τ</mi><mn>00</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>τ</mi><mn>01</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>τ</mi><mn>02</mn></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>τ</mi><mn>01</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>τ</mi><mn>11</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>τ</mi><mn>12</mn></msub></mtd></mtr><mtr><mtd columnalign="center" style="text-align: center"><msub><mi>τ</mi><mn>02</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>τ</mi><mn>12</mn></msub></mtd><mtd columnalign="center" style="text-align: center"><msub><mi>τ</mi><mn>22</mn></msub></mtd></mtr></mtable><mo stretchy="true" form="postfix">]</mo></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">
-\begin{align}
+\begin{aligned}
 \text{Level 1}\\
 Y_{ij}&amp;=\beta_{0j}+\beta_{1j}X_{1ij}+\beta_{2j}X_{2ij}+e_{ij}\\
 \sigma_e^2&amp;=\text{var}\left(e\right)\\
@@ -1178,7 +1194,7 @@ Y_{ij}&amp;=\beta_{0j}+\beta_{1j}X_{1ij}+\beta_{2j}X_{2ij}+e_{ij}\\
 \tau_{01} &amp; \tau_{11} &amp; \tau_{12}\\
 \tau_{02} &amp; \tau_{12} &amp; \tau_{22}
 \end{bmatrix}
-\end{align}
+\end{aligned}
 </annotation></semantics></math></p>
 <p>Here we have an outcome (<em>Y</em>), 2 level-1 predictors (<em>X</em><sub>1</sub> and <em>X</em><sub>2</sub>), and 1 level-2 predictor (<em>W</em><sub>1</sub>). The random intercept (<em>β</em><sub>0<em>j</em></sub>) has as fixed component (<em>γ</em><sub>00</sub> + <em>γ</em><sub>01</sub><em>W</em><sub>1<em>j</em></sub>) and a random component (<em>u</em><sub>0<em>j</em></sub>). The random intercept is partly predicted by the level-2 variable, <em>W</em><sub>1<em>j</em></sub>. The random slopes also have fixed and random components, as well as being predicted by the level-2 variable. The <em>τ</em> matrix is variance-covariance matrix of the level-2 random variables <em>u</em> (i.e., <em>u</em><sub>0<em>j</em></sub>, <em>u</em><sub>1<em>j</em></sub>, and <em>u</em><sub>1<em>j</em></sub>).</p>
 <p>These equations specify the model unambiguously, but it is easy to lose one’s way in them. It can facilitate interpretation if they equations are presented in a visual mode.</p>
@@ -1198,7 +1214,7 @@ Y_{ij}&amp;=\beta_{0j}+\beta_{1j}X_{1ij}+\beta_{2j}X_{2ij}+e_{ij}\\
 <span>                      <span class="va">fill</span> <span class="op">=</span> <span class="va">clr</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span>
 <span>                      <span class="va">color</span> <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>                      <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">as.list</a></span><span class="op">(</span><span class="va">center</span><span class="op">)</span>, \<span class="op">(</span><span class="va">cc</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="fu"><a href="../reference/unbind.html">unbind</a></span><span class="op">(</span><span class="va">center</span><span class="op">)</span>, \<span class="op">(</span><span class="va">cc</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">cc</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span><span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">90</span>, <span class="fl">210</span>, <span class="fl">330</span><span class="op">)</span><span class="op">)</span>, r <span class="op">=</span> <span class="va">r</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="../reference/ob_polygon.html">ob_polygon</a></span><span class="op">(</span><span class="va">p</span>,</span>

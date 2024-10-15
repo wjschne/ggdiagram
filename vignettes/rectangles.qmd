@@ -62,7 +62,7 @@ To avoid repetitive code, we make a base plot:
 my_font <- "Roboto Condensed"
 my_font_size <- 20
 my_point_size <- 2
-my_arrowhead <- arrowheadr::arrow_head_deltoid(2.1)
+my_arrowhead <- arrowheadr::arrow_head_deltoid(d = 2.3, n = 100)
 
 # my_colors <- viridis::viridis(2, begin = .25, end = .5)
 my_colors <- c("#3B528B", "#21908C")
@@ -167,27 +167,29 @@ rc_plot <- ggplot() +
   scale_y_continuous(breaks = -10:10) +
   r1
 
-rc_center <- c(
-  as.geom(r1@center),
-  as.geom(r1@center@label(
+rc_center <- list(
+  r1@center,
+  r1@center@label(
     fill = my_colors$primary@lighten(.15), 
-    vjust = -.15)))
+    vjust = -.15)) %>%
+  bind()
 
-rc_width <- as.geom(s_north |> set_props(label = ob_label(
+rc_width <- s_north |> 
+  set_props(label = ob_label(
     label = paste0("Width = ", r1@width),
     p = midpoint(s_north),
     color = my_colors$secondary,
     vjust = 0,
     label.margin = ggplot2::margin(2, 2, 2, 2, "pt")
-  )))
+  ))
 
-rc_height <- as.geom(s_east |> 
-                       set_props(label = ob_label(
+rc_height <- s_east |> 
+  set_props(label = ob_label(
     label = paste0("Height = ", r1@height),
     p  = midpoint(s_east),
     vjust = 0,
     color = my_colors$secondary,
-    angle = -90)))
+    angle = -90))
 
 
 rc_nw <- r1@northwest@label(
@@ -221,8 +223,6 @@ rc_se <- r1@southeast@label(
 rc_plot + rc_center + rc_width + rc_height
 ```
 
-
-
 ### Northeast corner, width, and height
 
 ```{r}
@@ -240,69 +240,11 @@ r1 == ob_rectangle(width = w,
 rc_plot + rc_width + rc_height + rc_ne
 ```
 
-### Northwest corner, width, and height
-
-```{r}
-#| label: hw_nw 
-r1 == ob_rectangle(width = w,
-                height = h,
-                northwest = nw)
-```
-
-
-```{r}
-#| label: fig-hw_nw
-#| fig-cap: Specify a rectangle with height, width, and the northwest corner
-#| code-fold: true
-#| fig-height: 4.75
-rc_plot + rc_width + rc_height + rc_nw
-```
-
-### Southwest corner, width, and height
-
-
-```{r}
-#| label: hw_sw
-r1 == ob_rectangle(width = w,
-                height = h,
-                southwest = sw)
-```
-
-
-```{r}
-#| label: fig-hw_sw
-#| fig-cap: Specify a rectangle with height, width, and the southwest corner
-#| code-fold: true
-#| fig-height: 4.75
-rc_plot + rc_width + rc_height + rc_sw
-```
-
-### Southeast corner, width, and height
-
-```{r}
-#| label: hw_se
-r1 == ob_rectangle(width = w,
-                height = h,
-                southeast = se)
-```
-
-
-```{r}
-#| label: fig-hw_se
-#| fig-cap: Specify a rectangle with height, width, and the southeast corner
-#| code-fold: true
-#| fig-height: 4.75
-rc_plot + rc_width + rc_height + rc_se
-```
-
-
-
-
 ## Give the center and any of the 4 corners
 
 A rectangle can be specified with the center and any other corner. The following rectangles are equivalent.
 
-### Northeast corner and center
+For example:
 
 ```{r}
 #| label: center_ne
@@ -318,60 +260,14 @@ r1 == ob_rectangle(center = cent,
 rc_plot + rc_center + rc_ne
 ```
 
-### Northwest corner and center
 
-```{r}
-#| label: center_nw
-r1 == ob_rectangle(center = cent, 
-                northwest = nw)
-```
-
-```{r}
-#| label: fig-center_nw
-#| fig-cap: Specify a rectangle with the center and the northwest corner
-#| code-fold: true
-#| fig-height: 4.75
-rc_plot + rc_center + rc_nw
-```
-
-### Southeast corner and center
-
-```{r}
-#| label: center_se
-r1 == ob_rectangle(center = cent, 
-                southeast = se)
-```
-
-```{r}
-#| label: fig-center_se
-#| fig-cap: Specify a rectangle with the center and the southeast corner
-#| code-fold: true
-#| fig-height: 4.75
-rc_plot + rc_center + rc_se
-```
-
-### Southeast corner and center
-
-```{r}
-#| label: center_sw
-r1 == ob_rectangle(center = cent, 
-                southwest = sw)
-```
-
-```{r}
-#| label: fig-center_sw
-#| fig-cap: Specify a rectangle with the center and the southwest corner
-#| code-fold: true
-#| fig-height: 4.75
-rc_plot + rc_center + rc_sw
-```
 
 
 ## Give opposite corners
 
 A rectangle can be specified with points from opposite corners. These rectangles are equivalent.
 
-### Northeast and southwest corners
+For example,
 
 ```{r}
 #| label: ne_sw 
@@ -388,22 +284,7 @@ r1 == ob_rectangle(
 rc_plot + rc_sw + rc_ne
 ```
 
-### Northwest and southeast corners
 
-```{r}
-#| label: nw_se
-r1 == ob_rectangle(
-  northeast = ne, 
-  southwest = sw)
-```
-
-```{r}
-#| label: fig-nw_se
-#| fig-cap: Specify a rectangle with the northwest and southeast corners
-#| code-fold: true
-#| fig-height: 4.75
-rc_plot + rc_se + rc_nw
-```
 
 ## Give width and two points on either side
 
@@ -424,26 +305,13 @@ r1 == ob_rectangle(width = w,
 rc_plot + rc_width + rc_nw + rc_sw
 ```
 
-```{r}
-#| label: w_ne_se
-r1 == ob_rectangle(width = w,
-                northwest = ne,
-                southwest = se)
-```
 
-```{r}
-#| label: fig-w_ne_se
-#| fig-cap: Specify a rectangle with the width and the right corners
-#| code-fold: true
-#| fig-height: 4.75
-rc_plot + rc_width + rc_ne + rc_se
-```
 
 ## Give height and two points on top or bottom
 
 A rectangle can be specified with the height and 2 points from the top or bottom side. These rectangles are equivalent.
 
-## Height and top corners
+For example,
 
 ```{r}
 #| label: h_ne_nw
@@ -460,22 +328,6 @@ r1 == ob_rectangle(height = h,
 rc_plot + rc_height + rc_ne + rc_nw
 ```
 
-## Height and bottom corners
-
-```{r}
-#| label: n_sw_se
-r1 == ob_rectangle(height = h,
-                southwest = sw,
-                southeast = se)
-```
-
-```{r}
-#| label: fig-n_sw_se
-#| fig-cap: Specify a rectangle with the height and the top corners
-#| code-fold: true
-#| fig-height: 4.75
-rc_plot + rc_sw + rc_se + rc_height
-```
 
 
 # Rectangle points
@@ -600,8 +452,8 @@ rc_plot +
 The `@radius` property controls the radius of the rounded corners. It must be of length 1. It can be given in as a `ggplot2::unit` or as a numeric value. If numeric, it is understood as a proportion of the plot area width. Rounding does not affect the location of corners.
 
 ```{r}
-#| label: fig-h_top
-#| fig-cap: Specify a rectangle with the height and the top corners
+#| label: fig-rounded
+#| fig-cap: Specify a rectangle rounded corners
 ggplot() +
   coord_equal(xlim = c(-4, 4), 
               ylim = c(-4, 4)) +
@@ -627,7 +479,8 @@ ggplot() +
     center = ob_point(0, 0),
     width = 6,
     height = 2,
-    angle = 30
+    angle = 30,
+    radius = unit(3, "mm")
   )
 ```
 

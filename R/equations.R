@@ -123,7 +123,7 @@ ob_latex <- new_class(
                        ifelse(length(width) > 0, width, 1),
                        height)
 
-    d <- tibble::tibble(tx = txt, fn = filename, imgsz = img_size, center = as.list(center))
+    d <- tibble::tibble(tx = txt, fn = filename, imgsz = img_size, center = unbind(center))
     n <- nrow(d)
 
     image <- purrr::pmap_df(d, \(tx, fn, imgsz, center) {
@@ -183,7 +183,7 @@ ob_latex <- new_class(
 
 method(as.geom, ob_latex) <- function(x, ...) {
 
-  purrr::pmap(list(x@image, x@width, x@height, as.list(x@center)), \(i,width, height, center) {
+  purrr::pmap(list(x@image, x@width, x@height, unbind(x@center)), \(i,width, height, center) {
 
     ggplot2::annotation_raster(
       i,

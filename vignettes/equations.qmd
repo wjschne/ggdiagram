@@ -111,31 +111,60 @@ If you need an equation in a plot that requires something other than a 1:1 aspec
 #| fig-cap: "Normal distribution's probability density function"
 #| fig-width: 8
 #| fig-height: 5
+
+mu <- 50
+sigma <- 10
+ratio <- (4 * sigma)  / dnorm(mu, mu, sigma)
+
 ggplot() +
-  coord_fixed(ratio = 1000) +
-  theme_classic() +
+  coord_fixed(ratio = ratio) +
+  theme_classic(base_family = "Roboto Condensed") +
+  theme(axis.line = element_blank(), axis.title.x = element_markdown()) +
   stat_function(
-    fun = \(x) dnorm(x, mean = 50, sd = 10),
+    fun = \(x) dnorm(x, mean = mu, sd = sigma),
     geom = "area",
     n = 1000,
     fill = "dodgerblue",
     alpha = .5
   ) +
-  scale_x_continuous(breaks = seq(10,90,10), limits = c(10, 90)) +
-  scale_y_continuous(NULL, breaks = NULL, limits = c(0, dnorm(50,50,10))) +
+  scale_x_continuous(NULL,
+                     breaks = mu + seq(-4 * sigma, 4 * sigma, sigma), 
+                     limits = mu + c(-4 * sigma, 4 * sigma, sigma)) +
+  scale_y_continuous(
+    NULL,
+    breaks = NULL,
+    limits = c(0, dnorm(mu, mu, sigma)),
+    expand = expansion()
+  ) +
   ob_latex(
-    r"(f(x) = 
+    r"(f(x) =
     \frac{1}{\sigma\sqrt{2\pi}}
     e^{-\frac{1}{2}
-    \left(\frac{x-\mu}{\sigma}\right)^2})", 
-           width = 30,
-           aspect_ratio = 1000,
-           border = 1,
-           filename = "zscore", 
-           density = 600) %>% 
-  place(ob_point(57, dnorm(57, 50, 10)), 
+    \left(\frac{x-\mu}{\sigma}\right)^2})",
+    width = sigma * 3,
+    aspect_ratio = ratio,
+    border = 1,
+    filename = "zscore",
+    density = 600
+  ) %>%
+  place(ob_point(mu + sigma * .7, dnorm(mu + sigma * .7, mu, sigma)), 
         where = "right", 
-        sep = 3)
+        sep = 3) + 
+  ob_label(label = paste0("*&mu;* = ", mu), 
+           ob_point(mu, 0), 
+           vjust = 0,
+           fill = NA,
+           color = "gray30") +
+  connect(
+    {p_mu <- ob_point(x = mu, y = dnorm(mu + sigma, mu, sigma))},
+    {p_sigma <- p_mu + ob_point(sigma, 0)},
+    label = ob_label(
+      paste0("*&sigma;* = ", sigma),
+      fill = NA,
+      vjust = 0,
+      color = "gray30"
+    )
+  )
 
 
 ```

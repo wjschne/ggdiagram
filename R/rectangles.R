@@ -1,7 +1,10 @@
-find_side <- function(theta, width, height) {
-  ne <- atan2(height, width)
-  corners <- c(ne, pi - ne, ne + pi, 2 * pi - ne)
-  side <- as.integer(theta > ne) + as.integer(theta > pi - ne) + as.integer(theta > pi + ne) + as.integer(theta > 2 * pi - ne) + 1L
+find_side <- function(theta, width = 1, height = 1) {
+  my_pi <- turn(.5)
+  if (!S7_inherits(theta, ob_angle)) theta <- radian(theta)
+  theta <- turn(theta@turn + 1 * (theta@turn < 0))
+  ne <- radian(atan2(height, width))
+  corners <- c(ne, my_pi - ne, ne + my_pi, 2 * my_pi - ne)
+  side <- as.integer(theta > ne) + as.integer(theta > my_pi - ne) + as.integer(theta > my_pi + ne) + as.integer(theta > 2 * my_pi - ne) + 1L
   side[side == 5L] <- 1L
   side
 }
@@ -19,8 +22,7 @@ rc_styles <- c(
   "color",
   "fill",
   "linewidth",
-  "linetype",
-  "angle"
+  "linetype"
 )
 
 rc_aesthetics_list <- class_aesthetics_list(
@@ -51,12 +53,13 @@ rc_props <- list(
   # Primary ----
   primary = list(
       width = new_property(class = class_numeric, default = 1),
-      height = new_property(class = class_numeric, default = 1)
+      height = new_property(class = class_numeric, default = 1),
+      angle = new_property(ob_angle_or_numeric, default = 0)
   ),
   # extra ----
   extra = list(
-    radius = new_property(class = class_numeric_or_unit, validator = function(value) {
-      if (length(value) > 1) stop("The radius property must be of length 1.")
+    corner_radius = new_property(class = class_numeric_or_unit, validator = function(value) {
+      if (length(value) > 1) stop("The corner_radius property must be of length 1.")
     })
   ),
   styles = ob_style@properties[rc_styles],
@@ -68,10 +71,10 @@ rc_props <- list(
     bounding_box = new_property(getter = function(self) {
 
       d_rect <- self@tibble |>
-        dplyr::summarise(xmin = min(x),
-                         xmax = max(x),
-                         ymin = min(y),
-                         ymax = max(y))
+        dplyr::summarise(xmin = min(x0),
+                         xmax = max(x0),
+                         ymin = min(y0),
+                         ymax = max(y0))
 
       ob_rectangle(southwest = ob_point(d_rect$xmin, d_rect$ymin),
                 northeast = ob_point(d_rect$xmax, d_rect$ymax))
@@ -182,52 +185,26 @@ rc_props <- list(
     ),
     tibble = new_property(getter = function(self) {
 
+
+
       d <- list(
-        p = tibble::tibble(
-          x = c(self@northeast@x,
-                self@northwest@x,
-                self@southwest@x,
-                self@southeast@x),
-          y = c(self@northeast@y,
-                self@northwest@y,
-                self@southwest@y,
-                self@southeast@y),
-          group = rep(seq(1,self@length), 4)
-        ) %>%
-          tidyr::nest(.by = group) %>%
-          dplyr::mutate(p = purrr::map(data, ob_point)) %>%
-          dplyr::pull(p),
-        group = seq(1, self@length),
+        x0 = self@center@x,
+        y0 = self@center@y,
+        width = self@width,
+        height = self@height,
+        corner_radius = self@corner_radius,
+        angle = self@angle@degree,
         alpha = self@alpha,
         color = self@color,
         fill = self@fill,
         linewidth = self@linewidth,
-        linetype = self@linetype,
-        radius = self@radius
-      )
-      get_non_empty_tibble(d) |>
-        dplyr::mutate(
-          p = purrr::map(p, \(x) {
-            x@tibble |>
-              dplyr::select(x,y)})) |>
-        tidyr::unnest(p)
-
-      # d <- list(
-      #   x = self@center@x,
-      #   y = self@center@y,
-      #   width = self@width,
-      #   height = self@height,
-      #   alpha = self@alpha,
-      #   color = self@color,
-      #   fill = self@fill,
-      #   linewidth = self@linewidth,
-      #   linetype = self@linetype)
-      # get_non_empty_tibble(d)
+        linetype = self@linetype)
+      get_non_empty_tibble(d)
     })
   ),
   # Functions ----
   funs = list(
-    geom = new_property(class_function, getter = function(self) {
+    geom = new_property(class_function,  getter = function(self) {
       \(...) {
         as.geom(self, ...)
       }
@@ -243,7 +220,7 @@ rc_props <- list(
           fill = self@fill,
           linewidth = self@linewidth,
           linetype = self@linetype,
-          radius = self@radius
+          corner_radius = self@corner_radius
         ) |> get_non_empty_tibble()
 
         d <- tibble::tibble(
@@ -252,9 +229,10 @@ rc_props <- list(
           width = self@width,
           height = self@height,
           angle = self@angle@radian,
-          group = seq(self@length)
+          group = seq(self@length),
+          theta = theta@radian
         ) |>
-          tidyr::crossing(theta = theta@radian) %>%
+          # tidyr::crossing(theta@radian) %>%
           mutate(
             rtheta = theta - angle,
             side = find_side(rtheta, width, height),
@@ -292,25 +270,13 @@ rc_props <- list(
             theta <- degree(theta)
           }
 
-          # p <- purrr::map(theta@degree, \(th) {
-          #   s <- ob_segment(self@center,
-          #           self@center + ob_polar(theta = degree(th),
-          #                               r = distance(self@center,
-          #                                            self@northeast)))
-          #   pp <- bind(intersection(self, s))
-          #   st <- self@style + ob_style(...)
-          #   pp@style <- st
-          #   pp
-          # }) |>
-          #   bind()
-
           dl <- list(
             alpha = self@alpha,
             color = self@color,
             fill = self@fill,
             linewidth = self@linewidth,
             linetype = self@linetype,
-            radius = self@radius
+            corner_radius = self@corner_radius
           ) |> get_non_empty_tibble()
 
           d <- tibble::tibble(
@@ -319,9 +285,9 @@ rc_props <- list(
             width = self@width,
             height = self@height,
             angle = self@angle@radian,
-            group = seq(self@length)
+            group = seq(self@length),
+            theta = theta@radian
           ) |>
-            tidyr::crossing(theta = theta@radian) %>%
             dplyr::mutate(
               rtheta = theta - angle,
               side = find_side(rtheta, width, height),
@@ -330,10 +296,11 @@ rc_props <- list(
                          sign(cos(rtheta)) * (height / 2) * abs(cos(rtheta) / sin(rtheta))),
               y = ifelse(side %in% c(2L, 4L),
                          sign(sin(rtheta)) * height / 2,
-                         sign(sin(rtheta)) * (width / 2) * abs(tan(rtheta)))) %>%
+                         sign(sin(rtheta)) * (width / 2) * abs(sin(rtheta) / cos(rtheta)))) %>%
             dplyr::select(group, x, y, angle, x0, y0) %>%
             tidyr::nest(.by = c(group, angle, x0, y0)) %>%
             dplyr::mutate(data = purrr::map2(data, angle, \(dd,aa) {
+              if (is.na(aa)) aa <- 0
               as.matrix(dd) |>
                 rotate2columnmatrix(aa) |>
                 `colnames<-`(c("x", "y")) |>
@@ -374,14 +341,14 @@ rc_props <- list(
 #' @param southwest lower left point
 #' @param southeast lower right point
 #' @param label A character, angle, or label object
-#' @param x overrides x-coordinate in `center@x`
-#' @param y overrides y-coordinate in `center@x`
-#' @param radius A numeric or unit vector of length one, specifying the corner radius
+#' @param x0 overrides x-coordinate in `center@x`
+#' @param y0 overrides y-coordinate in `center@x`
+#' @param corner_radius A numeric or unit vector of length one, specifying the corner radius for rounded corners
 #' @param style a style object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object
 #' @inherit ob_style params
 #' @examples
-#' # specify center point and radius
+#' # specify center point
 #' p <- ob_point(0,0)
 #' ob_rectangle(p, width = 2, height = 2)
 #' @export
@@ -407,7 +374,7 @@ ob_rectangle <- new_class(
                          southwest = class_missing,
                          southeast = class_missing,
                          angle = 0,
-                         radius = class_missing,
+                         corner_radius = class_missing,
                          label = class_missing,
                          alpha = class_missing,
                          color = "black",
@@ -415,215 +382,218 @@ ob_rectangle <- new_class(
                          linewidth = class_missing,
                          linetype = class_missing,
                          style = class_missing,
-                         x = class_missing,
-                         y = class_missing,
+                         x0 = class_missing,
+                         y0 = class_missing,
                          ...) {
 
     if (!S7_inherits(angle, ob_angle)) angle <- degree(angle)
 
-                          if (length(x) > 0 | length(y) > 0) {
-                            if (length(x) == 0) {
-                              x <- 0
-                            }
-                            if (length(y) == 0) {
-                              y <- 0
-                            }
-                            center <- ob_point(tibble::tibble(x = x, y = y))
-                          }
+    if (length(x0) > 0 | length(y0) > 0) {
+      if (length(x0) == 0) {
+        x0 <- 0
+      }
+      if (length(y0) == 0) {
+        y0 <- 0
+      }
+      center <- ob_point(tibble::tibble(x = x0, y = y0))
+    }
 
-                          hasnorth <- FALSE
-                          hassouth <- FALSE
-                          haseast <- FALSE
-                          haswest <- FALSE
+    hasnorth <- FALSE
+    hassouth <- FALSE
+    haseast <- FALSE
+    haswest <- FALSE
 
-                          if (length(north) > 0) {
-                            top <- north@y
-                            hasnorth <- TRUE
-                            if (length(width) > 0) {
-                              left <- north@x - width / 2
-                              right <- north@x + width / 2
-                              haswest <- TRUE
-                              haseast <- TRUE
-                            }
-                            if (length(height) > 0) {
-                              bottom <- north@y - height
-                              hassouth <- TRUE
-                            }
-                          }
+    if (length(north) > 0) {
+      top <- north@y
+      hasnorth <- TRUE
+      if (length(width) > 0) {
+        left <- north@x - width / 2
+        right <- north@x + width / 2
+        haswest <- TRUE
+        haseast <- TRUE
+      }
+      if (length(height) > 0) {
+        bottom <- north@y - height
+        hassouth <- TRUE
+      }
+    }
 
-                          if (length(south) > 0) {
-                            bottom <- south@y
-                            hassouth <- TRUE
+    if (length(south) > 0) {
+      bottom <- south@y
+      hassouth <- TRUE
 
-                            if (length(width) > 0) {
-                              left <- south@x - width / 2
-                              right <- south@x + width / 2
-                              haswest <- TRUE
-                              haseast <- TRUE
-                            }
-                            if (length(height) > 0) {
-                              top <- south@y + height
-                              hasnorth <- TRUE
-                            }
+      if (length(width) > 0) {
+        left <- south@x - width / 2
+        right <- south@x + width / 2
+        haswest <- TRUE
+        haseast <- TRUE
+      }
+      if (length(height) > 0) {
+        top <- south@y + height
+        hasnorth <- TRUE
+      }
 
-                          }
+    }
 
-                          if (length(west) > 0) {
-                            left <- west@x
-                            haswest <- TRUE
+    if (length(west) > 0) {
+      left <- west@x
+      haswest <- TRUE
 
-                            if (length(width) > 0) {
-                              right <- west@x + width
-                              haseast <- TRUE
-                            }
+      if (length(width) > 0) {
+        right <- west@x + width
+        haseast <- TRUE
+      }
 
-                            if (length(height) > 0) {
-                              top <- west@y - height / 2
-                              bottom <- west@y + height / 2
-                              hasnorth <- TRUE
-                              hassouth <- TRUE
-                            }
+      if (length(height) > 0) {
+        top <- west@y - height / 2
+        bottom <- west@y + height / 2
+        hasnorth <- TRUE
+        hassouth <- TRUE
+      }
+    }
 
-                            }
+    if (length(east) > 0) {
+      right <- east@x
+      haseast <- TRUE
 
-                          if (length(east) > 0) {
-                            right <- east@x
-                            haseast <- TRUE
+      if (length(width) > 0) {
+        left <- east@x + width
+        haswest <- TRUE
+      }
 
-                            if (length(width) > 0) {
-                              left <- east@x + width
-                              haswest <- TRUE
-                            }
+      if (length(height) > 0) {
+        top <- east@y - height / 2
+        bottom <- east@y + height / 2
+        hasnorth <- TRUE
+        hassouth <- TRUE
+      }
+    }
 
-                            if (length(height) > 0) {
-                              top <- east@y - height / 2
-                              bottom <- east@y + height / 2
-                              hasnorth <- TRUE
-                              hassouth <- TRUE
-                            }
-                          }
+    if (length(northeast) > 0) {
+      top <- northeast@y
+      right <- northeast@x
+      hasnorth <- TRUE
+      haseast <- TRUE
+    }
+    if (length(northwest) > 0) {
+      top <- northwest@y
+      left <- northwest@x
+      hasnorth <- TRUE
+      haswest <- TRUE
+    }
 
+    if (length(southeast) > 0) {
+      bottom <- southeast@y
+      right <- southeast@x
+      hassouth <- TRUE
+      haseast <- TRUE
+    }
 
-                          if (length(northeast) > 0) {
-                            top <- northeast@y
-                            right <- northeast@x
-                            hasnorth <- TRUE
-                            haseast <- TRUE
-                          }
-                          if (length(northwest) > 0) {
-                            top <- northwest@y
-                            left <- northwest@x
-                            hasnorth <- TRUE
-                            haswest <- TRUE
-                          }
+    if (length(southwest) > 0) {
+      bottom <- southwest@y
+      left <- southwest@x
+      hassouth <- TRUE
+      haswest <- TRUE
+    }
 
-                          if (length(southeast) > 0) {
-                            bottom <- southeast@y
-                            right <- southeast@x
-                            hassouth <- TRUE
-                            haseast <- TRUE
-                          }
+    if (hassouth && hasnorth) {
+      height <- abs(top - bottom)
+    }
 
-                          if (length(southwest) > 0) {
-                            bottom <- southwest@y
-                            left <- southwest@x
-                            hassouth <- TRUE
-                            haswest <- TRUE
-                          }
+    if (haswest && haseast) {
+      width <- abs(left - right)
+    }
 
-                          if (hassouth && hasnorth) {
-                            height <- abs(top - bottom)
-                          }
+    if (length(center) > 0 &&
+        length(width) > 0 &&
+        length(height) > 0) {
 
-                          if (haswest && haseast) {
-                            width <- abs(left - right)
-                          }
+    } else if (length(center) > 0 &&
+               (hasnorth ||
+                hassouth) && (haswest || haseast)) {
+      if (haseast) {
+        width <- abs(center@x - right) * 2
+      } else {
+        width <- abs(center@x - left) * 2
+      }
+      if (hasnorth) {
+        height <- abs(center@y - top) * 2
+      } else {
+        height <- abs(center@y - bottom) * 2
+      }
 
-                          if (length(center) > 0 &&
-                              length(width) > 0 && length(height) > 0) {
-
-                          } else if (length(center) > 0 &&
-                                     (hasnorth || hassouth) && (haswest || haseast)) {
-                            if (haseast) {
-                              width <- abs(center@x - right) * 2
-                            } else {
-                              width <- abs(center@x - left) * 2
-                            }
-                            if (hasnorth) {
-                              height <- abs(center@y - top) * 2
-                            } else {
-                              height <- abs(center@y - bottom) * 2
-                            }
-
-                          } else if (length(width) > 0 &&
-                                     length(height) > 0 &&
-                                     (hasnorth || hassouth) && (haswest || haseast)) {
-                            if (haseast) {
-                              c.x <- right - width / 2
-                            } else {
-                              c.x <- left + width / 2
-                            }
-                            if (hasnorth) {
-                              c.y <- top - height / 2
-                            } else {
-                              c.y <- bottom + height / 2
-                            }
-                            center = ob_point(c.x, c.y)
-                          } else {
-                            if (length(width)  == 0) width <- 1
-                            if (length(height) == 0) height <- 1
-                            if (length(center) == 0) center <- ob_point(0,0)
-                            # stop("There is not enough information to make a rectangle.")
-                          }
+    } else if (length(width) > 0 &&
+               length(height) > 0 &&
+               (hasnorth ||
+                hassouth) && (haswest || haseast)) {
+      if (haseast) {
+        c.x <- right - width / 2
+      } else {
+        c.x <- left + width / 2
+      }
+      if (hasnorth) {
+        c.y <- top - height / 2
+      } else {
+        c.y <- bottom + height / 2
+      }
+      center = ob_point(c.x, c.y)
+    } else {
+      if (length(width)  == 0)
+        width <- 1
+      if (length(height) == 0)
+        height <- 1
+      if (length(center) == 0)
+        center <- ob_point(0, 0)
+      # stop("There is not enough information to make a rectangle.")
+    }
 
 
     rc_style <- ob_style(
-        alpha = alpha,
-        color = color,
-        fill = fill,
-        linewidth = linewidth,
-        linetype = linetype
-      ) +
+      alpha = alpha,
+      color = color,
+      fill = fill,
+      linewidth = linewidth,
+      linetype = linetype
+    ) +
       style +
       ob_style(...)
 
 
-
     non_empty_list <- get_non_empty_props(rc_style)
-    d <- tibble::tibble(x = center@x,
-                        y = center@y,
-                        width = width,
-                        height = height,
-                        angle = angle@radian)
+    d <- tibble::tibble(
+      x0 = center@x,
+      y0 = center@y,
+      width = width,
+      height = height,
+      angle = angle@radian
+    )
     if (length(non_empty_list) > 0) {
-      d <- dplyr::bind_cols(
-        d,
-        tibble::tibble(!!!non_empty_list))
+      d <- dplyr::bind_cols(d, tibble::tibble(!!!non_empty_list))
     }
 
-    center = set_props(center, x = d$x, y = d$y)
+    center = set_props(center, x = d$x0, y = d$y0)
     center@style <- rc_style
-    label <- centerpoint_label(label,
-                               center = center,
-                               d = d,
-                               shape_name = "ob_rectangle",
-                               angle = angle)
+    label <- centerpoint_label(
+      label,
+      center = center,
+      d = d,
+      shape_name = "ob_rectangle",
+      angle = angle
+    )
 
-
-
-
-
-     new_object(centerpoint(center = center),
-                width = d$width,
-                height = d$height,
-                angle = radian(d$angle),
-                 label = label,
-                radius = radius,
-                 alpha = d[["alpha"]] %||% alpha,
-                 color = d[["color"]] %||% color ,
-                 fill = d[["fill"]]  %||% fill,
-                 linewidth = d[["linewidth"]]  %||% linewidth,
-                 linetype = d[["linetype"]]  %||% linetype)
+    new_object(
+      centerpoint(center = center),
+      width = d$width,
+      height = d$height,
+      angle = radian(d$angle),
+      label = label,
+      corner_radius = corner_radius,
+      alpha = d[["alpha"]] %||% alpha,
+      color = d[["color"]] %||% color ,
+      fill = d[["fill"]]  %||% fill,
+      linewidth = d[["linewidth"]]  %||% linewidth,
+      linetype = d[["linetype"]]  %||% linetype
+    )
   }
 )
 
@@ -651,7 +621,36 @@ method(print, ob_rectangle) <- function(x, ...) {
 
 
 method(get_tibble, ob_rectangle) <- function(x) {
-  x@tibble
+  xx <- x
+  d <- list(
+    p = tibble::tibble(
+      x = c(xx@northeast@x,
+            xx@northwest@x,
+            xx@southwest@x,
+            xx@southeast@x),
+      y = c(xx@northeast@y,
+            xx@northwest@y,
+            xx@southwest@y,
+            xx@southeast@y),
+      group = rep(seq(1,xx@length), 4)
+    ) %>%
+      tidyr::nest(.by = group) %>%
+      dplyr::mutate(p = purrr::map(data, ob_point)) %>%
+      dplyr::pull(p),
+    group = seq(1, x@length),
+    alpha = xx@alpha,
+    color = xx@color,
+    fill = xx@fill,
+    linewidth = xx@linewidth,
+    linetype = xx@linetype,
+    radius = xx@corner_radius
+  )
+  get_non_empty_tibble(d) |>
+    dplyr::mutate(
+      p = purrr::map(p, \(xxx) {
+        xxx@tibble |>
+          dplyr::select(.data$x,.data$y)})) |>
+    tidyr::unnest(p)
 }
 
 
@@ -671,10 +670,9 @@ method(get_tibble_defaults, ob_rectangle) <- function(x) {
 }
 
 method(`==`, list(ob_rectangle, ob_rectangle)) <- function(e1, e2) {
-  (e1@center@x == e2@center@x) &&
-    (e1@center@y == e2@center@y) &&
+  (e1@center == e2@center) &&
     (e1@width == e2@width) &&
-    (e1@height == e2@height) %%
+    (e1@height == e2@height) &&
     (e1@angle == e2@angle)
 }
 
@@ -726,7 +724,32 @@ method(place, list(ob_rectangle, ob_point)) <- function(x, from, where = "right"
 }
 
 
+method(ob_array, ob_rectangle) <- function(
+    x,
+    k = 2,
+    sep = 1,
+    where = "east",
+    anchor = "center",
+    ...) {
+  sa <- ob_array_helper(
+    x = x,
+    k = k,
+    sep = sep,
+    where = where,
+    anchor = anchor,
+    ...
+  )
 
+  rlang::inject(
+    ob_rectangle(
+      center = sa$p_center,
+      width = x@width,
+      height = x@height,
+      angle = x@angle@degree,
+      style = x@style,
+      !!!sa$dots
+    )
+  )
 
-
+}
 

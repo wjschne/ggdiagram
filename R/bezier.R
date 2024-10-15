@@ -225,7 +225,7 @@ ob_bezier <- new_class(
 
     if (S7_inherits(p, ob_point)) p <- list(p)
     p_style <- purrr::map(p, \(x) {
-      purrr::map(as.list(x), \(xx) xx@style) %>%
+      purrr::map(unbind(x), \(xx) xx@style) %>%
         purrr::reduce(`+`)
     }) %>%
       bind()
@@ -463,7 +463,7 @@ method(`[`, ob_bezier) <- function(x, y) {
   dl <- d %>%
     dplyr::select(-.data$x, -.data$y, -.data$group) %>%
     unique() %>%
-    as.list()
+    unbind()
   z <- rlang::inject(ob_bezier(p = x@p[y], !!!dl))
   z@label <- x@label[y]
   z

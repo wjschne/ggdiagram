@@ -20,6 +20,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/angles.html">Angles</a></li>
     <li><a class="dropdown-item" href="../articles/arcwedges.html">Arcs and Wedges</a></li>
+    <li><a class="dropdown-item" href="../articles/automation.html">Repetition and Automation</a></li>
     <li><a class="dropdown-item" href="../articles/bezier.html">Bézier Curves</a></li>
     <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
@@ -66,7 +67,7 @@
 <span>  southwest <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  southeast <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  angle <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  radius <span class="op">=</span> <span class="va">class_missing</span>,</span>
+<span>  corner_radius <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  label <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  color <span class="op">=</span> <span class="st">"black"</span>,</span>
@@ -74,8 +75,8 @@
 <span>  linewidth <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  linetype <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  style <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  x <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  y <span class="op">=</span> <span class="va">class_missing</span>,</span>
+<span>  x0 <span class="op">=</span> <span class="va">class_missing</span>,</span>
+<span>  y0 <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -132,8 +133,8 @@
 <dd><p>angle of text</p></dd>
 
 
-<dt id="arg-radius">radius<a class="anchor" aria-label="anchor" href="#arg-radius"></a></dt>
-<dd><p>A numeric or unit vector of length one, specifying the corner radius</p></dd>
+<dt id="arg-corner-radius">corner_radius<a class="anchor" aria-label="anchor" href="#arg-corner-radius"></a></dt>
+<dd><p>A numeric or unit vector of length one, specifying the corner radius for rounded corners</p></dd>
 
 
 <dt id="arg-label">label<a class="anchor" aria-label="anchor" href="#arg-label"></a></dt>
@@ -164,11 +165,11 @@
 <dd><p>a style object</p></dd>
 
 
-<dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
+<dt id="arg-x-">x0<a class="anchor" aria-label="anchor" href="#arg-x-"></a></dt>
 <dd><p>overrides x-coordinate in <code>center@x</code></p></dd>
 
 
-<dt id="arg-y">y<a class="anchor" aria-label="anchor" href="#arg-y"></a></dt>
+<dt id="arg-y-">y0<a class="anchor" aria-label="anchor" href="#arg-y-"></a></dt>
 <dd><p>overrides y-coordinate in <code>center@x</code></p></dd>
 
 
@@ -179,7 +180,7 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># specify center point and radius</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># specify center point</span></span></span>
 <span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">ob_rectangle</span><span class="op">(</span><span class="va">p</span>, width <span class="op">=</span> <span class="fl">2</span>, height <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;ob_rectangle&gt;</span>
@@ -188,8 +189,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  @ y: num 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> @ width : num 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> @ height: num 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Other props: label, radius, alpha, color, fill, linewidth,</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              linetype, angle, area, bounding_box, perimeter,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Other props: label, angle, corner_radius, alpha, color, fill,</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              linewidth, linetype, area, bounding_box, perimeter,</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              northeast, northwest, southwest, southeast, east,</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              north, west, south, side, length, style, tibble, geom,</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              normal_at, point_at, aesthetics</span>

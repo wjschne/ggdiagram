@@ -92,7 +92,16 @@ lb_props <- list(
                 vjust = self@vjust)
       d <- get_non_empty_tibble(d)
       if (!is.null(d$label.margin)) {
-        # d$label.margin <- purrr::map(d$label.margin, s7)
+        d$label.margin <- purrr::map(d$label.margin, \(m) {
+          if (S7_inherits(m, class_margin)) m <- c(m)[[1]]
+          m
+        })
+      }
+      if (!is.null(d$label.padding)) {
+        d$label.padding <- purrr::map(d$label.padding, \(m) {
+          if (S7_inherits(m, class_margin)) m <- c(m)[[1]]
+          m
+        })
       }
       d
 
@@ -187,8 +196,8 @@ ob_label <- new_class(
                          fontface = class_missing,
                          hjust = class_missing,
                          label.color = class_missing,
-                         label.margin = ggplot2::margin(1,1,1,1,"pt"),
-                         label.padding = ggplot2::margin(2,2,2,2,"pt"),
+                         label.margin = class_margin(ggplot2::margin(1,1,1,1,"pt")),
+                         label.padding = class_margin(ggplot2::margin(2,2,2,2,"pt")),
                          label.r = class_missing,
                          label.size = class_missing,
                          lineheight = class_missing,
@@ -222,8 +231,6 @@ ob_label <- new_class(
       }
 
     }
-
-
 
 
     if (length(label.padding) > 0) {
@@ -322,11 +329,21 @@ ob_label <- new_class(
 
     non_empty_list <- get_non_empty_props(l_style)
 
+    if (!is.null(non_empty_list$label.margin)) {
+      non_empty_list$label.margin <- purrr::map(non_empty_list$label.margin, class_margin)
+    }
+
+    if (!is.null(non_empty_list$label.padding)) {
+      non_empty_list$label.padding <- purrr::map(non_empty_list$label.padding, class_margin)
+    }
+
     if (length(non_empty_list) > 0) {
       d <- dplyr::bind_cols(
         d,
         tibble::tibble(!!!non_empty_list))
     }
+
+
 
 
 
@@ -448,7 +465,22 @@ method(str, ob_label) <- function(
 
 
 method(get_tibble, ob_label) <- function(x) {
-  x@tibble
+  d <- x@tibble
+  if (!is.null(d$label.margin)) {
+    d$label.margin <- purrr::map(d$label.margin, \(m) {
+      if (S7_inherits(m, class_margin)) m <- S7_data(m)
+      m
+    })
+  }
+
+  if (!is.null(d$label.padding)) {
+    d$label.padding <- purrr::map(d$label.padding, \(m) {
+      if (S7_inherits(m, class_margin)) m <- S7_data(m)
+      m
+    })
+  }
+
+  d
 }
 
 method(get_tibble_defaults, ob_label) <- function(x) {
@@ -512,19 +544,35 @@ method(label_object, ob_label) <- function(object, accuracy = .1) {
 method(`[`, ob_label) <- function(x, y) {
   d <- as.list(x@tibble[y,])
   new_x <- rlang::inject(ob_label(!!!d))
-  if (!is.null(d$label.margin)) {
-    new_x@label.margin = x@label.margin[y]
-  }
-  if (!is.null(d$label.padding)) {
-    new_x@label.padding = x@label.padding[y]
-  }
 
-    # new_x@p = x@p[y]
-
+  # if (!is.null(d$label.margin)) {
+  #   new_x@label.margin = x@label.margin[y]
+  # }
+  # if (!is.null(d$label.padding)) {
+  #   new_x@label.padding = x@label.padding[y]
+  # }
   new_x
 }
 
-method(as.list, ob_label) <- function(x, ...) {
+method(`[<-`, ob_label) <- function(x, y, value) {
+  dx <- x@tibble
+  dv <- value@tibble
+  dx[y, ] <- value@tibble
+  d <- as.list(dx)
+  new_x <- rlang::inject(ob_label(!!!d))
+  # if (!is.null(d$label.margin)) {
+  #   x@label.margin[y] <- value@label.margin
+  #   new_x@label.margin = x@label.margin
+  # }
+  # if (!is.null(d$label.padding)) {
+  #   x@label.padding[y] <- value@label.padding
+  #   new_x@label.padding = x@label.padding
+  # }
+  new_x
+}
+
+
+method(unbind, ob_label) <- function(x, ...) {
   purrr::map(seq(1, x@length), \(i) x[i])
 }
 
@@ -618,3 +666,6 @@ method(place, list(ob_label, ob_label)) <- function(
   x@p@y <- from@p@y + p@y
   x
 }
+
+
+

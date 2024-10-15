@@ -104,7 +104,7 @@ el_props <- list(
         y0 = self@center@y,
         a = self@a,
         b = self@b,
-        angle = self@angle@radian,
+        angle = c(self@angle) * 360,
         m1 = self@m1,
         m2 = self@m2,
         alpha = self@alpha,
@@ -141,8 +141,9 @@ el_props <- list(
             }
 
           p0 <- self@point_at(theta - self@angle) - self@center
-          p1 <- ob_point(sign(cos(theta)) * abs((self@a ^ (-1 * self@m1)) * self@m1 * (p0@x ^ (self@m1 - 1))),
-                      sign(sin(theta)) * abs((self@b ^ (-1 * self@m2)) * self@m2 * (p0@y ^ (self@m2 - 1))))
+          p1 <- ob_point(
+            sign(cos(theta)) * abs((self@a ^ (-1 * self@m1)) * self@m1 * (p0@x ^ (self@m1 - 1))),
+            sign(sin(theta)) * abs((self@b ^ (-1 * self@m2)) * self@m2 * (p0@y ^ (self@m2 - 1))))
           self@point_at(
             theta) +
             distance / p1@r * rotate(p1, self@angle)
@@ -383,7 +384,11 @@ method(projection, list(ob_point, circle_or_ellipse)) <- function(p,object, ...)
 }
 
 method(get_tibble, ob_ellipse) <- function(x) {
-  x@tibble
+  d <- x@tibble
+  if ("angle" %in% colnames(d)) {
+    d$angle <- pi * d$angle / 180
+  }
+    d
 }
 
 method(get_tibble_defaults, ob_ellipse) <- function(x) {
@@ -438,7 +443,7 @@ method(connect, list(ob_line, centerpoint)) <- function(x,y, ...) {
 }
 
 method(connect, list(class_list, centerpoint)) <- function(x,y, ...) {
-  purrr::map(as.list(x), \(xx) {
+  purrr::map(unbind(x), \(xx) {
     connect(xx,y,...)
   }) |>
     bind()
@@ -455,8 +460,8 @@ method(ob_variance, centerpoint) <- function(
     theta = 50,
     bend = 0,
     looseness = 1,
-    arrow_head = arrowheadr::arrow_head_deltoid(),
-    arrow_fins = arrowheadr::arrow_head_deltoid(),
+    arrow_head = arrowheadr::arrow_head_deltoid(d = 2.3, n = 100),
+    arrow_fins = arrowheadr::arrow_head_deltoid(d = 2.3, n = 100),
     resect = 2,
     ...) {
   if (!S7_inherits(where, ob_angle)) where <- degree(where)
@@ -464,11 +469,11 @@ method(ob_variance, centerpoint) <- function(
   if (!S7_inherits(bend, ob_angle)) bend <- degree(bend)
 
 
-  p <- purrr::pmap(list(el = as.list(x),
-                        th = as.list(theta),
-                        ww = as.list(where),
+  p <- purrr::pmap(list(el = unbind(x),
+                        th = unbind(theta),
+                        ww = unbind(where),
                         ll = looseness,
-                        bb = as.list(bend)), \(el, th, ww, ll, bb) {
+                        bb = unbind(bend)), \(el, th, ww, ll, bb) {
 
       start_angle <- ww - (th / 2)
       end_angle <- ww + (th / 2)
@@ -549,7 +554,7 @@ method(ob_covariance, list(centerpoint, centerpoint)) <- function(
     where = NULL,
     bend = 0,
     looseness = 1,
-    arrow_head = arrowheadr::arrow_head_deltoid(),
+    arrow_head = arrowheadr::arrow_head_deltoid(d = 2.3, n = 100),
     resect = 2,
     ...) {
   if (!S7_inherits(where, ob_angle) && !is.null(where)) where <- degree(where)
@@ -557,7 +562,7 @@ method(ob_covariance, list(centerpoint, centerpoint)) <- function(
 
 
 
-  p <- purrr::pmap(list(xx = as.list(x), yy = as.list(y), bb = as.list(bend)), \(xx, yy, bb) {
+  p <- purrr::pmap(list(xx = unbind(x), yy = unbind(y), bb = unbind(bend)), \(xx, yy, bb) {
 
     if (is.null(where)) {
       d_xy <- yy@center - xx@center

@@ -67,7 +67,7 @@ To avoid repetitive code, we make a base plot:
 my_font <- "Roboto Condensed"
 my_font_size <- 20
 my_point_size <- 2
-my_arrowhead <- arrowheadr::arrow_head_deltoid(2.1)
+my_arrowhead <- arrowheadr::arrow_head_deltoid(d = 2.3, n = 100)
 
 # my_colors <- viridis::viridis(2, begin = .25, end = .5)
 my_colors <- c("#3B528B", "#21908C")
@@ -266,28 +266,30 @@ bp +
 
 ## Placing circles next to points and points next to circles
 
-This works the same as placing circles next to each other. Here we create a point in the center, place six circles around it, and then place 12 points around each circle.
+This works the same as placing circles next to each other. Here we create a point in the center, place six circles around it, and then place 12 points around each circle using the `map_ob` function to "map" objects like the `map_*` functions in the purrr package.
 
 ```{r}
 #| label: fig-multimulti
 #| fig-cap: Place circles around a point, and points around each circle
-bp + 
-  {p1 <- ob_point(0,0)} +
-  {c6 <- place(x = ob_circle(radius = .5, 
-                          fill = viridis::viridis(6), 
-                          color = NA), 
-        from = p1, 
-        where = degree(seq(0,300,60)), 
-        sep = 2)} +
-  purrr::map(as.list(c6), 
-             \(x) ob_point(color = x@fill) |> 
-               place(from = x, 
-                     where = degree(seq(0, 330, 30)), 
-                     sep = .5) |> 
-               as.geom())
-
-
-
+bp +
+  {p1 <- ob_point(0, 0)} +
+  {c6 <- place(
+      x = ob_circle(
+        radius = .5,
+        fill = viridis::viridis(6),
+        color = NA
+      ),
+      from = p1,
+      where = degree(seq(0, 300, 60)),
+      sep = 2
+    )} +
+  map_ob(unbind(c6),
+         \(x) ob_point(color = x@fill) |>
+           place(
+             from = x,
+             where = degree(seq(0, 330, 30)),
+             sep = .5
+           ))
 ```
 
 ## Placing lines next to circles

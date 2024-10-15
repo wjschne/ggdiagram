@@ -318,17 +318,6 @@ method(place, list(ob_line, ob_circle)) <- function(x, from, where = "right", se
 }
 
 method(ob_array, ob_circle) <- function(x, k = 2, sep = 1, where = "east", anchor = "center", ...) {
-  # s <- seq(0, (sep + x@radius) * (k - 1), sep + x@radius)
-  # px <- cos(degree(where)) * s
-  # py <- sin(degree(where)) * s
-  # p <- ob_circle(ob_point(px, py), radius = x@radius)
-  # bb <- p@bounding_box
-  # if (anchor == "center") {
-  #   p_anchor <- bb@center
-  # } else {
-  #   p_anchor <- bb@point_at(anchor)
-  # }
-  # ob_circle(p@center - p_anchor + x@center, style = x@style, ...)
 
   sa <- ob_array_helper(x = x, k = k, sep = sep, where = where, anchor = anchor, ...)
 

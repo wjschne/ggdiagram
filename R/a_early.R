@@ -4,7 +4,7 @@ do_nothing <- function(x) {
   # Helps devtools:check find packages
   if (FALSE) {
     p1 <- ggforce::geom_circle()
-    p2 <- arrowheadr::arrow_head_deltoid()
+    p2 <- arrowheadr::arrow_head_deltoid(d = 2.3, n = 100)
     p3 <- geomtextpath::geom_labelcurve()
     p4 <- bezier::bezier(t = .5, p = c(0,0, 1,1))
     p5 <- tinter::tinter("red")
@@ -28,9 +28,10 @@ S7::props
 
 # internal states ----
 the <- new.env(parent = emptyenv())
-the$arrow_head <- arrowheadr::arrow_head_deltoid(n = 101, d = 2.3)
+the$arrow_head <- arrowheadr::arrow_head_deltoid(d = 2.3, n = 100)
 
 # classes ----
+## class_aesthetics_list ----
 #' class_aesthetics_list
 #'
 #' list of aesthetics
@@ -56,8 +57,10 @@ class_aesthetics_list <- new_class(
     inherit.aes = class_logical
   )
                                      )
-
+## class_ggplot ----
 class_ggplot <- new_S3_class("ggplot")
+
+## class_unit ----
 class_unit <- new_S3_class(
   "unit",
   constructor = function(.data = numeric(), units = "mm") {
@@ -73,6 +76,7 @@ class_unit <- new_S3_class(
   }
 )
 
+## class_margin ----
 class_margin <- new_class(
   name = "class_margin",
   parent = class_list,
@@ -86,6 +90,7 @@ class_margin <- new_class(
       }
       if (is.list(x)) {
          if (all(purrr::map_lgl(x, \(o) {"margin" %in% class(o)}))) {
+
           return(purrr::map(x, class_margin))
          }
         if (all(purrr::map_lgl(x, \(o) {"unit" %in% class(o)}))) {
@@ -123,6 +128,7 @@ class_margin <- new_class(
   }
 )
 
+## class_arrowhead ----
 class_arrowhead <- new_class(
   "class_arrowhead",
   class_list,
@@ -142,15 +148,81 @@ class_arrowhead <- new_class(
   }
 )
 
-class_shape_list <- new_class("class_shape_list", class_list)
+#' ob_shape_list
+#'
+#' makes a heterogeneous list of different ggdiagram objects
+#' @param .data a list of objects
+#' @export
+ob_shape_list <- new_class("ob_shape_list", class_list,validator = function(self) {
+  if(!all(purrr::map_lgl(self, S7_inherits, class = has_style))) "All objects must be ggdiagram objects that can be converted to geoms"
+})
 
+
+## has_style ----
 has_style <- new_class(name = "has_style", abstract = TRUE)
 method(print, has_style) <- function(x, ...) {
   str(x, ...)
   invisible(x)
 }
 
+assign_data <- function(x,y, value) {
+  dx <- x@tibble
+  dx_unit <- sapply(dx, grid::is.unit)
+  dx_unit <- names(dx_unit[dx_unit])
 
+  dx <- dplyr::select(dx, !dplyr::all_of(dx_unit))
+
+
+  dv <- value@tibble
+  dv_unit <- sapply(dv, grid::is.unit)
+  dv_unit <- names(dv_unit[dv_unit])
+  dv <- dplyr::select(dv, !dplyr::all_of(dv_unit))
+
+
+  # Filtering late necessary because unit variable cannot be
+  # zero-length
+  d_combined <- dplyr::bind_rows(
+    dx, dv) |>
+    dplyr::filter(FALSE)
+
+  dx <- d_combined |>
+    dplyr::add_row(dx)
+
+
+
+  dv <- d_combined |>
+    dplyr::add_row(dv)
+
+  dx[y, ] <- dv
+
+
+  as.list(dx)
+}
+
+method(`[<-`, has_style) <- function(x, y, value) {
+  .fn <- S7_class(x)
+  d <- assign_data(x,y,value)
+  l <- x@label
+  if (length(l) > 0) {
+    if (length(value@label) > 0) {
+      l[y] <- value@label
+    } else {
+      l[y] <- ob_label(NA)
+    }
+    d$label <- l
+  } else {
+      if (length(value@label) > 0 && !is.na(value@label)) {
+        l <- bind(rep(value@label, x@length))
+        l@label <- rep(NA_character_, x@length)
+        l@label[y] <- value@label
+      }
+    }
+  new_x <- rlang::inject(.fn(!!!d))
+  if (prop_exists(new_x, "corner_radius")) {
+    new_x@corner_radius <- x@corner_radius
+  }
+  new_x
+}
 
 
 shape <- new_class(name = "shape",
@@ -183,7 +255,7 @@ ob_variance <- new_generic("ob_variance", dispatch_args = "x", fun = function(
     theta = 50,
     bend = 0,
     looseness = 1,
-    arrow_head = arrowheadr::arrow_head_deltoid(),
+    arrow_head = arrowheadr::arrow_head_deltoid(d = 2.3, n = 100),
     resect = 2,
     ...) {
   S7_dispatch()
@@ -209,7 +281,7 @@ ob_covariance <- new_generic(
                  where = NULL,
                  bend = 0,
                  looseness = 1,
-                 arrow_head = arrowheadr::arrow_head_deltoid(),
+                 arrow_head = arrowheadr::arrow_head_deltoid(d = 2.3, n = 100),
                  resect = 2,
                  ...) {
     S7_dispatch()
@@ -230,6 +302,8 @@ ob_array <- new_generic(name = "ob_array", dispatch_args = "x", fun = function(x
   S7_dispatch()
 })
 
+## bind ----
+
 #' bind method
 #' @param x list of objects to bind
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
@@ -241,21 +315,26 @@ ob_array <- new_generic(name = "ob_array", dispatch_args = "x", fun = function(x
 bind <- new_generic(name = "bind", dispatch_args = "x")
 
 method(bind, class_list) <- function(x, ...) {
+  x <- unlist(x)
   .f <- S7_class(x[[1]])@name
   allsame <- allsameclass(x, .f)
-  if (length(allsame) > 0) stop(allsame)
+  if (length(allsame) > 0) {
+    return(bind(ob_shape_list(x)))
+  }
 
-    d <- get_non_empty_list(dplyr::bind_rows(purrr::map(x, \(o) {
-      if (S7_inherits(o, ob_style)) {
-        get_tibble(o)
-      } else {
-        o@tibble
-      }
+  d <- get_non_empty_list(
+    dplyr::bind_rows(
+      purrr::map(
+        x,
+        \(o) if (S7_inherits(o, ob_style)) get_tibble(o) else o@tibble
+        )))
 
-    })))
 
 
   .fn <- switch(.f,
+                degree = degree,
+                radian = radian,
+                turn = turn,
                 ob_arc = ob_arc,
                 ob_bezier = ob_bezier,
                 ob_circle = ob_circle,
@@ -269,11 +348,20 @@ method(bind, class_list) <- function(x, ...) {
                 ob_polar = ob_point)
   o <- rlang::inject(.fn(!!!d))
   dots <- rlang::list2(...)
-  rlang::inject(S7::set_props(o, !!!dots))
+  o <- rlang::inject(S7::set_props(o, !!!dots))
+  if (S7::prop_exists(x[[1]], "label") &&
+      !S7_inherits(x[[1]], ob_label)) {
+    x_label <- purrr::map(x, \(xx) xx@label)
+    if (any(purrr::map_lgl(x_label, S7_inherits, class = ob_label))) {
+      o@label <- bind(x_label)
+
+    }
+  }
+  o
 }
 
 
-method(bind, class_shape_list) <- function(x, ...) {
+method(bind, ob_shape_list) <- function(x, ...) {
   .f <- lapply(x, S7::S7_class) %>% unique()
 
   csl <- lapply(.f, \(.ff) {
@@ -284,7 +372,8 @@ method(bind, class_shape_list) <- function(x, ...) {
   })
 
   if (length(csl) > 1) {
-    class_shape_list(csl)
+    ob_shape_list(csl) %>%
+      `names<-`(purrr::map_chr(csl, \(xx) S7_class(xx)@name))
 
   } else {
     csl[[1]]
@@ -292,8 +381,43 @@ method(bind, class_shape_list) <- function(x, ...) {
   }
 }
 
+## unbind ----
+
+#' unbind
+#'
+#' Converts an object with k elements into a list of k objects
+#' @param x object
+#' @export
+unbind <- S7::new_generic("unbind", dispatch_args = "x")
+
+method(unbind, has_style) <- function(x, ...) {
+  purrr::map(seq(1, x@length), \(i) x[i])
+}
+
+method(unbind, ob_shape_list) <- function(x, ...) {
+  as.list(x)
+}
+
+#' map_ob
+#'
+#' A wrapper for purrr::map. It takes a ggdiagram object with multiple elements, applies a function to each element within the object, and returns a ggdiagram object
+#' @param .x a ggdiagram object
+#' @param .f a function that returns a ggdiagram object
+#' @param ...arguments passed to .f
+#' @param .progress display progress if TRUE
+#'
+#' @return a ggdiagram object
+#' @export
+map_ob <- function(.x, .f, ..., .progress = FALSE) {
+  if (S7_inherits(.x, has_style) | S7_inherits(.x, ob_angle)) .x <- unbind(.x)
+  purrr::map(.x, .f, ..., .progress = .progress) |>
+    bind()
+}
 
 
+
+
+# class(ob_bezier(ob_point(1:3)))
 ## str----
 str <- new_external_generic(package = "utils", name = "str", dispatch_args = "object")
 
@@ -528,10 +652,10 @@ ob_array_helper <- function(x, k = 2, sep = 1, where = "east", anchor = "center"
   dots <- rlang::list2(...)
 
   p <- as.list(seq(k))
-  p[1] <- as.list(x)
+  p[1] <- unbind(x)
 
   for (i in seq(2, k)) {
-    p[i] <- as.list(place(x, p[[i - 1]], where = where, sep = sep))
+    p[i] <- unbind(place(x, p[[i - 1]], where = where, sep = sep))
   }
   p <- bind(p)
 
@@ -666,15 +790,16 @@ round_probability <- function(p,
     l <- scales::number(p, accuracy = accuracy)
   }
   else {
-    sig_digits <- abs(ceiling(log10(p + p / 1e+09)) - digits)
-    pgt99 <- p > 0.99
-    sig_digits[pgt99] <- abs(ceiling(log10(1 - p[pgt99])) - digits + 1)
+    abs_p <- abs(p)
+    sig_digits <- abs(ceiling(log10(abs_p + abs_p / 1e+09)) - digits)
+    pgt99 <- abs_p > 0.99
+    sig_digits[pgt99] <- abs(ceiling(log10(1 - abs_p[pgt99])) - digits + 1)
 
 
-    sig_digits[ceiling(log10(p)) == log10(p) &
-                 (-log10(p) >= digits)] <-
-      sig_digits[ceiling(log10(p)) == log10(p) &
-                   (-log10(p) >= digits)] - 1
+    sig_digits[ceiling(log10(abs_p)) == log10(abs_p) &
+                 (-log10(abs_p) >= digits)] <-
+      sig_digits[ceiling(log10(abs_p)) == log10(abs_p) &
+                   (-log10(abs_p) >= digits)] - 1
 
 
     sig_digits[is.infinite(sig_digits)] <- 0
@@ -887,15 +1012,16 @@ prop_integer_coerce <- function(name) {
 #'
 as.geom <- new_generic("as.geom", "x")
 
-method(as.geom, class_shape_list) <- function(x, ...) {
-  c(lapply(x, \(g) as.geom(g, ...)[[1]]))
+method(as.geom, ob_shape_list) <- function(x, ...) {
+  lapply(c(x), \(g) as.geom(g, ...)) %>%
+    unlist()
 }
 
 method(`+`, list(class_ggplot, has_style)) <- function(e1, e2) {
   e1 + as.geom(e2)
 }
 
-method(`+`, list(class_ggplot, class_shape_list)) <- function(e1, e2) {
+method(`+`, list(class_ggplot, ob_shape_list)) <- function(e1, e2) {
   e1 + as.geom(e2)
 }
 
@@ -1069,6 +1195,7 @@ midpoint <- new_generic(
 
 #' @keywords internal
 rotate2columnmatrix <- function(x, theta) {
+  if (all(theta == 0)) return(x)
   x_rotated <- x %*%  matrix(
     c(cos(theta),
       -sin(theta),
@@ -1109,9 +1236,6 @@ place <- new_generic("place", c("x", "from"),
                      })
 
 
-method(as.list, shape) <- function(x, ...) {
-  purrr::map(seq(1, x@length), \(i) x[i])
-}
 
 
 #' ggdiagram function

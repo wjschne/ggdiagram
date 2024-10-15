@@ -271,7 +271,7 @@ method(as.character, ob_angle) <- function(x,
   if (a_class == "ob_angle") a_class <- "degree"
 
   if (is.null(digits)) {
-    digits <- c(degree = 0, radian = 2, turn = 2)[a_class]
+    digits <- unname(c(degree = 0, radian = 2, turn = 2)[a_class])
   }
   switch(
     a_class,
@@ -291,10 +291,16 @@ method(`[`, ob_angle) <- function(x, y) {
   x
 }
 
-# as.list ----
-method(as.list, ob_angle) <- function(x, ...) {
+method(`[<-`, ob_angle) <- function(x, y, value) {
+  d <- c(x)
+  d[y] <- c(value)
+  S7::S7_data(x) <-  d
+  x
+}
+
+# unbind ----
+method(unbind, ob_angle) <- function(x, ...) {
   purrr::map(seq(length(c(x))), \(i) x[i])
 }
 
 
-# tibble

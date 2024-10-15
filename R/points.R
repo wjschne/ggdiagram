@@ -406,7 +406,15 @@ method(`[`, ob_point) <- function(x, y) {
   rlang::inject(ob_point(!!!d))
 }
 
-method(connect, list(ob_point, ob_point)) <- function(x,y, arrow_head = arrowheadr::arrow_head_deltoid(2.4), length_head = 7, ...) {
+
+
+method(`[<-`, ob_point) <- function(x, y, value) {
+  d <- assign_data(x,y,value)
+  rlang::inject(ob_point(!!!d))
+}
+
+
+method(connect, list(ob_point, ob_point)) <- function(x,y, arrow_head = arrowheadr::arrow_head_deltoid(d = 2.3, n = 100), length_head = 7, ...) {
   s <- ob_segment(x,y, arrow_head = arrow_head, length_head = length_head, ...)
   s
 
@@ -456,7 +464,7 @@ method(ob_covariance, list(ob_point, ob_point)) <- function(
     where = NULL,
     bend = 0,
     looseness = 1,
-    arrow_head = arrowheadr::arrow_head_deltoid(),
+    arrow_head = arrowheadr::arrow_head_deltoid(d = 2.3, n = 100),
     resect = 2,
     ...) {
   if (!S7_inherits(where, ob_angle) && !is.null(where)) where <- degree(where)
@@ -464,7 +472,7 @@ method(ob_covariance, list(ob_point, ob_point)) <- function(
 
 
 
-  p <- purrr::pmap(list(xx = as.list(x), yy = as.list(y), bb = as.list(bend)), \(xx, yy, bb) {
+  p <- purrr::pmap(list(xx = unbind(x), yy = unbind(y), bb = unbind(bend)), \(xx, yy, bb) {
 
     if (is.null(where)) {
       d_xy <- yy - xx

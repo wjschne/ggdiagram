@@ -307,7 +307,7 @@ method(`[`, ob_polygon) <- function(x, y) {
   dl <- d %>%
     dplyr::select(-.data$x, -.data$y, -.data$group) %>%
     unique() %>%
-    as.list()
+    unbind()
   z <- rlang::inject(ob_polygon(p = x@p[y], !!!dl))
   z@label <- x@label[y]
   z
@@ -369,7 +369,7 @@ ob_intercept <- new_class(
       center = ob_point,
       width = class_numeric,
       p = new_property(getter = function(self) {
-        purrr::map(as.list(self@center), \(cc) {
+        purrr::map(unbind(self@center), \(cc) {
           cc + ob_polar(degree(c(90, 210, 330)),
                         r = self@width * .5 / cos(degree(30)))
         })

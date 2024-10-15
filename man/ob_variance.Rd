@@ -10,7 +10,7 @@ ob_variance(
   theta = 50,
   bend = 0,
   looseness = 1,
-  arrow_head = arrowheadr::arrow_head_deltoid(),
+  arrow_head = arrowheadr::arrow_head_deltoid(d = 2.3, n = 100),
   resect = 2,
   ...
 )
