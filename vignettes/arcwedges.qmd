@@ -97,6 +97,7 @@ ob_arc(center = ob_point(1,2),
     start = 25, 
     end = 75, 
     radius = 3)
+
 ```
 
 ```{r}
@@ -156,6 +157,27 @@ bp +
       end_point = p1) +
   p1
 ```
+
+As a example, I used the `start_point` argument to recreate a fun meme about a "square" object with 4 equal sides that meet at right angles:
+
+```{r fig-square}
+#| fig-cap: A "square" with four equal sizes that meet at right angles.
+little_r <- 1 / (2 * pi - 1)
+ggdiagram() +
+  {p1 <- ob_point(0,0)} +
+  {p2 <- ob_point(1,0)} +
+  ob_segment(p1, p2) +
+  {a1 <- ob_arc(start = 0, end = radian(1), radius = 1 + little_r, start_point = p2)} +
+  {p3 <- a1@midpoint(1)} +
+  {p4 <- a1@normal_at(radian(1), distance = -1)} +
+  ob_segment(p3, p4) + 
+  ob_arc(start_point = p4, 
+         radius = little_r, 
+         start = radian(1), 
+         end = turn(1))
+```
+
+
 
 # Midpoints
 

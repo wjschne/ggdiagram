@@ -55,8 +55,8 @@ ob_polygon_props <- list(
   # extra ----
   extra = list(
     label = label_or_character_or_angle,
-    radius = new_property(class = class_numeric_or_unit, validator = function(value) {
-      if (length(value) > 1) stop("The radius property must be of length 1.")
+    vertex_radius = new_property(class = class_numeric_or_unit, validator = function(value) {
+      if (length(value) > 1) stop("The vertex_radius property must be of length 1.")
     })
   ),
   styles = ob_style@properties[ob_polygon_styles],
@@ -123,7 +123,7 @@ ob_polygon_props <- list(
         fill = self@fill,
         linewidth = self@linewidth,
         linetype = self@linetype,
-        radius = self@radius
+        vertex_radius = self@vertex_radius
       )
       get_non_empty_tibble(d) |>
         dplyr::mutate(p = purrr::map(p, \(x) {x@tibble |> dplyr::select(x,y)})) |>
@@ -158,7 +158,7 @@ ob_polygon_props <- list(
 #' @export
 #' @param p ob_point or list of ob_point objects
 #' @param label A character, angle, or label object
-#' @param radius A numeric or unit vector of length one, specifying the corner radius
+#' @param vertex_radius A numeric or unit vector of length one, specifying the corner radius
 #' @slot length The number of polygons in the ob_polygon object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @param style Gets and sets the styles associated with polygons
@@ -179,7 +179,7 @@ ob_polygon <- new_class(
   ),
   constructor = function(p = class_missing,
                          label = class_missing,
-                         radius = class_missing,
+                         vertex_radius = class_missing,
                          alpha = class_missing,
                          color = class_missing,
                          fill = class_missing,
@@ -248,7 +248,7 @@ ob_polygon <- new_class(
     new_object(.parent = S7_object(),
                p =  d$p,
                label = label,
-               radius = radius,
+               vertex_radius = vertex_radius,
                alpha = d[["alpha"]] %||% alpha,
                color = d[["color"]] %||% color,
                fill = d[["fill"]] %||% fill,
@@ -288,7 +288,11 @@ method(print, ob_polygon) <- function(x, ...) {
 }
 
 method(get_tibble, ob_polygon) <- function(x) {
-  x@tibble
+  d <- x@tibble
+  if ("vertex_radius" %in% colnames(d)) {
+    d <- dplyr::rename(x@tibble, radius = vertex_radius)
+  }
+  d
 }
 
 
@@ -304,9 +308,9 @@ method(as.geom, ob_polygon) <- function(x, ...) {
 
 method(`[`, ob_polygon) <- function(x, y) {
   d <- x@tibble[y,]
-  dl <- d %>%
-    dplyr::select(-.data$x, -.data$y, -.data$group) %>%
-    unique() %>%
+  dl <- d |>
+    dplyr::select(-.data$x, -.data$y, -.data$group) |>
+    unique() |>
     unbind()
   z <- rlang::inject(ob_polygon(p = x@p[y], !!!dl))
   z@label <- x@label[y]
@@ -349,7 +353,7 @@ method(connect, list(ob_polygon, centerpoint)) <- function(x,y, ...) {
 #' @param center point at center
 #' @param width length of side
 #' @param label A character, angle, or label object
-#' @param radius A numeric or unit vector of length one, specifying the vertex radius
+#' @param vertex_radius A numeric or unit vector of length one, specifying the vertex radius
 #' @param top Top vertex of triangle
 #' @param left Left vertex of triangle
 #' @param right Right vertex of triangle
@@ -375,7 +379,7 @@ ob_intercept <- new_class(
         })
       }),
       polygon = new_property(getter = function(self) {
-        ob_polygon(self@p, style = self@style, radius = self@radius)
+        ob_polygon(self@p, style = self@style, vertex_radius = self@vertex_radius)
       }),
       top = new_property(getter = function(self) {
         self@center + ob_polar(degree(90),
@@ -402,7 +406,7 @@ ob_intercept <- new_class(
                          top = class_missing,
                          left = class_missing,
                          right = class_missing,
-                         radius = class_missing,
+                         vertex_radius = class_missing,
                          alpha = class_missing,
                          color = class_missing,
                          fill = class_missing,
@@ -462,7 +466,7 @@ ob_intercept <- new_class(
                center =  center,
                width = d$width %||% width,
                label = label,
-               radius = radius,
+               vertex_radius = vertex_radius,
                alpha = d[["alpha"]] %||% alpha,
                color = d[["color"]] %||% color,
                fill = d[["fill"]] %||% fill,
@@ -473,7 +477,11 @@ ob_intercept <- new_class(
 
 
 method(get_tibble, ob_intercept) <- function(x) {
-  x@tibble
+  d <- x@tibble
+  if ("vertex_radius" %in% colnames(d)) {
+    d <- dplyr::rename(x@tibble, radius = vertex_radius)
+  }
+  d
 }
 
 

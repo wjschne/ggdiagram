@@ -62,7 +62,7 @@ with an arrow (via `ggarrow::geom_arrow_segment`).
 ``` r
 library(ggdiagram)
 c1 <- ob_circle(radius = 1 / sqrt(pi)) 
-r2 <- ob_rectangle() %>% 
+r2 <- ob_rectangle() |>
   place(from = c1,
         where = "right", 
         sep = .5)

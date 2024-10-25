@@ -123,24 +123,56 @@ The `unbind` function will perform the opposite operation as `bind`. It converts
 unbind(p)
 ```
 
-The `unbind` function is needed we want to loop through each element using `lapply` or `purrr::map`. Here we have two columns of variables. We want to connect each element of one column to each element of the other column. Note that the output of `lapply` or `purrr::map` is a list. To make the list something that ggplot2 can plot, we can bind the list into a single object.
+The `unbind` function is needed when we want to loop through each element using `lapply` or `purrr::map`. Here we have two points and we want to put six points the both. We want to connect each element of one column to each element of the other column. Note that the output of `lapply` or `purrr::map` is a list. To make the list something that ggplot2 can plot, we can bind the list into a single object.
 
 ```{r}
+#| label: fig-unbind
+#| fig-cap: Using `unbind`, `map`, and `bind` to loop through elements.
+#| fig-width: 5
+#| fig-height: 5
+theta <- degree(seq(90, 360, 120))
 ggdiagram() + 
-  p +
-  purrr::map(unbind(p), \(pp) {
-    p + ob_polar(theta = degree(seq(0, 330, 30)), r = .5, color = "orchid")
-  }) %>% bind()
+  {p_3 <- ob_polar(
+        theta = theta,
+        r = .5,
+        fill = "black",
+        shape = "triangle down filled",
+        size = 15)} +
+  unbind(p_3) |>
+    purrr::map(
+      \(p_i) {
+        p_i + ob_polar(
+          theta = theta, 
+          r = .15, 
+          color = "orchid", 
+          fill = "orchid", 
+          size = 15, 
+          shape = "triangle filled")}) |>
+  bind() +
+  scale_x_continuous(NULL, expand = expansion(.15))
 ```
 
 Alternatively, we can convert each list item into a geom with `as.geom`.
 
 ```{r}
+#| label: fig-unbindgeom
+#| fig-cap: Using `unbind`, `lapply`, and `as.geom` to loop through elements.
+
 ggdiagram() + 
-  p +
-  lapply(unbind(p), \(pp) {
-    as.geom(p + ob_polar(theta = degree(seq(0, 330, 30)), r = .5, color = "orchid"))
-  }) 
+  {p <- ob_polar(degree(seq(30,330,60)), 
+                 r = 2, 
+                 size = 10, 
+                 color = "orchid")} +
+  unbind(p) |>
+    lapply(\(pp) {
+      p2 <- pp + ob_polar(
+        theta = degree(seq(0, 330, 30)),
+        r = .5)
+      
+      s <- connect(pp, p2)
+        
+      as.geom(s)
+      }) 
 ```
 
 # Use `map_ob` to loop through object elements
@@ -148,14 +180,21 @@ ggdiagram() +
 To `unbind`, `map`, and then `bind` can be tedious every time a loop is needed. The `map_ob` function is a wrapper for `map` that unbinds the input and binds the output automatically.
 
 ```{r fig-obmap}
-ggdiagram() + 
-  {p_3 <- ob_polar(theta = degree(seq(90, 360, 120)))} +
-  map_ob(p_3, \(p_i) {
-    p_i + ob_polar(theta = degree(seq(90, 360, 120)), r = .15, color = "orchid", size = 3)
-  }) 
+ggdiagram() +
+  {o <- ob_point()} +
+  {p <- ob_polar(degree(c(0, 90, 180, 270)))} +
+  connect(o, p, resect = 2) +
+  p |>
+    map_ob(\(pp) {
+      p2 <- pp + ob_polar(theta = degree(seq(45, 315, 90)),
+                          r = sqrt(2) / 3,
+                          color = "orchid")
+      list(p2,
+           connect(pp, p2, resect = 2))
+    }) 
 ```
 
-The `ob_map` function can output a list of different object types simultaniously.
+The `ob_map` function can output a list of different object types simultaneously.
 
 ```{r fig-map}
 #| fig-cap: Outputting a list of different object types in `map_ob`.
@@ -201,7 +240,10 @@ ggdiagram() +
   {t1 <- ob_array(ob_circle(), k = k, where = "north", 
                   fill = clr,
                   color = clr)} +
-  {t2 <- ob_circle(fill = clr, color = clr) %>% place(t1, sep = 10)} +
+  {t2 <- ob_circle(fill = clr, color = clr)@place(
+    from = t1, 
+    where = "right", 
+    sep = 10)} +
   map_ob(t1, \(tt) {
     connect(tt, t2, resect = 2, color = tt@color)
   })

@@ -161,7 +161,6 @@ Multiple points can be specified at once.
 ```{r}
 #| label: fig-pthetas
 #| fig-cap: Points on circle 20 degrees apart.
-#| code-fold: true
 
 bp + 
   c1 +
@@ -175,12 +174,12 @@ These can be named points (e.g., north|top|above, south|bottom|below, east|right
 #| label: fig_namedpoints
 #| fig-cap: The `@point_at` property can take angles or named positions
 
-positions <- c("east", "southwest", "north-northeast", "left", "top", "below")
+positions <- c("top", "bottom", "left", "right", "northeast", "north-northeast")
 
 bp +
   c1 +
   {p <- c1@point_at(positions)} +
-  ob_label(positions, p, polar_just = ob_polar(p@theta, 2))
+  ob_label(positions, p, polar_just = ob_polar(p@theta, 1.7))
   
 ```
 

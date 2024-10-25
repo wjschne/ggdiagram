@@ -87,6 +87,24 @@ el_props <- list(
       lamba <- (self@a - self@b) / ab
       pi * ab * (1 + (3 * lamba ^ 2) / (10 + sqrt(4 - 3 * lamba ^ 2)))
     }),
+    polygon = new_property(getter = function(self) {
+      d <- self@tibble
+      if (!("n" %in% colnames(d))) {
+        d$n <- 360
+      }
+
+
+
+      d$xy <- unbind(self) |>
+        purrr::map(\(x) {
+          if (length(x@n) > 0) n <- x@n else n <- 360
+          th <- degree(seq(0, 360, length.out = n + 1))
+          xy <- tibble::as_tibble(x@point_at(th)@xy) |>
+            dplyr::mutate(degree = th@degree)
+        })
+
+      tidyr::unnest(d, xy)
+    }),
     style = new_property(
       getter = function(self) {
         pr <- purrr::map(el_styles,
@@ -149,6 +167,7 @@ el_props <- list(
             distance / p1@r * rotate(p1, self@angle)
       }
     }),
+    place = pr_place,
     point_at = new_property(class_function, getter = function(self) {
       \(theta = degree(0), definitional = FALSE, ...) {
         if (!S7_inherits(theta, ob_angle)) theta <- degree(theta)

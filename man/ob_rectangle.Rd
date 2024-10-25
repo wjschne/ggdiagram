@@ -17,7 +17,7 @@ ob_rectangle(
   southwest = class_missing,
   southeast = class_missing,
   angle = 0,
-  corner_radius = class_missing,
+  vertex_radius = class_missing,
   label = class_missing,
   alpha = class_missing,
   color = "black",
@@ -55,7 +55,7 @@ ob_rectangle(
 
 \item{angle}{angle of text}
 
-\item{corner_radius}{A numeric or unit vector of length one, specifying the corner radius for rounded corners}
+\item{vertex_radius}{A numeric or unit vector of length one, specifying the corner radius for rounded corners}
 
 \item{label}{A character, angle, or label object}
 

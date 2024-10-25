@@ -11,7 +11,7 @@ ob_intercept(
   top = class_missing,
   left = class_missing,
   right = class_missing,
-  radius = class_missing,
+  vertex_radius = class_missing,
   alpha = class_missing,
   color = class_missing,
   fill = class_missing,
@@ -36,7 +36,7 @@ ob_intercept(
 
 \item{right}{Right vertex of triangle}
 
-\item{radius}{A numeric or unit vector of length one, specifying the vertex radius}
+\item{vertex_radius}{A numeric or unit vector of length one, specifying the vertex radius}
 
 \item{alpha}{numeric value for alpha transparency}
 

@@ -134,7 +134,7 @@ lb_direct <- redefault(
 
 ggdiagram(font_family = my_font, font_size = 16) + 
   {X <- observed(label = lb_observed("X"))} +
-  {Y <- observed(label = lb_observed("Y")) %>% 
+  {Y <- observed(label = lb_observed("Y")) |> 
     place(X,where = "right")} +
   direct(X,Y)
 ```
@@ -290,13 +290,13 @@ $$
 
 ggdiagram(font_family = my_font, font_size = 16) + 
   {x1 <- observed() 
-   x2 <- observed() %>% 
+   x2 <- observed() |> 
     place(x1, "below", sep = 2.25) 
-   x3 <- observed() %>% 
+   x3 <- observed() |> 
     place(midpoint(x1@point_at("east"),
                    x2@point_at("east")), 
           "right") 
-   x4 <- observed() %>% 
+   x4 <- observed() |> 
     place(x3, "right", sep = 1.5)
    x <- bind(c(x1, x2, x3, x4))} +
   lb_observed(paste0("*X*~",1:4,"~"), x@center) + 
@@ -310,7 +310,7 @@ ggdiagram(font_family = my_font, font_size = 16) +
                       "*b*~14~",
                       "*b*~24~")))} +
   {endogenous <- bind(c(x3,x4))
-   e <- error(label = lb_error(paste0("*e*~", 3:4, "~"))) %>% 
+   e <- error(label = lb_error(paste0("*e*~", 3:4, "~"))) |> 
     place(from = endogenous, 
           where = c("left", "right"),
           sep = .5)} + 
@@ -378,9 +378,9 @@ $$
 #| fig-cap: "Exploratory Factor Analysis with Two Latent Factors and Six Observed Variables"
 #| code-fold: true
 
-my_fills <- viridis::viridis(n = 3, begin = .3, end = .6) %>% 
-  class_color() %>% 
-  set_props(saturation = .6, brightness = .5) %>% 
+my_fills <- viridis::viridis(n = 3, begin = .3, end = .6) |> 
+  class_color() |> 
+  set_props(saturation = .6, brightness = .5) |> 
   c()
 
 ggdiagram(font_family = my_font, font_size = 16) +
@@ -403,7 +403,7 @@ ggdiagram(font_family = my_font, font_size = 16) +
                      size = 48,
                      nudge_y = -.2,
                      fill = NA, 
-                     color = "white")) %>% 
+                     color = "white")) |> 
     place(from = midpoint(x[1], x[2]), 
           where = "above", 
           sep = x[1:4]@bounding_box@width)} +
@@ -415,7 +415,7 @@ ggdiagram(font_family = my_font, font_size = 16) +
                      size = 48,
                      nudge_y = -.2,
                      fill = NA, 
-                     color = "white")) %>% 
+                     color = "white")) |> 
     place(midpoint(x[5], x[6]), 
           where = "above", 
           sep = x[1:4]@bounding_box@width)} +
@@ -473,7 +473,7 @@ ggdiagram(font_family = my_font, font_size = 16) +
       color = "white",
       size = 14
     )
-  ) %>% place(x, "below", sep = 1.2)} +
+  )@place(x, "below", sep = 1.2)} +
   connect(u, x, color = my_fills[2], resect = 2) +
   ob_variance(
     u,
@@ -503,10 +503,10 @@ Principal components analysis (PCA) is similar to exploratory factor analysis (E
 
 ggdiagram(font_family = my_font) +
   # observed variables
-  {o <- ob_ellipse(m1 = 10, a = .6, color = NA) %>%
+  {o <- ob_ellipse(m1 = 10, a = .6, color = NA) |>
       ob_array(5, sep = .2, fill = class_color(my_fills[2])@lighten(seq(.6, .9, length.out = 5)))} +
   # principal components
-  {pc <- ob_circle(fill = my_fills[c(1,3)], color = NA) %>% 
+  {pc <- ob_circle(fill = my_fills[c(1,3)], color = NA) |> 
     place(o[c(2, 4)], "above", 2)} +
   # direct effects from o to pc
   map(
@@ -533,9 +533,9 @@ ggdiagram(font_family = my_font) +
     )@geom()
   }) + 
   # Labels
-  ob_label("Formative<br>Indicators", size = 16, fill = NA) %>% 
+  ob_label("Formative<br>Indicators", size = 16, fill = NA) |> 
     place(o@bounding_box@east, sep = .8) + 
-  ob_label("Principal<br>Components", size = 24, fill = NA) %>% 
+  ob_label("Principal<br>Components", size = 24, fill = NA) |> 
     place(pc@bounding_box@east, sep = 1.3) +
   # Invisible point to prevent label from clipping
   ob_point(o@bounding_box@east@x + 1.2, 1, color = "white")
@@ -588,7 +588,7 @@ ggdiagram(font_family = my_font, font_size = 16) +
     arrow_head = arrowheadr::arrow_head_deltoid(2.4),
     arrow_fins = arrowheadr::arrow_head_deltoid(2.4))} +
   {lb_indicator <- ob_label("Indicator<br>Variables", 
-                            color = "black") %>%
+                            color = "black") |>
     place(o3[1]@point_at("west"), "west", sep = 1.2)} + 
   ob_point(-5, 0, color = "white") +
   ob_label("Loadings", 
@@ -614,9 +614,9 @@ ggdiagram(font_family = my_font, font_size = 16) +
 #| code-fold: true
 #| out-width: 100%
 
-my_fills <- viridis::viridis(n = 3, begin = .3, end = .6) %>% 
-  class_color() %>% 
-  set_props(saturation = .6, brightness = .5) %>% 
+my_fills <- viridis::viridis(n = 3, begin = .3, end = .6) |> 
+  class_color() |> 
+  set_props(saturation = .6, brightness = .5) |> 
   c()
 
 my_path_color <- "gray40"
@@ -788,7 +788,7 @@ ggdiagram(font_family = my_font, font_size = 13) +
   {d_Gx <- ob_circle(
     color = NA,
     fill = my_fills,
-    radius = sqrt(broad_variance / pi)) %>% 
+    radius = sqrt(broad_variance / pi)) |> 
     place(Gx, where = "left", sep = .45)} +
   direct(d_Gx, 
           Gx, 
@@ -871,7 +871,7 @@ ggdiagram(font_family = my_font, font_size = 13) +
          l_b_p, 
          error, 
          error2observed, 
-         lb_o) %>% 
+         lb_o) |> 
       lapply(as.geom)
   })}
 ```
@@ -921,7 +921,7 @@ ggdiagram(font_family = my_serif_font, font_size = 16) +
      l = 60)
     broad <- ob_circle(
       color = NA, 
-      fill = broad_color) %>%
+      fill = broad_color) |>
       place(
         from = g, 
         where = broad_angle, 
@@ -958,9 +958,9 @@ ggdiagram(font_family = my_serif_font, font_size = 16) +
     color = "gray20"
   ) +
   ob_path(
-    broad %>% 
-      set_props(radius = c(rep(.66, 4), rep(.59, 4))) %>% 
-      unbind() %>% 
+    broad |> 
+      set_props(radius = c(rep(.66, 4), rep(.59, 4))) |> 
+      unbind() |> 
       purrr::map(\(x) {
         x@point_at(x@center@theta + degree(seq(-90, 90, 10)))
         }),
@@ -981,9 +981,9 @@ ggdiagram(font_family = my_serif_font, font_size = 16) +
       size = 9.5,
       spacing = 100)) +
   ob_path(
-    broad %>% 
-      set_props(radius = c(rep(.59, 4), rep(.66, 4))) %>% 
-      unbind() %>% 
+    broad |> 
+      set_props(radius = c(rep(.59, 4), rep(.66, 4))) |> 
+      unbind() |> 
       purrr::map(\(x) {
         x@point_at(
           x@center@theta + degree(-180) + degree(seq(-90, 90, 10)))}),
@@ -1025,7 +1025,7 @@ ggdiagram(font_family = my_serif_font, font_size = 16) +
             color = tinter::lighten(x@fill, .5), 
             linewidth = .5,
             length_head = 6,
-            resect = 1) %>% 
+            resect = 1) |> 
       as.geom()
   })} +
   {test_theta <- degree(seq(0, 360 - 360/120, 360/120) + 360/240)
@@ -1052,7 +1052,7 @@ ggdiagram(font_family = my_serif_font, font_size = 16) +
             color = tinter::lighten(x@fill, .5), 
             resect = 1, 
             linewidth = .3,
-            length_head = 6) %>% 
+            length_head = 6) |> 
       as.geom()
   })} +
   scale_fill_manual(
@@ -1061,7 +1061,7 @@ ggdiagram(font_family = my_serif_font, font_size = 16) +
                    grid::radialGradient(c(tinter::lighten(fill, .15), 
                                           tinter::lighten(fill, .4)), 
                                         stops = c(0.2, 1), 
-                                        group = F)}) %>% 
+                                        group = F)}) |> 
       `names<-`(broad@fill)) +
   theme(legend.position = "none") +
   ob_label(
@@ -1211,13 +1211,13 @@ ggdiagram(font_family = my_font, font_size = 13) +
     size = 24),
     fill = clr[1])} +
   {x1 <- observed(label = lb_observed("*X*~1*ij*~"), 
-                  fill = clr[2]) %>%
+                  fill = clr[2]) |>
     place(bind(i1@segment)@midpoint()[2], "below", 1.5)} + 
   {x2 <- observed(label = lb_observed("*X*~2*ij*~"),
-                  fill = clr[3]) %>% 
+                  fill = clr[3]) |> 
     place(x1, "below", 1.5)} + 
   {y = observed(label = lb_observed("*Y*~*ij*~"),
-                fill = clr[4]) %>% 
+                fill = clr[4]) |> 
     place(x1, "right", sep = 9)} + 
   {i1_y <- connect(i1, y, resect = 2, color = clr[1])} + 
   {x1_y <- connect(x1, y, resect = 2, color = clr[2])} + 
@@ -1281,7 +1281,7 @@ ggdiagram(font_family = my_font, font_size = 13) +
       fill = NA,
       size = 14
     )
-  ) %>% place(b, "southwest", .5)} + 
+  ) |> place(b, "southwest", .5)} + 
   connect(
     u,
     b,
@@ -1327,7 +1327,7 @@ ggdiagram(font_family = my_font, font_size = 13) +
     ),
     theta = 60
   ) +
-  {e <- ob_circle(radius = .6, fill = y@fill, color = NA, label = lb_observed("*e~ij~*")) %>% place(y, "right", .9)} +
+  {e <- ob_circle(radius = .6, fill = y@fill, color = NA, label = lb_observed("*e~ij~*")) |> place(y, "right", .9)} +
   connect(e, y, color = y@fill, resect = 2) +
   {e_var <- ob_variance(e, "east", color = e@fill, looseness = 1.7)} +
   ob_latex(r"(\text{\emph{σ}}^{\text{2}}_{\mkern-1.5mu\text{\emph{e}}})", e_var@midpoint(), width = .45, family = "Roboto Condensed", filename = "sigma_e_2", color = e@fill)

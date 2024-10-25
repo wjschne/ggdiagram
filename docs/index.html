@@ -91,6 +91,27 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"wjschne/ggdiagram"</span><span class="op">)</span></span></code></pre></div>
 </div>
+<div class="section level2">
+<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+</h2>
+<p>In @fig_example, we create a circle object with <code>ob_circle</code> and a rectangle object with <code>ob_rectangle</code>, placing the rectangle such that there is .5 units of separation between the two objects.</p>
+<p>The <code>ggdiagram</code> function is a a wrapper for <code>ggplot</code>, that sets some defaults (e.g., <code>theme_void</code>, <code>coord_equal</code>, fonts, line size, etc.).</p>
+<p>The <code>ob_*</code> functions have methods such that they can be added to any ggplot. Under the hood, they are first converted to an appropriate geom and then added to the ggplot object. In this case, an <code>ob_circle</code> is converted to a <code>ggforce:geom_circle</code>, and an <code>ob_rectangle</code> is converted to a <code><a href="https://ggforce.data-imaginist.com/reference/geom_shape.html" class="external-link">ggforce::geom_shape</a></code>.</p>
+<p>The <code>connect</code> function connects the circle and rectangle at their edges with an arrow (via <code><a href="https://teunbrand.github.io/ggarrow/reference/geom_arrow_segment.html" class="external-link">ggarrow::geom_arrow_segment</a></code>).</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/wjschne/ggdiagram" class="external-link">ggdiagram</a></span><span class="op">)</span></span>
+<span><span class="va">c1</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ob_circle.html">ob_circle</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fl">1</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">pi</span><span class="op">)</span><span class="op">)</span> </span>
+<span><span class="va">r2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ob_rectangle.html">ob_rectangle</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="reference/place.html">place</a></span><span class="op">(</span>from <span class="op">=</span> <span class="va">c1</span>,</span>
+<span>        where <span class="op">=</span> <span class="st">"right"</span>, </span>
+<span>        sep <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/ggdiagram.html">ggdiagram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="va">c1</span> <span class="op">+</span></span>
+<span>  <span class="va">r2</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="reference/connect.html">connect</a></span><span class="op">(</span><span class="va">c1</span>, <span class="va">r2</span><span class="op">)</span> </span></code></pre></div>
+<p><img src="reference/figures/README-fig-example-1.png" width="100%"></p>
+</div>
 </div>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>

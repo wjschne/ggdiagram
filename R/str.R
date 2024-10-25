@@ -95,7 +95,11 @@ str_properties <- function(
 
   cat("\n")
 
-  str_nest(object = props(object)[!(p_names %in% omit)],
+  p_display <- p_names[!(p_names %in% omit)]
+  props_display <- lapply(p_display, prop, object = object) |>
+    `names<-`(p_display)
+  # props(object)[!(p_names %in% omit)]
+  str_nest(object = props_display,
            prefix = "@",
            nest.lev = nest.lev)
   if (length(omit) > 0 && additional && nest.lev == 0) {

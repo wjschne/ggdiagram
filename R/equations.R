@@ -5,9 +5,11 @@
 #' @param center ob_point
 #' @param width width (specify width or height but not both)
 #' @param height height (specify width or height but not both)
+#' @param name description
 #' @slot rectangle gets or sets rectangle that contains the image
 #' @param aspect_ratio alters the aspect ratio of the image
 #' @param color set color of equation text
+#' @param fill set color of background rectangle
 #' @param density image quality (dots per inch)
 #' @param latex_packages load latex packages
 #' @param preamble additional latex commands to load in preamble
@@ -25,9 +27,15 @@ ob_latex <- new_class(
     center = ob_point,
     width = class_numeric,
     height = class_numeric,
+    hjust = class_numeric,
+    vjust = class_numeric,
+    angle = ob_angle_or_character,
     rectangle = new_property(
       getter = function(self) {
-        ob_rectangle(self@center, width = self@width, height = self@height)
+        cc <- rotate(ob_point((self@hjust - .5) * -1 * self@width,
+                              (self@vjust - .5) * -1 * self@height),
+                     self@angle) + self@center
+        ob_rectangle(cc, width = self@width, height = self@height, angle = self@angle)
     }, setter = function(self, value) {
       if (!S7_inherits(value, ob_rectangle)) {
         stop("The `rectangle` must be the output of the function `ob_rectangle`.")
@@ -35,6 +43,7 @@ ob_latex <- new_class(
       self@center <- value@center
       self@width <- value@width
       self@height <- value@height
+      self@angle <- value@angle
       self
     }),
     aspect_ratio = new_property(class_numeric, default = 1),
@@ -43,26 +52,33 @@ ob_latex <- new_class(
     math_mode = new_property(class_logical, default = TRUE),
     filename = class_character,
     color = class_color_or_character,
+    fill = class_color_or_character,
     density = new_property(class_numeric, default = 300),
     latex_packages = class_character,
     preamble = class_character,
     force_recompile = new_property(class = class_logical, default = TRUE),
-    image = class_list),
+    image = class_list,
+    place = pr_place),
   constructor = function(
     tex = class_missing,
     center = ob_point(0,0),
     width = class_missing,
     height = class_missing,
+    hjust = .5,
+    vjust = .5,
+    angle = 0,
     aspect_ratio = 1,
     border = class_missing,
     family = class_missing,
     math_mode = TRUE,
     filename = class_missing,
     color = class_missing,
+    fill = "white",
     density = 300,
     latex_packages = class_missing,
     preamble = class_missing,
     force_recompile = TRUE) {
+    if (!S7_inherits(angle, ob_angle)) angle <- degree(angle)
 
     latex_color <- ""
     if (length(color) > 0) {
@@ -84,6 +100,27 @@ ob_latex <- new_class(
                    collapse = "")
     }
 
+    fill_tex <- ""
+    if (length(fill) > 0) {
+      if (S7_inherits(fill, class_color)) {
+        latex_fill <- c(fill)
+      } else {
+        latex_fill <- c(class_color(fill))
+      }
+
+      mybackground <- paste0("\n\\definecolor{mybackground}{HTML}{",
+                             substr(latex_fill, start = 2, stop = 7),
+                             "}\n")
+
+      fill_tex <- paste0(
+        mybackground,
+        r"(\newsavebox\pagecolorbox
+\savebox\pagecolorbox{%
+  \makebox[0pt]{\raisebox{-\paperheight}[0pt][0pt]{%
+    \textcolor{mybackground}{\rule{2\paperwidth}{\paperheight}}}}}
+\AtBeginDvi{\box\pagecolorbox})")
+    }
+
     txt_border <- "border=1pt"
     if (length(border) > 1) {
       txt_border <- paste0("border={",paste0(border, "pt", collapse = " "),"}")
@@ -102,6 +139,8 @@ ob_latex <- new_class(
       lp,
       "\n",
       preamble,
+      "\n",
+      fill_tex,
       "\n\\begin{document}\n",
       latex_color,
       ifelse(math_mode, "$", ""),
@@ -123,10 +162,10 @@ ob_latex <- new_class(
                        ifelse(length(width) > 0, width, 1),
                        height)
 
-    d <- tibble::tibble(tx = txt, fn = filename, imgsz = img_size, center = unbind(center))
+    d <- tibble::tibble(tx = txt, fn = filename, imgsz = img_size, center = unbind(center), theta = angle@degree, hj = hjust, vj = vjust)
     n <- nrow(d)
 
-    image <- purrr::pmap_df(d, \(tx, fn, imgsz, center) {
+    image <- purrr::pmap_df(d, \(tx, fn, imgsz, center, theta, hj, vj) {
       if (force_recompile || !file.exists(f_pdf)) {
         f_pdf <- paste0(fn, ".pdf")
         f_tex <- paste0(fn, ".tex")
@@ -147,13 +186,13 @@ ob_latex <- new_class(
         img_width <- aspect_ratio * img_height * ps$width / (ps$height)
       }
 
-      i <- magick::image_read_pdf(f_pdf, density = density) %>%
-        magick::image_raster(tidy = FALSE)
+      i <- magick::image_read_pdf(f_pdf, density = density)
+      i <- magick::image_raster(i, tidy = FALSE)
 
       file.remove(f_pdf)
       file.remove(f_tex)
 
-      tibble::tibble(image = list(i), width = img_width, height = img_height)
+      tibble::tibble(image = list(i), width = img_width, height = img_height, angle = theta, hjust = hj, vjust = vj)
 
     })
 
@@ -164,11 +203,15 @@ ob_latex <- new_class(
       center = bind(d$center),
       width = image$width,
       height = image$height,
+      hjust = image$hjust,
+      vjust = image$vjust,
+      angle = degree(image$angle),
       aspect_ratio = aspect_ratio,
       border = border,
       family = family,
       filename = filename,
       color = color,
+      fill = fill,
       density = density,
       latex_packages = latex_packages,
       preamble = preamble,
@@ -183,15 +226,32 @@ ob_latex <- new_class(
 
 method(as.geom, ob_latex) <- function(x, ...) {
 
-  purrr::pmap(list(x@image, x@width, x@height, unbind(x@center)), \(i,width, height, center) {
+  purrr::pmap(list(x@image, x@width, x@height, unbind(x@center), unbind(x@angle), x@hjust, x@vjust, x@fill), \(i,width, height, center, angle, hjust, vjust, fill) {
+
+    cc <- rotate(ob_point((hjust - .5) * -1 * width,
+                          (vjust - .5) * -1 * height),
+                 angle) + center
+
+
+      bb <- ob_rectangle(cc,
+                         width = width,
+                         height = height,
+                         angle = angle)@bounding_box
+
+      if (round(angle@degree,10) != 0) {
+      i <- magick::image_read(i) |>
+        magick::image_background("#FFFFFF00") %>%
+        magick::image_rotate(-angle@degree) |>
+        magick::image_raster(tidy = FALSE)
+    }
 
     ggplot2::annotation_raster(
       i,
       interpolate = TRUE,
-      xmin = center@x - width / 2,
-      xmax = center@x + width / 2,
-      ymin = center@y - height / 2,
-      ymax = center@y + height / 2
+      xmin = bb@west@x,
+      xmax = bb@east@x,
+      ymin = bb@south@y,
+      ymax = bb@north@y
     )
 
     })

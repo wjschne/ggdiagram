@@ -146,7 +146,7 @@ ggplot() +
     border = 1,
     filename = "zscore",
     density = 600
-  ) %>%
+  ) |>
   place(ob_point(mu + sigma * .7, dnorm(mu + sigma * .7, mu, sigma)), 
         where = "right", 
         sep = 3) + 
@@ -170,6 +170,85 @@ ggplot() +
 ```
 
 
+
+
+# Text Color and Background Fill Color
+
+The text color is black by default. It can be set to any color via the `color` property.
+
+The background color of the LaTeX expression will be white by default. If the LaTeX expression is placed inside an object with a filled background, you might want to give the expression the same background fill color.
+
+```{r fig-color}
+#| fig-cap: Altering the text color and background fill color.
+#| fig-width: 3
+#| fig-height: 3
+ggdiagram() +
+  ob_circle(fill = "dodgerblue4", color = NA) +
+  ob_latex(
+    "A+B+C=D",
+    center = ob_point(),
+    color = "white",
+    fill = "dodgerblue4",
+    density = 900,
+    width = 1.5
+  )
+```
+
+Of course, you can always manipulate text color via LaTeX.
+
+```{r fig-textcolor}
+#| fig-cap: Latex Colors
+#| fig-width: 3
+#| fig-height: 3
+ggdiagram() +
+  ob_circle() +
+  ob_latex("Y={\\color[HTML]{CD69C9} X_1^2} + {\\color[HTML]{228B22} X_2^2}")
+```
+
+
+As a convenience, the `latex-color` function will surround the expression with the right LaTeX expression to change the color.
+
+
+```{r fig-latexcolor}
+#| fig-cap: Using `latex_color` to alter text color in LaTeX expressions.
+#| fig-width: 3
+#| fig-height: 3
+ggdiagram() +
+  ob_circle() +
+  ob_latex(paste0("Y=", 
+                  latex_color("X_1^2", color = "orchid3"),
+                  "+",
+                  latex_color("X_2^2", color = "forestgreen")))
+```
+
+
+# Rotation
+
+The LaTeX expression can be rotated by setting the `angle` property.
+
+```{r}
+#| label: fig-rotated
+#| fig-cap: Rotated equation
+
+ggdiagram(theme_function = ggplot2::theme_minimal, font_size = 20) +
+  {s <- connect(ob_point(), ob_point(3,4))} +
+  ob_latex("\\left\\lVert\\vec{x}\\right\\rVert=5", 
+           center = s@midpoint(), 
+           height = .35,
+           density = 900,
+           angle = s@line@angle, 
+           vjust = -.1) + 
+  ob_latex(
+    paste0("\\vec{x}=", s@p2@auto_label),
+    vjust = 1.2,
+    hjust = 1.3,
+    center = s@p2,
+    height = .3,
+    density = 600
+  ) 
+ 
+```
+
 # Image quality
 
 The default density for `ob_latex` images is 300 dots per inch. If a small expression is displayed as a large image, it will appear pixelated.
@@ -184,6 +263,9 @@ ggdiagram() +
   ob_latex("X_i^2", 
            width = 1.25)
 ```
+
+
+
 
 Setting the density to a higher value will usually create a better image.
 
@@ -201,8 +283,6 @@ ggdiagram() +
 
 
 Higher densities are not always better, however. In addition to using more memory and rendering more slowly, images with very high densities will sometimes appear blurry or pixelated.
-
-
 
 # How does `ob_latex` work?
 

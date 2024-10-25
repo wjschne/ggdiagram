@@ -218,8 +218,8 @@ method(`[<-`, has_style) <- function(x, y, value) {
       }
     }
   new_x <- rlang::inject(.fn(!!!d))
-  if (prop_exists(new_x, "corner_radius")) {
-    new_x@corner_radius <- x@corner_radius
+  if (prop_exists(new_x, "vertex_radius")) {
+    new_x@vertex_radius <- x@vertex_radius
   }
   new_x
 }
@@ -362,7 +362,7 @@ method(bind, class_list) <- function(x, ...) {
 
 
 method(bind, ob_shape_list) <- function(x, ...) {
-  .f <- lapply(x, S7::S7_class) %>% unique()
+  .f <- unique(lapply(x, S7::S7_class))
 
   csl <- lapply(.f, \(.ff) {
     Filter(f = \(xx){
@@ -372,8 +372,9 @@ method(bind, ob_shape_list) <- function(x, ...) {
   })
 
   if (length(csl) > 1) {
-    ob_shape_list(csl) %>%
-      `names<-`(purrr::map_chr(csl, \(xx) S7_class(xx)@name))
+    csl_names <- purrr::map_chr(csl, \(xx) S7_class(xx)@name)
+    ob_shape_list(csl) |>
+      `names<-`(csl_names)
 
   } else {
     csl[[1]]
@@ -1013,7 +1014,7 @@ prop_integer_coerce <- function(name) {
 as.geom <- new_generic("as.geom", "x")
 
 method(as.geom, ob_shape_list) <- function(x, ...) {
-  lapply(c(x), \(g) as.geom(g, ...)) %>%
+  lapply(c(x), \(g) as.geom(g, ...)) |>
     unlist()
 }
 
@@ -1304,3 +1305,4 @@ ggdiagram <- function(
     ggplot2::coord_equal(clip = "off") +
     ggplot2::theme(...)
 }
+

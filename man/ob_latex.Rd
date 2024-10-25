@@ -9,12 +9,16 @@ ob_latex(
   center = ob_point(0, 0),
   width = class_missing,
   height = class_missing,
+  hjust = 0.5,
+  vjust = 0.5,
+  angle = 0,
   aspect_ratio = 1,
   border = class_missing,
   family = class_missing,
   math_mode = TRUE,
   filename = class_missing,
   color = class_missing,
+  fill = "white",
   density = 300,
   latex_packages = class_missing,
   preamble = class_missing,
@@ -42,6 +46,8 @@ ob_latex(
 
 \item{color}{set color of equation text}
 
+\item{fill}{set color of background rectangle}
+
 \item{density}{image quality (dots per inch)}
 
 \item{latex_packages}{load latex packages}
@@ -49,6 +55,8 @@ ob_latex(
 \item{preamble}{additional latex commands to load in preamble}
 
 \item{force_recompile}{Will re-run xelatex even if .pdf file exists already}
+
+\item{name}{description}
 }
 \description{
 make a latex equation

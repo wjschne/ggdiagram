@@ -193,11 +193,11 @@
 <span><span class="co">#&gt;  @ y: num 1</span></span>
 <span><span class="co">#&gt; @ width : num 4</span></span>
 <span><span class="co">#&gt; @ height: num 2</span></span>
-<span><span class="co">#&gt; Other props: label, angle, corner_radius, alpha, color, fill,</span></span>
+<span><span class="co">#&gt; Other props: label, angle, vertex_radius, alpha, color, fill,</span></span>
 <span><span class="co">#&gt;              linewidth, linetype, area, bounding_box, perimeter,</span></span>
 <span><span class="co">#&gt;              northeast, northwest, southwest, southeast, east,</span></span>
 <span><span class="co">#&gt;              north, west, south, side, length, style, tibble, geom,</span></span>
-<span><span class="co">#&gt;              normal_at, point_at, aesthetics</span></span></code></pre></div>
+<span><span class="co">#&gt;              normal_at, place, point_at, aesthetics</span></span></code></pre></div>
 </div>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
@@ -222,7 +222,7 @@
 <span>  <span class="va">r1</span><span class="op">@</span><span class="va">center</span>,</span>
 <span>  <span class="va">r1</span><span class="op">@</span><span class="va">center</span><span class="op">@</span><span class="va">label</span><span class="op">(</span></span>
 <span>    fill <span class="op">=</span> <span class="va">my_colors</span><span class="op">$</span><span class="va">primary</span><span class="op">@</span><span class="va">lighten</span><span class="op">(</span><span class="fl">.15</span><span class="op">)</span>, </span>
-<span>    vjust <span class="op">=</span> <span class="op">-</span><span class="fl">.15</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>    vjust <span class="op">=</span> <span class="op">-</span><span class="fl">.15</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/bind.html">bind</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">rc_width</span> <span class="op">&lt;-</span> <span class="va">s_north</span> <span class="op">|&gt;</span> </span>
@@ -415,7 +415,7 @@ Figure 6: Specify a rectangle with the height and the top corners
 <span><span class="co">#&gt; @ y: num 2</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
 <span><span class="co">#&gt;              bounding_box, length, r, theta, style, tibble, xy,</span></span>
-<span><span class="co">#&gt;              geom, label, aesthetics</span></span></code></pre></div>
+<span><span class="co">#&gt;              geom, label, place, aesthetics</span></span></code></pre></div>
 </div>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb17"><pre class="downlit sourceCode r">
@@ -483,7 +483,7 @@ Figure 7: The named points of a rectangle
 <span><span class="co">#&gt; @ y: num 2</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
 <span><span class="co">#&gt;              bounding_box, length, r, theta, style, tibble, xy,</span></span>
-<span><span class="co">#&gt;              geom, label, aesthetics</span></span></code></pre></div>
+<span><span class="co">#&gt;              geom, label, place, aesthetics</span></span></code></pre></div>
 </div>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">

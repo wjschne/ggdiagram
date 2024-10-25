@@ -114,6 +114,7 @@ cr_props <- list(
         }
       }
     ),
+    place = pr_place,
     point_at = new_property(
       class_function,
       getter = function(self) {

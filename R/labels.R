@@ -113,7 +113,8 @@ lb_props <- list(
       \(...) {
         as.geom(self, ...)
       }
-    })
+    }),
+    place = pr_place
   ),
   extras = list(
     plot_point = new_property(class_logical, validator = function(value) {

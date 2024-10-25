@@ -96,6 +96,7 @@ ln_props <- list(
         as.geom(self, ...)
       }
     }),
+    place = pr_place,
     point_at_x = new_property(class_function, getter = function(self) {
       \(x = 0, ...) {
         if (any(self@b == 0)) stop("Not possible with verical lines")

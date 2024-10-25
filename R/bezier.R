@@ -225,9 +225,9 @@ ob_bezier <- new_class(
 
     if (S7_inherits(p, ob_point)) p <- list(p)
     p_style <- purrr::map(p, \(x) {
-      purrr::map(unbind(x), \(xx) xx@style) %>%
+      purrr::map(unbind(x), \(xx) xx@style) |>
         purrr::reduce(`+`)
-    }) %>%
+    }) |>
       bind()
 
 bz_style <- p_style + style +
@@ -460,9 +460,9 @@ method(as.geom, ob_bezier) <- function(x, ...) {
 
 method(`[`, ob_bezier) <- function(x, y) {
   d <- x@tibble[y,]
-  dl <- d %>%
-    dplyr::select(-.data$x, -.data$y, -.data$group) %>%
-    unique() %>%
+  dl <- d |>
+    dplyr::select(-.data$x, -.data$y, -.data$group) |>
+    unique() |>
     unbind()
   z <- rlang::inject(ob_bezier(p = x@p[y], !!!dl))
   z@label <- x@label[y]
@@ -474,6 +474,6 @@ method(midpoint, list(ob_bezier, class_missing)) <- function(x,y, position = .5,
 
   purrr::map(x@p, \(xx) {
     ob_point(bezier::bezier(t = position, p = xx@xy), ...)
-    }) %>%
+    }) |>
     bind()
 }

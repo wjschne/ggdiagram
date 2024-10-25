@@ -161,9 +161,10 @@
 <span><span class="co">#&gt;              fill, lineend, linejoin, linewidth, linewidth_fins,</span></span>
 <span><span class="co">#&gt;              linewidth_head, linetype, n, resect, resect_fins,</span></span>
 <span><span class="co">#&gt;              resect_head, stroke_color, stroke_width, apothem,</span></span>
-<span><span class="co">#&gt;              sagitta, bounding_box, chord, length, polygon, style,</span></span>
-<span><span class="co">#&gt;              tibble, geom, angle_at, autolabel, midpoint, point_at,</span></span>
-<span><span class="co">#&gt;              tangent_at, aesthetics</span></span></code></pre></div>
+<span><span class="co">#&gt;              arc_length, sagitta, bounding_box, chord, length,</span></span>
+<span><span class="co">#&gt;              polygon, style, tibble, geom, angle_at, autolabel,</span></span>
+<span><span class="co">#&gt;              midpoint, normal_at, place, point_at, tangent_at,</span></span>
+<span><span class="co">#&gt;              aesthetics</span></span></code></pre></div>
 </div>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
@@ -231,11 +232,38 @@ Figure 1: Fixing the start and end points of an arc
 </div>
 </div>
 </div>
+<p>As a example, I used the <code>start_point</code> argument to recreate a fun meme about a “square” object with 4 equal sides that meet at right angles:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">little_r</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">/</span> <span class="op">(</span><span class="fl">2</span> <span class="op">*</span> <span class="va">pi</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/ggdiagram.html">ggdiagram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="op">{</span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
+<span>  <span class="op">{</span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">0</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_segment.html">ob_segment</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="op">{</span><span class="va">a1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span>start <span class="op">=</span> <span class="fl">0</span>, end <span class="op">=</span> <span class="fu"><a href="../reference/ob_angle.html">radian</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>, radius <span class="op">=</span> <span class="fl">1</span> <span class="op">+</span> <span class="va">little_r</span>, start_point <span class="op">=</span> <span class="va">p2</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
+<span>  <span class="op">{</span><span class="va">p3</span> <span class="op">&lt;-</span> <span class="va">a1</span><span class="op">@</span><span class="va">midpoint</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
+<span>  <span class="op">{</span><span class="va">p4</span> <span class="op">&lt;-</span> <span class="va">a1</span><span class="op">@</span><span class="va">normal_at</span><span class="op">(</span><span class="fu"><a href="../reference/ob_angle.html">radian</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>, distance <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_segment.html">ob_segment</a></span><span class="op">(</span><span class="va">p3</span>, <span class="va">p4</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span>start_point <span class="op">=</span> <span class="va">p4</span>, </span>
+<span>         radius <span class="op">=</span> <span class="va">little_r</span>, </span>
+<span>         start <span class="op">=</span> <span class="fu"><a href="../reference/ob_angle.html">radian</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>, </span>
+<span>         end <span class="op">=</span> <span class="fu"><a href="../reference/ob_angle.html">turn</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div id="fig-square" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-square-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="arcwedges_files/figure-html/fig-square-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-square-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 2: A “square” with four equal sizes that meet at right angles.
+</figcaption></figure>
+</div>
+</div>
+</div>
 </section><section class="section level2"><h2 id="midpoints">Midpoints<a class="anchor" aria-label="anchor" href="#midpoints"></a>
 </h2>
 <p>The midpoint function can find one or more midpoints at different positions. The default position is .5.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
 <span>  <span class="va">a1</span> <span class="op">+</span></span>
 <span>  <span class="va">a1</span><span class="op">@</span><span class="va">midpoint</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -245,14 +273,14 @@ Figure 1: Fixing the start and end points of an arc
 <img src="arcwedges_files/figure-html/fig-midpoint-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-midpoint-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 2: Default midpoint on a arc
+Figure 3: Default midpoint on a arc
 </figcaption></figure>
 </div>
 </div>
 </div>
 <p>The starting and ending points are at position 0 and 1, respectively.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
 <span>  <span class="va">a1</span> <span class="op">+</span></span>
 <span>  <span class="va">a1</span><span class="op">@</span><span class="va">midpoint</span><span class="op">(</span>position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -262,7 +290,7 @@ Figure 2: Default midpoint on a arc
 <img src="arcwedges_files/figure-html/fig-multimidpoints-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-multimidpoints-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 3: Multiple midpoints can be specified
+Figure 4: Multiple midpoints can be specified
 </figcaption></figure>
 </div>
 </div>
@@ -271,7 +299,7 @@ Figure 3: Multiple midpoints can be specified
 </h2>
 <p>By default, the arc label will appear outside the midpoint of the arc</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fl">3</span>, </span>
 <span>      start <span class="op">=</span> <span class="fl">20</span>, </span>
@@ -283,14 +311,14 @@ Figure 3: Multiple midpoints can be specified
 <img src="arcwedges_files/figure-html/fig-label-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-label-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 4: A labelled arc
+Figure 5: A labelled arc
 </figcaption></figure>
 </div>
 </div>
 </div>
 <p>If a label is needed elsewhere, it can be set with the <code>label</code> function’s <code>position</code> property.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fl">3</span>, </span>
 <span>      start <span class="op">=</span> <span class="fl">20</span>, </span>
@@ -304,14 +332,14 @@ Figure 4: A labelled arc
 <img src="arcwedges_files/figure-html/fig-labelmultiple-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-labelmultiple-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 5: Multiple labels on an arc
+Figure 6: Multiple labels on an arc
 </figcaption></figure>
 </div>
 </div>
 </div>
 <p>If the orientation of the label needs to be changed, it can be set with <code>vjust</code>, <code>hjust</code>, or <code>polar_just</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fl">3</span>, </span>
 <span>      start <span class="op">=</span> <span class="fl">20</span>, </span>
@@ -325,14 +353,14 @@ Figure 5: Multiple labels on an arc
 <img src="arcwedges_files/figure-html/fig-labeladjust-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-labeladjust-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 6: The arc’s labels can be adjusted.
+Figure 7: The arc’s labels can be adjusted.
 </figcaption></figure>
 </div>
 </div>
 </div>
 <p>There are cases where the arc is already created and a label is needed. Although the <code>label</code> can be added after the arc has been created, the position would have to be set manually (otherwise the position will be at 0,0 by default). In such cases, the <code>auto_label</code> function can help place the label correctly. By default, the <code>auto_label</code> will show the the <code>theta</code> property (i.e., <code>end</code> − <code>start</code>).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
 <span>  <span class="op">{</span><span class="va">a1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fl">3</span>, </span>
 <span>      start <span class="op">=</span> <span class="fl">20</span>, </span>
@@ -344,14 +372,14 @@ Figure 6: The arc’s labels can be adjusted.
 <img src="arcwedges_files/figure-html/fig-autolabel-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-autolabel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 7: Using the arc’s autolabel
+Figure 8: Using the arc’s autolabel
 </figcaption></figure>
 </div>
 </div>
 </div>
 <p>However, any label can be inserted at any position.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
 <span>  <span class="va">a1</span> <span class="op">+</span></span>
 <span>  <span class="va">a1</span><span class="op">@</span><span class="va">autolabel</span><span class="op">(</span>label <span class="op">=</span> <span class="st">"Start"</span>, position <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
@@ -361,7 +389,7 @@ Figure 7: Using the arc’s autolabel
 <img src="arcwedges_files/figure-html/fig-autolabeladjust-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-autolabeladjust-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 8: Adjusting the arc’s autolabel
+Figure 9: Adjusting the arc’s autolabel
 </figcaption></figure>
 </div>
 </div>
@@ -370,7 +398,7 @@ Figure 8: Adjusting the arc’s autolabel
 </h2>
 <p>The arc object is plotted using <code>ggarrow::arrow</code>. This means that arrows can be placed on either end of an arc.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_arrow_head</span> <span class="op">&lt;-</span> <span class="fu">arrowheadr</span><span class="fu">::</span><span class="fu"><a href="https://wjschne.github.io/arrowheadr/reference/arrow_head_hypotrochoid.html" class="external-link">arrow_head_deltoid</a></span><span class="op">(</span>d <span class="op">=</span> <span class="fl">2.3</span>, n <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">bp</span> <span class="op">+</span> </span>
@@ -386,7 +414,7 @@ Figure 8: Adjusting the arc’s autolabel
 <img src="arcwedges_files/figure-html/fig-arcarrow-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-arcarrow-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 9: Arcs with arrowheads
+Figure 10: Arcs with arrowheads
 </figcaption></figure>
 </div>
 </div>
@@ -395,7 +423,7 @@ Figure 9: Arcs with arrowheads
 </h2>
 <p>If the <code>ob_arc@wedge</code> property is set to <code>TRUE</code>, the <code>ob_arc</code> function will plot a wedge using <code><a href="https://ggplot2.tidyverse.org/reference/geom_polygon.html" class="external-link">ggplot2::geom_polygon</a></code>. The <code>ob_wedge</code> function is a convenient wrapper function for <code>ob_arc</code> that sets the <code>@wedge</code> property to <code>TRUE</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">120</span>, <span class="fl">180</span>, <span class="fl">360</span><span class="op">)</span></span>
 <span><span class="va">bp</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/ob_arc.html">ob_wedge</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fl">3</span>, </span>
@@ -410,7 +438,7 @@ Figure 9: Arcs with arrowheads
 <img src="arcwedges_files/figure-html/fig-wedge-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-wedge-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 10: Arc wedges
+Figure 11: Arc wedges
 </figcaption></figure>
 </div>
 </div>

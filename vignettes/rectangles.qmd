@@ -171,7 +171,7 @@ rc_center <- list(
   r1@center,
   r1@center@label(
     fill = my_colors$primary@lighten(.15), 
-    vjust = -.15)) %>%
+    vjust = -.15)) |>
   bind()
 
 rc_width <- s_north |> 

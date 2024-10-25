@@ -7,7 +7,7 @@
 ob_polygon(
   p = class_missing,
   label = class_missing,
-  radius = class_missing,
+  vertex_radius = class_missing,
   alpha = class_missing,
   color = class_missing,
   fill = class_missing,
@@ -22,7 +22,7 @@ ob_polygon(
 
 \item{label}{A character, angle, or label object}
 
-\item{radius}{A numeric or unit vector of length one, specifying the corner radius}
+\item{vertex_radius}{A numeric or unit vector of length one, specifying the corner radius}
 
 \item{alpha}{numeric value for alpha transparency}
 

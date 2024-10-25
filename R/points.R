@@ -1,4 +1,9 @@
 pt_styles <- c("alpha", "color", "fill", "shape", "size", "stroke")
+
+pr_place <- new_property(class_function, getter = function(self) {
+  \(from, where = "right", sep = 1, ...) place(x = self, from = from, where = where, sep = sep, ...)
+})
+
 pt_props <- list(
   # Primary ----
   primary = list(
@@ -91,7 +96,8 @@ pt_props <- list(
         ob_label(p = self, label = label, ...)
       }
 
-    })
+    }),
+    place = pr_place
 
   ),
   info = list(
@@ -317,6 +323,7 @@ purrr::walk(list(`+`, `-`, `*`, `/`, `^`), \(.f) {
     y <- .f(e1@y, e2@y)
     e2@x <- x
     e2@y <- y
+    e2@style <- e1@style + e2@style
     e2
   }
   method(.f, list(ob_point, class_numeric)) <- function(e1, e2) {

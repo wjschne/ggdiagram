@@ -72,6 +72,9 @@ arc_props <- list(
     apothem = new_property(getter = function(self) {
       self@radius - self@sagitta
     }),
+    arc_length = new_property(getter = function(self) {
+      abs(self@radius) * abs(self@theta@radian)
+    }),
     sagitta = new_property(getter = function(self) {
       l <- self@chord@distance
       r <- self@radius
@@ -213,12 +216,7 @@ arc_props <- list(
         as.geom(self, ...)
       }
     }),
-    angle_at = new_property(class_function, getter = function(self) {
-      \(point) {
-        dp <- point - self@center
-        dp@theta
-      }
-    }),
+    angle_at = ob_circle@properties$angle_at,
     autolabel = new_property(class_function, getter = function(self) {
       \(label = as.character(degree(self@theta)),
         position = .5,
@@ -233,32 +231,19 @@ arc_props <- list(
       }
     }),
     midpoint = new_property(class_function, getter = function(self) {
-      \(position = .5, ...) midpoint(self, position = position, ...)
+      \(position = .5, ...) {
+        m <- self@start@turn + (self@theta@turn * position)
+        self@center + ob_polar(
+          theta = turn(m),
+          r = self@radius,
+          style = self@style + ob_style(...))
+      }
+
     }),
-    point_at = new_property(
-      class_function,
-      getter = function(self) {
-        \(theta = degree(0), ...) ob_polar(theta = theta, r = self@radius, style = self@style, ...)
-      }
-    ),
-    tangent_at = new_property(
-      class = class_function,
-      getter = function(self) {
-        \(theta = degree(0), ...) {
-          x0 <- self@center@x
-          y0 <- self@center@y
-          x1 <- cos(theta) * self@radius + self@center@x
-          y1 <- cos(theta) * self@radius + self@center@y
-          ob_line(
-            a = x1 - x0,
-            b = y1 - y0,
-            c = x0^2 - (x1 * x0) + y0^2 - (y1 * y0) - self@radius^2,
-            style = self@style,
-            ...
-          )
-        }
-      }
-    )
+    normal_at = ob_circle@properties$normal_at,
+    place = pr_place,
+    point_at = ob_circle@properties$point_at,
+    tangent_at = ob_circle@properties$tangent_at
   ),
   # info ----
   info = list(aesthetics = new_property(
@@ -484,32 +469,19 @@ ob_arc <- new_class(
     }
 
     label <- centerpoint_label(label,
-                               center = center,
+                               center = label@p,
                                d = d,
                                shape_name = "ob_arc")
 
-
-
-    if (S7_inherits(label, ob_label)) {
-      if (all(label@p@x == 0) && all(label@p@y == 0)) {
-        m <- start + ((end - start) * label@position)
-        label@p <- center + ob_polar(theta = m, r = radius)
-        if (all(length(label@hjust) == 0)) {
-          label@hjust <- polar2just(m, 1.4, axis = "h")
-        }
-
-        if (all(length(label@vjust) == 0)) {
-          label@vjust <- polar2just(m, 1.4, axis = "v")
-        }
-
-
-
-      }
-
-    }
-
     center = set_props(center, x = d$x0, y = d$y0)
     center@style <- arc_style
+
+
+
+
+
+
+
 
     if (S7_inherits(start, degree)) {
       start <- degree(d$start * 360)
@@ -527,9 +499,19 @@ ob_arc <- new_class(
       end <- turn(d$end)
     }
 
+    if (S7_inherits(label, ob_label)) {
+      if (all(label@p@x == 0) && all(label@p@y == 0)) {
+        m <- start + ((end - start) * label@position)
+        label@p <- center + ob_polar(theta = m, r = radius)
+        if (all(length(label@hjust) == 0)) {
+          label@hjust <- polar2just(m, 1.4, axis = "h")
+        }
 
-
-
+        if (all(length(label@vjust) == 0)) {
+          label@vjust <- polar2just(m, 1.4, axis = "v")
+        }
+      }
+    }
 
     new_object(
       centerpoint(center = center, label = label),
@@ -651,15 +633,10 @@ method(get_tibble_defaults, ob_arc) <- function(x) {
   get_tibble_defaults_helper(x, sp,required_aes = c("x0", "y0", "r", "start", "end", "group"))
 }
 
-method(
-  midpoint,
-  list(ob_arc, class_missing)) <- function(x,y, position = .5, ...) {
-  m <- x@start@turn + (x@theta@turn * position)
-  x@center + ob_polar(
-    theta = turn(m),
-    r = x@radius,
-    style = x@style + ob_style(...))
-  }
+method(midpoint,list(ob_arc, class_missing)) <- function(x,y, position = .5, ...) {
+    x@midpoint(position = position, ...)
+}
+
 
 method(`[`, ob_arc) <- function(x, y) {
   d <- as.list(x@tibble[y,] |>

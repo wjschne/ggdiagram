@@ -40,8 +40,8 @@ class_color <- new_class(
       class = class_function,
       getter = function(self) {
         \(amount = 0.2) {
-          tibble::tibble(amount = amount, x = c(self)) %>%
-            purrr::pmap_chr(tinter::lighten) %>%
+          tibble::tibble(amount = amount, x = c(self)) |>
+            purrr::pmap_chr(tinter::lighten) |>
             class_color()
         }
       }
@@ -50,8 +50,8 @@ class_color <- new_class(
       class = class_function,
       getter = function(self) {
         \(amount = 0.2) {
-          tibble::tibble(amount = amount, x = c(self)) %>%
-            purrr::pmap_chr(tinter::darken) %>%
+          tibble::tibble(amount = amount, x = c(self)) |>
+            purrr::pmap_chr(tinter::darken) |>
             class_color()
         }
       }
@@ -114,7 +114,10 @@ class_color <- new_class(
         )
         self
       }
-    )
+    ),
+    tex = new_property(getter = function(self) {
+      paste0("\\color[HTML]{", substring(self@color, 2, 7), "}")
+    })
   ), constructor = function(color = class_missing, hue = NULL, saturation = NULL, brightness = NULL, alpha = NULL) {
     decoded <- farver::decode_colour(color, alpha = TRUE)
 
@@ -171,3 +174,22 @@ method(mean, class_color) <- function(x, ...) {
 mean_color <- function(x) {
   grDevices::colorRampPalette(x, space = "Lab")(3)[2]
 }
+
+# latex_color ----
+#' Surround TeX expression with a color command
+#'
+#' @param x TeX expression
+#' @param color color
+#'
+#' @return character string
+#' @export
+#'
+#' @examples
+#' latex_color("X^2", "red")
+latex_color <- function(x, color) {
+  if (!S7_inherits(color, class_color)) {
+    color <- class_color(color)
+  }
+  paste0("{",color@tex," ", x,"}")
+}
+

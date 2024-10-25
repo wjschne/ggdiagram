@@ -207,10 +207,13 @@ ob_path <- new_class(
 
     if (S7_inherits(p, ob_point)) p <- list(p)
     p_style <- purrr::map(p, \(x) {
-      purrr::map(unbind(x), \(xx) xx@style) %>%
+      purrr::map(unbind(x), \(xx) xx@style) |>
         purrr::reduce(`+`)
-    }) %>%
-      bind()
+    })
+
+
+
+    p_style <- bind(p_style)
 
 
 
@@ -374,9 +377,9 @@ method(as.geom, ob_path) <- function(x, ...) {
 
 method(`[`, ob_path) <- function(x, y) {
   d <- x@tibble[y,]
-  dl <- d %>%
-    dplyr::select(-.data$x, -.data$y, -.data$group) %>%
-    unique() %>%
+  dl <- d |>
+    dplyr::select(-.data$x, -.data$y, -.data$group) |>
+    unique() |>
     unbind()
   z <- rlang::inject(ob_path(p = x@p[y], !!!dl))
   z@label <- x@label[y]

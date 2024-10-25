@@ -58,8 +58,8 @@ rc_props <- list(
   ),
   # extra ----
   extra = list(
-    corner_radius = new_property(class = class_numeric_or_unit, validator = function(value) {
-      if (length(value) > 1) stop("The corner_radius property must be of length 1.")
+    vertex_radius = new_property(class = class_numeric_or_unit, validator = function(value) {
+      if (length(value) > 1) stop("The vertex_radius property must be of length 1.")
     })
   ),
   styles = ob_style@properties[rc_styles],
@@ -70,7 +70,20 @@ rc_props <- list(
     }),
     bounding_box = new_property(getter = function(self) {
 
-      d_rect <- self@tibble |>
+      d_rect <- tibble::tibble(
+        x0 = c(
+          self@northwest@x,
+          self@northeast@x,
+          self@southwest@x,
+          self@southeast@x
+        ),
+        y0 = c(
+          self@northwest@y,
+          self@northeast@y,
+          self@southwest@y,
+          self@southeast@y
+        )
+      ) |>
         dplyr::summarise(xmin = min(x0),
                          xmax = max(x0),
                          ymin = min(y0),
@@ -192,7 +205,7 @@ rc_props <- list(
         y0 = self@center@y,
         width = self@width,
         height = self@height,
-        corner_radius = self@corner_radius,
+        vertex_radius = self@vertex_radius,
         angle = self@angle@degree,
         alpha = self@alpha,
         color = self@color,
@@ -220,7 +233,7 @@ rc_props <- list(
           fill = self@fill,
           linewidth = self@linewidth,
           linetype = self@linetype,
-          corner_radius = self@corner_radius
+          vertex_radius = self@vertex_radius
         ) |> get_non_empty_tibble()
 
         d <- tibble::tibble(
@@ -232,7 +245,6 @@ rc_props <- list(
           group = seq(self@length),
           theta = theta@radian
         ) |>
-          # tidyr::crossing(theta@radian) %>%
           mutate(
             rtheta = theta - angle,
             side = find_side(rtheta, width, height),
@@ -241,27 +253,28 @@ rc_props <- list(
                        sign(cos(rtheta)) * (height / 2) * abs(cos(rtheta) / sin(rtheta))),
             y = ifelse(side %in% c(2L, 4L),
                        sign(sin(rtheta)) * (height / 2 + distance),
-                       sign(sin(rtheta)) * (width / 2) * abs(tan(rtheta)))) %>%
-          dplyr::select(group, x, y, angle, x0, y0) %>%
-          tidyr::nest(.by = c(group, angle, x0, y0)) %>%
+                       sign(sin(rtheta)) * (width / 2) * abs(tan(rtheta)))) |>
+          dplyr::select(group, x, y, angle, x0, y0) |>
+          tidyr::nest(.by = c(group, angle, x0, y0)) |>
           dplyr::mutate(data = purrr::map2(data, angle, \(dd,aa) {
             as.matrix(dd) |>
               rotate2columnmatrix(aa) |>
               `colnames<-`(c("x", "y")) |>
               tibble::as_tibble()
-          })) %>%
-          tidyr::unnest(data) %>%
+          })) |>
+          tidyr::unnest(data) |>
           mutate(x = x  + x0,
-                 y = y  + y0) %>%
-          dplyr::select(group, x,y) %>%
-          tidyr::nest(.by = group) %>%
-          dplyr::bind_cols(dl) %>%
+                 y = y  + y0) |>
+          dplyr::select(group, x,y) |>
+          tidyr::nest(.by = group) |>
+          dplyr::bind_cols(dl) |>
           tidyr::unnest(data)
 
         rlang::inject(ob_point(!!!d))
 
       }
     }),
+    place = pr_place,
     point_at = new_property(
       class_function,
       getter = function(self) {
@@ -276,7 +289,7 @@ rc_props <- list(
             fill = self@fill,
             linewidth = self@linewidth,
             linetype = self@linetype,
-            corner_radius = self@corner_radius
+            vertex_radius = self@vertex_radius
           ) |> get_non_empty_tibble()
 
           d <- tibble::tibble(
@@ -296,22 +309,22 @@ rc_props <- list(
                          sign(cos(rtheta)) * (height / 2) * abs(cos(rtheta) / sin(rtheta))),
               y = ifelse(side %in% c(2L, 4L),
                          sign(sin(rtheta)) * height / 2,
-                         sign(sin(rtheta)) * (width / 2) * abs(sin(rtheta) / cos(rtheta)))) %>%
-            dplyr::select(group, x, y, angle, x0, y0) %>%
-            tidyr::nest(.by = c(group, angle, x0, y0)) %>%
+                         sign(sin(rtheta)) * (width / 2) * abs(sin(rtheta) / cos(rtheta)))) |>
+            dplyr::select(group, x, y, angle, x0, y0) |>
+            tidyr::nest(.by = c(group, angle, x0, y0)) |>
             dplyr::mutate(data = purrr::map2(data, angle, \(dd,aa) {
               if (is.na(aa)) aa <- 0
               as.matrix(dd) |>
                 rotate2columnmatrix(aa) |>
                 `colnames<-`(c("x", "y")) |>
                 tibble::as_tibble()
-            })) %>%
-            tidyr::unnest(data) %>%
+            })) |>
+            tidyr::unnest(data) |>
             dplyr::mutate(x = x  + x0,
-                          y = y  + y0) %>%
-            dplyr::select(group, x,y) %>%
-            tidyr::nest(.by = group) %>%
-            dplyr::bind_cols(dl) %>%
+                          y = y  + y0) |>
+            dplyr::select(group, x,y) |>
+            tidyr::nest(.by = group) |>
+            dplyr::bind_cols(dl) |>
             tidyr::unnest(data)
 
             rlang::inject(ob_point(!!!d))
@@ -343,7 +356,7 @@ rc_props <- list(
 #' @param label A character, angle, or label object
 #' @param x0 overrides x-coordinate in `center@x`
 #' @param y0 overrides y-coordinate in `center@x`
-#' @param corner_radius A numeric or unit vector of length one, specifying the corner radius for rounded corners
+#' @param vertex_radius A numeric or unit vector of length one, specifying the corner radius for rounded corners
 #' @param style a style object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object
 #' @inherit ob_style params
@@ -374,7 +387,7 @@ ob_rectangle <- new_class(
                          southwest = class_missing,
                          southeast = class_missing,
                          angle = 0,
-                         corner_radius = class_missing,
+                         vertex_radius = class_missing,
                          label = class_missing,
                          alpha = class_missing,
                          color = "black",
@@ -587,7 +600,7 @@ ob_rectangle <- new_class(
       height = d$height,
       angle = radian(d$angle),
       label = label,
-      corner_radius = corner_radius,
+      vertex_radius = vertex_radius,
       alpha = d[["alpha"]] %||% alpha,
       color = d[["color"]] %||% color ,
       fill = d[["fill"]]  %||% fill,
@@ -633,9 +646,9 @@ method(get_tibble, ob_rectangle) <- function(x) {
             xx@southwest@y,
             xx@southeast@y),
       group = rep(seq(1,xx@length), 4)
-    ) %>%
-      tidyr::nest(.by = group) %>%
-      dplyr::mutate(p = purrr::map(data, ob_point)) %>%
+    ) |>
+      tidyr::nest(.by = group) |>
+      dplyr::mutate(p = purrr::map(data, ob_point)) |>
       dplyr::pull(p),
     group = seq(1, x@length),
     alpha = xx@alpha,
@@ -643,7 +656,7 @@ method(get_tibble, ob_rectangle) <- function(x) {
     fill = xx@fill,
     linewidth = xx@linewidth,
     linetype = xx@linetype,
-    radius = xx@corner_radius
+    radius = xx@vertex_radius
   )
   get_non_empty_tibble(d) |>
     dplyr::mutate(

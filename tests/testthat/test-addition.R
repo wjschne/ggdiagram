@@ -1,4 +1,4 @@
-test_that("add angles", {
+test_that("add, subtract, multiply, divide, and exponentiate degrees, radians, and turns", {
   purrr::map(list(degree, radian, turn), \(.f) {
     expect_equal(prop(.f(.1), S7_class(.f(0))@name), .1)
     expect_equal(.f(.1) + .f(.1), .f(.2))
@@ -9,13 +9,15 @@ test_that("add angles", {
   })
   })
 
-  test_that("trig", {
+
+
+  test_that("trig functions work with ob_angle", {
     expect_equal(cos(turn(1)), cospi(2))
     expect_equal(sin(turn(.25)), sinpi(.5))
     expect_equal(tan(turn(.5)), tanpi(1))
   })
 
-test_that("equality", {
+test_that("equality with ob_angle", {
   tidyr::crossing(tibble::tibble(
     .f = list(degree, radian, turn),
     ratio = c(360, 2 * pi, 1)),
@@ -37,7 +39,7 @@ test_that("equality", {
 
 test_that("trig angles", {
   my_turn <- 1 / 8
-  purrr::map2(list(degree, radian, turn), c(360, 2*pi, 1), \(.f, ratio) {
+  purrr::map2(list(degree, radian, turn), c(360, 2 * pi, 1), \(.f, ratio) {
     expect_equal(sin(.f(ratio * my_turn)),  sinpi(2 * my_turn))
     expect_equal(cos(.f(ratio * my_turn)),  cospi(2 * my_turn))
     expect_equal(tan(.f(ratio * my_turn)),  tanpi(2 * my_turn))
