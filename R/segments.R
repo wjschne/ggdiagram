@@ -125,7 +125,7 @@ sg_props <- list(
 
 
           label(
-            p = midpoint(self, position = position),
+            center = midpoint(self, position = position),
             label = purrr::map_chr(label, \(l) ifelse(is.numeric(l),signs::signs(l, accuracy = .01),l)),
             vjust = vjust,
             angle = angle,
@@ -342,8 +342,8 @@ ob_segment <- new_class(
 
     if (S7_inherits(label, ob_label)) {
       pos <- label@position
-      if (all(label@p == ob_point(0,0))) {
-        label@p <- midpoint(p1,p2, position = pos)
+      if (all(label@center == ob_point(0,0))) {
+        label@center <- midpoint(p1,p2, position = pos)
       }
       if (all(length(label@angle) == 0)) {
         label@angle = (p2 - p1)@theta

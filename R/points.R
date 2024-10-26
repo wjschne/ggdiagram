@@ -93,7 +93,7 @@ pt_props <- list(
             label = signs::signs(label, accuracy = accuracy, trim_leading_zeros = TRUE)
           }
         }
-        ob_label(p = self, label = label, ...)
+        ob_label(center = self, label = label, ...)
       }
 
     }),

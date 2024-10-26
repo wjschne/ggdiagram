@@ -233,8 +233,8 @@ ob_polygon <- new_class(
 
       center@style <- ob_polygon_style
       if (S7_inherits(label, ob_label)) {
-        if (all(label@p@x == 0) && all(label@p@y == 0)) {
-          label@p <- center
+        if (all(label@center@x == 0) && all(label@center@y == 0)) {
+          label@center <- center
         }
         if (length(label@fill) == 0 || all(label@fill == "white") && all(!is.na(label@fill))) {
           label@fill <- d[["fill"]] %||% fill
@@ -450,8 +450,8 @@ ob_intercept <- new_class(
     center = set_props(center, x = d$x0, y = d$y0)
 
     if (S7_inherits(label, ob_label)) {
-      if (all(label@p == ob_point(0,0))) {
-        label@p <- center
+      if (all(label@center == ob_point(0,0))) {
+        label@center <- center
       }
     }
 

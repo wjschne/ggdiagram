@@ -177,7 +177,7 @@ rc_center <- list(
 rc_width <- s_north |> 
   set_props(label = ob_label(
     label = paste0("Width = ", r1@width),
-    p = midpoint(s_north),
+    center = midpoint(s_north),
     color = my_colors$secondary,
     vjust = 0,
     label.margin = ggplot2::margin(2, 2, 2, 2, "pt")
@@ -186,7 +186,7 @@ rc_width <- s_north |>
 rc_height <- s_east |> 
   set_props(label = ob_label(
     label = paste0("Height = ", r1@height),
-    p  = midpoint(s_east),
+    center  = midpoint(s_east),
     vjust = 0,
     color = my_colors$secondary,
     angle = -90))

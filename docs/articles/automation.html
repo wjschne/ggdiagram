@@ -245,7 +245,7 @@ Figure 1: An ob_shape_list
 <span>        fill <span class="op">=</span> <span class="st">"black"</span>,</span>
 <span>        shape <span class="op">=</span> <span class="st">"triangle down filled"</span>,</span>
 <span>        size <span class="op">=</span> <span class="fl">15</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/unbind.html">unbind</a></span><span class="op">(</span><span class="va">p_3</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/unbind.html">unbind</a></span><span class="op">(</span><span class="va">p_3</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>    <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span></span>
 <span>      \<span class="op">(</span><span class="va">p_i</span><span class="op">)</span> <span class="op">{</span></span>
 <span>        <span class="va">p_i</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span></span>
@@ -254,7 +254,7 @@ Figure 1: An ob_shape_list
 <span>          color <span class="op">=</span> <span class="st">"orchid"</span>, </span>
 <span>          fill <span class="op">=</span> <span class="st">"orchid"</span>, </span>
 <span>          size <span class="op">=</span> <span class="fl">15</span>, </span>
-<span>          shape <span class="op">=</span> <span class="st">"triangle filled"</span><span class="op">)</span><span class="op">}</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>          shape <span class="op">=</span> <span class="st">"triangle filled"</span><span class="op">)</span><span class="op">}</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/bind.html">bind</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span><span class="cn">NULL</span>, expand <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expansion.html" class="external-link">expansion</a></span><span class="op">(</span><span class="fl">.15</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
@@ -276,7 +276,7 @@ Figure 2: Using <code>unbind</code>, <code>map</code>, and <code>bind</code> to
 <span>                 r <span class="op">=</span> <span class="fl">2</span>, </span>
 <span>                 size <span class="op">=</span> <span class="fl">10</span>, </span>
 <span>                 color <span class="op">=</span> <span class="st">"orchid"</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/unbind.html">unbind</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/unbind.html">unbind</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span>\<span class="op">(</span><span class="va">pp</span><span class="op">)</span> <span class="op">{</span></span>
 <span>      <span class="va">p2</span> <span class="op">&lt;-</span> <span class="va">pp</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span></span>
 <span>        theta <span class="op">=</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">330</span>, <span class="fl">30</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -306,7 +306,7 @@ Figure 3: Using <code>unbind</code>, <code>lapply</code>, and <code>as.geom</co
 <span>  <span class="op">{</span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
 <span>  <span class="op">{</span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span><span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">90</span>, <span class="fl">180</span>, <span class="fl">270</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/connect.html">connect</a></span><span class="op">(</span><span class="va">o</span>, <span class="va">p</span>, resect <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="va">p</span> <span class="op">|&gt;</span></span>
+<span>  <span class="va">p</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="../reference/map_ob.html">map_ob</a></span><span class="op">(</span>\<span class="op">(</span><span class="va">pp</span><span class="op">)</span> <span class="op">{</span></span>
 <span>      <span class="va">p2</span> <span class="op">&lt;-</span> <span class="va">pp</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span>theta <span class="op">=</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">45</span>, <span class="fl">315</span>, <span class="fl">90</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                          r <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span> <span class="op">/</span> <span class="fl">3</span>,</span>

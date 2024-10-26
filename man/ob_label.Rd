@@ -6,7 +6,7 @@
 \usage{
 ob_label(
   label = class_missing,
-  p = class_missing,
+  center = class_missing,
   angle = class_missing,
   alpha = class_missing,
   color = class_missing,
@@ -39,7 +39,7 @@ ob_label(
 \arguments{
 \item{label}{text label}
 
-\item{p}{ob_point}
+\item{center}{ob_point indicating the center of the label}
 
 \item{angle}{angle of text}
 
@@ -89,9 +89,9 @@ ob_label(
 
 \item{spacing}{letter spacing for labels used with ob_path and ob_bezier}
 
-\item{x}{x-coordinate of center point. If specified, overrides x-coordinate of \verb{@p}.}
+\item{x}{x-coordinate of center point. If specified, overrides x-coordinate of \verb{@center}.}
 
-\item{y}{x-coordinate of center point. If specified, overrides y-coordinate of \verb{@p}.}
+\item{y}{x-coordinate of center point. If specified, overrides y-coordinate of \verb{@center}.}
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
 }

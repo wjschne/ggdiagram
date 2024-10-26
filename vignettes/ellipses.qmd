@@ -145,20 +145,20 @@ bp +
   e1 + 
   ob_label("*F*~1~", e1@focus_1, plot_point = T, vjust = 1.2) +
   ob_label("*F*~2~", e1@focus_2, plot_point = T, vjust = 1.2) + 
-  {P <- e1@point_at(deg)} +
-  P@label("*P*", polar_just = ob_polar(deg, 1.5)) +
+  {p <- e1@point_at(deg)} +
+  p@label("*P*", polar_just = ob_polar(deg, 1.5)) +
   ob_segment(e1@focus_1, 
-          P, 
+          p, 
           label = paste0("*PF*~1~ = ",
-                         distance(e1@focus_1, P) |>
+                         distance(e1@focus_1, p) |>
                            round())) + 
-  ob_segment(P, 
+  ob_segment(p, 
           e1@focus_2, 
           label = paste0("*PF*~2~ = ",
-                         distance(e1@focus_2, P) |> 
+                         distance(e1@focus_2, p) |> 
                            round())) + 
   ob_label("*PF*~1~ + *PF*~2~ = 2*a* = 8", 
-        p = ob_point(0,4), 
+        center = ob_point(0,4), 
         size = 20)
 
 ```
@@ -438,7 +438,8 @@ bp +
   ) + 
   ob_label(
     label = l1@equation,
-    p = ob_polar(theta = deg1, r = e1@point_at(deg1)@r + d),
+    center = ob_polar(theta = deg1, 
+                      r = e1@point_at(deg1)@r + d),
     angle = l1@angle,
     vjust = 0
   )

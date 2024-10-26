@@ -675,13 +675,13 @@ ob_array_helper <- function(x, k = 2, sep = 1, where = "east", anchor = "center"
     if (x@label@length == 1) {
       l <- ob_label(subscript(x@label@label, seq(k)),
                  style = x@style,
-                 p = p_center)
+                 center = p_center)
     }
 
     if (x@label@length == k) {
       l <- ob_label(x@label@label,
                  style = x@style,
-                 p = p_center)
+                 center = p_center)
     }
   }
 
@@ -691,7 +691,7 @@ ob_array_helper <- function(x, k = 2, sep = 1, where = "east", anchor = "center"
     }
   } else {
     if (S7_inherits(dots$label, ob_label)) {
-      dots$label <- ob_label(p = p_center,
+      dots$label <- ob_label(center = p_center,
                           label = dots$label@label,
                           style = dots$label@style)
     }

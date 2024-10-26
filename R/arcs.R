@@ -224,10 +224,12 @@ arc_props <- list(
         polar_just_distance = 1.4,
         ...) {
         mp <- midpoint(self, position = position, ...)
-        ob_label(p = mp,
-              label = label,
-              polar_just = ob_polar(theta = polar_just_angle,
-                                 r = polar_just_distance), ...)
+        ob_label(
+          center = mp,
+          label = label,
+          polar_just = ob_polar(theta = polar_just_angle, r = polar_just_distance),
+          ...
+        )
       }
     }),
     midpoint = new_property(class_function, getter = function(self) {
@@ -469,7 +471,7 @@ ob_arc <- new_class(
     }
 
     label <- centerpoint_label(label,
-                               center = label@p,
+                               center = label@center,
                                d = d,
                                shape_name = "ob_arc")
 
@@ -500,9 +502,9 @@ ob_arc <- new_class(
     }
 
     if (S7_inherits(label, ob_label)) {
-      if (all(label@p@x == 0) && all(label@p@y == 0)) {
+      if (all(label@center@x == 0) && all(label@center@y == 0)) {
         m <- start + ((end - start) * label@position)
-        label@p <- center + ob_polar(theta = m, r = radius)
+        label@center <- center + ob_polar(theta = m, r = radius)
         if (all(length(label@hjust) == 0)) {
           label@hjust <- polar2just(m, 1.4, axis = "h")
         }

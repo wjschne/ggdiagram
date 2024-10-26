@@ -203,7 +203,7 @@ bp +
     plot_point = TRUE) +
   ob_label(c(equation(s1@line), 
           paste0("Distance = ", round(s1@distance, 2))), 
-        p = midpoint(s1), 
+        center = midpoint(s1), 
         vjust = c(-.2, 1.1), 
         angle = s1@line@angle)
 ```

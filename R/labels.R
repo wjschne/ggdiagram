@@ -38,13 +38,13 @@ lb_props <- list(
   # primary ----
   primary = list(
     label = new_property(class = class_character),
-    p = new_property(class = ob_point)
+    center = new_property(class = ob_point)
   ),
   styles = ob_style@properties[lb_styles],
   # derived ----
   derived = list(
     auto_label = new_property(getter = function(self) {
-      label_object(self@p)
+      label_object(self@center)
     }),
    length = new_property(
       getter = function(self) {
@@ -58,7 +58,7 @@ lb_props <- list(
                        lb_styles)
        rlang::inject(ob_style(!!!get_non_empty_list(pr)))},
      setter = function(self, value) {
-       ob_label(label = self@label, p = self@p, style = self@style + value)
+       ob_label(label = self@label, center = self@center, style = self@style + value)
      }),
     tibble = new_property(getter = function(self) {
       if (length(self@angle) > 0) {
@@ -66,8 +66,8 @@ lb_props <- list(
           self@angle <- self@angle@degree
         }
       }
-      d <- list(x = self@p@x,
-                y = self@p@y,
+      d <- list(x = self@center@x,
+                y = self@center@y,
                 label = self@label,
                 spacing = self@spacing,
                 alpha = self@alpha,
@@ -167,13 +167,13 @@ lb_props <- list(
 #' ob_label class
 #'
 #' @param label text label
-#' @param p ob_point
+#' @param center ob_point indicating the center of the label
 #' @param style a style list
 #' @param plot_point plot ob_point (default = FALSE)
 #' @param spacing letter spacing for labels used with ob_path and ob_bezier
 #' @param position position (used in conjunction with the `place` function)
-#' @param x x-coordinate of center point. If specified, overrides x-coordinate of `@p`.
-#' @param y x-coordinate of center point. If specified, overrides y-coordinate of `@p`.
+#' @param x x-coordinate of center point. If specified, overrides x-coordinate of `@center`.
+#' @param y x-coordinate of center point. If specified, overrides y-coordinate of `@center`.
 #' @inherit ob_style params
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @export
@@ -188,7 +188,7 @@ ob_label <- new_class(
     !!!lb_props$funs,
     !!!lb_props$info)),
   constructor = function(label = class_missing,
-                         p = class_missing,
+                         center = class_missing,
                          angle = class_missing,
                          alpha = class_missing,
                          color = class_missing,
@@ -217,18 +217,18 @@ ob_label <- new_class(
                          y = class_missing,
                          ...) {
 
-    # If p is missing, assign x and y
-    if (missing(p)) {
+    # If center is missing, assign x and y
+    if (missing(center)) {
       if (missing(x)) x <- 0
       if (missing(y)) y <- 0
-      p <- ob_point(x,y)
+      center <- ob_point(x,y)
     } else {
       if (!missing(x)) {
-        p@x <- x
+        center@x <- x
       }
 
       if (!missing(y)) {
-        p@y <- y
+        center@y <- y
       }
 
     }
@@ -256,15 +256,15 @@ ob_label <- new_class(
 
       label = paste0(
         "(",
-        ifelse(rlang::is_integerish(p@x), p@x, signs::signs(p@x, accuracy = .1)),
+        ifelse(rlang::is_integerish(center@x), center@x, signs::signs(center@x, accuracy = .1)),
         ",",
-        ifelse(rlang::is_integerish(p@y), p@y, signs::signs(p@y, accuracy = .1)),
+        ifelse(rlang::is_integerish(center@y), center@y, signs::signs(center@y, accuracy = .1)),
         ")")
 
 
     }
 
-    d <- tibble::tibble(x = p@x, y = p@y, label = as.character(label))
+    d <- tibble::tibble(x = center@x, y = center@y, label = as.character(label))
 
     if (length(angle) > 0) {
       if (nrow(d) > 1 && length(angle) == 1) {
@@ -278,7 +278,7 @@ ob_label <- new_class(
       }
     }
 
-    p_style <- p@style
+    p_style <- center@style
     p_style@size <- 12
 
 
@@ -306,25 +306,20 @@ ob_label <- new_class(
         vjust = vjust
       )
 
-
-
-
-
-
-    if (S7::S7_inherits(p, ob_segment)) {
-      l_style@angle <- p@line@angle@degree
+    if (S7::S7_inherits(center, ob_segment)) {
+      l_style@angle <- center@line@angle@degree
       l_style@vjust = ifelse(length(l_style@vjust) == 0 || is.na(l_style@vjust), 0,l_style@vjust)
-      p <- midpoint(p)
+      center <- midpoint(center)
     }
 
-    if (S7::S7_inherits(p, ob_arc)) {
+    if (S7::S7_inherits(center, ob_arc)) {
       if (missing(label)) {
-        label = as.character(degree(p@theta@degree))
+        label = as.character(degree(center@theta@degree))
       }
-      a <- p
-      p <- midpoint(p)
+      a <- center
+      center <- midpoint(center)
       l_style <- polar_just(l_style,
-                            (p - a@center)@theta + angle(turn = .5),
+                            (center - a@center)@theta + angle(turn = .5),
                             multiplier = 1.15) + ob_style(...)
     }
 
@@ -344,17 +339,13 @@ ob_label <- new_class(
         tibble::tibble(!!!non_empty_list))
     }
 
-
-
-
-
-    p@x <- d$x
-    p@y <- d$y
+    center@x <- d$x
+    center@y <- d$y
     alpha = d[["alpha"]] %||% alpha
     new_object(
       S7_object(),
       label = d[["label"]],
-      p = p,
+      center = center,
       alpha = d[["alpha"]] %||% alpha,
       color = d[["color"]] %||% color,
       angle = d[["angle"]] %||% angle,
@@ -406,25 +397,25 @@ method(as.geom, centerpoint) <- function(x, ...) {
 
 method(`+`, list(centerpoint, ob_point)) <- function(e1, e2) {
   e1@center <- e1@center + e2
-  if (S7_inherits(e1@label, ob_label)) e1@label@p <- e1@label@p + e2
+  if (S7_inherits(e1@label, ob_label)) e1@label@center <- e1@label@center + e2
   e1
 }
 
 method(`-`, list(centerpoint, ob_point)) <- function(e1, e2) {
   e1@center <- e1@center - e2
-  if (S7_inherits(e1@label, ob_label)) e1@label@p <- e1@label@p - e2
+  if (S7_inherits(e1@label, ob_label)) e1@label@center <- e1@label@center - e2
   e1
 }
 
 method(`+`, list(ob_point, centerpoint)) <- function(e1, e2) {
   e2@center <- e1 + e2@center
-  if (S7_inherits(e2@label, ob_label)) e2@label@p <- e2@label@p + e1
+  if (S7_inherits(e2@label, ob_label)) e2@label@center <- e2@label@center + e1
   e2
 }
 
 method(`-`, list(ob_point, centerpoint)) <- function(e1, e2) {
   e2@center <- e1 - e2@center
-  if (S7_inherits(e2@label, ob_label)) e2@label@p <- e2@label@p - e1
+  if (S7_inherits(e2@label, ob_label)) e2@label@center <- e2@label@center - e1
   e2
 }
 
@@ -457,7 +448,7 @@ method(str, ob_label) <- function(
     object,
     nest.lev = 0,
     additional = TRUE,
-    omit = omit_props(object, include = c("label","p"))) {
+    omit = omit_props(object, include = c("label","center"))) {
   str_properties(object,
                  omit = omit,
                  nest.lev = nest.lev)
@@ -529,7 +520,7 @@ method(as.geom, ob_label) <- function(x, ...) {
 
     if (x@plot_point) {
 
-      gp <- as.geom(x@p)
+      gp <- as.geom(x@center)
       gl <- list(gl, gp)
     }
   gl
@@ -537,7 +528,7 @@ method(as.geom, ob_label) <- function(x, ...) {
 }
 
 method(label_object, ob_label) <- function(object, accuracy = .1) {
-  label_object(object@p, accuracy = accuracy)
+  label_object(object@center, accuracy = accuracy)
 }
 
 
@@ -580,11 +571,11 @@ method(unbind, ob_label) <- function(x, ...) {
 centerpoint_label <- function(label, center, d, shape_name = "shape", ...) {
 
   if (S7_inherits(label, ob_label)) {
-    label@p <- center
+    label@center <- center
   }
 
   if (is.character(label) || S7_inherits(label, ob_angle) || is.numeric(label)) {
-    label <- ob_label(label = label, p = center, fill = NA, ...)
+    label <- ob_label(label = label, center = center, fill = NA, ...)
   }
 
 
@@ -613,17 +604,17 @@ centerpoint_label <- function(label, center, d, shape_name = "shape", ...) {
 }
 
 method(nudge, list(ob_label, class_numeric, class_numeric)) <- function(object, x, y) {
-  object@p <- object@p + ob_point(x, y)
+  object@center <- object@center + ob_point(x, y)
   object
 }
 
 method(nudge, list(ob_label, class_numeric, class_missing)) <- function(object, x, y) {
-  object@p <- object@p + ob_point(x, 0)
+  object@center <- object@center + ob_point(x, 0)
   object
 }
 
 method(nudge, list(ob_label, class_missing, class_numeric)) <- function(object, x, y) {
-  object@p <- object@p + ob_point(0, y)
+  object@center <- object@center + ob_point(0, y)
   object
 }
 
@@ -651,8 +642,8 @@ method(place, list(ob_label, ob_point)) <- function(
     sep = 1) {
   where <- degree(where)
   p <- ob_polar(where, sep)
-  x@p@x <- from@x + p@x
-  x@p@y <- from@y + p@y
+  x@center@x <- from@x + p@x
+  x@center@y <- from@y + p@y
   x
 }
 
@@ -662,9 +653,9 @@ method(place, list(ob_label, ob_label)) <- function(
     where = "right",
     sep = 1) {
   where <- degree(where)
-  p <- ob_polar(where@p, sep)
-  x@p@x <- from@p@x + p@x
-  x@p@y <- from@p@y + p@y
+  p <- ob_polar(where@center, sep)
+  x@center@x <- from@center@x + p@x
+  x@center@y <- from@center@y + p@y
   x
 }
 

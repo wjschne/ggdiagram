@@ -646,7 +646,7 @@ method(place, list(centerpoint, centerpoint)) <- function(x, from, where = "righ
 
   xp <- x@point_at(where + degree(180)) - x@center
   x@center <- (p + p_sep) - xp
-  if (S7_inherits(x@label)) x@label@p <- x@center
+  if (S7_inherits(x@label)) x@label@center <- x@center
   x
 }
 
@@ -667,7 +667,7 @@ method(place, list(centerpoint, ob_point)) <- function(x, from, where = "right",
   p <- x@center - x@point_at(where + degree(180))
   x@center@x <- from@x + p@x + p_sep@x
   x@center@y <- from@y + p@y + p_sep@y
-  if (S7_inherits(x@label)) x@label@p <- x@center
+  if (S7_inherits(x@label)) x@label@center <- x@center
   x
 
 }

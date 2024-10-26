@@ -1,14 +1,12 @@
+# ggdiagram
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
-# ggdiagram <a href="https://wjschne.github.io/ggdiagram/"><img src="man/figures/logo.png" align="right" height="120" alt="ggdiagram website" /></a>
 
 <!-- badges: start -->
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![CRAN
-status](https://www.r-pkg.org/badges/version/ggdiagram)](https://CRAN.R-project.org/package=ggdiagram)
+status](https://www.r-pkg.org/badges/version/ggdiagram.png)](https://CRAN.R-project.org/package=ggdiagram)
 <!-- badges: end -->
 
 The ggdiagram package takes an object-oriented approach to making
@@ -73,4 +71,12 @@ ggdiagram() +
   connect(c1, r2) 
 ```
 
-<img src="man/figures/README-fig-example-1.png" width="100%" />
+<div id="fig-example">
+
+<img src="man/figures/README-fig-example-1.png" style="width:100.0%"
+data-fig-alt="An arrow points from a circle to a square." />
+
+
+Figure 1: Connecting a circle and a square with an arrow.
+
+</div>

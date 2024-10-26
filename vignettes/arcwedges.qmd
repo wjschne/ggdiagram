@@ -115,7 +115,7 @@ bp +
     )} +
   ob_label(
     label = paste0("Center ", p1@auto_label), 
-    p = p1, 
+    center = p1, 
     vjust = 1.1) + 
   connect(
     p1, 
@@ -123,12 +123,12 @@ bp +
     label = paste0("Radius = ", r)) + 
   ob_label(
     label = ang_start, 
-    p = a1@midpoint(0),
+    center = a1@midpoint(0),
     polar_just = ob_polar(ang_start + degree(-90), 1.3), 
     plot_point = TRUE) +
   ob_label(
     label = ang_end, 
-    p = a1@midpoint(1), 
+    center = a1@midpoint(1), 
     polar_just = ob_polar(ang_end + degree(90), 1), 
     plot_point = TRUE)
 ```

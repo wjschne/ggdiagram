@@ -138,7 +138,7 @@ ggdiagram() +
         fill = "black",
         shape = "triangle down filled",
         size = 15)} +
-  unbind(p_3) |>
+  unbind(p_3) %>%
     purrr::map(
       \(p_i) {
         p_i + ob_polar(
@@ -147,7 +147,7 @@ ggdiagram() +
           color = "orchid", 
           fill = "orchid", 
           size = 15, 
-          shape = "triangle filled")}) |>
+          shape = "triangle filled")}) %>% 
   bind() +
   scale_x_continuous(NULL, expand = expansion(.15))
 ```
@@ -163,7 +163,7 @@ ggdiagram() +
                  r = 2, 
                  size = 10, 
                  color = "orchid")} +
-  unbind(p) |>
+  unbind(p) %>% 
     lapply(\(pp) {
       p2 <- pp + ob_polar(
         theta = degree(seq(0, 330, 30)),
@@ -184,7 +184,7 @@ ggdiagram() +
   {o <- ob_point()} +
   {p <- ob_polar(degree(c(0, 90, 180, 270)))} +
   connect(o, p, resect = 2) +
-  p |>
+  p %>%
     map_ob(\(pp) {
       p2 <- pp + ob_polar(theta = degree(seq(45, 315, 90)),
                           r = sqrt(2) / 3,

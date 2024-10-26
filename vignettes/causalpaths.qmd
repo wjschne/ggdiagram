@@ -390,7 +390,7 @@ ggdiagram(font_family = my_font, font_size = 16) +
                     k = 6, 
                     sep = .25)} +
   ob_label(label = paste0("*X*~",1:6, "~"),
-           p = x@center,
+           center = x@center,
            size = 20,
            fill = NA,
            nudge_y = -.1,
@@ -592,16 +592,16 @@ ggdiagram(font_family = my_font, font_size = 16) +
     place(o3[1]@point_at("west"), "west", sep = 1.2)} + 
   ob_point(-5, 0, color = "white") +
   ob_label("Loadings", 
-           lb_indicator@p %|-% midpoint(l1, o3@bounding_box)) + 
+           lb_indicator@center %|-% midpoint(l1, o3@bounding_box)) + 
   ob_label("Residuals", 
-           lb_indicator@p %|-% e3@bounding_box@center) + 
-  ob_label("Latent<br>Variable", lb_indicator@p %|-% l1) + 
+           lb_indicator@center %|-% e3@bounding_box@center) + 
+  ob_label("Latent<br>Variable", lb_indicator@center %|-% l1) + 
   ob_label("Latent<br>Variance", 
-           lb_indicator@p %|-% l1@normal_at(
+           lb_indicator@center %|-% l1@normal_at(
              "north", 
              distance = .5)) + 
   ob_label("Residual<br>Variances", 
-           lb_indicator@p %|-% e3[1]@normal_at(
+           lb_indicator@center %|-% e3[1]@normal_at(
              "south", 
              distance = .5))
 
@@ -710,7 +710,7 @@ ggdiagram(font_family = my_font, font_size = 16) +
   {lb_direct(
     label = round_probability(g2broad, 
                               phantom_text = "."), 
-    p = pGx@line@point_at_y(pGx[2]@midpoint(
+    center = pGx@line@point_at_y(pGx[2]@midpoint(
       position = .47)@y),
     color = Gx@fill)} +
   # list----
@@ -737,7 +737,7 @@ ggdiagram(font_family = my_font, font_size = 16) +
       round_probability(
         broad2indicator[[b@label@label]],
         phantom_text = "."), 
-      p = p@line@point_at_y(p[2]@midpoint(position = .47)@y),
+      center = p@line@point_at_y(p[2]@midpoint(position = .47)@y),
       color = b@fill)
     
     v <- ob_variance(
@@ -798,7 +798,7 @@ ggdiagram(font_family = my_font, font_size = 13) +
   {lb_direct(
     label = round_probability(g2broad,
                               phantom_text = "."),
-    p = pGx@line@point_at_y(pGx[2]@midpoint(
+    center = pGx@line@point_at_y(pGx[2]@midpoint(
       position = .46)@y),
     color = Gx@fill)} +
   ob_wedge(center = Gx@center, 
@@ -806,7 +806,7 @@ ggdiagram(font_family = my_font, font_size = 13) +
            start = turn(.5) + turn(broad_variance) / 2,
            end = turn(.5) - turn(broad_variance) / 2,
            fill = my_fills) + 
-  lb_latent(broad, p = Gx@center, vjust = .6) +
+  lb_latent(broad, center = Gx@center, vjust = .6) +
   {map(1:3, \(i) {
     b <- Gx[i]
     p2 <- place(ob_point(), from = b, where = "south", sep = 1.2)
@@ -818,7 +818,7 @@ ggdiagram(font_family = my_font, font_size = 13) +
     b_text <- b@label@label
     
     lb_o <- ob_label(paste0(b_text, "~", 1:3, "~"),
-                     p = p - ob_point(0,.55),
+                     center = p - ob_point(0,.55),
                      color = "white", 
                      size = 20,
                      fill = NA)
@@ -830,7 +830,7 @@ ggdiagram(font_family = my_font, font_size = 13) +
     l_b_p <- lb_direct(
       round_probability(broad2indicator[[b_text]], 
                         phantom_text = "."), 
-      p = b_p@line@point_at_y(b_p[2]@midpoint(.46)@y),
+      center = b_p@line@point_at_y(b_p[2]@midpoint(.46)@y),
       color = my_fills[i])
     
     r_g <- ob_rectangle(
@@ -1066,7 +1066,7 @@ ggdiagram(font_family = my_serif_font, font_size = 16) +
   theme(legend.position = "none") +
   ob_label(
     label = rev(strsplit(str_narrow, split = character(0))[[1]]),
-    p = narrow[seq(nchar(str_narrow)) + 2]@center,
+    center = narrow[seq(nchar(str_narrow)) + 2]@center,
     angle = narrow[seq(nchar(str_narrow)) + 2]@center@theta - degree(90),
     fill = NA,
     family = my_serif_font,
@@ -1076,7 +1076,7 @@ ggdiagram(font_family = my_serif_font, font_size = 16) +
   ) +
   ob_label(
     label = strsplit(str_narrow, split = character(0))[[1]],
-    p = narrow[seq(nchar(str_narrow)) + 22]@center,
+    center = narrow[seq(nchar(str_narrow)) + 22]@center,
     angle = narrow[seq(nchar(str_narrow)) + 22]@center@theta + degree(90),
     fill = NA,
     family = my_serif_font,
@@ -1087,7 +1087,7 @@ ggdiagram(font_family = my_serif_font, font_size = 16) +
   {purrr::map(65 + c(0,15, 30, 45), \(x) {
     ob_label(
       label = strsplit(str_tests, split = character(0))[[1]],
-      p = tests[seq(nchar(str_tests)) + x]@center,
+      center = tests[seq(nchar(str_tests)) + x]@center,
       angle = tests[seq(nchar(str_tests)) + x]@center@theta + degree(90),
       fill = NA,
       family = my_serif_font,
@@ -1099,7 +1099,7 @@ ggdiagram(font_family = my_serif_font, font_size = 16) +
   {purrr::map(5 + c(0,15, 30, 45), \(x) {
     ob_label(
       label = rev(strsplit(str_tests, split = character(0))[[1]]),
-      p = tests[seq(nchar(str_tests)) + x]@center,
+      center = tests[seq(nchar(str_tests)) + x]@center,
       angle = tests[seq(nchar(str_tests)) + x]@center@theta - degree(90),
       fill = NA,
       family = my_serif_font,
@@ -1110,7 +1110,7 @@ ggdiagram(font_family = my_serif_font, font_size = 16) +
   {purrr::map(63 + c(0,15, 30, 45), \(x) {
     ob_label(
       label = strsplit(str_specifics, split = character(0))[[1]],
-      p = specifics[seq(nchar(str_specifics)) + x]@center,
+      center = specifics[seq(nchar(str_specifics)) + x]@center,
       angle = specifics[seq(nchar(str_specifics)) + x]@center@theta + degree(90),
       fill = NA,
       family = my_serif_font,
@@ -1121,7 +1121,7 @@ ggdiagram(font_family = my_serif_font, font_size = 16) +
   {purrr::map(3 + c(0,15, 30, 45), \(x) {
     ob_label(
       label = rev(strsplit(str_specifics, split = character(0))[[1]]),
-      p = specifics[seq(nchar(str_specifics)) + x]@center,
+      center = specifics[seq(nchar(str_specifics)) + x]@center,
       angle = specifics[seq(nchar(str_specifics)) + x]@center@theta - degree(90),
       fill = NA,
       family = my_serif_font,

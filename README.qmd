@@ -1,10 +1,10 @@
 ---
-output: github_document
+title: ggdiagram
+format: gfm
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
-```{r, include = FALSE}
+```{r}
+#| include: false
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -12,10 +12,6 @@ knitr::opts_chunk$set(
   out.width = "100%"
 )
 ```
-
-
-# ggdiagram <a href="https://wjschne.github.io/ggdiagram/"><img src="man/figures/logo.png" align="right" height="120" alt="ggdiagram website" /></a>
-
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
@@ -48,7 +44,13 @@ The `ob_*` functions have methods such that they can be added to any ggplot. Und
 
 The `connect` function connects the circle and rectangle at their edges with an arrow (via `ggarrow::geom_arrow_segment`).
 
-```{r fig-example, dev='ragg_png', fig.width=6, fig.height=3.5}
+```{r fig-example, fig.alt="An arrow points from a circle to a square."}
+#| fig-width: 6
+#| fig-height: 3.5
+#| fig-cap: Connecting a circle and a square with an arrow.
+#| dev: ragg_png
+#| fig-dpi: 320
+
 library(ggdiagram)
 c1 <- ob_circle(radius = 1 / sqrt(pi)) 
 r2 <- ob_rectangle() |>

@@ -229,8 +229,8 @@ ob_circle <- new_class(
     center = set_props(center, x = d$x0, y = d$y0)
 
     if (S7_inherits(label, ob_label)) {
-      if (all(label@p == ob_point(0,0))) {
-        label@p <- center
+      if (all(label@center == ob_point(0,0))) {
+        label@center <- center
       }
     }
 
@@ -297,20 +297,6 @@ method(`==`, list(ob_circle, ob_circle)) <- function(e1, e2) {
 }
 
 # Place ----
-
-# method(place, list(ob_circle, ob_circle)) <- function(x, from, where = "right", sep = 1) {
-#
-#   where <- degree(where)
-#   p <- ob_polar(where, sep + x@radius + from@radius)
-#   x@center@x <- from@center@x + p@x
-#   x@center@y <- from@center@y + p@y
-#
-#   if (S7_inherits(x@label, ob_label)) {
-#     x@label@p <- x@center
-#   }
-#   x
-#
-# }
 
 method(place, list(ob_line, ob_circle)) <- function(x, from, where = "right", sep = 1) {
   where <- degree(where)
