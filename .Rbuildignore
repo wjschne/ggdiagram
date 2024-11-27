@@ -8,3 +8,4 @@
 ^dev$
 ^vignettes/*_files$
 ^README\.Rmd$
+^README\.qmd$

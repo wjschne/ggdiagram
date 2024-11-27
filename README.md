@@ -18,10 +18,11 @@ in many ways. Every time I run into speed bumps or inconveniences as I
 use the program in practice, I adapt it to anticipate user needs.
 
 My motivation in making ggdiagram was to find a way to approach the
-functionality of TikZ but with the flexibility and convenience of R. The
-ggdiagram package is built atop [S7](https://rconsortium.github.io/S7/)
-and is integrated with [ggplot2](https://ggplot2.tidyverse.org/), making
-heavy use of [ggtext](https://wilkelab.org/ggtext/),
+functionality of [TikZ](https://tikz.dev/) but with the flexibility and
+convenience of R. The ggdiagram package is built atop
+[S7](https://rconsortium.github.io/S7/) and is integrated with
+[ggplot2](https://ggplot2.tidyverse.org/), making heavy use of
+[ggtext](https://wilkelab.org/ggtext/),
 [ggforce](https://ggforce.data-imaginist.com/), and
 [ggarrow](https://teunbrand.github.io/ggarrow/).
 
@@ -75,7 +76,6 @@ ggdiagram() +
 
 <img src="man/figures/README-fig-example-1.png" style="width:100.0%"
 data-fig-alt="An arrow points from a circle to a square." />
-
 
 Figure 1: Connecting a circle and a square with an arrow.
 

@@ -80,7 +80,7 @@ class_unit <- new_S3_class(
 class_margin <- new_class(
   name = "class_margin",
   parent = class_list,
-  constructor = function(x = class_missing, units = "pt") {
+  constructor = function(x = numeric(0), units = "pt") {
 
     if (S7_inherits(x, class_margin))
       return(x)
@@ -315,6 +315,20 @@ ob_array <- new_generic(name = "ob_array", dispatch_args = "x", fun = function(x
 bind <- new_generic(name = "bind", dispatch_args = "x")
 
 method(bind, class_list) <- function(x, ...) {
+
+  all_angles <- all(sapply(lapply(x, class), function(xx)
+    "ob_angle" %in% xx))
+  if (all_angles) {
+    trns <- unlist(x)
+    if (S7_inherits(x[[1]], turn)) {
+      return(turn(trns))
+    } else if (S7_inherits(x[[1]], radian)) {
+      return(radian(trns * pi * 2))
+    } else {
+      return(degree(trns * 360))
+    }
+  }
+
   x <- unlist(x)
   .f <- S7_class(x[[1]])@name
   allsame <- allsameclass(x, .f)
@@ -326,10 +340,10 @@ method(bind, class_list) <- function(x, ...) {
     dplyr::bind_rows(
       purrr::map(
         x,
-        \(o) if (S7_inherits(o, ob_style)) get_tibble(o) else o@tibble
+        \(o) {
+          if (S7_inherits(o, ob_style)) get_tibble(o) else o@tibble
+          }
         )))
-
-
 
   .fn <- switch(.f,
                 degree = degree,
@@ -341,8 +355,10 @@ method(bind, class_list) <- function(x, ...) {
                 ob_ellipse = ob_ellipse,
                 ob_label = ob_label,
                 ob_line = ob_line,
+                ob_ngon = ob_ngon,
                 ob_point = ob_point,
                 ob_rectangle = ob_rectangle,
+                ob_reuleaux = ob_reuleaux,
                 ob_segment = ob_segment,
                 ob_style = ob_style,
                 ob_polar = ob_point)
@@ -391,11 +407,11 @@ method(bind, ob_shape_list) <- function(x, ...) {
 #' @export
 unbind <- S7::new_generic("unbind", dispatch_args = "x")
 
-method(unbind, has_style) <- function(x, ...) {
+method(unbind, has_style) <- function(x) {
   purrr::map(seq(1, x@length), \(i) x[i])
 }
 
-method(unbind, ob_shape_list) <- function(x, ...) {
+method(unbind, ob_shape_list) <- function(x) {
   as.list(x)
 }
 
@@ -404,13 +420,15 @@ method(unbind, ob_shape_list) <- function(x, ...) {
 #' A wrapper for purrr::map. It takes a ggdiagram object with multiple elements, applies a function to each element within the object, and returns a ggdiagram object
 #' @param .x a ggdiagram object
 #' @param .f a function that returns a ggdiagram object
-#' @param ...arguments passed to .f
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to .f
 #' @param .progress display progress if TRUE
 #'
 #' @return a ggdiagram object
 #' @export
 map_ob <- function(.x, .f, ..., .progress = FALSE) {
-  if (S7_inherits(.x, has_style) | S7_inherits(.x, ob_angle)) .x <- unbind(.x)
+  if (S7_inherits(.x, has_style) | S7_inherits(.x, ob_angle)) {
+    .x <- unbind(.x)
+     }
   purrr::map(.x, .f, ..., .progress = .progress) |>
     bind()
 }
@@ -563,6 +581,7 @@ cardinalpoint <- function(x) {
 #' @keywords internal
 allsameclass <- function(l, classname) {
   classname[classname == "ob_polar"] <- "ob_point"
+  classname <- paste0("ggdiagram::", classname)
   allsame <- all(sapply(lapply(l, class), function(x)
     classname %in% x))
   if (!allsame) {
@@ -635,8 +654,8 @@ get_non_empty_list <- function(l) {
 #' @keywords internal
 get_non_empty_tibble <- function(d) {
   d <- Filter(\(x) length(x) > 0, d)
-  d <- Filter(\(x) ! is.null(x), d)
-  d <- Filter(\(x) ! is.null(x), d)
+  d <- Filter(\(x) !is.null(x), d)
+  d <- Filter(\(x) !is.null(x), d)
   tibble::as_tibble(d)
 }
 
@@ -1067,6 +1086,11 @@ make_geom_helper <- function(d = NULL,
 
   # make geom for each row in d_nested
   purrr::pmap(d_all, \(data, unmappable) {
+
+    if ("p_unnest" %in% colnames(data)) {
+      data <- tidyr::unnest(data = data, p_unnest)
+    }
+
     # make list of not mapped arguments
     not_mapped <- as.list(unmappable)
 
