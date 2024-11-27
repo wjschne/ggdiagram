@@ -49,6 +49,7 @@
     <li><a class="dropdown-item" href="../articles/bezier.html">Bézier Curves</a></li>
     <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
+    <li><a class="dropdown-item" href="../articles/elements.html">Recreating Figures form Byrne's *Elements of Euclid*</a></li>
     <li><a class="dropdown-item" href="../articles/ellipses.html">Ellipses</a></li>
     <li><a class="dropdown-item" href="../articles/equations.html">Equations with LaTeX</a></li>
     <li><a class="dropdown-item" href="../articles/lines.html">Lines</a></li>
@@ -149,15 +150,15 @@
 <span><span class="va">r</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
 <span><span class="va">c1</span> <span class="op">&lt;-</span>  <span class="fu"><a href="../reference/ob_circle.html">ob_circle</a></span><span class="op">(</span>center <span class="op">=</span> <span class="va">p</span>, radius <span class="op">=</span> <span class="va">r</span><span class="op">)</span></span>
 <span><span class="va">c1</span></span>
-<span><span class="co">#&gt; &lt;ob_circle&gt;</span></span>
-<span><span class="co">#&gt; @ center: &lt;ob_point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_circle&gt;</span></span>
+<span><span class="co">#&gt; @ center: &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt;  @ x: num 0</span></span>
 <span><span class="co">#&gt;  @ y: num 0</span></span>
 <span><span class="co">#&gt; @ radius: num 3</span></span>
-<span><span class="co">#&gt; Other props: label, alpha, color, fill, linewidth, linetype, n,</span></span>
-<span><span class="co">#&gt;              area, bounding_box, circumference, diameter, length,</span></span>
-<span><span class="co">#&gt;              polygon, style, tibble, geom, angle_at, normal_at,</span></span>
-<span><span class="co">#&gt;              tangent_at, place, point_at, aesthetics</span></span></code></pre></div>
+<span><span class="co">#&gt; Other props: label, alpha, color, fill, linewidth, linetype,</span></span>
+<span><span class="co">#&gt;              n, area, bounding_box, circumference, diameter,</span></span>
+<span><span class="co">#&gt;              length, polygon, style, tibble, geom, arc, angle_at,</span></span>
+<span><span class="co">#&gt;              normal_at, tangent_at, place, point_at, aesthetics</span></span></code></pre></div>
 </div>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
@@ -187,11 +188,14 @@ Figure 1: A circle can be specified with a center and a radius,
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">c1</span><span class="op">@</span><span class="va">point_at</span><span class="op">(</span><span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">60</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;ob_point&gt;</span></span>
-<span><span class="co">#&gt; @ x: num 1.5</span></span>
-<span><span class="co">#&gt; @ y: num 2.6</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_polar&gt;</span></span>
+<span><span class="co">#&gt; @ x    : num 1.5</span></span>
+<span><span class="co">#&gt; @ y    : num 2.6</span></span>
+<span><span class="co">#&gt; @ r    : num 3</span></span>
+<span><span class="co">#&gt; @ theta: &lt;ggdiagram::radian&gt;</span></span>
+<span><span class="co">#&gt;  @ radian: num 1.05</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
-<span><span class="co">#&gt;              bounding_box, length, r, theta, style, tibble, xy,</span></span>
+<span><span class="co">#&gt;              bounding_box, centroid, length, style, tibble, xy,</span></span>
 <span><span class="co">#&gt;              geom, label, place, aesthetics</span></span></code></pre></div>
 </div>
 <div class="cell">

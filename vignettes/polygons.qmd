@@ -150,3 +150,127 @@ bp +
     fill = "dodgerblue4")
 ```
 
+# Regular Polygons (ngons)
+
+An `ob_ngon` (regular polygon) can be be created by specifying the center point, the number of sides, and the radius (the distance from the center to a vertex). 
+
+In @fig-regon, many regular polygons are displayed concentrically.
+
+```{r fig-regon}
+#| fig-cap: Regular polygons
+n <- 10
+ggdiagram() +
+  ob_ngon(
+    n = n:1 + 2,
+    radius = seq(1, .1, length.out = n) ^ .7,
+    fill = viridis::viridis(n = n, begin = .2, end = .8) %>%
+      tinter::lighten(.6),
+    color = "white",
+    linewidth = 1,
+    angle = 90
+  )
+```
+
+Alternately, instead of the `radius`, the `ob_ngon` object can be specified with either the `side_length` or the `apothem` (the distance from the center to a side's midpoint). 
+
+
+```{r fig-ngon}
+#| fig-cap: The `ob_ngon` object can be specificied with the `radius`, `side_length`, or `apothem`.
+bp + 
+  {ng <- ob_ngon(n = 8, 
+                 radius = 4, 
+                 angle = degree(22.5),
+                 fill = "dodgerblue4")} +
+  ob_segment(
+    ng@center,
+    ng@vertices[1],
+    color = "white",
+    label = ob_label(paste0("Radius = ", ng@radius), 
+                     vjust = 1.2, 
+                     fill = NA,
+                     family = my_font)
+  ) +
+  ob_segment(
+    ng@center,
+    ng@segments[1]@midpoint(),
+    color = "white",
+    label = ob_label(paste0("Apothem = ", round(ng@apothem, 2)), 
+                     vjust = -.2, 
+                     fill = NA,
+                     family = my_font)
+  ) + 
+  ob_label(paste0("Side = ", 
+                  round(ng@side_length, 2)), 
+           ng@segments[1]@midpoint(), 
+           angle = ng@segments[1]@line@angle, 
+           vjust = -0.2,
+           family = my_font) 
+```
+
+
+
+# Reuleaux Polygons
+
+Start with a regular polygon with an odd number of sides. For each pair of adjacent vertices, draw an arc with its center on the vertex of the opposite side. Amazingly, if you roll a Reuleaux polygon, its height is constant. This means that a Reuleaux polygon can roll smoothly. In @fig-reuleaux3, a Reuleaux triangle is made with the `ob_reuleaux` function.
+
+```{r fig-reuleaux3}
+#| fig-cap: "A Reuleaux triangle"
+th <- 275
+ggdiagram() +
+  {x <- ob_reuleaux(
+    n = 3,
+    fill = NA,
+    angle = 45
+  )} 
+
+```
+
+
+In @fig-reuleaux we draw 6 Reuleaux polygons with sides ranging from 3 to 13.
+
+```{r fig-reuleaux}
+#| fig-cap: "Six Reuleaux polygons arranged concentrically"
+
+ggdiagram() +
+  ob_reuleaux(
+    n = seq(13, 3, -2),
+    radius = seq(2, 1, -.2),
+    fill = viridis::viridis(
+      n = 6, 
+      begin = .2, 
+      end = .8) %>% 
+      tinter::lighten(.6),
+    color = "white",
+    linewidth = 1
+  )
+
+```
+
+
+
+A true Reuleaux polygon with an even number of sides is not possible, but it is possible to draw even-sided figures that resemble Reuleaux polygons (@fig-reuleaux4). These figures do not have same height as they roll.
+
+```{r fig-reuleaux4}
+#| fig-cap: A Reuleaux-like square
+
+ggdiagram() +
+  ob_reuleaux(
+    n = 4,
+    fill = NA,
+    angle = 45
+  ) 
+
+```
+
+Specifying `n = 2` will create a symmetric lens, which is also not a Reuleaux polygon.
+
+```{r fig-reuleaux2}
+#| fig-cap: A symmetric lens
+
+ggdiagram() +
+  ob_reuleaux(
+    n = 2,
+    fill = NA
+  ) 
+
+```

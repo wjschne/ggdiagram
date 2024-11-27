@@ -7,16 +7,16 @@
 ob_circle(
   center = ob_point(0, 0),
   radius = 1,
-  label = class_missing,
-  alpha = class_missing,
-  color = class_missing,
-  fill = class_missing,
-  linewidth = class_missing,
-  linetype = class_missing,
-  n = class_missing,
+  label = character(0),
+  alpha = numeric(0),
+  color = character(0),
+  fill = character(0),
+  linewidth = numeric(0),
+  linetype = numeric(0),
+  n = numeric(0),
   style = class_missing,
-  x0 = class_missing,
-  y0 = class_missing,
+  x0 = numeric(0),
+  y0 = numeric(0),
   ...
 )
 }

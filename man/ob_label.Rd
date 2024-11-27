@@ -5,32 +5,32 @@
 \title{ob_label class}
 \usage{
 ob_label(
-  label = class_missing,
+  label = character(0),
   center = class_missing,
-  angle = class_missing,
-  alpha = class_missing,
-  color = class_missing,
-  family = class_missing,
-  fill = class_missing,
-  fontface = class_missing,
-  hjust = class_missing,
-  label.color = class_missing,
+  angle = numeric(0),
+  alpha = numeric(0),
+  color = character(0),
+  family = "sans",
+  fill = character(0),
+  fontface = character(0),
+  hjust = numeric(0),
+  label.color = character(0),
   label.margin = class_margin(ggplot2::margin(1, 1, 1, 1, "pt")),
   label.padding = class_margin(ggplot2::margin(2, 2, 2, 2, "pt")),
-  label.r = class_missing,
-  label.size = class_missing,
-  lineheight = class_missing,
-  polar_just = class_missing,
-  nudge_x = class_missing,
-  nudge_y = class_missing,
-  size = class_missing,
-  straight = class_missing,
-  text.color = class_missing,
-  vjust = class_missing,
+  label.r = numeric(0),
+  label.size = numeric(0),
+  lineheight = numeric(0),
+  polar_just = numeric(0),
+  nudge_x = numeric(0),
+  nudge_y = numeric(0),
+  size = numeric(0),
+  straight = logical(0),
+  text.color = character(0),
+  vjust = numeric(0),
   style = class_missing,
   plot_point = FALSE,
   position = 0.5,
-  spacing = class_missing,
+  spacing = numeric(0),
   x = class_missing,
   y = class_missing,
   ...
@@ -53,7 +53,7 @@ ob_label(
 
 \item{fontface}{Can be plain, bold, italic, or bold.italic}
 
-\item{hjust}{horizontal justification.}
+\item{hjust}{horizontal justification. 0 means left justified, 1 means right justified, 0.5 means horizontally centered}
 
 \item{label.color}{Color of label outline.}
 
@@ -79,7 +79,7 @@ ob_label(
 
 \item{text.color}{Color of label text.}
 
-\item{vjust}{vertical justification}
+\item{vjust}{vertical justification. 0 means bottom aligned, 1 means top aligned, 0.5 means vertically centered}
 
 \item{style}{a style list}
 

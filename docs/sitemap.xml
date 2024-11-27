@@ -6,6 +6,7 @@
 <url><loc>https://wjschne.github.io/ggdiagram/articles/bezier.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/articles/causalpaths.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/articles/circles.html</loc></url>
+<url><loc>https://wjschne.github.io/ggdiagram/articles/elements.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/articles/ellipses.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/articles/equations.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/articles/index.html</loc></url>
@@ -20,6 +21,7 @@
 <url><loc>https://wjschne.github.io/ggdiagram/LICENSE.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/as.geom.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/bind.html</loc></url>
+<url><loc>https://wjschne.github.io/ggdiagram/reference/circle_from_3_points.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/class_aesthetics_list.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/class_color.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/connect.html</loc></url>
@@ -49,10 +51,12 @@
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_label.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_latex.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_line.html</loc></url>
+<url><loc>https://wjschne.github.io/ggdiagram/reference/ob_ngon.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_path.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_point.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_polygon.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_rectangle.html</loc></url>
+<url><loc>https://wjschne.github.io/ggdiagram/reference/ob_reuleaux.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_segment.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_shape_list.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_style.html</loc></url>

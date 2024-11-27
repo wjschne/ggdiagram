@@ -49,6 +49,7 @@
     <li><a class="dropdown-item" href="../articles/bezier.html">Bézier Curves</a></li>
     <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
+    <li><a class="dropdown-item" href="../articles/elements.html">Recreating Figures form Byrne's *Elements of Euclid*</a></li>
     <li><a class="dropdown-item" href="../articles/ellipses.html">Ellipses</a></li>
     <li><a class="dropdown-item" href="../articles/equations.html">Equations with LaTeX</a></li>
     <li><a class="dropdown-item" href="../articles/lines.html">Lines</a></li>
@@ -407,24 +408,11 @@ Figure 4: 40° − 60° = −20°
 <code class="sourceCode R"><span><span class="fl">2</span> <span class="op">*</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">180</span><span class="op">)</span></span>
 <span><span class="co">#&gt; 0°</span></span></code></pre></div>
 </div>
-</section><section class="section level2"><h2 id="retrieving-the-underlying-data-from-a-ob_angle-object">Retrieving the underlying data from a <code>ob_angle</code> object<a class="anchor" aria-label="anchor" href="#retrieving-the-underlying-data-from-a-ob_angle-object"></a>
+</section><section class="section level2"><h2 id="trigonometry">Trigonometry<a class="anchor" aria-label="anchor" href="#trigonometry"></a>
 </h2>
-<p>Angles created with the <code>degree</code>, <code>radian</code>, or <code>turn</code> function are <code>ob_angle</code> objects. The <code>ob_angle</code> function exists but is not meant to be used directly. Its underlying data is a vector of numeric data representing the number or turns. The underlying turn data from any <code>ob_angle</code> object can be extracted with the <code>c</code> function:</p>
+<p>The outputs of <code>degree</code>, <code>radian</code>, and <code>turn</code> can take the three standard trigonometric functions</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">180</span>,<span class="fl">360</span>, <span class="fl">720</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co"># Degrees range: 0&lt;= degree &lt; 360</span></span>
-<span><span class="va">theta</span><span class="op">@</span><span class="va">degree</span></span>
-<span><span class="co">#&gt; [1]   0 180   0   0</span></span>
-<span><span class="co"># Underlying data in turns</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">theta</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.0 0.5 1.0 2.0</span></span></code></pre></div>
-</div>
-<section class="level2"><h3 id="trigonometry">Trigonometry<a class="anchor" aria-label="anchor" href="#trigonometry"></a>
-</h3>
-<p>Angles can take the three standard trigonometric functions</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">60</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">cos</a></span><span class="op">(</span><span class="va">theta</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0.5</span></span>
@@ -434,7 +422,7 @@ Figure 4: 40° − 60° = −20°
 <span><span class="co">#&gt; [1] 1.732051</span></span></code></pre></div>
 </div>
 <div class="cell">
-<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb21"><pre class="downlit sourceCode r">
+<details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span><span class="va">theta</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span></span>
@@ -555,17 +543,33 @@ Figure 5: Trigonometric functions
 </ul>
 <p>For example, <code>tan(pi)</code> is slightly off from its true value of 0.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">tan</a></span><span class="op">(</span><span class="va">pi</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] -1.224647e-16</span></span></code></pre></div>
 </div>
 <p>By contrast, <code>tan(radian(pi))</code> rounds to 0 exactly.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">tan</a></span><span class="op">(</span><span class="fu"><a href="../reference/ob_angle.html">radian</a></span><span class="op">(</span><span class="va">pi</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0</span></span></code></pre></div>
 </div>
-</section></section><script id="quarto-html-after-body" type="application/javascript">
+</section><section class="section level2"><h2 id="retrieving-the-underlying-data-from-a-ob_angle-object">Retrieving the underlying data from a <code>ob_angle</code> object<a class="anchor" aria-label="anchor" href="#retrieving-the-underlying-data-from-a-ob_angle-object"></a>
+</h2>
+<p>Angles created with the <code>degree</code>, <code>radian</code>, or <code>turn</code> function are <code>ob_angle</code> objects. The <code>ob_angle</code> function exists but is not meant to be used directly. Its underlying data is a vector of numeric data representing the number of turns. The underlying turn data from any <code>ob_angle</code> object can be extracted with the <code>c</code> function (or with the <code><a href="https://rconsortium.github.io/S7/reference/S7_data.html" class="external-link">S7::S7_data</a></code> function).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">180</span>,<span class="fl">360</span>, <span class="fl">720</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># Degrees range: 0&lt;= degree &lt; 360</span></span>
+<span><span class="va">theta</span><span class="op">@</span><span class="va">degree</span></span>
+<span><span class="co">#&gt; [1]   0 180   0   0</span></span>
+<span><span class="co"># Underlying data in turns</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">theta</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.0 0.5 1.0 2.0</span></span>
+<span><span class="co"># Alternative method of extracting data</span></span>
+<span><span class="fu">S7</span><span class="fu">::</span><span class="fu"><a href="https://rconsortium.github.io/S7/reference/S7_data.html" class="external-link">S7_data</a></span><span class="op">(</span><span class="va">theta</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.0 0.5 1.0 2.0</span></span></code></pre></div>
+</div>
+</section><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -666,8 +670,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script></main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
-    </nav></aside>
+</script></main>
 </div>
 
 

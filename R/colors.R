@@ -115,10 +115,58 @@ class_color <- new_class(
         self
       }
     ),
+    red = new_property(
+      class = class_integer,
+      getter = function(self) {
+        farver::get_channel(colour = c(self),
+                            channel = "r",
+                            space = "rgb")
+      },
+      setter = function(self, value) {
+        S7_data(self) <- farver::set_channel(c(self), value, channel = "r", space = "rgb")
+        self
+      }
+    ),
+    green = new_property(
+      class = class_integer,
+      getter = function(self) {
+        farver::get_channel(colour = c(self),
+                            channel = "g",
+                            space = "rgb")
+      },
+      setter = function(self, value) {
+        S7_data(self) <- farver::set_channel(c(self), value, channel = "g", space = "rgb")
+        self
+      }
+    ),
+    blue = new_property(
+      class = class_integer,
+      getter = function(self) {
+        farver::get_channel(colour = c(self),
+                            channel = "b",
+                            space = "rgb")
+      },
+      setter = function(self, value) {
+        S7_data(self) <- farver::set_channel(c(self), value, channel = "b", space = "rgb")
+        self
+      }
+    ),
+    mean = new_property(getter = \(self) {
+      r <- mean(self@red)
+      g <- mean(self@green)
+      b <- mean(self@blue)
+      a <- mean(self@alpha)
+      x <- class_color("white")
+      x@red <- r
+      x@green <- g
+      x@blue <- b
+      x@alpha <- a
+      x
+    }),
     tex = new_property(getter = function(self) {
       paste0("\\color[HTML]{", substring(self@color, 2, 7), "}")
     })
-  ), constructor = function(color = class_missing, hue = NULL, saturation = NULL, brightness = NULL, alpha = NULL) {
+  ), constructor = function(color = character(0), hue = NULL, saturation = NULL, brightness = NULL, alpha = NULL) {
     decoded <- farver::decode_colour(color, alpha = TRUE)
 
     if (!is.null(hue)) decodec <- farver::get_channel(decoded, channel = "h", space = "hsv")

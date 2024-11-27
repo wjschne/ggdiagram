@@ -6,28 +6,28 @@
 \usage{
 ob_bezier(
   p = class_missing,
-  label = class_missing,
+  label = character(0),
   label_sloped = TRUE,
   n = 360,
-  alpha = class_missing,
+  alpha = numeric(0),
   arrow_head = class_missing,
   arrow_fins = class_missing,
-  arrowhead_length = class_missing,
-  length_head = class_missing,
-  length_fins = class_missing,
-  color = class_missing,
-  fill = class_missing,
-  lineend = class_missing,
-  linejoin = class_missing,
-  linewidth = class_missing,
-  linewidth_fins = class_missing,
-  linewidth_head = class_missing,
-  linetype = class_missing,
-  resect = class_missing,
-  resect_fins = class_missing,
-  resect_head = class_missing,
-  stroke_color = class_missing,
-  stroke_width = class_missing,
+  arrowhead_length = numeric(0),
+  length_head = numeric(0),
+  length_fins = numeric(0),
+  color = character(0),
+  fill = character(0),
+  lineend = numeric(0),
+  linejoin = numeric(0),
+  linewidth = numeric(0),
+  linewidth_fins = numeric(0),
+  linewidth_head = numeric(0),
+  linetype = numeric(0),
+  resect = numeric(0),
+  resect_fins = numeric(0),
+  resect_head = numeric(0),
+  stroke_color = character(0),
+  stroke_width = numeric(0),
   style = class_missing,
   ...
 )
@@ -98,7 +98,7 @@ If you wish to specify multiple bezier curves, you must supply a list of ob_poin
 
 \item{\code{geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggarrow::geom_arrow}.}
 
-\item{\code{midpoint}}{A function that selects 1 or more midpoints of the ob_bezier. The \code{position} argument can be between 0 and 1. Additional arguments are passed to the ob_point's style object.}
+\item{\code{midpoint}}{A function that selects 1 or more midpoints of the ob_bezier. The \code{position} argument can be between 0 and 1. Additional arguments are passed to \code{ob_point}.}
 
 \item{\code{aesthetics}}{A list of information about the ob_bezier's aesthetic properties}
 }}
@@ -106,7 +106,8 @@ If you wish to specify multiple bezier curves, you must supply a list of ob_poin
 \examples{
 library(ggplot2)
 control_points <- ob_point(c(0,1,2,4), c(0,4,0,0))
-ggplot() + coord_equal() +
+ggplot() +
+  coord_equal() +
   ob_bezier(control_points, color = "blue") +
   ob_path(control_points, linetype = "dashed", linewidth = .5) +
   control_points

@@ -57,6 +57,10 @@ path_props <- list(
         l
       }
     ),
+    segments = new_property(getter = function(self) {
+      purrr::map(self@p, ob_segment, style = self@style) %>%
+        bind()
+    }),
     style = new_property(
       getter = function(self) {
         pr <- purrr::map(path_styles,
@@ -67,7 +71,10 @@ path_props <- list(
         rlang::inject(ob_style(!!!get_non_empty_list(pr)))
       },
       setter = function(self, value) {
-        ob_point(self@x, self@y, style = self@style + value)
+        ob_path(p = self@p,
+                label = self@label,
+                style = self@style + value,
+                label_sloped = self@label_sloped)
       }
     ),
     tibble = new_property(getter = function(self) {
@@ -100,6 +107,34 @@ path_props <- list(
         dplyr::mutate(p = purrr::map(p, \(x) {x@tibble |> dplyr::select(x,y)})) |>
         tidyr::unnest(p)
 
+    }),
+    vertex_angle = new_property(getter = function(self) {
+      a <- purrr::map(self@p, \(pp) {
+        if (pp@length > 3) {
+          aa <- purrr::map(seq(2,pp@length - 1), \(i) {
+            a1 <- (pp[i - 1] - pp[i])@theta
+            a2 <- (pp[i + 1] - pp[i])@theta
+            a21 <- a1 - a2
+            if (a21 < 0) a21 <- a21 + degree(360)
+            a21
+          }) %>%
+            bind()
+
+          if (pp[1] == pp[pp@length]) {
+            al1 <- (pp[pp@length - 1] - pp[1])@theta -
+              (pp[2] - pp[1])@theta
+            if (al1 < 0) al1 <- al1 + degree(360)
+           aa <- bind(list(aa, al1))
+
+          }
+          aa
+        }
+      })
+
+      if (length(a) == 1) {
+        a <- a[[1]]
+      }
+      a
     })
   ),
   # functions ----
@@ -182,26 +217,26 @@ ob_path <- new_class(
     )
   ),
   constructor = function(p = class_missing,
-                         label = class_missing,
-                         alpha = class_missing,
+                         label = character(0),
+                         alpha = numeric(0),
                          arrow_head = class_missing,
                          arrow_fins = class_missing,
-                         arrowhead_length = class_missing,
-                         length_head = class_missing,
-                         length_fins = class_missing,
-                         color = class_missing,
-                         fill = class_missing,
-                         lineend = class_missing,
-                         linejoin = class_missing,
-                         linewidth = class_missing,
-                         linewidth_fins = class_missing,
-                         linewidth_head = class_missing,
-                         linetype = class_missing,
-                         resect = class_missing,
-                         resect_fins = class_missing,
-                         resect_head = class_missing,
-                         stroke_color = class_missing,
-                         stroke_width = class_missing,
+                         arrowhead_length = numeric(0),
+                         length_head = numeric(0),
+                         length_fins = numeric(0),
+                         color = character(0),
+                         fill = character(0),
+                         lineend = numeric(0),
+                         linejoin = numeric(0),
+                         linewidth = numeric(0),
+                         linewidth_fins = numeric(0),
+                         linewidth_head = numeric(0),
+                         linetype = numeric(0),
+                         resect = numeric(0),
+                         resect_fins = numeric(0),
+                         resect_head = numeric(0),
+                         stroke_color = character(0),
+                         stroke_width = numeric(0),
                          style = class_missing,
                          ...) {
 
@@ -210,8 +245,6 @@ ob_path <- new_class(
       purrr::map(unbind(x), \(xx) xx@style) |>
         purrr::reduce(`+`)
     })
-
-
 
     p_style <- bind(p_style)
 

@@ -182,7 +182,8 @@ lb_observed <- redefault(ob_label,
                          color = lb_color)
 
 var_observed <- redefault(ob_variance,
-                          bend = -20, 
+                          bend = -25, 
+                          looseness = 1.5,
                           color = ln_color)
 
 
@@ -1176,10 +1177,12 @@ clr <-   class_color(
     "#4E9C9B",
     "#66AB7A",
     "#A4AF5A"))@darken(.3)@color
+
 clr <- c("#6B4B5E", "#515E72", "#376E6E", "#487956", "#747C3F")
+
 intercept <- function(center = ob_point(),
                       r = 1,
-                      rounding = unit(.6, "mm"),
+                      vertex_radius = unit(.6, "mm"),
                       fill = clr[1],
                       color = NA,
                       ...) {
@@ -1187,7 +1190,7 @@ intercept <- function(center = ob_point(),
     cc + ob_polar(degree(c(90, 210, 330)), r = r)
   })
   ob_polygon(p,
-             radius = rounding,
+             vertex_radius = vertex_radius,
              fill = fill,
              color = color,
              ...)
@@ -1239,7 +1242,7 @@ ggdiagram(font_family = my_font, font_size = 13) +
     color = NA,
     label = lb_slope("*&beta;*~2*j*~")
   )} +
-  {i2 <- intercept(
+  {i2 <- intercept(width = 2,
     rotate(latent_slope_line, degree(90), origin = b0j@center)@point_at_x(b1j@center@x),
     label = lb_observed("1~2~")
   )} +
@@ -1337,3 +1340,5 @@ ggdiagram(font_family = my_font, font_size = 13) +
 
 
 ```
+
+

@@ -49,6 +49,7 @@ To avoid repetitive code, we make a base plot:
 
 ```{r}
 #| label: baseplot
+#| cache: false
 
 my_font <- "Roboto Condensed"
 my_font_size <- 20
@@ -98,13 +99,13 @@ ob_arc(center = ob_point(1,2),
     end = 75, 
     radius = 3)
 
+
 ```
 
 ```{r}
 #| label: fig_arc
 #| fig-cap: Arc with starting and ending angles and center point.
 #| code-fold: true
-
 bp +
   {p1 <- ob_point(0, 0)} + 
   {a1 <- ob_arc(
@@ -148,14 +149,14 @@ bp +
     ob_arc(start = -45, 
       end = 45, 
       radius = 2,
-      color = "red", 
+      color = "orchid4", 
       start_point = p1)  +
   ob_arc(start = -45, 
       end = 45, 
       radius = 2,
-      color = "blue", 
+      color = "forestgreen", 
       end_point = p1) +
-  p1
+  p1 
 ```
 
 As a example, I used the `start_point` argument to recreate a fun meme about a "square" object with 4 equal sides that meet at right angles:
@@ -271,7 +272,6 @@ bp +
   a1 +
   a1@autolabel(label = "Start", position = 0)
 ```
-
 # Arcs with arrows
 
 The arc object is plotted using `ggarrow::arrow`. This means that arrows can be placed on either end of an arc.
@@ -293,7 +293,9 @@ bp +
 
 # Wedges
 
-If the `ob_arc@wedge` property is set to `TRUE`, the `ob_arc` function will plot a wedge using `ggplot2::geom_polygon`. The `ob_wedge` function is a convenient wrapper function for `ob_arc` that sets the `@wedge` property to `TRUE`.
+The `ob_arc` function has a `@type` property that can be set to `"arc"`, `"wedge"`, or `"segment"`. When set to `arc`, the arc is drawn with `geom::arrow` so that the arc endpoints can be arrows. Otherwise, when `@type` is `wedge` or `segment`, `ob_arc` drawn with `ggplot2::geom_polygon`. 
+
+The `ob_wedge` function is a convenient wrapper function for `ob_arc` that sets the `@type` property to `wedge`.
 
 ```{r}
 #| label: fig-wedge
@@ -308,3 +310,80 @@ bp +
       color = "white", 
       linewidth = 1)
 ```
+
+
+# Circular Segments
+
+A circular segment is an arc made into a polygon. 
+
+The `ob_circular_segment` function is a convenient wrapper function for `ob_arc` that sets the `@type` property to `segment`.
+
+
+```{r fig-threecircularsegments}
+#| fig-cap: Three circular segments
+ggdiagram() +
+  ob_circular_segment(
+    start = c(30, 150, 270),
+    end = c(150, 270, 390),
+    fill = c("dodgerblue4", "orchid4", "darkgreen")
+  )
+```
+
+Objects made with `ob_arc`, `ob_wedge`, or `ob_circular_segment` can return important features of arcs, including the `chord`, `sagitta`, and `arc_length`. In @fig-circularsegment, the `chord` is the `ob_segment` that connects the endpoints of the arc.  The `sagitta` is `ob_segment` from the arc's midpoint to the chord's midpoint. Not shown in @fig-circularsegment, the `apothem` is the `ob_segment` from the arc's center point to the midpoint of the chord. The radius is the sum of the distances spanned by the apothem and the sagitta.
+
+```{r fig-circularsegment}
+#| fig-cap: A circular segment and arc and its chord.
+
+
+bp +
+  {cs <- ob_circular_segment(
+      radius = 3,
+      start = radian(-acos(1 / 3)),
+      end = radian(acos(1 / 3)),
+      fill = "dodgerblue3"
+    )} +
+  ob_arc(
+    radius = 3,
+    start = cs@end,
+    end = cs@start + degree(360),
+    linetype = "dashed"
+  ) +
+  cs@chord@midpoint()@label(
+    paste0("Chord Length = ", round(cs@chord@distance, 2)),
+    angle = cs@chord@line@angle,
+    vjust = -.1,
+    color = "black",
+    size = 24,
+    family = my_font
+  ) +
+  cs@sagitta %>% set_props(color = "white") +
+  cs@sagitta@midpoint()@label(
+    paste0("Sagitta = ", round(cs@sagitta@distance, 2)),
+    vjust = 0,
+    size = 20,
+    family = my_font,
+    fill = NA, 
+    color = "white"
+  ) +
+  ob_path(
+    ob_point(
+      cs@polygon %>% 
+        mutate(id = dplyr::row_number()) %>% 
+        arrange(-id) %>% 
+        select(x, y)
+    ),
+    label = ob_label(
+      paste0("Arc Length = ", round(cs@arc_length, 2)),
+      vjust = -0.1,
+      size = 24,
+      family = my_font,
+      color = "black"
+    ),
+    color = "dodgerblue3"
+  )
+  
+
+```
+
+
+Fun fact: Our geometric concepts *arc*, *chord*, and *sagitta* are all archery terms, deriving from the Latin words *arcus* (bow), *chorda* (string), and *sagitta* (arrow). 

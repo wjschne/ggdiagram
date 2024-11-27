@@ -11,9 +11,9 @@ map_ob(.x, .f, ..., .progress = FALSE)
 
 \item{.f}{a function that returns a ggdiagram object}
 
-\item{.progress}{display progress if TRUE}
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> arguments passed to .f}
 
-\item{...arguments}{passed to .f}
+\item{.progress}{display progress if TRUE}
 }
 \value{
 a ggdiagram object

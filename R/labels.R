@@ -58,7 +58,11 @@ lb_props <- list(
                        lb_styles)
        rlang::inject(ob_style(!!!get_non_empty_list(pr)))},
      setter = function(self, value) {
-       ob_label(label = self@label, center = self@center, style = self@style + value)
+       s <- self@style + value
+       s_list <- get_non_empty_props(s)
+       s_list <- s_list[names(s_list) %in% lb_styles]
+       self <- rlang::inject(set_props(self, !!!s_list))
+       self
      }),
     tibble = new_property(getter = function(self) {
       if (length(self@angle) > 0) {
@@ -187,32 +191,32 @@ ob_label <- new_class(
     !!!lb_props$derived,
     !!!lb_props$funs,
     !!!lb_props$info)),
-  constructor = function(label = class_missing,
+  constructor = function(label = character(0),
                          center = class_missing,
-                         angle = class_missing,
-                         alpha = class_missing,
-                         color = class_missing,
-                         family = class_missing,
-                         fill = class_missing,
-                         fontface = class_missing,
-                         hjust = class_missing,
-                         label.color = class_missing,
+                         angle = numeric(0),
+                         alpha = numeric(0),
+                         color = character(0),
+                         family = "sans",
+                         fill = character(0),
+                         fontface = character(0),
+                         hjust = numeric(0),
+                         label.color = character(0),
                          label.margin = class_margin(ggplot2::margin(1,1,1,1,"pt")),
                          label.padding = class_margin(ggplot2::margin(2,2,2,2,"pt")),
-                         label.r = class_missing,
-                         label.size = class_missing,
-                         lineheight = class_missing,
-                         polar_just = class_missing,
-                         nudge_x = class_missing,
-                         nudge_y = class_missing,
-                         size = class_missing,
-                         straight = class_missing,
-                         text.color = class_missing,
-                         vjust = class_missing,
+                         label.r = numeric(0),
+                         label.size = numeric(0),
+                         lineheight = numeric(0),
+                         polar_just = numeric(0),
+                         nudge_x = numeric(0),
+                         nudge_y = numeric(0),
+                         size = numeric(0),
+                         straight = logical(0),
+                         text.color = character(0),
+                         vjust = numeric(0),
                          style = class_missing,
                          plot_point = FALSE,
                          position = .5,
-                         spacing = class_missing,
+                         spacing = numeric(0),
                          x = class_missing,
                          y = class_missing,
                          ...) {
@@ -564,7 +568,7 @@ method(`[<-`, ob_label) <- function(x, y, value) {
 }
 
 
-method(unbind, ob_label) <- function(x, ...) {
+method(unbind, ob_label) <- function(x) {
   purrr::map(seq(1, x@length), \(i) x[i])
 }
 
@@ -574,7 +578,7 @@ centerpoint_label <- function(label, center, d, shape_name = "shape", ...) {
     label@center <- center
   }
 
-  if (is.character(label) || S7_inherits(label, ob_angle) || is.numeric(label)) {
+  if ((is.character(label) && length(label) > 0) || S7_inherits(label, ob_angle) || is.numeric(label)) {
     label <- ob_label(label = label, center = center, fill = NA, ...)
   }
 

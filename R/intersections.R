@@ -497,3 +497,13 @@ method(intersection, list(ob_polygon, ob_segment)) <- function(x,y, ...) {
 method(intersection, list(ob_segment, ob_polygon)) <- function(x,y, ...) {
   intersection(y,x, ...)
 }
+
+
+method(intersection, list(ob_ngon, ob_segment)) <- function(x,y, ...) {
+  intersection(x@segments, y, ...)
+}
+
+
+method(intersection, list(ob_segment, ob_ngon)) <- function(x,y, ...) {
+  intersection(y,x@segments, ...)
+}

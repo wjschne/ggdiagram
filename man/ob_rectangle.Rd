@@ -6,8 +6,8 @@
 \usage{
 ob_rectangle(
   center = class_missing,
-  width = class_missing,
-  height = class_missing,
+  width = numeric(0),
+  height = numeric(0),
   east = class_missing,
   north = class_missing,
   west = class_missing,
@@ -16,22 +16,22 @@ ob_rectangle(
   northwest = class_missing,
   southwest = class_missing,
   southeast = class_missing,
-  angle = 0,
-  vertex_radius = class_missing,
-  label = class_missing,
-  alpha = class_missing,
-  color = "black",
-  fill = NA_character_,
-  linewidth = class_missing,
-  linetype = class_missing,
+  angle = numeric(0),
+  vertex_radius = numeric(0),
+  label = character(0),
+  alpha = numeric(0),
+  color = character(0),
+  fill = character(0),
+  linewidth = numeric(0),
+  linetype = numeric(0),
   style = class_missing,
-  x0 = class_missing,
-  y0 = class_missing,
+  x0 = numeric(0),
+  y0 = numeric(0),
   ...
 )
 }
 \arguments{
-\item{center}{point at center of the circle}
+\item{center}{point at center of the rectangle}
 
 \item{width}{width}
 

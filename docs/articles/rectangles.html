@@ -49,6 +49,7 @@
     <li><a class="dropdown-item" href="../articles/bezier.html">Bézier Curves</a></li>
     <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
+    <li><a class="dropdown-item" href="../articles/elements.html">Recreating Figures form Byrne's *Elements of Euclid*</a></li>
     <li><a class="dropdown-item" href="../articles/ellipses.html">Ellipses</a></li>
     <li><a class="dropdown-item" href="../articles/equations.html">Equations with LaTeX</a></li>
     <li><a class="dropdown-item" href="../articles/lines.html">Lines</a></li>
@@ -187,8 +188,8 @@
 <span>  linewidth <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">r1</span></span>
-<span><span class="co">#&gt; &lt;ob_rectangle&gt;</span></span>
-<span><span class="co">#&gt; @ center: &lt;ob_point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_rectangle&gt;</span></span>
+<span><span class="co">#&gt; @ center: &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt;  @ x: num 2</span></span>
 <span><span class="co">#&gt;  @ y: num 1</span></span>
 <span><span class="co">#&gt; @ width : num 4</span></span>
@@ -410,12 +411,12 @@ Figure 6: Specify a rectangle with the height and the top corners
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">r1</span><span class="op">@</span><span class="va">north</span></span>
-<span><span class="co">#&gt; &lt;ob_point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 2</span></span>
 <span><span class="co">#&gt; @ y: num 2</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
-<span><span class="co">#&gt;              bounding_box, length, r, theta, style, tibble, xy,</span></span>
-<span><span class="co">#&gt;              geom, label, place, aesthetics</span></span></code></pre></div>
+<span><span class="co">#&gt;              bounding_box, centroid, length, r, theta, style,</span></span>
+<span><span class="co">#&gt;              tibble, xy, geom, label, place, aesthetics</span></span></code></pre></div>
 </div>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb17"><pre class="downlit sourceCode r">
@@ -478,12 +479,12 @@ Figure 7: The named points of a rectangle
 <div class="sourceCode cell-code" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">60</span><span class="op">)</span></span>
 <span><span class="va">r1</span><span class="op">@</span><span class="va">point_at</span><span class="op">(</span><span class="va">theta</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;ob_point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 2.58</span></span>
 <span><span class="co">#&gt; @ y: num 2</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
-<span><span class="co">#&gt;              bounding_box, length, r, theta, style, tibble, xy,</span></span>
-<span><span class="co">#&gt;              geom, label, place, aesthetics</span></span></code></pre></div>
+<span><span class="co">#&gt;              bounding_box, centroid, length, r, theta, style,</span></span>
+<span><span class="co">#&gt;              tibble, xy, geom, label, place, aesthetics</span></span></code></pre></div>
 </div>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">
@@ -517,11 +518,11 @@ Figure 8: The point on a rectangle at angle θ = 60°
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">r1</span><span class="op">@</span><span class="va">side</span><span class="op">@</span><span class="va">north</span></span>
-<span><span class="co">#&gt; &lt;ob_segment&gt;</span></span>
-<span><span class="co">#&gt; @ p1: &lt;ob_point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_segment&gt;</span></span>
+<span><span class="co">#&gt; @ p1: &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt;  @ x: num 0</span></span>
 <span><span class="co">#&gt;  @ y: num 2</span></span>
-<span><span class="co">#&gt; @ p2: &lt;ob_point&gt;</span></span>
+<span><span class="co">#&gt; @ p2: &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt;  @ x: num 4</span></span>
 <span><span class="co">#&gt;  @ y: num 2</span></span></code></pre></div>
 </div>

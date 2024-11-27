@@ -164,3 +164,16 @@ bp +
        label = c(".52", ".42", ".61"))
 ```
 
+# Segments
+
+```{r}
+ah <- lapply(seq(p_curve@length - 1), \(x) ggarrow::arrow_head_minimal())
+ah[p_curve@length - 1] <- list(arrowheadr::arrow_head_deltoid(2.4))
+
+ggdiagram() +
+  ob_path(p_curve)@segments %>% set_props(color = viridis::viridis(p_curve@length - 1))
+
+
+
+```
+

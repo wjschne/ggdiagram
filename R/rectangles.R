@@ -193,6 +193,8 @@ rc_props <- list(
           center = self@center,
           width = self@width,
           height = self@height,
+          vertex_radius = self@vertex_radius,
+          angle = self@angle,
           style = self@style + value)
       }
     ),
@@ -342,7 +344,7 @@ rc_props <- list(
 # ob_rectangle ----
 
 #' ob_rectangle class
-#' @param center point at center of the circle
+#' @param center point at center of the rectangle
 #' @param width width
 #' @param height height
 #' @param east right middle point
@@ -376,8 +378,8 @@ ob_rectangle <- new_class(
     !!!rc_props$funs,
     !!!rc_props$info)),
   constructor = function(center = class_missing,
-                         width = class_missing,
-                         height = class_missing,
+                         width = numeric(0),
+                         height = numeric(0),
                          east = class_missing,
                          north = class_missing,
                          west = class_missing,
@@ -386,20 +388,27 @@ ob_rectangle <- new_class(
                          northwest = class_missing,
                          southwest = class_missing,
                          southeast = class_missing,
-                         angle = 0,
-                         vertex_radius = class_missing,
-                         label = class_missing,
-                         alpha = class_missing,
-                         color = "black",
-                         fill = NA_character_,
-                         linewidth = class_missing,
-                         linetype = class_missing,
+                         angle = numeric(0),
+                         vertex_radius = numeric(0),
+                         label = character(0),
+                         alpha = numeric(0),
+                         color = character(0),
+                         fill = character(0),
+                         linewidth = numeric(0),
+                         linetype = numeric(0),
                          style = class_missing,
-                         x0 = class_missing,
-                         y0 = class_missing,
+                         x0 = numeric(0),
+                         y0 = numeric(0),
                          ...) {
 
-    if (!S7_inherits(angle, ob_angle)) angle <- degree(angle)
+
+
+    if (length(angle) == 0) angle <- degree(0)
+
+
+    if (!S7_inherits(angle, ob_angle)) {
+      angle <- degree(angle)
+      }
 
     if (length(x0) > 0 | length(y0) > 0) {
       if (length(x0) == 0) {
@@ -561,14 +570,16 @@ ob_rectangle <- new_class(
     }
 
 
-    rc_style <- ob_style(
+    rc_style <- ob_style(fill = NA_character_,
+                         color = "black") +
+      style +
+      ob_style(
       alpha = alpha,
       color = color,
       fill = fill,
       linewidth = linewidth,
       linetype = linetype
     ) +
-      style +
       ob_style(...)
 
 
@@ -752,17 +763,17 @@ method(ob_array, ob_rectangle) <- function(
     anchor = anchor,
     ...
   )
+  dot_style <- rlang::inject(ob_style(!!!sa$dots))
 
-  rlang::inject(
-    ob_rectangle(
-      center = sa$p_center,
-      width = x@width,
-      height = x@height,
-      angle = x@angle@degree,
-      style = x@style,
-      !!!sa$dots
-    )
+
+  ob_rectangle(
+    center = sa$p_center,
+    width = x@width,
+    height = x@height,
+    angle = x@angle@degree,
+    style = x@style + dot_style,
+    vertex_radius = x@vertex_radius
   )
-
 }
+
 

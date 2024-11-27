@@ -4,7 +4,7 @@
 \alias{ob_shape_list}
 \title{ob_shape_list}
 \usage{
-ob_shape_list(.data = class_missing)
+ob_shape_list(.data = list())
 }
 \arguments{
 \item{.data}{a list of objects}

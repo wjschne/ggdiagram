@@ -26,6 +26,7 @@ Polar points are ordinary points but are specified with an angle (theta) and a r
     <li><a class="dropdown-item" href="../articles/bezier.html">Bézier Curves</a></li>
     <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
+    <li><a class="dropdown-item" href="../articles/elements.html">Recreating Figures form Byrne's *Elements of Euclid*</a></li>
     <li><a class="dropdown-item" href="../articles/ellipses.html">Ellipses</a></li>
     <li><a class="dropdown-item" href="../articles/equations.html">Equations with LaTeX</a></li>
     <li><a class="dropdown-item" href="../articles/lines.html">Lines</a></li>
@@ -60,25 +61,25 @@ Polar points are ordinary points but are specified with an angle (theta) and a r
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ob_point</span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  y <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  alpha <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  color <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  fill <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  shape <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  size <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  stroke <span class="op">=</span> <span class="va">class_missing</span>,</span>
+<span>  alpha <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  stroke <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  style <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">ob_polar</span><span class="op">(</span></span>
 <span>  theta <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  r <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  alpha <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  color <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  fill <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  shape <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  size <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  stroke <span class="op">=</span> <span class="va">class_missing</span>,</span>
+<span>  r <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  alpha <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  stroke <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  style <span class="op">=</span> <span class="va">class_missing</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>

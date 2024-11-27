@@ -49,6 +49,7 @@
     <li><a class="dropdown-item" href="../articles/bezier.html">Bézier Curves</a></li>
     <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
+    <li><a class="dropdown-item" href="../articles/elements.html">Recreating Figures form Byrne's *Elements of Euclid*</a></li>
     <li><a class="dropdown-item" href="../articles/ellipses.html">Ellipses</a></li>
     <li><a class="dropdown-item" href="../articles/equations.html">Equations with LaTeX</a></li>
     <li><a class="dropdown-item" href="../articles/lines.html">Lines</a></li>
@@ -212,7 +213,8 @@ Figure 3: Simplified path diagram of a regression model
 <span>                         color <span class="op">=</span> <span class="va">lb_color</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">var_observed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/redefault.html">redefault</a></span><span class="op">(</span><span class="va">ob_variance</span>,</span>
-<span>                          bend <span class="op">=</span> <span class="op">-</span><span class="fl">20</span>, </span>
+<span>                          bend <span class="op">=</span> <span class="op">-</span><span class="fl">25</span>, </span>
+<span>                          looseness <span class="op">=</span> <span class="fl">1.5</span>,</span>
 <span>                          color <span class="op">=</span> <span class="va">ln_color</span><span class="op">)</span></span>
 <span></span>
 <span></span>
@@ -1207,10 +1209,12 @@ Y_{ij}&amp;=\beta_{0j}+\beta_{1j}X_{1ij}+\beta_{2j}X_{2ij}+e_{ij}\\
 <span>    <span class="st">"#4E9C9B"</span>,</span>
 <span>    <span class="st">"#66AB7A"</span>,</span>
 <span>    <span class="st">"#A4AF5A"</span><span class="op">)</span><span class="op">)</span><span class="op">@</span><span class="va">darken</span><span class="op">(</span><span class="fl">.3</span><span class="op">)</span><span class="op">@</span><span class="va">color</span></span>
+<span></span>
 <span><span class="va">clr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#6B4B5E"</span>, <span class="st">"#515E72"</span>, <span class="st">"#376E6E"</span>, <span class="st">"#487956"</span>, <span class="st">"#747C3F"</span><span class="op">)</span></span>
+<span></span>
 <span><span class="va">intercept</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">center</span> <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>                      <span class="va">r</span> <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>                      <span class="va">rounding</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">.6</span>, <span class="st">"mm"</span><span class="op">)</span>,</span>
+<span>                      <span class="va">vertex_radius</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">.6</span>, <span class="st">"mm"</span><span class="op">)</span>,</span>
 <span>                      <span class="va">fill</span> <span class="op">=</span> <span class="va">clr</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span>
 <span>                      <span class="va">color</span> <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>                      <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
@@ -1218,7 +1222,7 @@ Y_{ij}&amp;=\beta_{0j}+\beta_{1j}X_{1ij}+\beta_{2j}X_{2ij}+e_{ij}\\
 <span>    <span class="va">cc</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span><span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">90</span>, <span class="fl">210</span>, <span class="fl">330</span><span class="op">)</span><span class="op">)</span>, r <span class="op">=</span> <span class="va">r</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="../reference/ob_polygon.html">ob_polygon</a></span><span class="op">(</span><span class="va">p</span>,</span>
-<span>             radius <span class="op">=</span> <span class="va">rounding</span>,</span>
+<span>             vertex_radius <span class="op">=</span> <span class="va">vertex_radius</span>,</span>
 <span>             fill <span class="op">=</span> <span class="va">fill</span>,</span>
 <span>             color <span class="op">=</span> <span class="va">color</span>,</span>
 <span>             <span class="va">...</span><span class="op">)</span></span>
@@ -1270,7 +1274,7 @@ Y_{ij}&amp;=\beta_{0j}+\beta_{1j}X_{1ij}+\beta_{2j}X_{2ij}+e_{ij}\\
 <span>    color <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>    label <span class="op">=</span> <span class="fu">lb_slope</span><span class="op">(</span><span class="st">"*&amp;beta;*~2*j*~"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
-<span>  <span class="op">{</span><span class="va">i2</span> <span class="op">&lt;-</span> <span class="fu">intercept</span><span class="op">(</span></span>
+<span>  <span class="op">{</span><span class="va">i2</span> <span class="op">&lt;-</span> <span class="fu">intercept</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>    <span class="fu"><a href="../reference/rotate.html">rotate</a></span><span class="op">(</span><span class="va">latent_slope_line</span>, <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">90</span><span class="op">)</span>, origin <span class="op">=</span> <span class="va">b0j</span><span class="op">@</span><span class="va">center</span><span class="op">)</span><span class="op">@</span><span class="va">point_at_x</span><span class="op">(</span><span class="va">b1j</span><span class="op">@</span><span class="va">center</span><span class="op">@</span><span class="va">x</span><span class="op">)</span>,</span>
 <span>    label <span class="op">=</span> <span class="fu">lb_observed</span><span class="op">(</span><span class="st">"1~2~"</span><span class="op">)</span></span>
 <span>  <span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>

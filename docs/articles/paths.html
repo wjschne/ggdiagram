@@ -49,6 +49,7 @@
     <li><a class="dropdown-item" href="../articles/bezier.html">Bézier Curves</a></li>
     <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
+    <li><a class="dropdown-item" href="../articles/elements.html">Recreating Figures form Byrne's *Elements of Euclid*</a></li>
     <li><a class="dropdown-item" href="../articles/ellipses.html">Ellipses</a></li>
     <li><a class="dropdown-item" href="../articles/equations.html">Equations with LaTeX</a></li>
     <li><a class="dropdown-item" href="../articles/lines.html">Lines</a></li>
@@ -237,6 +238,22 @@ Figure 3: A path with a curved label at position .1
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-multiplepath-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 4: Multiple paths
 </figcaption></figure>
+</div>
+</div>
+</div>
+</section><section class="section level2"><h2 id="segments">Segments<a class="anchor" aria-label="anchor" href="#segments"></a>
+</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ah</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="va">p_curve</span><span class="op">@</span><span class="va">length</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>, \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">ggarrow</span><span class="fu">::</span><span class="fu"><a href="https://teunbrand.github.io/ggarrow/reference/arrow_ornaments.html" class="external-link">arrow_head_minimal</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">ah</span><span class="op">[</span><span class="va">p_curve</span><span class="op">@</span><span class="va">length</span> <span class="op">-</span> <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu">arrowheadr</span><span class="fu">::</span><span class="fu"><a href="https://wjschne.github.io/arrowheadr/reference/arrow_head_hypotrochoid.html" class="external-link">arrow_head_deltoid</a></span><span class="op">(</span><span class="fl">2.4</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/ggdiagram.html">ggdiagram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_path.html">ob_path</a></span><span class="op">(</span><span class="va">p_curve</span><span class="op">)</span><span class="op">@</span><span class="va">segments</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rconsortium.github.io/S7/reference/props.html" class="external-link">set_props</a></span><span class="op">(</span>color <span class="op">=</span> <span class="fu">viridis</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">viridis</a></span><span class="op">(</span><span class="va">p_curve</span><span class="op">@</span><span class="va">length</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="paths_files/figure-html/unnamed-chunk-8-1.png" width="672"></p>
+</figure>
 </div>
 </div>
 </div>

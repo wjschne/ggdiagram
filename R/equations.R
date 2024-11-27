@@ -5,7 +5,7 @@
 #' @param center ob_point
 #' @param width width (specify width or height but not both)
 #' @param height height (specify width or height but not both)
-#' @param name description
+#' @param hjust horizontal adjustment. 0 means left justified, 1 means right justified, 0.5 means centered
 #' @slot rectangle gets or sets rectangle that contains the image
 #' @param aspect_ratio alters the aspect ratio of the image
 #' @param color set color of equation text
@@ -19,6 +19,7 @@
 #' @param math_mode include dollar signs automatically. Set to `FALSE` when the latex command is not in math mode
 #' @param filename bare file name without extension (e.g., `myequation`)
 #' @param force_recompile Will re-run xelatex even if .pdf file exists already
+#' @inherit ob_style params
 #' @export
 ob_latex <- new_class(
   name = "ob_latex",
@@ -60,23 +61,23 @@ ob_latex <- new_class(
     image = class_list,
     place = pr_place),
   constructor = function(
-    tex = class_missing,
+    tex = character(0),
     center = ob_point(0,0),
-    width = class_missing,
-    height = class_missing,
+    width = numeric(0),
+    height = numeric(0),
     hjust = .5,
     vjust = .5,
     angle = 0,
     aspect_ratio = 1,
-    border = class_missing,
-    family = class_missing,
+    border = numeric(0),
+    family = character(0),
     math_mode = TRUE,
-    filename = class_missing,
-    color = class_missing,
+    filename = character(0),
+    color = character(0),
     fill = "white",
     density = 300,
-    latex_packages = class_missing,
-    preamble = class_missing,
+    latex_packages = character(0),
+    preamble = character(0),
     force_recompile = TRUE) {
     if (!S7_inherits(angle, ob_angle)) angle <- degree(angle)
 
@@ -120,6 +121,8 @@ ob_latex <- new_class(
     \textcolor{mybackground}{\rule{2\paperwidth}{\paperheight}}}}}
 \AtBeginDvi{\box\pagecolorbox})")
     }
+
+    fill_tex[is.na(fill)] <- ""
 
     txt_border <- "border=1pt"
     if (length(border) > 1) {
@@ -192,7 +195,14 @@ ob_latex <- new_class(
       file.remove(f_pdf)
       file.remove(f_tex)
 
-      tibble::tibble(image = list(i), width = img_width, height = img_height, angle = theta, hjust = hj, vjust = vj)
+      tibble::tibble(
+        image = list(i),
+        width = img_width,
+        height = img_height,
+        angle = theta,
+        hjust = hj,
+        vjust = vj
+      )
 
     })
 
@@ -210,8 +220,8 @@ ob_latex <- new_class(
       border = border,
       family = family,
       filename = filename,
-      color = color,
-      fill = fill,
+      color = as.character(color),
+      fill = as.character(fill),
       density = density,
       latex_packages = latex_packages,
       preamble = preamble,

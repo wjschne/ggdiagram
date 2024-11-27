@@ -3,6 +3,7 @@
 \name{ob_arc}
 \alias{ob_arc}
 \alias{ob_wedge}
+\alias{ob_circular_segment}
 \title{ob_arc class}
 \usage{
 ob_arc(
@@ -10,33 +11,33 @@ ob_arc(
   radius = 1,
   start = 0,
   end = 0,
-  label = class_missing,
+  label = character(0),
   start_point = class_missing,
   end_point = class_missing,
   n = 360,
-  wedge = FALSE,
-  alpha = class_missing,
-  arrow_head = class_missing,
-  arrow_fins = class_missing,
-  arrowhead_length = class_missing,
-  length_head = class_missing,
-  length_fins = class_missing,
-  color = class_missing,
-  fill = class_missing,
-  lineend = class_missing,
-  linejoin = class_missing,
-  linewidth = class_missing,
-  linewidth_fins = class_missing,
-  linewidth_head = class_missing,
-  linetype = class_missing,
-  resect = class_missing,
-  resect_fins = class_missing,
-  resect_head = class_missing,
-  stroke_color = class_missing,
-  stroke_width = class_missing,
+  type = "arc",
+  alpha = numeric(0),
+  arrow_head = list(),
+  arrow_fins = list(),
+  arrowhead_length = numeric(0),
+  length_head = numeric(0),
+  length_fins = numeric(0),
+  color = character(0),
+  fill = character(0),
+  lineend = numeric(0),
+  linejoin = numeric(0),
+  linewidth = numeric(0),
+  linewidth_fins = numeric(0),
+  linewidth_head = numeric(0),
+  linetype = numeric(0),
+  resect = numeric(0),
+  resect_fins = numeric(0),
+  resect_head = numeric(0),
+  stroke_color = character(0),
+  stroke_width = numeric(0),
   style = class_missing,
-  x0 = class_missing,
-  y0 = class_missing,
+  x0 = numeric(0),
+  y0 = numeric(0),
   ...
 )
 
@@ -45,33 +46,68 @@ ob_wedge(
   radius = 1,
   start = 0,
   end = 0,
-  label = class_missing,
+  label = character(0),
   start_point = class_missing,
   end_point = class_missing,
   n = 360,
-  wedge = TRUE,
-  alpha = class_missing,
-  arrow_head = class_missing,
-  arrow_fins = class_missing,
-  arrowhead_length = class_missing,
-  length_head = class_missing,
-  length_fins = class_missing,
+  type = "wedge",
+  alpha = numeric(0),
+  arrow_head = list(),
+  arrow_fins = list(),
+  arrowhead_length = numeric(0),
+  length_head = numeric(0),
+  length_fins = numeric(0),
   color = NA,
   fill = "black",
-  lineend = class_missing,
-  linejoin = class_missing,
-  linewidth = class_missing,
-  linewidth_fins = class_missing,
-  linewidth_head = class_missing,
-  linetype = class_missing,
-  resect = class_missing,
-  resect_fins = class_missing,
-  resect_head = class_missing,
-  stroke_color = class_missing,
-  stroke_width = class_missing,
+  lineend = numeric(0),
+  linejoin = numeric(0),
+  linewidth = numeric(0),
+  linewidth_fins = numeric(0),
+  linewidth_head = numeric(0),
+  linetype = numeric(0),
+  resect = numeric(0),
+  resect_fins = numeric(0),
+  resect_head = numeric(0),
+  stroke_color = character(0),
+  stroke_width = numeric(0),
   style = class_missing,
-  x0 = class_missing,
-  y0 = class_missing,
+  x0 = numeric(0),
+  y0 = numeric(0),
+  ...
+)
+
+ob_circular_segment(
+  center = ob_point(0, 0),
+  radius = 1,
+  start = 0,
+  end = 0,
+  label = character(0),
+  start_point = class_missing,
+  end_point = class_missing,
+  n = 360,
+  type = "segment",
+  alpha = numeric(0),
+  arrow_head = list(),
+  arrow_fins = list(),
+  arrowhead_length = numeric(0),
+  length_head = numeric(0),
+  length_fins = numeric(0),
+  color = NA,
+  fill = "black",
+  lineend = numeric(0),
+  linejoin = numeric(0),
+  linewidth = numeric(0),
+  linewidth_fins = numeric(0),
+  linewidth_head = numeric(0),
+  linetype = numeric(0),
+  resect = numeric(0),
+  resect_fins = numeric(0),
+  resect_head = numeric(0),
+  stroke_color = character(0),
+  stroke_width = numeric(0),
+  style = class_missing,
+  x0 = numeric(0),
+  y0 = numeric(0),
   ...
 )
 }
@@ -92,7 +128,7 @@ ob_wedge(
 
 \item{n}{number of points in arc (default = 360)}
 
-\item{wedge}{Draw a wedge instead of an arc when \code{TRUE}}
+\item{type}{Type of object to drawn. Can be "arc", "wedge", or "segment"}
 
 \item{alpha}{numeric value for alpha transparency}
 
@@ -150,11 +186,25 @@ Create arcs and wedges
 
 \item{\code{angle_at}}{A function that finds the angle of the specified point in relation to the arc's center}
 
+\item{\code{apothem}}{Distance from center to the chord's midpoint}
+
+\item{\code{arc_length}}{Distance along arc from \code{start_point} to \code{end_point}}
+
+\item{\code{auto_label}}{Places a label at the arc's midpoint}
+
+\item{\code{chord}}{\code{ob_segment} from \code{start_point} to \code{end_point}}
+
 \item{\code{geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggarrow::geom_arrow}.}
+
+\item{\code{hatch}}{A function that puts hatch (tally) marks on arcs. Often used to indicate which arcs have the same angle. The \code{k} parameter controls how many hatch marks to display. The \code{height} parameter controls how long the hatch mark segment is. The \code{sep} paramater controls the separation between hatch marks when \code{k > 2}. Additional parameters sent to \code{ob_segment}.}
 
 \item{\code{length}}{The number of arcs in the arc object}
 
+\item{\code{midpoint}}{A function that selects 1 or more midpoints of the ob_arc. The \code{position} argument can be between 0 and 1. Additional arguments are passed to \code{ob_point}.}
+
 \item{\code{point_at}}{A function that finds a point on the arc at the specified angle.}
+
+\item{\code{sagitta}}{\code{ob_segment} from \code{chord} midpoint to \code{ob_arc} midpoint}
 
 \item{\code{tangent_at}}{A function that finds the tangent line at the specified angle.}
 

@@ -49,6 +49,7 @@
     <li><a class="dropdown-item" href="../articles/bezier.html">Bézier Curves</a></li>
     <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
+    <li><a class="dropdown-item" href="../articles/elements.html">Recreating Figures form Byrne's *Elements of Euclid*</a></li>
     <li><a class="dropdown-item" href="../articles/ellipses.html">Ellipses</a></li>
     <li><a class="dropdown-item" href="../articles/equations.html">Equations with LaTeX</a></li>
     <li><a class="dropdown-item" href="../articles/lines.html">Lines</a></li>
@@ -228,12 +229,12 @@ Figure 3: The sum of distances from the foci is constant.
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">e1</span><span class="op">@</span><span class="va">point_at</span><span class="op">(</span><span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">60</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;ob_point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 1.59</span></span>
 <span><span class="co">#&gt; @ y: num 2.75</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
-<span><span class="co">#&gt;              bounding_box, length, r, theta, style, tibble, xy,</span></span>
-<span><span class="co">#&gt;              geom, label, place, aesthetics</span></span></code></pre></div>
+<span><span class="co">#&gt;              bounding_box, centroid, length, r, theta, style,</span></span>
+<span><span class="co">#&gt;              tibble, xy, geom, label, place, aesthetics</span></span></code></pre></div>
 </div>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
@@ -300,12 +301,12 @@ Figure 5: The ellipse’s definitional parameter <em>t</em> does not always lin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ob_ellipse.html">ob_ellipse</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">@</span><span class="va">point_at</span><span class="op">(</span><span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">60</span><span class="op">)</span>, definitional <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;ob_point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 1</span></span>
 <span><span class="co">#&gt; @ y: num 1.73</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
-<span><span class="co">#&gt;              bounding_box, length, r, theta, style, tibble, xy,</span></span>
-<span><span class="co">#&gt;              geom, label, place, aesthetics</span></span></code></pre></div>
+<span><span class="co">#&gt;              bounding_box, centroid, length, r, theta, style,</span></span>
+<span><span class="co">#&gt;              tibble, xy, geom, label, place, aesthetics</span></span></code></pre></div>
 </div>
 </section><section class="section level2"><h2 id="tangent-lines">Tangent lines<a class="anchor" aria-label="anchor" href="#tangent-lines"></a>
 </h2>

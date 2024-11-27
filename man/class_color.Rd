@@ -5,7 +5,7 @@
 \title{color class}
 \usage{
 class_color(
-  color = class_missing,
+  color = character(0),
   hue = NULL,
   saturation = NULL,
   brightness = NULL,

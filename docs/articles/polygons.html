@@ -49,6 +49,7 @@
     <li><a class="dropdown-item" href="../articles/bezier.html">Bézier Curves</a></li>
     <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
+    <li><a class="dropdown-item" href="../articles/elements.html">Recreating Figures form Byrne's *Elements of Euclid*</a></li>
     <li><a class="dropdown-item" href="../articles/ellipses.html">Ellipses</a></li>
     <li><a class="dropdown-item" href="../articles/equations.html">Equations with LaTeX</a></li>
     <li><a class="dropdown-item" href="../articles/lines.html">Lines</a></li>
@@ -224,6 +225,165 @@ Figure 3: Arrow between two polygons
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-roundedpolygon-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 4: A polygon with rounded vertices
+</figcaption></figure>
+</div>
+</div>
+</div>
+</section><section class="section level2"><h2 id="regular-polygons-ngons">Regular Polygons (ngons)<a class="anchor" aria-label="anchor" href="#regular-polygons-ngons"></a>
+</h2>
+<p>An <code>ob_ngon</code> (regular polygon) can be be created by specifying the center point, the number of sides, and the radius (the distance from the center to a vertex).</p>
+<p>In <a href="#fig-regon" class="quarto-xref">Figure 5</a>, many regular polygons are displayed concentrically.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">10</span></span>
+<span><span class="fu"><a href="../reference/ggdiagram.html">ggdiagram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_ngon.html">ob_ngon</a></span><span class="op">(</span></span>
+<span>    n <span class="op">=</span> <span class="va">n</span><span class="op">:</span><span class="fl">1</span> <span class="op">+</span> <span class="fl">2</span>,</span>
+<span>    radius <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">.1</span>, length.out <span class="op">=</span> <span class="va">n</span><span class="op">)</span> <span class="op">^</span> <span class="fl">.7</span>,</span>
+<span>    fill <span class="op">=</span> <span class="fu">viridis</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">viridis</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n</span>, begin <span class="op">=</span> <span class="fl">.2</span>, end <span class="op">=</span> <span class="fl">.8</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>      <span class="fu">tinter</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tinter/man/lighten.html" class="external-link">lighten</a></span><span class="op">(</span><span class="fl">.6</span><span class="op">)</span>,</span>
+<span>    color <span class="op">=</span> <span class="st">"white"</span>,</span>
+<span>    linewidth <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>    angle <span class="op">=</span> <span class="fl">90</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div id="fig-regon" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-regon-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="polygons_files/figure-html/fig-regon-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-regon-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 5: Regular polygons
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Alternately, instead of the <code>radius</code>, the <code>ob_ngon</code> object can be specified with either the <code>side_length</code> or the <code>apothem</code> (the distance from the center to a side’s midpoint).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
+<span>  <span class="op">{</span><span class="va">ng</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_ngon.html">ob_ngon</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">8</span>, </span>
+<span>                 radius <span class="op">=</span> <span class="fl">4</span>, </span>
+<span>                 angle <span class="op">=</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">22.5</span><span class="op">)</span>,</span>
+<span>                 fill <span class="op">=</span> <span class="st">"dodgerblue4"</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_segment.html">ob_segment</a></span><span class="op">(</span></span>
+<span>    <span class="va">ng</span><span class="op">@</span><span class="va">center</span>,</span>
+<span>    <span class="va">ng</span><span class="op">@</span><span class="va">vertices</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span>
+<span>    color <span class="op">=</span> <span class="st">"white"</span>,</span>
+<span>    label <span class="op">=</span> <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Radius = "</span>, <span class="va">ng</span><span class="op">@</span><span class="va">radius</span><span class="op">)</span>, </span>
+<span>                     vjust <span class="op">=</span> <span class="fl">1.2</span>, </span>
+<span>                     fill <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>                     family <span class="op">=</span> <span class="va">my_font</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_segment.html">ob_segment</a></span><span class="op">(</span></span>
+<span>    <span class="va">ng</span><span class="op">@</span><span class="va">center</span>,</span>
+<span>    <span class="va">ng</span><span class="op">@</span><span class="va">segments</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">@</span><span class="va">midpoint</span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    color <span class="op">=</span> <span class="st">"white"</span>,</span>
+<span>    label <span class="op">=</span> <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Apothem = "</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">ng</span><span class="op">@</span><span class="va">apothem</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>, </span>
+<span>                     vjust <span class="op">=</span> <span class="op">-</span><span class="fl">.2</span>, </span>
+<span>                     fill <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>                     family <span class="op">=</span> <span class="va">my_font</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Side = "</span>, </span>
+<span>                  <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">ng</span><span class="op">@</span><span class="va">side_length</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>, </span>
+<span>           <span class="va">ng</span><span class="op">@</span><span class="va">segments</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">@</span><span class="va">midpoint</span><span class="op">(</span><span class="op">)</span>, </span>
+<span>           angle <span class="op">=</span> <span class="va">ng</span><span class="op">@</span><span class="va">segments</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">@</span><span class="va">line</span><span class="op">@</span><span class="va">angle</span>, </span>
+<span>           vjust <span class="op">=</span> <span class="op">-</span><span class="fl">0.2</span>,</span>
+<span>           family <span class="op">=</span> <span class="va">my_font</span><span class="op">)</span> </span></code></pre></div>
+<div class="cell-output-display">
+<div id="fig-ngon" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-ngon-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="polygons_files/figure-html/fig-ngon-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ngon-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 6: The <code>ob_ngon</code> object can be specificied with the <code>radius</code>, <code>side_length</code>, or <code>apothem</code>.
+</figcaption></figure>
+</div>
+</div>
+</div>
+</section><section class="section level2"><h2 id="reuleaux-polygons">Reuleaux Polygons<a class="anchor" aria-label="anchor" href="#reuleaux-polygons"></a>
+</h2>
+<p>Start with a regular polygon with an odd number of sides. For each pair of adjacent vertices, draw an arc with its center on the vertex of the opposite side. Amazingly, if you roll a Reuleaux polygon, its height is constant. This means that a Reuleaux polygon can roll smoothly. In <a href="#fig-reuleaux3" class="quarto-xref">Figure 7</a>, a Reuleaux triangle is made with the <code>ob_reuleaux</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">th</span> <span class="op">&lt;-</span> <span class="fl">275</span></span>
+<span><span class="fu"><a href="../reference/ggdiagram.html">ggdiagram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="op">{</span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_reuleaux.html">ob_reuleaux</a></span><span class="op">(</span></span>
+<span>    n <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>    fill <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>    angle <span class="op">=</span> <span class="fl">45</span></span>
+<span>  <span class="op">)</span><span class="op">}</span> </span></code></pre></div>
+<div class="cell-output-display">
+<div id="fig-reuleaux3" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-reuleaux3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="polygons_files/figure-html/fig-reuleaux3-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-reuleaux3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 7: A Reuleaux triangle
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>In <a href="#fig-reuleaux" class="quarto-xref">Figure 8</a> we draw 6 Reuleaux polygons with sides ranging from 3 to 13.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ggdiagram.html">ggdiagram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_reuleaux.html">ob_reuleaux</a></span><span class="op">(</span></span>
+<span>    n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">13</span>, <span class="fl">3</span>, <span class="op">-</span><span class="fl">2</span><span class="op">)</span>,</span>
+<span>    radius <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="op">-</span><span class="fl">.2</span><span class="op">)</span>,</span>
+<span>    fill <span class="op">=</span> <span class="fu">viridis</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">viridis</a></span><span class="op">(</span></span>
+<span>      n <span class="op">=</span> <span class="fl">6</span>, </span>
+<span>      begin <span class="op">=</span> <span class="fl">.2</span>, </span>
+<span>      end <span class="op">=</span> <span class="fl">.8</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>      <span class="fu">tinter</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tinter/man/lighten.html" class="external-link">lighten</a></span><span class="op">(</span><span class="fl">.6</span><span class="op">)</span>,</span>
+<span>    color <span class="op">=</span> <span class="st">"white"</span>,</span>
+<span>    linewidth <span class="op">=</span> <span class="fl">1</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div id="fig-reuleaux" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-reuleaux-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="polygons_files/figure-html/fig-reuleaux-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-reuleaux-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 8: Six Reuleaux polygons arranged concentrically
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>A true Reuleaux polygon with an even number of sides is not possible, but it is possible to draw even-sided figures that resemble Reuleaux polygons (<a href="#fig-reuleaux4" class="quarto-xref">Figure 9</a>). These figures do not have same height as they roll.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ggdiagram.html">ggdiagram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_reuleaux.html">ob_reuleaux</a></span><span class="op">(</span></span>
+<span>    n <span class="op">=</span> <span class="fl">4</span>,</span>
+<span>    fill <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>    angle <span class="op">=</span> <span class="fl">45</span></span>
+<span>  <span class="op">)</span> </span></code></pre></div>
+<div class="cell-output-display">
+<div id="fig-reuleaux4" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-reuleaux4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="polygons_files/figure-html/fig-reuleaux4-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-reuleaux4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 9: A Reuleaux-like square
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Specifying <code>n = 2</code> will create a symmetric lens, which is also not a Reuleaux polygon.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ggdiagram.html">ggdiagram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_reuleaux.html">ob_reuleaux</a></span><span class="op">(</span></span>
+<span>    n <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>    fill <span class="op">=</span> <span class="cn">NA</span></span>
+<span>  <span class="op">)</span> </span></code></pre></div>
+<div class="cell-output-display">
+<div id="fig-reuleaux2" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-reuleaux2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="polygons_files/figure-html/fig-reuleaux2-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-reuleaux2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 10: A symmetric lens
 </figcaption></figure>
 </div>
 </div>

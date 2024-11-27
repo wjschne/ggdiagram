@@ -68,7 +68,11 @@ sg_props <- list(
         rlang::inject(ob_style(!!!get_non_empty_list(pr)))
       },
       setter = function(self, value) {
-        ob_segment(self@p1, self@p2, style = self@style + value)
+        s <- self@style + value
+        s_list <- get_non_empty_props(s)
+        s_list <- s_list[names(s_list) %in% sg_styles]
+        self <- rlang::inject(set_props(self, !!!s_list))
+        self
       }
     ),
     tibble = new_property(
@@ -108,33 +112,20 @@ sg_props <- list(
         as.geom(self, ...)
       }
     }),
-    auto_label = new_property(
-      class_function,
-      getter = function(self) {
-        \(
-          label,
-          position = .5,
-          # offset_angle  = self@angle + degree(90),
-          # polar_multiplier = 1.2,
-          # polar_just = ob_polar(self@angle, r = multiplier),
-          # hjust = NULL,
-          vjust = class_missing,
-          angle = self@line@angle,
-          ...
-        ) {
+    hatch = new_property(class_function, getter = function(self) {
+      \(k = 1, sep = .05, height = .05, position = .5, ...) {
+        h <- map_ob(self, \(s) {
+          m <- s@midpoint(position = position)
+          p_center <- ob_array(m, k = k, sep = sep, where = s@line@angle)
+          p_top <- p_center + ob_polar(s@line@angle + degree(90), height)
+          p_bottom <- p_center + ob_polar(s@line@angle - degree(90), height)
+          ob_segment(p_top, p_bottom, style = s@style)
+        })
 
+        h@style <- h@style + ob_style(...)
+        h
 
-          label(
-            center = midpoint(self, position = position),
-            label = purrr::map_chr(label, \(l) ifelse(is.numeric(l),signs::signs(l, accuracy = .01),l)),
-            vjust = vjust,
-            angle = angle,
-            ...
-          )
-        }
-
-      }
-    ),
+    }}),
     midpoint = new_property(
       class_function,
       getter = function(self) {
@@ -204,6 +195,10 @@ sg_props <- list(
 #' @param yend overrides the y-coordinate of p2
 #' @param style a style list
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
+#' @slot geom A function that converts the object to a geom. Any additional parameters are passed to `ggarrow::geom_arrow_segment`.
+#' @slot hatch A function that puts hatch (tally) marks on segments. Often used to indicate which segments have the same length. The `k` parameter controls how many hatch marks to display. The `height` parameter controls how long the hatch mark segment is. The `sep` paramater controls the separation between hatch marks when `k > 2`. Additional parameters sent to `ob_segment`.
+#' @slot midpoint A function that selects 1 or more midpoints of the ob_segment. The `position` argument can be between 0 and 1. Additional arguments are passed to `ob_point`.
+#' @slot nudge A function to move the segment by x and y units.
 #' @inherit ob_style params
 #' @export
 ob_segment <- new_class(
@@ -221,25 +216,25 @@ ob_segment <- new_class(
   ),
   constructor = function(p1 = class_missing,
                          p2 = class_missing,
-                         label = class_missing,
-                         alpha = class_missing,
+                         label = character(0),
+                         alpha = numeric(0),
                          arrow_head = ggarrow::arrow_head_minimal(90),
-                         arrow_fins = class_missing,
+                         arrow_fins = list(),
                          arrowhead_length = 4,
-                         length_head = class_missing,
-                         length_fins = class_missing,
-                         color = class_missing,
-                         lineend = class_missing,
-                         linejoin = class_missing,
-                         linewidth = class_missing,
-                         linewidth_fins = class_missing,
-                         linewidth_head = class_missing,
-                         linetype = class_missing,
-                         resect = class_missing,
-                         resect_fins = class_missing,
-                         resect_head = class_missing,
-                         stroke_color = class_missing,
-                         stroke_width = class_missing,
+                         length_head = numeric(0),
+                         length_fins = numeric(0),
+                         color = character(0),
+                         lineend = numeric(0),
+                         linejoin = numeric(0),
+                         linewidth = numeric(0),
+                         linewidth_fins = numeric(0),
+                         linewidth_head = numeric(0),
+                         linetype = numeric(0),
+                         resect = numeric(0),
+                         resect_fins = numeric(0),
+                         resect_head = numeric(0),
+                         stroke_color = character(0),
+                         stroke_width = numeric(0),
                          style = class_missing,
                          x = class_missing,
                          xend = class_missing,
@@ -442,7 +437,7 @@ method(get_tibble_defaults, ob_segment) <- function(x) {
     arrow_fins = ggarrow::arrow_fins_minimal(90),
     color = replace_na(ggarrow::GeomArrowSegment$default_aes$colour, "black"),
     stroke_color = replace_na(ggarrow::GeomArrowSegment$default_aes$colour, "black"),
-    stroke_width = replace_na(ggarrow::GeomArrowSegment$default_aes$colour, 0.25),
+    stroke_width = replace_na(ggarrow::GeomArrowSegment$default_aes$stroke_width, 0.25),
     lineend = "butt",
     linejoin = "round",
     linewidth = replace_na(ggarrow::GeomArrowSegment$default_aes$linewidth, .5),

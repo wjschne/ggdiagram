@@ -7,13 +7,18 @@
 \alias{turn}
 \title{ob_angle}
 \usage{
-ob_angle(.data = class_missing)
+ob_angle(
+  .data = numeric(0),
+  degree = integer(0),
+  radian = integer(0),
+  turn = integer(0)
+)
 
-degree(degree = class_missing)
+degree(degree = numeric(0))
 
-radian(radian = class_missing)
+radian(radian = numeric(0))
 
-turn(turn = class_missing)
+turn(turn = numeric(0))
 }
 \arguments{
 \item{.data}{a real number indicating the number of turns.}
@@ -23,6 +28,10 @@ turn(turn = class_missing)
 \item{radian}{radians}
 
 \item{turn}{proportion of full turns of a circle (1 turn = 2 * pi radians)}
+
+\item{positive}{if angle is negative, adds a full turn to ensure the angle is positive}
+
+\item{negative}{if angle is positive, subtracts a full turn to ensure the angle is negative}
 }
 \description{
 Creates an angle in the metric of radians, degrees, and turns.

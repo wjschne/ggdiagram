@@ -326,21 +326,9 @@ $$
 2 * degree(180)
 ```
 
-# Retrieving the underlying data from a `ob_angle` object
+# Trigonometry
 
-Angles created with the `degree`, `radian`, or `turn` function are `ob_angle` objects. The `ob_angle` function exists but is not meant to be used directly. Its underlying data is a vector of numeric data representing the number or turns. The underlying turn data from any `ob_angle` object can be extracted with the `c` function:
-
-```{r}
-theta <- degree(c(0,180,360, 720))
-# Degrees range: 0<= degree < 360
-theta@degree
-# Underlying data in turns
-c(theta)
-```
-
-## Trigonometry
-
-Angles can take the three standard trigonometric functions
+The outputs of `degree`, `radian`, and `turn` can take the three standard trigonometric functions
 
 ```{r}
 #| label: trig
@@ -483,5 +471,17 @@ tan(radian(pi))
 
 ```
 
+# Retrieving the underlying data from a `ob_angle` object
 
+Angles created with the `degree`, `radian`, or `turn` function are `ob_angle` objects. The `ob_angle` function exists but is not meant to be used directly. Its underlying data is a vector of numeric data representing the number of turns. The underlying turn data from any `ob_angle` object can be extracted with the `c` function (or with the `S7::S7_data` function).
+
+```{r}
+theta <- degree(c(0,180,360, 720))
+# Degrees range: 0<= degree < 360
+theta@degree
+# Underlying data in turns
+c(theta)
+# Alternative method of extracting data
+S7::S7_data(theta)
+```
 

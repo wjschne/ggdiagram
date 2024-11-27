@@ -24,6 +24,7 @@
     <li><a class="dropdown-item" href="../articles/bezier.html">Bézier Curves</a></li>
     <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
+    <li><a class="dropdown-item" href="../articles/elements.html">Recreating Figures form Byrne's *Elements of Euclid*</a></li>
     <li><a class="dropdown-item" href="../articles/ellipses.html">Ellipses</a></li>
     <li><a class="dropdown-item" href="../articles/equations.html">Equations with LaTeX</a></li>
     <li><a class="dropdown-item" href="../articles/lines.html">Lines</a></li>
@@ -57,25 +58,25 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ob_segment</span><span class="op">(</span></span>
 <span>  p1 <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  p2 <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  label <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  alpha <span class="op">=</span> <span class="va">class_missing</span>,</span>
+<span>  label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  alpha <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  arrow_head <span class="op">=</span> <span class="fu">ggarrow</span><span class="fu">::</span><span class="fu"><a href="https://teunbrand.github.io/ggarrow/reference/arrow_ornaments.html" class="external-link">arrow_head_minimal</a></span><span class="op">(</span><span class="fl">90</span><span class="op">)</span>,</span>
-<span>  arrow_fins <span class="op">=</span> <span class="va">class_missing</span>,</span>
+<span>  arrow_fins <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  arrowhead_length <span class="op">=</span> <span class="fl">4</span>,</span>
-<span>  length_head <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  length_fins <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  color <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  lineend <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  linejoin <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  linewidth <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  linewidth_fins <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  linewidth_head <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  linetype <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  resect <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  resect_fins <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  resect_head <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  stroke_color <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  stroke_width <span class="op">=</span> <span class="va">class_missing</span>,</span>
+<span>  length_head <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  length_fins <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  lineend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  linejoin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  linewidth <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  linewidth_fins <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  linewidth_head <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  linetype <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  resect <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  resect_fins <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  resect_head <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  stroke_color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  stroke_width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  style <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  x <span class="op">=</span> <span class="va">class_missing</span>,</span>
 <span>  xend <span class="op">=</span> <span class="va">class_missing</span>,</span>
@@ -195,6 +196,27 @@
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>&lt;<code><a href="https://rlang.r-lib.org/reference/dyn-dots.html" class="external-link">dynamic-dots</a></code>&gt; properties passed to style</p></dd>
+
+</dl></div>
+    <div class="section level2">
+    <h2 id="slots">Slots<a class="anchor" aria-label="anchor" href="#slots"></a></h2>
+
+
+<dl><dt><code>geom</code></dt>
+<dd><p>A function that converts the object to a geom. Any additional parameters are passed to <code><a href="https://teunbrand.github.io/ggarrow/reference/geom_arrow_segment.html" class="external-link">ggarrow::geom_arrow_segment</a></code>.</p></dd>
+
+
+<dt><code>hatch</code></dt>
+<dd><p>A function that puts hatch (tally) marks on segments. Often used to indicate which segments have the same length. The <code>k</code> parameter controls how many hatch marks to display. The <code>height</code> parameter controls how long the hatch mark segment is. The <code>sep</code> paramater controls the separation between hatch marks when <code>k &gt; 2</code>. Additional parameters sent to <code>ob_segment</code>.</p></dd>
+
+
+<dt><code>midpoint</code></dt>
+<dd><p>A function that selects 1 or more midpoints of the ob_segment. The <code>position</code> argument can be between 0 and 1. Additional arguments are passed to <code>ob_point</code>.</p></dd>
+
+
+<dt><code>nudge</code></dt>
+<dd><p>A function to move the segment by x and y units.</p></dd>
+
 
 </dl></div>
 

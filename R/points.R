@@ -20,6 +20,9 @@ pt_props <- list(
       ob_rectangle(southwest = ob_point(x = min(self@x), y = min(self@y)),
                 northeast = ob_point(x = max(self@x), y = max(self@y)))
     }),
+    centroid = new_property(getter = function(self) {
+      ob_point(mean(self@x), mean(self@y), style = self[1]@style)
+    }),
     length = new_property(
       getter = function(self) {
         length(self@x)
@@ -49,7 +52,11 @@ pt_props <- list(
         rlang::inject(ob_style(!!!get_non_empty_list(pr)))
       },
       setter = function(self, value) {
-        ob_point(self@x, self@y, style = self@style + value)
+        s <- self@style + value
+        s_list <- get_non_empty_props(s)
+        s_list <- s_list[names(s_list) %in% pt_styles]
+        self <- rlang::inject(set_props(self, !!!s_list))
+        self
       }
     ),
     tibble = new_property(getter = function(self) {
@@ -147,12 +154,12 @@ ob_point <- new_class(
     !!!pt_props$info)),
   constructor = function(x = 0,
                          y = 0,
-                         alpha = class_missing,
-                         color = class_missing,
-                         fill = class_missing,
-                         shape = class_missing,
-                         size = class_missing,
-                         stroke = class_missing,
+                         alpha = numeric(0),
+                         color = character(0),
+                         fill = character(0),
+                         shape = numeric(0),
+                         size = numeric(0),
+                         stroke = numeric(0),
                          style = class_missing,
                          ...) {
 
@@ -208,13 +215,13 @@ ob_polar <- new_class(
   name = "ob_polar",
   parent = ob_point,
   constructor = function(theta = class_missing,
-                         r = class_missing,
-                         alpha = class_missing,
-                         color = class_missing,
-                         fill = class_missing,
-                         shape = class_missing,
-                         size = class_missing,
-                         stroke = class_missing,
+                         r = numeric(0),
+                         alpha = numeric(0),
+                         color = character(0),
+                         fill = character(0),
+                         shape = numeric(0),
+                         size = numeric(0),
+                         stroke = numeric(0),
                         style = class_missing) {
     if (length(r) == 0) r <- 1
     if (length(theta) == 0) theta <- degree(0)

@@ -71,7 +71,7 @@ bz_props <- list(
         rlang::inject(ob_style(!!!get_non_empty_list(pr)))
       },
       setter = function(self, value) {
-        ob_point(self@x, self@y, style = self@style + value)
+        ob_path(self@p, label = self@label, style = self@style + value)
       }
     ),
     tibble = new_property(getter = function(self) {
@@ -175,12 +175,13 @@ bz_props <- list(
 #' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggarrow::geom_arrow`.
 #' @inherit ob_style params
 #' @slot geom A function that converts the object to a geom. Any additional parameters are passed to `ggarrow::geom_arrow`.
-#' @slot midpoint A function that selects 1 or more midpoints of the ob_bezier. The `position` argument can be between 0 and 1. Additional arguments are passed to the ob_point's style object.
+#' @slot midpoint A function that selects 1 or more midpoints of the ob_bezier. The `position` argument can be between 0 and 1. Additional arguments are passed to `ob_point`.
 #' @slot aesthetics A list of information about the ob_bezier's aesthetic properties
 #' @examples
 #' library(ggplot2)
 #' control_points <- ob_point(c(0,1,2,4), c(0,4,0,0))
-#' ggplot() + coord_equal() +
+#' ggplot() +
+#'   coord_equal() +
 #'   ob_bezier(control_points, color = "blue") +
 #'   ob_path(control_points, linetype = "dashed", linewidth = .5) +
 #'   control_points
@@ -198,28 +199,28 @@ ob_bezier <- new_class(
     )
   ),
   constructor = function(p = class_missing,
-                         label = class_missing,
+                         label = character(0),
                          label_sloped = TRUE,
                          n = 360,
-                         alpha = class_missing,
+                         alpha = numeric(0),
                          arrow_head = class_missing,
                          arrow_fins = class_missing,
-                         arrowhead_length = class_missing,
-                         length_head = class_missing,
-                         length_fins = class_missing,
-                         color = class_missing,
-                         fill = class_missing,
-                         lineend = class_missing,
-                         linejoin = class_missing,
-                         linewidth = class_missing,
-                         linewidth_fins = class_missing,
-                         linewidth_head = class_missing,
-                         linetype = class_missing,
-                         resect = class_missing,
-                         resect_fins = class_missing,
-                         resect_head = class_missing,
-                         stroke_color = class_missing,
-                         stroke_width = class_missing,
+                         arrowhead_length = numeric(0),
+                         length_head = numeric(0),
+                         length_fins = numeric(0),
+                         color = character(0),
+                         fill = character(0),
+                         lineend = numeric(0),
+                         linejoin = numeric(0),
+                         linewidth = numeric(0),
+                         linewidth_fins = numeric(0),
+                         linewidth_head = numeric(0),
+                         linetype = numeric(0),
+                         resect = numeric(0),
+                         resect_fins = numeric(0),
+                         resect_head = numeric(0),
+                         stroke_color = character(0),
+                         stroke_width = numeric(0),
                          style = class_missing,
                          ...) {
 
@@ -331,15 +332,15 @@ method(get_tibble, ob_bezier) <- function(x) {
     dplyr::mutate(p = purrr::map(p, \(x) {
       x@tibble |> dplyr::select(x,y) |> as.matrix()
     })) |>
-    dplyr::mutate(p = purrr::map2(p,n, \(pp,nn) {
+    dplyr::mutate(p_unnest = purrr::map2(p,n, \(pp,nn) {
       bezier::bezier(t = seq(0,1, length.out = nn),
                      p = pp) |>
         `colnames<-`(c("x", "y")) |>
         tibble::as_tibble()
 
     })) |>
-    tidyr::unnest(p) |>
-    dplyr::select(-n)
+    # tidyr::unnest(p) |>
+    dplyr::select(-n, -p)
 }
 
 
@@ -350,7 +351,7 @@ method(get_tibble_defaults, ob_bezier) <- function(x) {
     arrow_fins = ggarrow::arrow_fins_minimal(90),
     color = replace_na(ggarrow::GeomArrow$default_aes$colour, "black"),
     stroke_color = replace_na(ggarrow::GeomArrow$default_aes$colour, "black"),
-    stroke_width = replace_na(ggarrow::GeomArrow$default_aes$colour, 0.25),
+    stroke_width = replace_na(ggarrow::GeomArrow$default_aes$stroke_width, 0.25),
     lineend = "butt",
     linejoin = "round",
     linewidth = replace_na(ggarrow::GeomArrow$default_aes$linewidth, .5),
@@ -359,7 +360,7 @@ method(get_tibble_defaults, ob_bezier) <- function(x) {
     linetype = replace_na(ggarrow::GeomArrow$default_aes$linetype, 1),
     n = 360
   )
-  get_tibble_defaults_helper(x, sp,required_aes = c("x", "y", "group"))
+  get_tibble_defaults_helper(x, sp,required_aes = c("group", "p_unnest"))
 }
 
 
@@ -386,12 +387,15 @@ method(as.geom, ob_bezier) <- function(x, ...) {
 
     if (all(x@label_sloped)) {
 
-      d_label <- tidyr::nest(dplyr::select(d, x, y, group), .by = group) |>
-        dplyr::bind_cols(dplyr::select(x@label@tibble, -c(x, y))) |>
+      d_label <- tidyr::nest(dplyr::select(d, p_unnest, group),
+                             .by = group) |>
+        dplyr::bind_cols(
+          dplyr::select(x@label@tibble, -c(x, y))) |>
         tidyr::unnest(data)
 
       if ("size" %in% colnames(d_label)) {
-        d_label <- dplyr::mutate(d_label, size = size / ggplot2::.pt)
+        d_label <- dplyr::mutate(d_label,
+                                 size = size / ggplot2::.pt)
       }
 
 
@@ -414,13 +418,14 @@ method(as.geom, ob_bezier) <- function(x, ...) {
         user_overrides = NULL)
 
     } else {
-      dpos <- tibble(group = unique(d$group),
+      dpos <- tibble::tibble(group = unique(d$group),
                      pos = x@label@position)
 
       d_l <- dplyr::select(x@label@tibble, -c(x, y))
 
 
-      d_label <- dplyr::select(d, x,y,group) |>
+      d_label <- tidyr::unnest(d, p_unnest) %>%
+        dplyr::select(x,y,group) |>
         dplyr::left_join(dpos, by = "group") |>
         dplyr::mutate(x0 = dplyr::lag(x),
                       y0 = dplyr::lag(y),

@@ -49,6 +49,7 @@
     <li><a class="dropdown-item" href="../articles/bezier.html">Bézier Curves</a></li>
     <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
+    <li><a class="dropdown-item" href="../articles/elements.html">Recreating Figures form Byrne's *Elements of Euclid*</a></li>
     <li><a class="dropdown-item" href="../articles/ellipses.html">Ellipses</a></li>
     <li><a class="dropdown-item" href="../articles/equations.html">Equations with LaTeX</a></li>
     <li><a class="dropdown-item" href="../articles/lines.html">Lines</a></li>
@@ -107,20 +108,20 @@
 <span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">p1</span>,<span class="va">p2</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
-<span><span class="co">#&gt; &lt;ob_point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 1</span></span>
 <span><span class="co">#&gt; @ y: num 2</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
-<span><span class="co">#&gt;              bounding_box, length, r, theta, style, tibble, xy,</span></span>
-<span><span class="co">#&gt;              geom, label, place, aesthetics</span></span>
+<span><span class="co">#&gt;              bounding_box, centroid, length, r, theta, style,</span></span>
+<span><span class="co">#&gt;              tibble, xy, geom, label, place, aesthetics</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[2]]</span></span>
-<span><span class="co">#&gt; &lt;ob_point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 3</span></span>
 <span><span class="co">#&gt; @ y: num 4</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
-<span><span class="co">#&gt;              bounding_box, length, r, theta, style, tibble, xy,</span></span>
-<span><span class="co">#&gt;              geom, label, place, aesthetics</span></span></code></pre></div>
+<span><span class="co">#&gt;              bounding_box, centroid, length, r, theta, style,</span></span>
+<span><span class="co">#&gt;              tibble, xy, geom, label, place, aesthetics</span></span></code></pre></div>
 </div>
 </section><section class="section level2"><h2 id="binding-lists-of-objects-into-a-single-object">Binding lists of objects into a single object<a class="anchor" aria-label="anchor" href="#binding-lists-of-objects-into-a-single-object"></a>
 </h2>
@@ -129,12 +130,12 @@
 <div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bind.html">bind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">p1</span>,<span class="va">p2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">p</span></span>
-<span><span class="co">#&gt; &lt;ob_point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num [1:2] 1 3</span></span>
 <span><span class="co">#&gt; @ y: num [1:2] 2 4</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
-<span><span class="co">#&gt;              bounding_box, length, r, theta, style, tibble, xy,</span></span>
-<span><span class="co">#&gt;              geom, label, place, aesthetics</span></span></code></pre></div>
+<span><span class="co">#&gt;              bounding_box, centroid, length, r, theta, style,</span></span>
+<span><span class="co">#&gt;              tibble, xy, geom, label, place, aesthetics</span></span></code></pre></div>
 </div>
 <p>Binding objects can make subsequent tasks easier and less repetitive. For example, from the new object <code>p</code>, we can create two circles with one line of code rather than the two lines that would otherwise be needed to create separate circles from <code>p1</code> and <code>p2</code>.</p>
 <div class="cell">
@@ -161,21 +162,21 @@
 <span><span class="va">osl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bind.html">bind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span>, <span class="va">c1</span>, <span class="va">c2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">osl</span></span>
 <span><span class="co">#&gt; &lt;ob_shape_list&gt;</span></span>
-<span><span class="co">#&gt; &lt;ob_point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num [1:2] 0 2</span></span>
 <span><span class="co">#&gt; @ y: num [1:2] 0 0</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
-<span><span class="co">#&gt;              bounding_box, length, r, theta, style, tibble, xy,</span></span>
-<span><span class="co">#&gt;              geom, label, place, aesthetics</span></span>
-<span><span class="co">#&gt; &lt;ob_circle&gt;</span></span>
-<span><span class="co">#&gt; @ center: &lt;ob_point&gt;</span></span>
+<span><span class="co">#&gt;              bounding_box, centroid, length, r, theta, style,</span></span>
+<span><span class="co">#&gt;              tibble, xy, geom, label, place, aesthetics</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_circle&gt;</span></span>
+<span><span class="co">#&gt; @ center: &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt;  @ x: num [1:2] 0 2</span></span>
 <span><span class="co">#&gt;  @ y: num [1:2] 0 0</span></span>
 <span><span class="co">#&gt; @ radius: num [1:2] 2 1.5</span></span>
-<span><span class="co">#&gt; Other props: label, alpha, color, fill, linewidth, linetype, n,</span></span>
-<span><span class="co">#&gt;              area, bounding_box, circumference, diameter, length,</span></span>
-<span><span class="co">#&gt;              polygon, style, tibble, geom, angle_at, normal_at,</span></span>
-<span><span class="co">#&gt;              tangent_at, place, point_at, aesthetics</span></span>
+<span><span class="co">#&gt; Other props: label, alpha, color, fill, linewidth, linetype,</span></span>
+<span><span class="co">#&gt;              n, area, bounding_box, circumference, diameter,</span></span>
+<span><span class="co">#&gt;              length, polygon, style, tibble, geom, arc, angle_at,</span></span>
+<span><span class="co">#&gt;              normal_at, tangent_at, place, point_at, aesthetics</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/ggdiagram.html">ggdiagram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="va">osl</span></span></code></pre></div>
@@ -195,22 +196,22 @@ Figure 1: An ob_shape_list
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">osl</span><span class="op">[[</span><span class="st">"ob_point"</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="co">#&gt; &lt;ob_point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num [1:2] 0 2</span></span>
 <span><span class="co">#&gt; @ y: num [1:2] 0 0</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
-<span><span class="co">#&gt;              bounding_box, length, r, theta, style, tibble, xy,</span></span>
-<span><span class="co">#&gt;              geom, label, place, aesthetics</span></span>
+<span><span class="co">#&gt;              bounding_box, centroid, length, r, theta, style,</span></span>
+<span><span class="co">#&gt;              tibble, xy, geom, label, place, aesthetics</span></span>
 <span><span class="va">osl</span><span class="op">[[</span><span class="st">"ob_circle"</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="co">#&gt; &lt;ob_circle&gt;</span></span>
-<span><span class="co">#&gt; @ center: &lt;ob_point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_circle&gt;</span></span>
+<span><span class="co">#&gt; @ center: &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt;  @ x: num [1:2] 0 2</span></span>
 <span><span class="co">#&gt;  @ y: num [1:2] 0 0</span></span>
 <span><span class="co">#&gt; @ radius: num [1:2] 2 1.5</span></span>
-<span><span class="co">#&gt; Other props: label, alpha, color, fill, linewidth, linetype, n,</span></span>
-<span><span class="co">#&gt;              area, bounding_box, circumference, diameter, length,</span></span>
-<span><span class="co">#&gt;              polygon, style, tibble, geom, angle_at, normal_at,</span></span>
-<span><span class="co">#&gt;              tangent_at, place, point_at, aesthetics</span></span></code></pre></div>
+<span><span class="co">#&gt; Other props: label, alpha, color, fill, linewidth, linetype,</span></span>
+<span><span class="co">#&gt;              n, area, bounding_box, circumference, diameter,</span></span>
+<span><span class="co">#&gt;              length, polygon, style, tibble, geom, arc, angle_at,</span></span>
+<span><span class="co">#&gt;              normal_at, tangent_at, place, point_at, aesthetics</span></span></code></pre></div>
 </div>
 </section><section class="section level2"><h2 id="use-unbind-to-make-an-object-into-a-list-of-objects">Use <code>unbind</code> to make an object into a list of objects<a class="anchor" aria-label="anchor" href="#use-unbind-to-make-an-object-into-a-list-of-objects"></a>
 </h2>
@@ -219,20 +220,20 @@ Figure 1: An ob_shape_list
 <div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/unbind.html">unbind</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
-<span><span class="co">#&gt; &lt;ob_point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 1</span></span>
 <span><span class="co">#&gt; @ y: num 2</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
-<span><span class="co">#&gt;              bounding_box, length, r, theta, style, tibble, xy,</span></span>
-<span><span class="co">#&gt;              geom, label, place, aesthetics</span></span>
+<span><span class="co">#&gt;              bounding_box, centroid, length, r, theta, style,</span></span>
+<span><span class="co">#&gt;              tibble, xy, geom, label, place, aesthetics</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; [[2]]</span></span>
-<span><span class="co">#&gt; &lt;ob_point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 3</span></span>
 <span><span class="co">#&gt; @ y: num 4</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
-<span><span class="co">#&gt;              bounding_box, length, r, theta, style, tibble, xy,</span></span>
-<span><span class="co">#&gt;              geom, label, place, aesthetics</span></span></code></pre></div>
+<span><span class="co">#&gt;              bounding_box, centroid, length, r, theta, style,</span></span>
+<span><span class="co">#&gt;              tibble, xy, geom, label, place, aesthetics</span></span></code></pre></div>
 </div>
 <p>The <code>unbind</code> function is needed when we want to loop through each element using <code>lapply</code> or <code><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">purrr::map</a></code>. Here we have two points and we want to put six points the both. We want to connect each element of one column to each element of the other column. Note that the output of <code>lapply</code> or <code><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">purrr::map</a></code> is a list. To make the list something that ggplot2 can plot, we can bind the list into a single object.</p>
 <div class="cell">
@@ -399,12 +400,12 @@ Figure 6: Using <code>map_ob</code> to the connect variables
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
-<span><span class="co">#&gt; &lt;ob_point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 1</span></span>
 <span><span class="co">#&gt; @ y: num 0</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
-<span><span class="co">#&gt;              bounding_box, length, r, theta, style, tibble, xy,</span></span>
-<span><span class="co">#&gt;              geom, label, place, aesthetics</span></span></code></pre></div>
+<span><span class="co">#&gt;              bounding_box, centroid, length, r, theta, style,</span></span>
+<span><span class="co">#&gt;              tibble, xy, geom, label, place, aesthetics</span></span></code></pre></div>
 </div>
 <p>The strategic use of subsetting can make otherwise repetitive tasks much less tedious. In <a href="#fig-c12" class="quarto-xref">Figure 7</a> we connect a ring of 12 circles with one command rather than 12.</p>
 <div class="cell">

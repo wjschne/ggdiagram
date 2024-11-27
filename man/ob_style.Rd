@@ -5,49 +5,49 @@
 \title{ob_style class}
 \usage{
 ob_style(
-  alpha = class_missing,
-  angle = class_missing,
-  arrow_head = class_missing,
-  arrow_fins = class_missing,
-  arrow_mid = class_missing,
-  color = class_missing,
-  family = class_missing,
-  fill = class_missing,
-  fontface = class_missing,
-  hjust = class_missing,
-  justify = class_missing,
-  label.color = class_missing,
-  label.margin = class_missing,
-  label.padding = class_missing,
-  label.r = class_missing,
-  label.size = class_missing,
-  arrowhead_length = class_missing,
-  length_head = class_missing,
-  length_fins = class_missing,
-  length_mid = class_missing,
-  lineend = class_missing,
-  lineheight = class_missing,
-  linejoin = class_missing,
-  linewidth_fins = class_missing,
-  linewidth_head = class_missing,
-  linewidth = class_missing,
-  linetype = class_missing,
-  n = class_missing,
-  nudge_x = class_missing,
-  nudge_y = class_missing,
-  polar_just = class_missing,
-  resect = class_missing,
-  resect_fins = class_missing,
-  resect_head = class_missing,
-  shape = class_missing,
-  size = class_missing,
-  size.unit = class_missing,
-  straight = class_missing,
-  stroke = class_missing,
-  stroke_color = class_missing,
-  stroke_width = class_missing,
-  text.color = class_missing,
-  vjust = class_missing,
+  alpha = numeric(0),
+  angle = numeric(0),
+  arrow_head = list(),
+  arrow_fins = list(),
+  arrow_mid = list(),
+  color = character(0),
+  family = character(0),
+  fill = character(0),
+  fontface = character(0),
+  hjust = numeric(0),
+  justify = numeric(0),
+  label.color = character(0),
+  label.margin = list(),
+  label.padding = list(),
+  label.r = numeric(0),
+  label.size = numeric(0),
+  arrowhead_length = numeric(0),
+  length_head = numeric(0),
+  length_fins = numeric(0),
+  length_mid = numeric(0),
+  lineend = numeric(0),
+  lineheight = numeric(0),
+  linejoin = numeric(0),
+  linewidth_fins = numeric(0),
+  linewidth_head = numeric(0),
+  linewidth = numeric(0),
+  linetype = numeric(0),
+  n = numeric(0),
+  nudge_x = numeric(0),
+  nudge_y = numeric(0),
+  polar_just = numeric(0),
+  resect = numeric(0),
+  resect_fins = numeric(0),
+  resect_head = numeric(0),
+  shape = numeric(0),
+  size = numeric(0),
+  size.unit = numeric(0),
+  straight = logical(0),
+  stroke = numeric(0),
+  stroke_color = character(0),
+  stroke_width = numeric(0),
+  text.color = character(0),
+  vjust = numeric(0),
   ...
 )
 }
@@ -70,7 +70,7 @@ ob_style(
 
 \item{fontface}{Can be plain, bold, italic, or bold.italic}
 
-\item{hjust}{horizontal justification.}
+\item{hjust}{horizontal justification. 0 means left justified, 1 means right justified, 0.5 means horizontally centered}
 
 \item{justify}{A numeric(1) between 0 and 1 to control where the arrows should be drawn relative to the path's endpoints. A value of 0 sets the arrow's tips at the path's end, whereas a value of 1 sets the arrow's base at the path's end. From ggarrow.}
 
@@ -136,7 +136,7 @@ ob_style(
 
 \item{text.color}{Color of label text.}
 
-\item{vjust}{vertical justification}
+\item{vjust}{vertical justification. 0 means bottom aligned, 1 means top aligned, 0.5 means vertically centered}
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> unused}
 }

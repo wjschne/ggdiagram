@@ -1,0 +1,51 @@
+---
+title: "lavaan"
+format: 
+  html:
+    toc: true
+    html-math-method: katex
+vignette: >
+  %\VignetteIndexEntry{lavaan}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+bibliography: references.json
+csl: apa.csl
+---
+
+
+```{r}
+library(simstandard)
+library(lavaan)
+library(tidyverse)
+library(ggdiagram)
+m <- "
+A =~ 0.7 * A_1 + 0.8 * A_2 + 0.9 * A_3 + 0.3 * B_1
+B =~ 0.7 * B_1 + 0.8 * B_2 + 0.9 * B_3
+B ~ 0.6 * A
+"
+
+
+pt <- lavaan::parametertable(sem(m))
+
+
+
+x_o <- lavNames(m, "ov.x")
+n_o <- lavNames(m, "ov.nox")
+x_l <- lavNames(m, "lv.x")
+n_l <- lavNames(m, "lv.nox")
+
+
+tibble(type = c("x_o", "n_o", "x_l", "n_l"),
+       fun = list(x_o = ob_ellipse,
+                n_o = ob_ellipse,
+                x_l = ob_circle,
+                n_l = ob_circle),
+       v = list(x_o = x_o,
+                n_o = n_o,
+                x_l = x_l,
+                n_l = n_l)) %>% 
+  unnest(v) %>% 
+  mutate(o = map2(fun, v))
+
+```
+

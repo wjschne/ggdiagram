@@ -49,6 +49,7 @@
     <li><a class="dropdown-item" href="../articles/bezier.html">Bézier Curves</a></li>
     <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
+    <li><a class="dropdown-item" href="../articles/elements.html">Recreating Figures form Byrne's *Elements of Euclid*</a></li>
     <li><a class="dropdown-item" href="../articles/ellipses.html">Ellipses</a></li>
     <li><a class="dropdown-item" href="../articles/equations.html">Equations with LaTeX</a></li>
     <li><a class="dropdown-item" href="../articles/lines.html">Lines</a></li>
@@ -145,26 +146,26 @@
 <span>    start <span class="op">=</span> <span class="fl">25</span>, </span>
 <span>    end <span class="op">=</span> <span class="fl">75</span>, </span>
 <span>    radius <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;ob_arc&gt;</span></span>
-<span><span class="co">#&gt; @ center: &lt;ob_point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_arc&gt;</span></span>
+<span><span class="co">#&gt; @ center: &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt;  @ x: num 1</span></span>
 <span><span class="co">#&gt;  @ y: num 2</span></span>
 <span><span class="co">#&gt; @ radius: num 3</span></span>
-<span><span class="co">#&gt; @ start : &lt;degree&gt;</span></span>
+<span><span class="co">#&gt; @ start : &lt;ggdiagram::degree&gt;</span></span>
 <span><span class="co">#&gt;  @ degree: num 25</span></span>
-<span><span class="co">#&gt; @ end   : &lt;degree&gt;</span></span>
+<span><span class="co">#&gt; @ end   : &lt;ggdiagram::degree&gt;</span></span>
 <span><span class="co">#&gt;  @ degree: num 75</span></span>
-<span><span class="co">#&gt; @ theta : &lt;degree&gt;</span></span>
+<span><span class="co">#&gt; @ theta : &lt;ggdiagram::degree&gt;</span></span>
 <span><span class="co">#&gt;  @ degree: num 50</span></span>
-<span><span class="co">#&gt; Other props: label, wedge, alpha, arrow_head, arrow_fins,</span></span>
+<span><span class="co">#&gt; Other props: label, type, alpha, arrow_head, arrow_fins,</span></span>
 <span><span class="co">#&gt;              arrowhead_length, length_head, length_fins, color,</span></span>
 <span><span class="co">#&gt;              fill, lineend, linejoin, linewidth, linewidth_fins,</span></span>
 <span><span class="co">#&gt;              linewidth_head, linetype, n, resect, resect_fins,</span></span>
 <span><span class="co">#&gt;              resect_head, stroke_color, stroke_width, apothem,</span></span>
-<span><span class="co">#&gt;              arc_length, sagitta, bounding_box, chord, length,</span></span>
-<span><span class="co">#&gt;              polygon, style, tibble, geom, angle_at, autolabel,</span></span>
-<span><span class="co">#&gt;              midpoint, normal_at, place, point_at, tangent_at,</span></span>
-<span><span class="co">#&gt;              aesthetics</span></span></code></pre></div>
+<span><span class="co">#&gt;              arc_length, sagitta, bounding_box, circle, chord,</span></span>
+<span><span class="co">#&gt;              length, end_point, polygon, start_point, style,</span></span>
+<span><span class="co">#&gt;              tibble, geom, angle_at, autolabel, hatch, midpoint,</span></span>
+<span><span class="co">#&gt;              normal_at, place, point_at, tangent_at, aesthetics</span></span></code></pre></div>
 </div>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
@@ -208,7 +209,29 @@
 <div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
-<span></span>
+<span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span>start <span class="op">=</span> <span class="fl">60</span>, end <span class="op">=</span> <span class="fl">120</span>, radius <span class="op">=</span> <span class="fl">1</span>, color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span></span>
+<span><span class="va">a</span><span class="op">@</span><span class="va">start_point</span> <span class="op">&lt;-</span> <span class="va">p1</span></span>
+<span><span class="va">a</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_arc&gt;</span></span>
+<span><span class="co">#&gt; @ center: &lt;ggdiagram::ob_point&gt;</span></span>
+<span><span class="co">#&gt;  @ x: num 0</span></span>
+<span><span class="co">#&gt;  @ y: num 0</span></span>
+<span><span class="co">#&gt; @ radius: num 1</span></span>
+<span><span class="co">#&gt; @ start : &lt;ggdiagram::degree&gt;</span></span>
+<span><span class="co">#&gt;  @ degree: num 60</span></span>
+<span><span class="co">#&gt; @ end   : &lt;ggdiagram::degree&gt;</span></span>
+<span><span class="co">#&gt;  @ degree: num 120</span></span>
+<span><span class="co">#&gt; @ theta : &lt;ggdiagram::degree&gt;</span></span>
+<span><span class="co">#&gt;  @ degree: num 60</span></span>
+<span><span class="co">#&gt; Other props: label, type, alpha, arrow_head, arrow_fins,</span></span>
+<span><span class="co">#&gt;              arrowhead_length, length_head, length_fins, color,</span></span>
+<span><span class="co">#&gt;              fill, lineend, linejoin, linewidth, linewidth_fins,</span></span>
+<span><span class="co">#&gt;              linewidth_head, linetype, n, resect, resect_fins,</span></span>
+<span><span class="co">#&gt;              resect_head, stroke_color, stroke_width, apothem,</span></span>
+<span><span class="co">#&gt;              arc_length, sagitta, bounding_box, circle, chord,</span></span>
+<span><span class="co">#&gt;              length, end_point, polygon, start_point, style,</span></span>
+<span><span class="co">#&gt;              tibble, geom, angle_at, autolabel, hatch, midpoint,</span></span>
+<span><span class="co">#&gt;              normal_at, place, point_at, tangent_at, aesthetics</span></span>
 <span><span class="va">bp</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span>start <span class="op">=</span> <span class="op">-</span><span class="fl">45</span>, </span>
 <span>      end <span class="op">=</span> <span class="fl">45</span>, </span>
@@ -220,7 +243,8 @@
 <span>      radius <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>      color <span class="op">=</span> <span class="st">"blue"</span>, </span>
 <span>      end_point <span class="op">=</span> <span class="va">p1</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="va">p1</span></span></code></pre></div>
+<span>  <span class="va">p1</span> <span class="op">+</span></span>
+<span>  <span class="va">a</span></span></code></pre></div>
 <div class="cell-output-display">
 <div id="fig-startpoint" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-startpoint-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -421,7 +445,8 @@ Figure 10: Arcs with arrowheads
 </div>
 </section><section class="section level2"><h2 id="wedges">Wedges<a class="anchor" aria-label="anchor" href="#wedges"></a>
 </h2>
-<p>If the <code>ob_arc@wedge</code> property is set to <code>TRUE</code>, the <code>ob_arc</code> function will plot a wedge using <code><a href="https://ggplot2.tidyverse.org/reference/geom_polygon.html" class="external-link">ggplot2::geom_polygon</a></code>. The <code>ob_wedge</code> function is a convenient wrapper function for <code>ob_arc</code> that sets the <code>@wedge</code> property to <code>TRUE</code>.</p>
+<p>The <code>ob_arc</code> function has a <code>@type</code> property that can be set to <code>"arc"</code>, <code>"wedge"</code>, or <code>"segment"</code>. When set to <code>arc</code>, the arc is drawn with <code>geom::arrow</code> so that the arc endpoints can be arrows. Otherwise, when <code>@type</code> is <code>wedge</code> or <code>segment</code>, <code>ob_arc</code> drawn with <code><a href="https://ggplot2.tidyverse.org/reference/geom_polygon.html" class="external-link">ggplot2::geom_polygon</a></code>.</p>
+<p>The <code>ob_wedge</code> function is a convenient wrapper function for <code>ob_arc</code> that sets the <code>@type</code> property to <code>wedge</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">120</span>, <span class="fl">180</span>, <span class="fl">360</span><span class="op">)</span></span>
@@ -443,6 +468,92 @@ Figure 11: Arc wedges
 </div>
 </div>
 </div>
+</section><section class="section level2"><h2 id="circular-segments">Circular Segments<a class="anchor" aria-label="anchor" href="#circular-segments"></a>
+</h2>
+<p>A circular segment is an arc made into a polygon.</p>
+<p>The <code>ob_circular_segment</code> function is a convenient wrapper function for <code>ob_arc</code> that sets the <code>@type</code> property to <code>segment</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ggdiagram.html">ggdiagram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_arc.html">ob_circular_segment</a></span><span class="op">(</span></span>
+<span>    start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">30</span>, <span class="fl">150</span>, <span class="fl">270</span><span class="op">)</span>,</span>
+<span>    end <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">150</span>, <span class="fl">270</span>, <span class="fl">390</span><span class="op">)</span>,</span>
+<span>    fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dodgerblue4"</span>, <span class="st">"orchid4"</span>, <span class="st">"darkgreen"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div id="fig-threecircularsegments" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-threecircularsegments-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="arcwedges_files/figure-html/fig-threecircularsegments-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-threecircularsegments-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 12: Three circular segments
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Objects made with <code>ob_arc</code>, <code>ob_wedge</code>, or <code>ob_circular_segment</code> can return important features of arcs, including the <code>chord</code>, <code>sagitta</code>, and <code>arc_length</code>. In <a href="#fig-circularsegment" class="quarto-xref">Figure 13</a>, the <code>chord</code> is the <code>ob_segment</code> that connects the endpoints of the arc. The <code>sagitta</code> is <code>ob_segment</code> from the arc’s midpoint to the chord’s midpoint. Not shown in <a href="#fig-circularsegment" class="quarto-xref">Figure 13</a>, the <code>apothem</code> is the <code>ob_segment</code> from the arc’s center point to the midpoint of the chord. The radius is the sum of the distances spanned by the apothem and the sagitta.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="va">bp</span> <span class="op">+</span></span>
+<span>  <span class="op">{</span><span class="va">cs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_arc.html">ob_circular_segment</a></span><span class="op">(</span></span>
+<span>      radius <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>      start <span class="op">=</span> <span class="fu"><a href="../reference/ob_angle.html">radian</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">acos</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>      end <span class="op">=</span> <span class="fu"><a href="../reference/ob_angle.html">radian</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Trig.html" class="external-link">acos</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>      fill <span class="op">=</span> <span class="st">"dodgerblue3"</span></span>
+<span>    <span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span></span>
+<span>    radius <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>    start <span class="op">=</span> <span class="va">cs</span><span class="op">@</span><span class="va">end</span>,</span>
+<span>    end <span class="op">=</span> <span class="va">cs</span><span class="op">@</span><span class="va">start</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">360</span><span class="op">)</span>,</span>
+<span>    linetype <span class="op">=</span> <span class="st">"dashed"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="va">cs</span><span class="op">@</span><span class="va">chord</span><span class="op">@</span><span class="va">midpoint</span><span class="op">(</span><span class="op">)</span><span class="op">@</span><span class="va">label</span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Chord Length = "</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">cs</span><span class="op">@</span><span class="va">chord</span><span class="op">@</span><span class="va">distance</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    angle <span class="op">=</span> <span class="va">cs</span><span class="op">@</span><span class="va">chord</span><span class="op">@</span><span class="va">line</span><span class="op">@</span><span class="va">angle</span>,</span>
+<span>    vjust <span class="op">=</span> <span class="op">-</span><span class="fl">.1</span>,</span>
+<span>    color <span class="op">=</span> <span class="st">"black"</span>,</span>
+<span>    size <span class="op">=</span> <span class="fl">24</span>,</span>
+<span>    family <span class="op">=</span> <span class="va">my_font</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="va">cs</span><span class="op">@</span><span class="va">sagitta</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rconsortium.github.io/S7/reference/props.html" class="external-link">set_props</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="va">cs</span><span class="op">@</span><span class="va">sagitta</span><span class="op">@</span><span class="va">midpoint</span><span class="op">(</span><span class="op">)</span><span class="op">@</span><span class="va">label</span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Sagitta = "</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">cs</span><span class="op">@</span><span class="va">sagitta</span><span class="op">@</span><span class="va">distance</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    vjust <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>    size <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>    family <span class="op">=</span> <span class="va">my_font</span>,</span>
+<span>    fill <span class="op">=</span> <span class="cn">NA</span>, </span>
+<span>    color <span class="op">=</span> <span class="st">"white"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_path.html">ob_path</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span></span>
+<span>      <span class="va">cs</span><span class="op">@</span><span class="va">polygon</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>id <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/row_number.html" class="external-link">row_number</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="op">-</span><span class="va">id</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>        <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    label <span class="op">=</span> <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Arc Length = "</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">cs</span><span class="op">@</span><span class="va">arc_length</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>      vjust <span class="op">=</span> <span class="op">-</span><span class="fl">0.1</span>,</span>
+<span>      size <span class="op">=</span> <span class="fl">24</span>,</span>
+<span>      family <span class="op">=</span> <span class="va">my_font</span>,</span>
+<span>      color <span class="op">=</span> <span class="st">"black"</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    color <span class="op">=</span> <span class="st">"dodgerblue3"</span></span>
+<span>  <span class="op">)</span></span>
+<span>  </span></code></pre></div>
+<div class="cell-output-display">
+<div id="fig-circularsegment" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-circularsegment-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="arcwedges_files/figure-html/fig-circularsegment-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-circularsegment-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 13: A circular segment and arc and its chord.
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Fun fact: Our geometric concepts <em>arc</em>, <em>chord</em>, and <em>sagitta</em> are all archery terms, deriving from the Latin words <em>arcus</em> (bow), <em>chorda</em> (string), and <em>sagitta</em> (arrow).</p>
 </section><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

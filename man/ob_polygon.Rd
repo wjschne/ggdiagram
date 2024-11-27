@@ -2,17 +2,17 @@
 % Please edit documentation in R/polygons.R
 \name{ob_polygon}
 \alias{ob_polygon}
-\title{The ob_polygon (polygon) class}
+\title{The ob_polygon class}
 \usage{
 ob_polygon(
   p = class_missing,
-  label = class_missing,
-  vertex_radius = class_missing,
-  alpha = class_missing,
-  color = class_missing,
-  fill = class_missing,
-  linewidth = class_missing,
-  linetype = class_missing,
+  label = character(0),
+  vertex_radius = numeric(0),
+  alpha = numeric(0),
+  color = character(0),
+  fill = character(0),
+  linewidth = numeric(0),
+  linetype = numeric(0),
   style = class_missing,
   ...
 )
@@ -39,16 +39,16 @@ ob_polygon(
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
 }
 \description{
-A polygon is specified with an obpoint that contains at least 3 points, the start and the end. Any number of intermediate points are possible.
+A polygon is specified with an ob_point that contains at least 3 points, the start and the end. Any number of intermediate points are possible.
 }
 \details{
-If you wish to specify multiple polygons, you must supply a list of ob_points. When plotted, the ob_polygon function uses the ggplot2::geom_polygon function to create the geom.
+If you wish to specify multiple polygons, you must supply a list of ob_points. When plotted, the ob_polygon function uses the ggforce::geom_shape function to create the geom.
 }
 \section{Slots}{
 
 \describe{
 \item{\code{length}}{The number of polygons in the ob_polygon object}
 
-\item{\code{tibble}}{Gets a tibble (data.frame) containing parameters and styles used by \code{ggplot2::geom_polygon}.}
+\item{\code{tibble}}{Gets a tibble (data.frame) containing parameters and styles used by \code{ggforce::geom_shape}.}
 }}
 

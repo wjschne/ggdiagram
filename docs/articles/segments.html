@@ -49,6 +49,7 @@
     <li><a class="dropdown-item" href="../articles/bezier.html">Bézier Curves</a></li>
     <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
+    <li><a class="dropdown-item" href="../articles/elements.html">Recreating Figures form Byrne's *Elements of Euclid*</a></li>
     <li><a class="dropdown-item" href="../articles/ellipses.html">Ellipses</a></li>
     <li><a class="dropdown-item" href="../articles/equations.html">Equations with LaTeX</a></li>
     <li><a class="dropdown-item" href="../articles/lines.html">Lines</a></li>
@@ -286,7 +287,7 @@ Figure 4: The `s1 object has not changed
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">s1</span><span class="op">@</span><span class="va">line</span></span>
-<span><span class="co">#&gt; &lt;ob_line&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_line&gt;</span></span>
 <span><span class="co">#&gt; @ slope     : num 0.667</span></span>
 <span><span class="co">#&gt; @ intercept : num 1</span></span>
 <span><span class="co">#&gt; @ xintercept: num -1.5</span></span>
@@ -326,12 +327,12 @@ Figure 5: Line passing through segment
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">s1</span><span class="op">@</span><span class="va">midpoint</span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;ob_point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 0</span></span>
 <span><span class="co">#&gt; @ y: num 1</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
-<span><span class="co">#&gt;              bounding_box, length, r, theta, style, tibble, xy,</span></span>
-<span><span class="co">#&gt;              geom, label, place, aesthetics</span></span></code></pre></div>
+<span><span class="co">#&gt;              bounding_box, centroid, length, r, theta, style,</span></span>
+<span><span class="co">#&gt;              tibble, xy, geom, label, place, aesthetics</span></span></code></pre></div>
 </div>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb17"><pre class="downlit sourceCode r">
@@ -356,12 +357,12 @@ Figure 6: Midpoint of a segment
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">s1</span><span class="op">@</span><span class="va">midpoint</span><span class="op">(</span>position <span class="op">=</span> <span class="fl">.25</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;ob_point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num -1.5</span></span>
 <span><span class="co">#&gt; @ y: num 0</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
-<span><span class="co">#&gt;              bounding_box, length, r, theta, style, tibble, xy,</span></span>
-<span><span class="co">#&gt;              geom, label, place, aesthetics</span></span></code></pre></div>
+<span><span class="co">#&gt;              bounding_box, centroid, length, r, theta, style,</span></span>
+<span><span class="co">#&gt;              tibble, xy, geom, label, place, aesthetics</span></span></code></pre></div>
 </div>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">

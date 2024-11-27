@@ -5,14 +5,14 @@
 \title{class_aesthetics_list}
 \usage{
 class_aesthetics_list(
-  geom = class_missing,
-  style = class_missing,
-  mappable_bare = class_missing,
-  mappable_identity = class_missing,
-  not_mappable = class_missing,
-  required_aes = class_missing,
-  omit_names = class_missing,
-  inherit.aes = class_missing
+  geom = function() NULL,
+  style = character(0),
+  mappable_bare = character(0),
+  mappable_identity = character(0),
+  not_mappable = character(0),
+  required_aes = character(0),
+  omit_names = character(0),
+  inherit.aes = logical(0)
 )
 }
 \arguments{

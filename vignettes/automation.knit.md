@@ -1,0 +1,500 @@
+---
+title: "Repetition and Automation"
+format: 
+  html:
+    toc: true
+    html-math-method: katex
+vignette: >
+  %\VignetteIndexEntry{automation}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+
+
+
+# Setup
+
+
+
+::: {.cell}
+
+```{.r .cell-code}
+library(ggdiagram)
+library(ggplot2)
+library(dplyr)
+library(ggtext)
+library(ggarrow)
+library(purrr)
+```
+:::
+
+
+
+
+
+# Object Lists
+
+
+Any ggdiagram object made with `ob_*` functions can be made into a list, either with the `list` function or the `c` function.
+
+
+
+::: {.cell}
+
+```{.r .cell-code}
+p1 <- ob_point(1, 2)
+p2 <- ob_point(3, 4)
+c(p1,p2)
+#> [[1]]
+#> <ggdiagram::ob_point>
+#> @ x: num 1
+#> @ y: num 2
+#> Other props: alpha, color, fill, shape, size, stroke, auto_label,
+#>              bounding_box, centroid, length, r, theta, style,
+#>              tibble, xy, geom, label, place, aesthetics
+#> 
+#> [[2]]
+#> <ggdiagram::ob_point>
+#> @ x: num 3
+#> @ y: num 4
+#> Other props: alpha, color, fill, shape, size, stroke, auto_label,
+#>              bounding_box, centroid, length, r, theta, style,
+#>              tibble, xy, geom, label, place, aesthetics
+```
+:::
+
+
+# Binding lists of objects into a single object
+
+The `bind` function will take a list of the ggdiagram objects and a create single object. If all objects in the list are of a single type (e.g., `ob_point`), `bind` will return an object of that type. If the objects are of multiple types, `bind` will bind each type of object separately and return a `ob_shape_list`.
+
+
+
+::: {.cell}
+
+```{.r .cell-code}
+p <- bind(c(p1,p2))
+p
+#> <ggdiagram::ob_point>
+#> @ x: num [1:2] 1 3
+#> @ y: num [1:2] 2 4
+#> Other props: alpha, color, fill, shape, size, stroke, auto_label,
+#>              bounding_box, centroid, length, r, theta, style,
+#>              tibble, xy, geom, label, place, aesthetics
+```
+:::
+
+
+
+Binding objects can make subsequent tasks easier and less repetitive. For example, from the new object `p`, we can create two circles with one line of code rather than the two lines that would otherwise be needed to create separate circles from `p1` and `p2`.
+
+
+
+::: {.cell}
+
+```{.r .cell-code}
+ggdiagram() +
+  ob_circle(center = p)
+```
+
+::: {.cell-output-display}
+![](automation_files/figure-html/circle-1.png){width=672}
+:::
+:::
+
+
+
+With only two points, the time savings is small. When many objects are bound, the time savings can be substantial.
+
+If the list of objects are of different types, the `bind` function will bind all objects of the same type and the resulting list will be an `ob_shape_list`. In @fig-osl we bind 2 points and 2 circles into a `ob_shape_list` that has 1 `ob_point` and 1 `ob_circle`.
+
+
+
+::: {.cell}
+
+```{.r .cell-code}
+p1 <- ob_point(0,0)
+p2 <- ob_point(2,0)
+c1 <- ob_circle(p1, radius = 2)
+c2 <- ob_circle(p2, radius = 1.5)
+
+# bind objectins into an ob_shape_list
+osl <- bind(c(p1, p2, c1, c2))
+osl
+#> <ob_shape_list>
+#> <ggdiagram::ob_point>
+#> @ x: num [1:2] 0 2
+#> @ y: num [1:2] 0 0
+#> Other props: alpha, color, fill, shape, size, stroke, auto_label,
+#>              bounding_box, centroid, length, r, theta, style,
+#>              tibble, xy, geom, label, place, aesthetics
+#> <ggdiagram::ob_circle>
+#> @ center: <ggdiagram::ob_point>
+#>  @ x: num [1:2] 0 2
+#>  @ y: num [1:2] 0 0
+#> @ radius: num [1:2] 2 1.5
+#> Other props: label, alpha, color, fill, linewidth, linetype,
+#>              n, area, bounding_box, circumference, diameter,
+#>              length, polygon, style, tibble, geom, arc, angle_at,
+#>              normal_at, tangent_at, place, point_at, aesthetics
+
+ggdiagram() +
+  osl
+```
+
+::: {.cell-output-display}
+![An ob_shape_list](automation_files/figure-html/fig-osl-1.png){#fig-osl width=672}
+:::
+:::
+
+
+
+There is not much benefit to making an `ob_shape_list` as shown here. It would simpler to just include the objects one at a time. However, it can be useful in the context of a large diagram with many elements, each of which would require a separate layer in ggplot2. Binding all the elements first can reduce the number of ggplot layers to the number of object types in the `ob_shape_list`.
+
+An `ob_shape_list`'s underlying data is a named list. The names are the functions that were used to create the objects. For example,
+
+
+
+::: {.cell}
+
+```{.r .cell-code}
+osl[["ob_point"]]
+#> <ggdiagram::ob_point>
+#> @ x: num [1:2] 0 2
+#> @ y: num [1:2] 0 0
+#> Other props: alpha, color, fill, shape, size, stroke, auto_label,
+#>              bounding_box, centroid, length, r, theta, style,
+#>              tibble, xy, geom, label, place, aesthetics
+osl[["ob_circle"]]
+#> <ggdiagram::ob_circle>
+#> @ center: <ggdiagram::ob_point>
+#>  @ x: num [1:2] 0 2
+#>  @ y: num [1:2] 0 0
+#> @ radius: num [1:2] 2 1.5
+#> Other props: label, alpha, color, fill, linewidth, linetype,
+#>              n, area, bounding_box, circumference, diameter,
+#>              length, polygon, style, tibble, geom, arc, angle_at,
+#>              normal_at, tangent_at, place, point_at, aesthetics
+```
+:::
+
+
+
+
+
+# Use `unbind` to make an object into a list of objects
+
+The `unbind` function will perform the opposite operation as `bind`. It converts the elements of an object into a list of singleton objects. For example, object `p` has two points. Unbinding it will create a list of 2 `ob_point` objects.
+
+
+
+::: {.cell}
+
+```{.r .cell-code}
+unbind(p)
+#> [[1]]
+#> <ggdiagram::ob_point>
+#> @ x: num 1
+#> @ y: num 2
+#> Other props: alpha, color, fill, shape, size, stroke, auto_label,
+#>              bounding_box, centroid, length, r, theta, style,
+#>              tibble, xy, geom, label, place, aesthetics
+#> 
+#> [[2]]
+#> <ggdiagram::ob_point>
+#> @ x: num 3
+#> @ y: num 4
+#> Other props: alpha, color, fill, shape, size, stroke, auto_label,
+#>              bounding_box, centroid, length, r, theta, style,
+#>              tibble, xy, geom, label, place, aesthetics
+```
+:::
+
+
+
+The `unbind` function is needed when we want to loop through each element using `lapply` or `purrr::map`. Here we have two points and we want to put six points the both. We want to connect each element of one column to each element of the other column. Note that the output of `lapply` or `purrr::map` is a list. To make the list something that ggplot2 can plot, we can bind the list into a single object.
+
+
+
+::: {.cell}
+
+```{.r .cell-code}
+theta <- degree(seq(90, 360, 120))
+ggdiagram() + 
+  {p_3 <- ob_polar(
+        theta = theta,
+        r = .5,
+        fill = "black",
+        shape = "triangle down filled",
+        size = 15)} +
+  unbind(p_3) %>%
+    purrr::map(
+      \(p_i) {
+        p_i + ob_polar(
+          theta = theta, 
+          r = .15, 
+          color = "orchid", 
+          fill = "orchid", 
+          size = 15, 
+          shape = "triangle filled")}) %>% 
+  bind() +
+  scale_x_continuous(NULL, expand = expansion(.15))
+```
+
+::: {.cell-output-display}
+![Using `unbind`, `map`, and `bind` to loop through elements.](automation_files/figure-html/fig-unbind-1.png){#fig-unbind width=480}
+:::
+:::
+
+
+
+Alternatively, we can convert each list item into a geom with `as.geom`.
+
+
+
+::: {.cell}
+
+```{.r .cell-code}
+ggdiagram() + 
+  {p <- ob_polar(degree(seq(30,330,60)), 
+                 r = 2, 
+                 size = 10, 
+                 color = "orchid")} +
+  unbind(p) %>% 
+    lapply(\(pp) {
+      p2 <- pp + ob_polar(
+        theta = degree(seq(0, 330, 30)),
+        r = .5)
+      
+      s <- connect(pp, p2)
+        
+      as.geom(s)
+      }) 
+```
+
+::: {.cell-output-display}
+![Using `unbind`, `lapply`, and `as.geom` to loop through elements.](automation_files/figure-html/fig-unbindgeom-1.png){#fig-unbindgeom width=672}
+:::
+:::
+
+
+
+# Use `map_ob` to loop through object elements
+
+To `unbind`, `map`, and then `bind` can be tedious every time a loop is needed. The `map_ob` function is a wrapper for `map` that unbinds the input and binds the output automatically.
+
+
+
+::: {.cell}
+
+```{.r .cell-code}
+ggdiagram() +
+  {o <- ob_point()} +
+  {p <- ob_polar(degree(c(0, 90, 180, 270)))} +
+  connect(o, p, resect = 2) +
+  p %>%
+    map_ob(\(pp) {
+      p2 <- pp + ob_polar(theta = degree(seq(45, 315, 90)),
+                          r = sqrt(2) / 3,
+                          color = "orchid")
+      list(p2,
+           connect(pp, p2, resect = 2))
+    }) 
+```
+
+::: {.cell-output-display}
+![](automation_files/figure-html/fig-obmap-1.png){#fig-obmap width=672}
+:::
+:::
+
+
+
+The `ob_map` function can output a list of different object types simultaneously.
+
+
+
+::: {.cell}
+
+```{.r .cell-code}
+theta <- degree(seq(0,300, 60))
+
+ggdiagram() +
+  {e6 <- ob_ellipse(
+    center = ob_polar(
+      theta = theta, 
+      r = 60),
+    m1 = .5,
+    a = 8,
+    b = 4,
+    angle = theta + degree(90),
+    color = NA,
+    fill = "orchid4", 
+    size = 4)} +
+  map_ob(e6, \(e_i) {
+    p_i <- e_i@center
+    p_ij <- p_i + ob_polar(theta, 15)
+    c_ij <- ob_circle(
+      center = p_ij, 
+      radius = 2,
+      fill = "green4",
+      color = NA)
+    p_ijk <- map_ob(p_ij, \(pt_ij) {
+      ob_segment(pt_ij, pt_ij + ob_polar(theta, 4) )
+      })
+    list(p_ijk, c_ij)
+  })
+
+```
+
+::: {.cell-output-display}
+![Outputting a list of different object types in `map_ob`.](automation_files/figure-html/fig-map-1.png){#fig-map width=672}
+:::
+:::
+
+
+
+In a more practical example, every variable in the left column is connected to every variable on the right.
+
+
+
+::: {.cell}
+
+```{.r .cell-code}
+k <- 5
+clr <- viridis::viridis(k, begin = .3, end = .7)
+ggdiagram() +
+  {t1 <- ob_array(ob_circle(), k = k, where = "north", 
+                  fill = clr,
+                  color = clr)} +
+  {t2 <- ob_circle(fill = clr, color = clr)@place(
+    from = t1, 
+    where = "right", 
+    sep = 10)} +
+  map_ob(t1, \(tt) {
+    connect(tt, t2, resect = 2, color = tt@color)
+  })
+```
+
+::: {.cell-output-display}
+![Using `map_ob` to the connect variables](automation_files/figure-html/fig-bindt1t2-1.png){#fig-bindt1t2 width=672}
+:::
+:::
+
+
+
+
+# Subsetting objects
+
+The `[` operator can subset ggdiagram objects created with `ob_*` functions. Object `p` has 2 points in  it. To select the first point only:
+
+
+
+
+::: {.cell}
+
+```{.r .cell-code}
+p[1]
+#> <ggdiagram::ob_point>
+#> @ x: num 1
+#> @ y: num 0
+#> Other props: alpha, color, fill, shape, size, stroke, auto_label,
+#>              bounding_box, centroid, length, r, theta, style,
+#>              tibble, xy, geom, label, place, aesthetics
+```
+:::
+
+
+
+
+The strategic use of subsetting can make otherwise repetitive tasks much less tedious. In @fig-c12 we connect a ring of 12 circles with one command rather than 12.
+
+
+
+::: {.cell}
+
+```{.r .cell-code}
+theta <- degree(seq(0,330,30))
+clr <- hsv(theta@degree / 360, s = .4, v = .6)
+ggdiagram() +
+  {c12 <- ob_circle(
+    center = ob_polar(theta, r = 6),
+    fill = clr,
+    color = NA)} +
+  connect(c12, c12[c(2:12, 1)], 
+          resect = 2, 
+          color = clr) 
+```
+
+::: {.cell-output-display}
+![A ring of connected circles.](automation_files/figure-html/fig-c12-1.png){#fig-c12 width=672}
+:::
+:::
+
+
+
+Subsetting can be used for assignment in ggdiagram objects. For example, in @fig-subsetting, the first of four points is changed from (1,5) to (0,0)
+
+
+
+::: {.cell}
+
+```{.r .cell-code}
+p <- ob_point(x = 1:4, 
+              y = 2:5)
+p[1] <- ob_point(0,0, color = "firebrick", size = 5)
+
+ggplot() + 
+  coord_equal() +
+  p 
+```
+
+::: {.cell-output-display}
+![Subsetting objects](automation_files/figure-html/fig-subsetting-1.png){#fig-subsetting width=384}
+:::
+:::
+
+
+
+In @fig-path, there are  8 variables with 13 arrows connecting them. Rather than making a separate connection for each arrow, subsetting allows us to make all 13 connections with a single `connect` command. Using subsetting to assign variables within a `for` loop allows for placing the variables programmatically. If more or fewer variables are desired, setting `k` to another value, will create *k* variables and 2*k*&nbsp;&minus;&nbsp;3 connections.
+
+
+
+::: {.cell}
+
+```{.r .cell-code}
+# Number of variables
+k <- 8L
+
+# Make k variables
+x <- ob_rectangle(ob_point(rep(0, k), rep(0, k)),
+                  label = ob_label(
+                    label = paste0("*X*~", 1:k, "~"),
+                    vjust = .6,
+                    size = 20,
+                    family = "Roboto Condensed"
+                  ))
+
+
+
+# Place even variables to the right and 
+# odd variables below the previous variables
+for (i in 2:k) {
+  x[i] <- place(x[i], x[i - 1], ifelse((i %% 2) == 0, "right", "below"))
+}
+
+# Plot
+ggdiagram() + 
+  x +
+  # paths between variables ahead by 1 and by 2
+  connect(x[c(seq(1,k - 1), seq(1, k - 2))], 
+          x[c(seq(2,k),     seq(3, k))],
+          resect = 2)
+```
+
+::: {.cell-output-display}
+![A model with 8 variables and 13 causal paths](automation_files/figure-html/fig-path-1.png){#fig-path width=672}
+:::
+:::
+

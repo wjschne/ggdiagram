@@ -5,23 +5,23 @@
 \title{ob_latex class}
 \usage{
 ob_latex(
-  tex = class_missing,
+  tex = character(0),
   center = ob_point(0, 0),
-  width = class_missing,
-  height = class_missing,
+  width = numeric(0),
+  height = numeric(0),
   hjust = 0.5,
   vjust = 0.5,
   angle = 0,
   aspect_ratio = 1,
-  border = class_missing,
-  family = class_missing,
+  border = numeric(0),
+  family = character(0),
   math_mode = TRUE,
-  filename = class_missing,
-  color = class_missing,
+  filename = character(0),
+  color = character(0),
   fill = "white",
   density = 300,
-  latex_packages = class_missing,
-  preamble = class_missing,
+  latex_packages = character(0),
+  preamble = character(0),
   force_recompile = TRUE
 )
 }
@@ -33,6 +33,12 @@ ob_latex(
 \item{width}{width (specify width or height but not both)}
 
 \item{height}{height (specify width or height but not both)}
+
+\item{hjust}{horizontal adjustment. 0 means left justified, 1 means right justified, 0.5 means centered}
+
+\item{vjust}{vertical justification. 0 means bottom aligned, 1 means top aligned, 0.5 means vertically centered}
+
+\item{angle}{angle of text}
 
 \item{aspect_ratio}{alters the aspect ratio of the image}
 
@@ -55,8 +61,6 @@ ob_latex(
 \item{preamble}{additional latex commands to load in preamble}
 
 \item{force_recompile}{Will re-run xelatex even if .pdf file exists already}
-
-\item{name}{description}
 }
 \description{
 make a latex equation

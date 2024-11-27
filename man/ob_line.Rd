@@ -5,18 +5,18 @@
 \title{ob_line class}
 \usage{
 ob_line(
-  slope = class_missing,
-  intercept = class_missing,
-  xintercept = class_missing,
-  a = class_missing,
-  b = class_missing,
-  c = class_missing,
-  alpha = class_missing,
-  color = class_missing,
-  lineend = class_missing,
-  linejoin = class_missing,
-  linewidth = class_missing,
-  linetype = class_missing,
+  slope = numeric(0),
+  intercept = numeric(0),
+  xintercept = numeric(0),
+  a = numeric(0),
+  b = numeric(0),
+  c = numeric(0),
+  alpha = numeric(0),
+  color = character(0),
+  lineend = numeric(0),
+  linejoin = numeric(0),
+  linewidth = numeric(0),
+  linetype = numeric(0),
   style = class_missing,
   ...
 )

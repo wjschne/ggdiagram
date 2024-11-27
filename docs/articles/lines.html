@@ -49,6 +49,7 @@
     <li><a class="dropdown-item" href="../articles/bezier.html">Bézier Curves</a></li>
     <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
+    <li><a class="dropdown-item" href="../articles/elements.html">Recreating Figures form Byrne's *Elements of Euclid*</a></li>
     <li><a class="dropdown-item" href="../articles/ellipses.html">Ellipses</a></li>
     <li><a class="dropdown-item" href="../articles/equations.html">Equations with LaTeX</a></li>
     <li><a class="dropdown-item" href="../articles/lines.html">Lines</a></li>
@@ -142,7 +143,7 @@
 <div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_line.html">ob_line</a></span><span class="op">(</span>slope <span class="op">=</span> <span class="fl">2</span>, intercept <span class="op">=</span> <span class="fl">1</span>, color <span class="op">=</span> <span class="va">my_colors</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">l</span></span>
-<span><span class="co">#&gt; &lt;ob_line&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_line&gt;</span></span>
 <span><span class="co">#&gt; @ slope     : num 2</span></span>
 <span><span class="co">#&gt; @ intercept : num 1</span></span>
 <span><span class="co">#&gt; @ xintercept: num -0.5</span></span></code></pre></div>
@@ -168,7 +169,7 @@ Figure 1: A line with slope of 2 and intercept of 1
 <div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">h</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_line.html">ob_line</a></span><span class="op">(</span>intercept <span class="op">=</span> <span class="fl">2</span>, color <span class="op">=</span> <span class="va">my_colors</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">h</span></span>
-<span><span class="co">#&gt; &lt;ob_line&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_line&gt;</span></span>
 <span><span class="co">#&gt; @ slope     : num 0</span></span>
 <span><span class="co">#&gt; @ intercept : num 2</span></span>
 <span><span class="co">#&gt; @ xintercept: num -Inf</span></span></code></pre></div>
@@ -194,7 +195,7 @@ Figure 2: A horizontal line intercept of 2
 <div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">v</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_line.html">ob_line</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="op">-</span><span class="fl">2</span>, color <span class="op">=</span> <span class="va">my_colors</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">v</span></span>
-<span><span class="co">#&gt; &lt;ob_line&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_line&gt;</span></span>
 <span><span class="co">#&gt; @ slope     : num -Inf</span></span>
 <span><span class="co">#&gt; @ intercept : num -Inf</span></span>
 <span><span class="co">#&gt; @ xintercept: num -2</span></span></code></pre></div>
@@ -257,12 +258,12 @@ Figure 4: Line with slope = 0 and intercept = −2
 <span></span>
 <span><span class="co"># Alternately:</span></span>
 <span><span class="va">l</span><span class="op">@</span><span class="va">projection</span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span>
-<span><span class="co">#&gt; &lt;ob_point&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num -1</span></span>
 <span><span class="co">#&gt; @ y: num 0</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
-<span><span class="co">#&gt;              bounding_box, length, r, theta, style, tibble, xy,</span></span>
-<span><span class="co">#&gt;              geom, label, place, aesthetics</span></span></code></pre></div>
+<span><span class="co">#&gt;              bounding_box, centroid, length, r, theta, style,</span></span>
+<span><span class="co">#&gt;              tibble, xy, geom, label, place, aesthetics</span></span></code></pre></div>
 </div>
 <p>The shortest distance from a point to a line can be calculated.</p>
 <div class="cell">

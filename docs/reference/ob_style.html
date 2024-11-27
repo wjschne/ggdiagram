@@ -24,6 +24,7 @@
     <li><a class="dropdown-item" href="../articles/bezier.html">Bézier Curves</a></li>
     <li><a class="dropdown-item" href="../articles/causalpaths.html">Path Diagrams</a></li>
     <li><a class="dropdown-item" href="../articles/circles.html">Circles</a></li>
+    <li><a class="dropdown-item" href="../articles/elements.html">Recreating Figures form Byrne's *Elements of Euclid*</a></li>
     <li><a class="dropdown-item" href="../articles/ellipses.html">Ellipses</a></li>
     <li><a class="dropdown-item" href="../articles/equations.html">Equations with LaTeX</a></li>
     <li><a class="dropdown-item" href="../articles/lines.html">Lines</a></li>
@@ -55,49 +56,49 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ob_style</span><span class="op">(</span></span>
-<span>  alpha <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  angle <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  arrow_head <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  arrow_fins <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  arrow_mid <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  color <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  family <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  fill <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  fontface <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  hjust <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  justify <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  label.color <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  label.margin <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  label.padding <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  label.r <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  label.size <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  arrowhead_length <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  length_head <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  length_fins <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  length_mid <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  lineend <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  lineheight <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  linejoin <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  linewidth_fins <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  linewidth_head <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  linewidth <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  linetype <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  n <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  nudge_x <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  nudge_y <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  polar_just <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  resect <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  resect_fins <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  resect_head <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  shape <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  size <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  size.unit <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  straight <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  stroke <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  stroke_color <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  stroke_width <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  text.color <span class="op">=</span> <span class="va">class_missing</span>,</span>
-<span>  vjust <span class="op">=</span> <span class="va">class_missing</span>,</span>
+<span>  alpha <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  angle <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  arrow_head <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  arrow_fins <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  arrow_mid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  family <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  fontface <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  hjust <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  justify <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  label.color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  label.margin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  label.padding <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  label.r <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  label.size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  arrowhead_length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  length_head <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  length_fins <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  length_mid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  lineend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  lineheight <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  linejoin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  linewidth_fins <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  linewidth_head <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  linewidth <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  linetype <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  nudge_x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  nudge_y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  polar_just <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  resect <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  resect_fins <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  resect_head <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  size.unit <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  straight <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/logical.html" class="external-link">logical</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  stroke <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  stroke_color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  stroke_width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  text.color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  vjust <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -143,7 +144,7 @@
 
 
 <dt id="arg-hjust">hjust<a class="anchor" aria-label="anchor" href="#arg-hjust"></a></dt>
-<dd><p>horizontal justification.</p></dd>
+<dd><p>horizontal justification. 0 means left justified, 1 means right justified, 0.5 means horizontally centered</p></dd>
 
 
 <dt id="arg-justify">justify<a class="anchor" aria-label="anchor" href="#arg-justify"></a></dt>
@@ -275,7 +276,7 @@
 
 
 <dt id="arg-vjust">vjust<a class="anchor" aria-label="anchor" href="#arg-vjust"></a></dt>
-<dd><p>vertical justification</p></dd>
+<dd><p>vertical justification. 0 means bottom aligned, 1 means top aligned, 0.5 means vertically centered</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>

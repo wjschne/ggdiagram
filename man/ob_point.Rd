@@ -8,25 +8,25 @@
 ob_point(
   x = 0,
   y = 0,
-  alpha = class_missing,
-  color = class_missing,
-  fill = class_missing,
-  shape = class_missing,
-  size = class_missing,
-  stroke = class_missing,
+  alpha = numeric(0),
+  color = character(0),
+  fill = character(0),
+  shape = numeric(0),
+  size = numeric(0),
+  stroke = numeric(0),
   style = class_missing,
   ...
 )
 
 ob_polar(
   theta = class_missing,
-  r = class_missing,
-  alpha = class_missing,
-  color = class_missing,
-  fill = class_missing,
-  shape = class_missing,
-  size = class_missing,
-  stroke = class_missing,
+  r = numeric(0),
+  alpha = numeric(0),
+  color = character(0),
+  fill = character(0),
+  shape = numeric(0),
+  size = numeric(0),
+  stroke = numeric(0),
   style = class_missing
 )
 }

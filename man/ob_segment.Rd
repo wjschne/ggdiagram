@@ -7,25 +7,25 @@
 ob_segment(
   p1 = class_missing,
   p2 = class_missing,
-  label = class_missing,
-  alpha = class_missing,
+  label = character(0),
+  alpha = numeric(0),
   arrow_head = ggarrow::arrow_head_minimal(90),
-  arrow_fins = class_missing,
+  arrow_fins = list(),
   arrowhead_length = 4,
-  length_head = class_missing,
-  length_fins = class_missing,
-  color = class_missing,
-  lineend = class_missing,
-  linejoin = class_missing,
-  linewidth = class_missing,
-  linewidth_fins = class_missing,
-  linewidth_head = class_missing,
-  linetype = class_missing,
-  resect = class_missing,
-  resect_fins = class_missing,
-  resect_head = class_missing,
-  stroke_color = class_missing,
-  stroke_width = class_missing,
+  length_head = numeric(0),
+  length_fins = numeric(0),
+  color = character(0),
+  lineend = numeric(0),
+  linejoin = numeric(0),
+  linewidth = numeric(0),
+  linewidth_fins = numeric(0),
+  linewidth_head = numeric(0),
+  linetype = numeric(0),
+  resect = numeric(0),
+  resect_fins = numeric(0),
+  resect_head = numeric(0),
+  stroke_color = character(0),
+  stroke_width = numeric(0),
   style = class_missing,
   x = class_missing,
   xend = class_missing,
@@ -92,3 +92,15 @@ ob_segment(
 \description{
 ob_segment class
 }
+\section{Slots}{
+
+\describe{
+\item{\code{geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggarrow::geom_arrow_segment}.}
+
+\item{\code{hatch}}{A function that puts hatch (tally) marks on segments. Often used to indicate which segments have the same length. The \code{k} parameter controls how many hatch marks to display. The \code{height} parameter controls how long the hatch mark segment is. The \code{sep} paramater controls the separation between hatch marks when \code{k > 2}. Additional parameters sent to \code{ob_segment}.}
+
+\item{\code{midpoint}}{A function that selects 1 or more midpoints of the ob_segment. The \code{position} argument can be between 0 and 1. Additional arguments are passed to \code{ob_point}.}
+
+\item{\code{nudge}}{A function to move the segment by x and y units.}
+}}
+

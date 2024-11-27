@@ -58,7 +58,10 @@ cr_props <- list(
         rlang::inject(ob_style(!!!get_non_empty_list(pr)))
       },
       setter = function(self, value) {
-        ob_point(self@x, self@y, style = self@style + value)
+        ob_circle(center = self@center,
+                  radius = self@radius,
+                  label = self@label,
+                  style = self@style + value)
       }
     ),
     tibble = new_property(getter = function(self) {
@@ -82,6 +85,11 @@ cr_props <- list(
         as.geom(self, ...)
       }
     }),
+    arc = new_property(class_function, getter = \(self) {
+      \(start, end, type = "arc", ...) {
+        ob_arc(self@center, radius = self@radius, start = start, end = end, type = type, ...)
+      }
+    }),
     angle_at = new_property(class_function, getter = function(self) {
       \(point) {
         dp <- point - self@center
@@ -89,10 +97,10 @@ cr_props <- list(
       }
     }),
     normal_at = new_property(class_function, getter = function(self) {
-      \(theta = degree(0), distance = 1) {
+      \(theta = degree(0), distance = 1, ...) {
         if (S7_inherits(theta, ob_point)) theta <- projection(theta, self)@theta
         if (!S7_inherits(theta, ob_angle)) theta <- degree(theta)
-        ob_polar(theta, self@radius + distance) + self@center
+        self@center + ob_polar(theta, self@radius + distance, ...)
       }
     }),
     tangent_at = new_property(
@@ -119,7 +127,9 @@ cr_props <- list(
       class_function,
       getter = function(self) {
         \(theta = degree(0), ...) {
-          if (!S7_inherits(theta, ob_angle)) theta <- degree(theta)
+          if (!S7_inherits(theta, ob_angle)) {
+            theta <- degree(theta)
+            }
           self@center + ob_polar(theta = theta, r = self@radius, style = self@style, ...)
           }
       }
@@ -185,16 +195,16 @@ ob_circle <- new_class(
     !!!cr_props$info)),
   constructor = function(center = ob_point(0,0),
                          radius = 1,
-                         label = class_missing,
-                         alpha = class_missing,
-                         color = class_missing,
-                         fill = class_missing,
-                         linewidth = class_missing,
-                         linetype = class_missing,
-                         n = class_missing,
+                         label = character(0),
+                         alpha = numeric(0),
+                         color = character(0),
+                         fill = character(0),
+                         linewidth = numeric(0),
+                         linetype = numeric(0),
+                         n = numeric(0),
                          style = class_missing,
-                         x0 = class_missing,
-                         y0 = class_missing,
+                         x0 = numeric(0),
+                         y0 = numeric(0),
                          ...) {
     c_style <- style +
       ob_style(
@@ -313,3 +323,47 @@ method(ob_array, ob_circle) <- function(x, k = 2, sep = 1, where = "east", ancho
                         style = x@style,
                         !!!sa$dots))
 }
+
+
+#' Get a circle from 3 points
+#'
+#' @param p1 an ob_point of length 1 or length 3
+#' @param p2 an ob_point of length 1 or NULL
+#' @param p3 an ob_point of length 1 or NULL
+#'
+#' @return ob_point
+#' @export
+#'
+#' @examples
+#' p1 <- ob_point(1,1)
+#' p2 <- ob_point(2,4)
+#' p3 <- ob_point(5,3)
+#' circle_from_3_points(p1,p2, p3)
+circle_from_3_points <- function(p1, p2 = NULL, p3 = NULL, ...) {
+  # from https://math.stackexchange.com/a/1460096
+
+  if (p1@length == 3 && is.null(p2) && is.null(p3)) {
+    p <- p1
+  } else if (p1@length == 1 && p2@length == 1 && p3@length == 1) {
+    p <- bind(c(p1, p2, p3))
+  } else {
+    stop("p1 must be of length 3 or p1, p2, and p2 must be of length 1")
+  }
+
+  # Minor M11
+  m11 <- det(cbind(p@x, p@y, rep(1,3)))
+  if (m11 == 0) stop("Points on the same line cannot lie on a circle.")
+
+  # Minor m12
+  m12 <- det(cbind(p@x ^ 2 + p@y ^ 2, p@y, rep(1,3)))
+  # Minor m13
+  m13 <- det(cbind(p@x ^ 2 + p@y ^ 2, p@x, rep(1,3)))
+
+  x0 <- 0.5 * m12 / m11
+  y0 <- -0.5 * m13 / m11
+  center <- ob_point(x0,y0)
+  ob_circle(center, radius = distance(center, p1), ...)
+}
+
+
+
