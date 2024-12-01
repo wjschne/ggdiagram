@@ -15,8 +15,8 @@
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Roboto_Condensed-0.4.9/font.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="arcwedges_files/libs/quarto-html/popper.min.js"></script><script src="arcwedges_files/libs/quarto-html/tippy.umd.min.js"></script><link href="arcwedges_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="arcwedges_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Arcs and Wedges">
@@ -74,7 +74,7 @@
 </nav><div class="container template-quarto">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Arcs and Wedges</h1>
+      <img src="../logo.png" class="logo" alt=""><h1></h1>
 
 
 
@@ -88,7 +88,7 @@
 
 
 
-    <section class="section level2"><h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
+    <header id="title-block-header" class="quarto-title-block"><h1 class="title">Arcs and Wedges</h1></header><section class="section level2"><h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
 </h2>
 <section class="level2"><h3 id="packages">Packages<a class="anchor" aria-label="anchor" href="#packages"></a>
 </h3>
@@ -118,6 +118,7 @@
 <span>    base_size <span class="op">=</span> <span class="va">my_font_size</span>,</span>
 <span>    base_family <span class="op">=</span> <span class="va">my_font</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.title.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">0</span>, vjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/update_defaults.html" class="external-link">update_geom_defaults</a></span><span class="op">(</span><span class="st">"richtext"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>family <span class="op">=</span> <span class="va">my_font</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">bp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ggdiagram.html">ggdiagram</a></span><span class="op">(</span></span>
 <span>  font_family <span class="op">=</span> <span class="va">my_font</span>,</span>
@@ -169,7 +170,22 @@
 </div>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
+<code class="sourceCode R"><span><span class="fu">ggtext</span><span class="fu">::</span><span class="va"><a href="https://wilkelab.org/ggtext/reference/geom_richtext.html" class="external-link">GeomRichText</a></span><span class="op">$</span><span class="va">default_aes</span></span>
+<span><span class="co">#&gt; Aesthetic mapping: </span></span>
+<span><span class="co">#&gt; * `colour`       -&gt; "black"</span></span>
+<span><span class="co">#&gt; * `fill`         -&gt; "white"</span></span>
+<span><span class="co">#&gt; * `size`         -&gt; 7.029196</span></span>
+<span><span class="co">#&gt; * `angle`        -&gt; 0</span></span>
+<span><span class="co">#&gt; * `hjust`        -&gt; 0.5</span></span>
+<span><span class="co">#&gt; * `vjust`        -&gt; 0.5</span></span>
+<span><span class="co">#&gt; * `alpha`        -&gt; NA</span></span>
+<span><span class="co">#&gt; * `family`       -&gt; "Roboto Condensed"</span></span>
+<span><span class="co">#&gt; * `fontface`     -&gt; 1</span></span>
+<span><span class="co">#&gt; * `lineheight`   -&gt; 1.2</span></span>
+<span><span class="co">#&gt; * `text.colour`  -&gt; NULL</span></span>
+<span><span class="co">#&gt; * `label.colour` -&gt; NULL</span></span>
+<span><span class="co">#&gt; * `label.size`   -&gt; 0.25</span></span>
+<span><span class="va">bp</span> <span class="op">+</span></span>
 <span>  <span class="op">{</span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span> </span>
 <span>  <span class="op">{</span><span class="va">a1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span></span>
 <span>    center <span class="op">=</span> <span class="va">p1</span>,</span>
@@ -194,7 +210,8 @@
 <span>    label <span class="op">=</span> <span class="va">ang_end</span>, </span>
 <span>    center <span class="op">=</span> <span class="va">a1</span><span class="op">@</span><span class="va">midpoint</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>, </span>
 <span>    polar_just <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span><span class="va">ang_end</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">90</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span>, </span>
-<span>    plot_point <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span>    plot_point <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    family <span class="op">=</span> <span class="va">my_font</span><span class="op">)</span></span></code></pre></div>
 </details><div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure><p><img src="arcwedges_files/figure-html/fig_arc-1.png" width="672"></p>
@@ -209,42 +226,19 @@
 <div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
-<span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span>start <span class="op">=</span> <span class="fl">60</span>, end <span class="op">=</span> <span class="fl">120</span>, radius <span class="op">=</span> <span class="fl">1</span>, color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span></span>
-<span><span class="va">a</span><span class="op">@</span><span class="va">start_point</span> <span class="op">&lt;-</span> <span class="va">p1</span></span>
-<span><span class="va">a</span></span>
-<span><span class="co">#&gt; &lt;ggdiagram::ob_arc&gt;</span></span>
-<span><span class="co">#&gt; @ center: &lt;ggdiagram::ob_point&gt;</span></span>
-<span><span class="co">#&gt;  @ x: num 0</span></span>
-<span><span class="co">#&gt;  @ y: num 0</span></span>
-<span><span class="co">#&gt; @ radius: num 1</span></span>
-<span><span class="co">#&gt; @ start : &lt;ggdiagram::degree&gt;</span></span>
-<span><span class="co">#&gt;  @ degree: num 60</span></span>
-<span><span class="co">#&gt; @ end   : &lt;ggdiagram::degree&gt;</span></span>
-<span><span class="co">#&gt;  @ degree: num 120</span></span>
-<span><span class="co">#&gt; @ theta : &lt;ggdiagram::degree&gt;</span></span>
-<span><span class="co">#&gt;  @ degree: num 60</span></span>
-<span><span class="co">#&gt; Other props: label, type, alpha, arrow_head, arrow_fins,</span></span>
-<span><span class="co">#&gt;              arrowhead_length, length_head, length_fins, color,</span></span>
-<span><span class="co">#&gt;              fill, lineend, linejoin, linewidth, linewidth_fins,</span></span>
-<span><span class="co">#&gt;              linewidth_head, linetype, n, resect, resect_fins,</span></span>
-<span><span class="co">#&gt;              resect_head, stroke_color, stroke_width, apothem,</span></span>
-<span><span class="co">#&gt;              arc_length, sagitta, bounding_box, circle, chord,</span></span>
-<span><span class="co">#&gt;              length, end_point, polygon, start_point, style,</span></span>
-<span><span class="co">#&gt;              tibble, geom, angle_at, autolabel, hatch, midpoint,</span></span>
-<span><span class="co">#&gt;              normal_at, place, point_at, tangent_at, aesthetics</span></span>
+<span></span>
 <span><span class="va">bp</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span>start <span class="op">=</span> <span class="op">-</span><span class="fl">45</span>, </span>
 <span>      end <span class="op">=</span> <span class="fl">45</span>, </span>
 <span>      radius <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>      color <span class="op">=</span> <span class="st">"red"</span>, </span>
+<span>      color <span class="op">=</span> <span class="st">"orchid4"</span>, </span>
 <span>      start_point <span class="op">=</span> <span class="va">p1</span><span class="op">)</span>  <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span>start <span class="op">=</span> <span class="op">-</span><span class="fl">45</span>, </span>
 <span>      end <span class="op">=</span> <span class="fl">45</span>, </span>
 <span>      radius <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>      color <span class="op">=</span> <span class="st">"blue"</span>, </span>
+<span>      color <span class="op">=</span> <span class="st">"forestgreen"</span>, </span>
 <span>      end_point <span class="op">=</span> <span class="va">p1</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="va">p1</span> <span class="op">+</span></span>
-<span>  <span class="va">a</span></span></code></pre></div>
+<span>  <span class="va">p1</span> </span></code></pre></div>
 <div class="cell-output-display">
 <div id="fig-startpoint" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-startpoint-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">

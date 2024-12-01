@@ -64,6 +64,7 @@ theme_set(
     base_size = my_font_size,
     base_family = my_font) +
     theme(axis.title.y = element_text(angle = 0, vjust = 0.5)))
+ggplot2::update_geom_defaults("richtext", list(family = my_font))
 
 bp <- ggdiagram(
   font_family = my_font,
@@ -106,6 +107,7 @@ ob_arc(center = ob_point(1,2),
 #| label: fig_arc
 #| fig-cap: Arc with starting and ending angles and center point.
 #| code-fold: true
+ggtext::GeomRichText$default_aes
 bp +
   {p1 <- ob_point(0, 0)} + 
   {a1 <- ob_arc(
@@ -131,7 +133,8 @@ bp +
     label = ang_end, 
     center = a1@midpoint(1), 
     polar_just = ob_polar(ang_end + degree(90), 1), 
-    plot_point = TRUE)
+    plot_point = TRUE,
+    family = my_font)
 ```
 
 # Starting or ending points of arcs

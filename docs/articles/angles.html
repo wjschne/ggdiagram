@@ -15,8 +15,8 @@
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Roboto_Condensed-0.4.9/font.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="angles_files/libs/quarto-html/popper.min.js"></script><script src="angles_files/libs/quarto-html/tippy.umd.min.js"></script><link href="angles_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="angles_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Angles">
@@ -74,7 +74,7 @@
 </nav><div class="container template-quarto">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Angles</h1>
+      <img src="../logo.png" class="logo" alt=""><h1></h1>
 
 
 
@@ -88,7 +88,7 @@
 
 
 
-    <section class="section level2"><h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
+    <header id="title-block-header" class="quarto-title-block"><h1 class="title">Angles</h1></header><section class="section level2"><h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
 </h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
@@ -176,11 +176,12 @@
 <span>  <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/pmap.html" class="external-link">pmap</a></span><span class="op">(</span></span>
 <span>    .l <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">r</span>, <span class="va">theta_list</span>, <span class="va">my_shades</span><span class="op">)</span>, </span>
 <span>    .f <span class="op">=</span> \<span class="op">(</span><span class="va">rs</span>, <span class="va">ts</span>, <span class="va">ss</span><span class="op">)</span> <span class="op">{</span></span>
-<span>      <span class="fu"><a href="../reference/ob_circle.html">ob_circle</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="va">rs</span> <span class="op">-</span> <span class="fl">1</span><span class="op">/</span><span class="fl">8</span><span class="op">)</span><span class="op">@</span><span class="va">point_at</span><span class="op">(</span><span class="va">ts</span><span class="op">)</span><span class="op">@</span><span class="va">label</span><span class="op">(</span><span class="va">ts</span>, fill <span class="op">=</span> <span class="va">ss</span>, size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span><span class="op">@</span><span class="va">geom</span><span class="op">(</span><span class="op">)</span></span>
+<span>      <span class="fu"><a href="../reference/ob_circle.html">ob_circle</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="va">rs</span> <span class="op">-</span> <span class="fl">1</span><span class="op">/</span><span class="fl">8</span><span class="op">)</span><span class="op">@</span><span class="va">point_at</span><span class="op">(</span><span class="va">ts</span><span class="op">)</span><span class="op">@</span><span class="va">label</span><span class="op">(</span><span class="va">ts</span>, fill <span class="op">=</span> <span class="va">ss</span>, size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span><span class="op">@</span><span class="va">geom</span><span class="op">(</span>family <span class="op">=</span> <span class="va">my_font</span><span class="op">)</span></span>
 <span>      <span class="op">}</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">0</span>, y <span class="op">=</span> <span class="va">r</span> <span class="op">-</span> <span class="fl">1</span><span class="op">/</span><span class="fl">18</span><span class="op">)</span><span class="op">@</span><span class="va">label</span><span class="op">(</span><span class="va">angle_types</span>, </span>
 <span>                               fill <span class="op">=</span> <span class="va">my_shades</span>, </span>
 <span>                               fontface <span class="op">=</span> <span class="st">"bold"</span>, </span>
+<span>                               family <span class="op">=</span> <span class="va">my_font</span>,</span>
 <span>                               size <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></span></code></pre></div>
 </details><div class="cell-output-display">
 <div id="fig-angles" class="quarto-float quarto-figure quarto-figure-center">
@@ -279,7 +280,9 @@ Figure 1: Angle Metrics
 <span><span class="va">arcs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="va">r</span>, </span>
 <span>      start <span class="op">=</span> <span class="va">start_angles</span>, </span>
 <span>      end <span class="op">=</span> <span class="va">end_angles</span>,</span>
-<span>      label <span class="op">=</span> <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="va">arc_labels</span>, color <span class="op">=</span> <span class="va">mycolors</span><span class="op">)</span>,</span>
+<span>      label <span class="op">=</span> <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="va">arc_labels</span>, </span>
+<span>                       color <span class="op">=</span> <span class="va">mycolors</span>, </span>
+<span>                       family <span class="op">=</span> <span class="va">my_font</span><span class="op">)</span>,</span>
 <span>      linewidth <span class="op">=</span> <span class="fl">.25</span>,</span>
 <span>      length_head <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>      arrow_head <span class="op">=</span>  <span class="fu">arrowheadr</span><span class="fu">::</span><span class="fu"><a href="https://wjschne.github.io/arrowheadr/reference/arrow_head_hypotrochoid.html" class="external-link">arrow_head_deltoid</a></span><span class="op">(</span><span class="op">)</span>,</span>
@@ -303,8 +306,7 @@ Figure 1: Angle Metrics
 </div>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="fu">make_angles</span><span class="op">(</span>a <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">30</span>, <span class="fl">60</span><span class="op">)</span>, </span>
+<code class="sourceCode R"><span><span class="fu">make_angles</span><span class="op">(</span>a <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">30</span>, <span class="fl">60</span><span class="op">)</span>, </span>
 <span>            r <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.12</span>,<span class="fl">.24</span>, <span class="fl">.36</span><span class="op">)</span>, </span>
 <span>            multiplier <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.5</span>,<span class="fl">1.5</span>,<span class="fl">1.5</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
 </details><div class="cell-output-display">
@@ -350,8 +352,7 @@ Figure 2: 30° + 60° = 90°
 </annotation></semantics></math></p>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">make_angles</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">80</span>, <span class="fl">300</span><span class="op">)</span><span class="op">)</span> </span>
-<span>  </span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">make_angles</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">80</span>, <span class="fl">300</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
 </details><div class="cell-output-display">
 <div id="fig-80300" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-80300-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -432,7 +433,6 @@ Figure 4: 40° − 60° = −20°
 <span></span>
 <span><span class="va">my_colors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#8C0172"</span>, <span class="st">"#944046"</span>, <span class="st">"#9B7424"</span>, </span>
 <span>               <span class="st">"#8EB63B"</span>, <span class="st">"#53BD91"</span>, <span class="st">"#6C939A"</span><span class="op">)</span></span>
-<span></span>
 <span><span class="fu"><a href="../reference/ggdiagram.html">ggdiagram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/ob_circle.html">ob_circle</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="cn">NA</span>, color <span class="op">=</span> <span class="st">"gray"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="co"># axes</span></span>

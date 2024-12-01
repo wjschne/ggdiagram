@@ -13,6 +13,7 @@ vignette: >
 ```{r}
 #| label: presetup
 #| include: false
+#| cache: false
 library(ggdiagram)
 library(ggplot2)
 library(dplyr)
@@ -99,11 +100,12 @@ ggplot() +
   purrr::pmap(
     .l = list(r, theta_list, my_shades), 
     .f = \(rs, ts, ss) {
-      ob_circle(radius = rs - 1/8)@point_at(ts)@label(ts, fill = ss, size = 16)@geom()
+      ob_circle(radius = rs - 1/8)@point_at(ts)@label(ts, fill = ss, size = 16)@geom(family = my_font)
       }) +
   ob_point(0, y = r - 1/18)@label(angle_types, 
                                fill = my_shades, 
                                fontface = "bold", 
+                               family = my_font,
                                size = 16)
 
 
@@ -192,7 +194,9 @@ arc_labels[3] <- paste0(arc_labels[1],
 arcs <- ob_arc(radius = r, 
       start = start_angles, 
       end = end_angles,
-      label = ob_label(arc_labels, color = mycolors),
+      label = ob_label(arc_labels, 
+                       color = mycolors, 
+                       family = my_font),
       linewidth = .25,
       length_head = 10,
       arrow_head =  arrowheadr::arrow_head_deltoid(),
@@ -223,13 +227,9 @@ ggplot() +
 #| fig-cap: "30&deg; + 60&deg; = 90&deg;"
 #| fig-width: 7
 #| fig-height: 7
-
-
 make_angles(a = c(30, 60), 
             r = c(.12,.24, .36), 
             multiplier = c(1.5,1.5,1.5)) 
-
-
 ```
 
 
@@ -273,9 +273,7 @@ $$
 #| label: fig-80300
 #| code-fold: true
 #| fig-cap: "80&deg; + 300&deg; = 380&deg; = 20&deg;"
-
 make_angles(c(80, 300)) 
-  
 ```
 
 
@@ -299,7 +297,9 @@ $$
 #| fig-cap: "40&deg; &minus; 60&deg; = &minus;20&deg;"
 #| fig-width: 7
 #| fig-height: 7
+
 make_angles(c(40, -60)) 
+
 ```
 
 ```{r}
@@ -355,7 +355,6 @@ p <- ob_polar(theta, 1)
 
 my_colors <- c("#8C0172", "#944046", "#9B7424", 
                "#8EB63B", "#53BD91", "#6C939A")
-
 ggdiagram() +
   ob_circle(fill = NA, color = "gray") +
   # axes

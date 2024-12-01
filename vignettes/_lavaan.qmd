@@ -1,5 +1,6 @@
 ---
 title: "lavaan"
+draft: true
 format: 
   html:
     toc: true
@@ -34,10 +35,10 @@ n_o <- lavNames(m, "ov.nox")
 x_l <- lavNames(m, "lv.x")
 n_l <- lavNames(m, "lv.nox")
 
-
-tibble(type = c("x_o", "n_o", "x_l", "n_l"),
-       fun = list(x_o = ob_ellipse,
-                n_o = ob_ellipse,
+ob_x <- redefault(ob_ellipse, m1 = 10)
+osl <- tibble(type = c("x_o", "n_o", "x_l", "n_l"),
+       fun = list(x_o = ob_x,
+                n_o = ob_x,
                 x_l = ob_circle,
                 n_l = ob_circle),
        v = list(x_o = x_o,
@@ -45,7 +46,11 @@ tibble(type = c("x_o", "n_o", "x_l", "n_l"),
                 x_l = x_l,
                 n_l = n_l)) %>% 
   unnest(v) %>% 
-  mutate(o = map2(fun, v))
+  mutate(o = map2(fun, v, \(fun, v) {
+    fun(label = v)
+  })) %>% 
+  pull(o) 
+
 
 ```
 
