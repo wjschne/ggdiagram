@@ -166,12 +166,12 @@ bp +
 
 # Segments
 
-```{r}
-ah <- lapply(seq(p_curve@length - 1), \(x) ggarrow::arrow_head_minimal())
-ah[p_curve@length - 1] <- list(arrowheadr::arrow_head_deltoid(2.4))
+It is possible to create color gradients along a path using the paths' segments.
 
+```{r}
 ggdiagram() +
-  ob_path(p_curve)@segments %>% set_props(color = viridis::viridis(p_curve@length - 1))
+  ob_path(p_curve)@segments %>% 
+  set_props(color = viridis::viridis(p_curve@length - 1))
 
 
 

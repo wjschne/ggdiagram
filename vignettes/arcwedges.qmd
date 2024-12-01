@@ -59,13 +59,6 @@ my_arrowhead <- arrowheadr::arrow_head_deltoid(2.3, n = 101)
 # my_colors <- viridis::viridis(2, begin = .25, end = .5)
 my_colors <- c("#3B528B", "#21908C")
 
-theme_set(
-  theme_minimal(
-    base_size = my_font_size,
-    base_family = my_font) +
-    theme(axis.title.y = element_text(angle = 0, vjust = 0.5)))
-ggplot2::update_geom_defaults("richtext", list(family = my_font))
-
 bp <- ggdiagram(
   font_family = my_font,
   font_size = my_font_size,
@@ -133,8 +126,7 @@ bp +
     label = ang_end, 
     center = a1@midpoint(1), 
     polar_just = ob_polar(ang_end + degree(90), 1), 
-    plot_point = TRUE,
-    family = my_font)
+    plot_point = TRUE)
 ```
 
 # Starting or ending points of arcs
@@ -167,7 +159,8 @@ As a example, I used the `start_point` argument to recreate a fun meme about a "
 ```{r fig-square}
 #| fig-cap: A "square" with four equal sizes that meet at right angles.
 little_r <- 1 / (2 * pi - 1)
-ggdiagram() +
+ggdiagram(font_family = my_font,
+          font_size = my_font_size) +
   {p1 <- ob_point(0,0)} +
   {p2 <- ob_point(1,0)} +
   ob_segment(p1, p2) +
@@ -219,9 +212,7 @@ bp +
   ob_arc(radius = 3, 
       start = 20, 
       end = 120, 
-      label = ob_label(degree(100),
-                       family = my_font,
-                       size = my_font_size))
+      label = ob_label(degree(100)))
 ```
 
 If a label is needed elsewhere, it can be set with the `label` function's `position` property.
@@ -238,9 +229,7 @@ bp +
     label = ob_label(
       c("Start", "Middle", "End"),
       position = c(0, .5, 1),
-      plot_point = TRUE,
-      family = my_font,
-      size = my_font_size
+      plot_point = TRUE
     )
   )
 ```
@@ -259,9 +248,7 @@ bp +
     label = ob_label(
       "A",
       vjust = 1.2,
-      hjust = .75,
-      family = my_font,
-      size = my_font_size
+      hjust = .75
     )
   )
 ```
@@ -276,8 +263,7 @@ bp +
   {a1 <- ob_arc(radius = 3, 
       start = 20, 
       end = 120)} + 
-  a1@autolabel(family = my_font,
-               size = my_font_size)
+  a1@autolabel()
 ```
 
 However, any label can be inserted at any position.
@@ -289,9 +275,7 @@ However, any label can be inserted at any position.
 bp + 
   a1 +
   a1@autolabel(label = "Start", 
-               position = 0,
-               family = my_font,
-               size = my_font_size)
+               position = 0)
 ```
 # Arcs with arrows
 
@@ -374,15 +358,13 @@ bp +
     angle = cs@chord@line@angle,
     vjust = -.1,
     color = "black",
-    size = 24,
-    family = my_font
+    size = 18
   ) +
   cs@sagitta %>% set_props(color = "white") +
   cs@sagitta@midpoint()@label(
     paste0("Sagitta = ", round(cs@sagitta@distance, 2)),
     vjust = 0,
-    size = 20,
-    family = my_font,
+    size = 18,
     fill = NA, 
     color = "white"
   ) +
@@ -396,8 +378,7 @@ bp +
     label = ob_label(
       paste0("Arc Length = ", round(cs@arc_length, 2)),
       vjust = -0.1,
-      size = 24,
-      family = my_font,
+      size = 18,
       color = "black"
     ),
     color = "dodgerblue3"

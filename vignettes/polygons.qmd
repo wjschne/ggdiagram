@@ -82,6 +82,7 @@ bp <- ggdiagram(
   scale_y_continuous(labels = signs::signs,
                      limits = c(-4, 4))
 
+
 ```
 
 # Polygons
@@ -159,10 +160,10 @@ In @fig-regon, many regular polygons are displayed concentrically.
 ```{r fig-regon}
 #| fig-cap: Regular polygons
 n <- 10
-ggdiagram() +
+bp +
   ob_ngon(
     n = n:1 + 2,
-    radius = seq(1, .1, length.out = n) ^ .7,
+    radius = 4 * seq(1, .1, length.out = n) ^ .7,
     fill = viridis::viridis(n = n, begin = .2, end = .8) %>%
       tinter::lighten(.6),
     color = "white",
