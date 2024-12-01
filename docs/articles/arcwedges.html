@@ -322,7 +322,9 @@ Figure 4: Multiple midpoints can be specified
 <span>  <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fl">3</span>, </span>
 <span>      start <span class="op">=</span> <span class="fl">20</span>, </span>
 <span>      end <span class="op">=</span> <span class="fl">120</span>, </span>
-<span>      label <span class="op">=</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
+<span>      label <span class="op">=</span> <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span>,</span>
+<span>                       family <span class="op">=</span> <span class="va">my_font</span>,</span>
+<span>                       size <span class="op">=</span> <span class="va">my_font_size</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div id="fig-label" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-label-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -338,12 +340,18 @@ Figure 5: A labelled arc
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fl">3</span>, </span>
-<span>      start <span class="op">=</span> <span class="fl">20</span>, </span>
-<span>      end <span class="op">=</span> <span class="fl">120</span>, </span>
-<span>      label <span class="op">=</span> <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Start"</span>, <span class="st">"Middle"</span>, <span class="st">"End"</span><span class="op">)</span>, </span>
-<span>                    position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">.5</span>, <span class="fl">1</span><span class="op">)</span>, </span>
-<span>                    plot_point <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span></span>
+<span>    radius <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>    start <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>    end <span class="op">=</span> <span class="fl">120</span>,</span>
+<span>    label <span class="op">=</span> <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Start"</span>, <span class="st">"Middle"</span>, <span class="st">"End"</span><span class="op">)</span>,</span>
+<span>      position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">.5</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>      plot_point <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>      family <span class="op">=</span> <span class="va">my_font</span>,</span>
+<span>      size <span class="op">=</span> <span class="va">my_font_size</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div id="fig-labelmultiple" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-labelmultiple-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -358,13 +366,19 @@ Figure 6: Multiple labels on an arc
 <p>If the orientation of the label needs to be changed, it can be set with <code>vjust</code>, <code>hjust</code>, or <code>polar_just</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fl">3</span>, </span>
-<span>      start <span class="op">=</span> <span class="fl">20</span>, </span>
-<span>      end <span class="op">=</span> <span class="fl">120</span>,</span>
-<span>      label <span class="op">=</span> <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="st">"A"</span>, </span>
-<span>                    vjust <span class="op">=</span> <span class="fl">1.2</span>, </span>
-<span>                    hjust <span class="op">=</span> <span class="fl">.75</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span></span>
+<span>    radius <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>    start <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>    end <span class="op">=</span> <span class="fl">120</span>,</span>
+<span>    label <span class="op">=</span> <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span></span>
+<span>      <span class="st">"A"</span>,</span>
+<span>      vjust <span class="op">=</span> <span class="fl">1.2</span>,</span>
+<span>      hjust <span class="op">=</span> <span class="fl">.75</span>,</span>
+<span>      family <span class="op">=</span> <span class="va">my_font</span>,</span>
+<span>      size <span class="op">=</span> <span class="va">my_font_size</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div id="fig-labeladjust" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-labeladjust-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -383,7 +397,8 @@ Figure 7: The arc’s labels can be adjusted.
 <span>  <span class="op">{</span><span class="va">a1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fl">3</span>, </span>
 <span>      start <span class="op">=</span> <span class="fl">20</span>, </span>
 <span>      end <span class="op">=</span> <span class="fl">120</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span> </span>
-<span>  <span class="va">a1</span><span class="op">@</span><span class="va">autolabel</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="va">a1</span><span class="op">@</span><span class="va">autolabel</span><span class="op">(</span>family <span class="op">=</span> <span class="va">my_font</span>,</span>
+<span>               size <span class="op">=</span> <span class="va">my_font_size</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div id="fig-autolabel" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-autolabel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -400,7 +415,10 @@ Figure 8: Using the arc’s autolabel
 <div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
 <span>  <span class="va">a1</span> <span class="op">+</span></span>
-<span>  <span class="va">a1</span><span class="op">@</span><span class="va">autolabel</span><span class="op">(</span>label <span class="op">=</span> <span class="st">"Start"</span>, position <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="va">a1</span><span class="op">@</span><span class="va">autolabel</span><span class="op">(</span>label <span class="op">=</span> <span class="st">"Start"</span>, </span>
+<span>               position <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>               family <span class="op">=</span> <span class="va">my_font</span>,</span>
+<span>               size <span class="op">=</span> <span class="va">my_font_size</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div id="fig-autolabeladjust" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-autolabeladjust-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">

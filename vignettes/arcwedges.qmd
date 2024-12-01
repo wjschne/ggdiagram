@@ -219,7 +219,9 @@ bp +
   ob_arc(radius = 3, 
       start = 20, 
       end = 120, 
-      label = degree(100)) 
+      label = ob_label(degree(100),
+                       family = my_font,
+                       size = my_font_size))
 ```
 
 If a label is needed elsewhere, it can be set with the `label` function's `position` property.
@@ -229,12 +231,18 @@ If a label is needed elsewhere, it can be set with the `label` function's `posit
 #| fig-cap: "Multiple labels on an arc"
 
 bp +
-  ob_arc(radius = 3, 
-      start = 20, 
-      end = 120, 
-      label = ob_label(c("Start", "Middle", "End"), 
-                    position = c(0,.5, 1), 
-                    plot_point = TRUE))
+  ob_arc(
+    radius = 3,
+    start = 20,
+    end = 120,
+    label = ob_label(
+      c("Start", "Middle", "End"),
+      position = c(0, .5, 1),
+      plot_point = TRUE,
+      family = my_font,
+      size = my_font_size
+    )
+  )
 ```
 
 If the orientation of the label needs to be changed, it can be set with `vjust`, `hjust`, or `polar_just`.
@@ -243,13 +251,19 @@ If the orientation of the label needs to be changed, it can be set with `vjust`,
 #| label: fig-labeladjust
 #| fig-cap: "The arc's labels can be adjusted."
 
-bp + 
-  ob_arc(radius = 3, 
-      start = 20, 
-      end = 120,
-      label = ob_label("A", 
-                    vjust = 1.2, 
-                    hjust = .75))
+bp +
+  ob_arc(
+    radius = 3,
+    start = 20,
+    end = 120,
+    label = ob_label(
+      "A",
+      vjust = 1.2,
+      hjust = .75,
+      family = my_font,
+      size = my_font_size
+    )
+  )
 ```
 
 There are cases where the arc is already created and a label is needed. Although the `label` can be added after the arc has been created, the position would have to be set manually (otherwise the position will be at 0,0 by default). In such cases, the `auto_label` function can help place the label correctly. By default, the `auto_label` will show the the `theta` property (i.e., `end` − `start`).
@@ -262,7 +276,8 @@ bp +
   {a1 <- ob_arc(radius = 3, 
       start = 20, 
       end = 120)} + 
-  a1@autolabel()
+  a1@autolabel(family = my_font,
+               size = my_font_size)
 ```
 
 However, any label can be inserted at any position.
@@ -273,7 +288,10 @@ However, any label can be inserted at any position.
 
 bp + 
   a1 +
-  a1@autolabel(label = "Start", position = 0)
+  a1@autolabel(label = "Start", 
+               position = 0,
+               family = my_font,
+               size = my_font_size)
 ```
 # Arcs with arrows
 
