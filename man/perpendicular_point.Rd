@@ -17,6 +17,11 @@ e1 \%-|\% e2
 
 \item{e2}{second ob_point}
 }
+\value{
+ob_point object
+
+ob_point object
+}
 \description{
 Find point perpendicular to 2 points
 }

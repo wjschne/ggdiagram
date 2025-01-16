@@ -13,6 +13,9 @@ polar2just(x, multiplier = 1.2, axis = c("h", "v"))
 
 \item{axis}{vertical (v) or horizontal (h)}
 }
+\value{
+ob_angle object
+}
 \description{
 Convert hjust and vjust parameters from polar coordinates
 }

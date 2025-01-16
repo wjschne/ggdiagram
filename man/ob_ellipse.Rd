@@ -59,6 +59,9 @@ ob_ellipse(
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> arguments passed to style object}
 }
+\value{
+ob_ellipse object
+}
 \description{
 Makes ellipses and superellipses
 }

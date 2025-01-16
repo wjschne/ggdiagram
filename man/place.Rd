@@ -17,6 +17,9 @@ place(x, from, where = "right", sep = 1, ...)
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> Arguments passed to style}
 }
+\value{
+object of same class as \code{x}
+}
 \description{
 Place an object a specified distance from another object
 }

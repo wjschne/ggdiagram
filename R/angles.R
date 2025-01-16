@@ -25,6 +25,7 @@ turn2angle <- function(x, object_name) {
 #' @param positive if angle is negative, adds a full turn to ensure the angle is positive
 #' @param negative if angle is positive, subtracts a full turn to ensure the angle is negative
 #' @export
+#' @return ob_angle
 #' @examples
 #' # Three Different ways to make a right angle
 #' ## 90 degrees

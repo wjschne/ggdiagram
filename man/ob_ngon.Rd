@@ -55,6 +55,9 @@ ob_ngon(
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
 }
+\value{
+ob_ngon object
+}
 \description{
 An ngon is a regular polygon, meaning that each side is of equal length. The \code{ob_ngon} object can be specified with a center, n (number of sides), radius, and angle. Instead of specifying a radius, one can specify either the \code{side_length} or the length of the \code{apothem} (i.e., the distance from the center to a side's midpoint.
 }

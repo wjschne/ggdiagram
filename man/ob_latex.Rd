@@ -22,7 +22,8 @@ ob_latex(
   density = 300,
   latex_packages = character(0),
   preamble = character(0),
-  force_recompile = TRUE
+  force_recompile = TRUE,
+  delete_files = TRUE
 )
 }
 \arguments{
@@ -61,6 +62,9 @@ ob_latex(
 \item{preamble}{additional latex commands to load in preamble}
 
 \item{force_recompile}{Will re-run xelatex even if .pdf file exists already}
+}
+\value{
+ob_latex object
 }
 \description{
 make a latex equation

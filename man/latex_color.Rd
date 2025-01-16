@@ -12,7 +12,7 @@ latex_color(x, color)
 \item{color}{color}
 }
 \value{
-character string
+string
 }
 \description{
 Surround TeX expression with a color command

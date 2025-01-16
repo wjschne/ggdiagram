@@ -143,6 +143,7 @@ pt_props <- list(
 #' @slot geom A function that converts the object to a geom. Any additional parameters are passed to `ggplot2::geom_point`.
 #' @inherit ob_style params
 #' @export
+#' @return ob_point object
 ob_point <- new_class(
   name = "ob_point",
   parent = xy,
@@ -295,6 +296,7 @@ method(get_tibble_defaults, ob_point) <- function(x) {
 #' @param multiplier distance
 #' @param axis vertical (v) or horizontal (h)
 #' @export
+#' @return ob_angle object
 polar2just <- new_generic(
   name = "polar2just",
   dispatch_args = "x",
@@ -375,6 +377,7 @@ NULL
 #' @rdname perpendicular_point
 #' @aliases %|-%
 #' @export
+#' @return ob_point object
 `%|-%` <- new_generic("%|-%", c("e1", "e2"), fun = function(e1,e2) {S7_dispatch()})
 
 method(`%|-%`, list(ob_point, ob_point)) <- function(e1,e2) {
@@ -388,6 +391,7 @@ method(`%|-%`, list(ob_point, ob_point)) <- function(e1,e2) {
 #' @rdname perpendicular_point
 #' @aliases %-|%
 #' @export
+#' @return ob_point object
 `%-|%` <- new_generic("%-|%", c("e1", "e2"), fun = function(e1,e2) {S7_dispatch()})
 
 method(`%-|%`, list(ob_point, ob_point)) <- function(e1,e2) {

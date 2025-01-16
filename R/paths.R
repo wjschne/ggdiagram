@@ -196,6 +196,7 @@ path_props <- list(
 #'
 #' If you wish to specify multiple paths, you must supply a list of `ob_point` objects. When plotted, the `ob_path` function uses the ggarrow::geom_arrow function to create the geom.
 #' @export
+#' @return ob_path object
 #' @param p `ob_point` or list of `ob_point`s
 #' @param label A character, angle, or label object
 #' @param style Gets and sets the styles associated with paths

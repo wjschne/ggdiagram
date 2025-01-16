@@ -44,6 +44,8 @@ the$arrow_head <- arrowheadr::arrow_head_deltoid(d = 2.3, n = 100)
 #' @param omit_names properties that are ignored
 #' @param inherit.aes Defaults to `FALSE` so that ggdiagram objects do not interfere with other layers in the ggplot
 #' @keywords internal
+#' @return a class_aesthetics_list object
+#' @export
 class_aesthetics_list <- new_class(
   name = "class_aesthetics_list",
   properties = list(
@@ -153,6 +155,7 @@ class_arrowhead <- new_class(
 #' makes a heterogeneous list of different ggdiagram objects
 #' @param .data a list of objects
 #' @export
+#' @return An object of `ob_shape_list` class. List of objects that can be converted to geoms
 ob_shape_list <- new_class("ob_shape_list", class_list,validator = function(self) {
   if(!all(purrr::map_lgl(self, S7_inherits, class = has_style))) "All objects must be ggdiagram objects that can be converted to geoms"
 })
@@ -248,6 +251,7 @@ xy <- new_class(name = "xy",
 #' @param bend Angle by which the control points are rotated
 #' @inherit ob_style params
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
+#' @return Returns an object of type `ob_bezier`
 #' @export
 ob_variance <- new_generic("ob_variance", dispatch_args = "x", fun = function(
     x,
@@ -272,6 +276,7 @@ ob_variance <- new_generic("ob_variance", dispatch_args = "x", fun = function(
 #' @param bend Angle by which the control points are rotated
 #' @inherit ob_style params
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
+#' @return An `ob_bezier` object
 #' @export
 ob_covariance <- new_generic(
   "ob_covariance",
@@ -297,6 +302,7 @@ ob_covariance <- new_generic(
 #' @param where angle or named direction (e.g.,northwest, east, below, left)
 #' @param anchor bounding box anchor
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to shape
+#' @return An array of shapes of the same class as object passed to x
 #' @export
 ob_array <- new_generic(name = "ob_array", dispatch_args = "x", fun = function(x, k = 2, sep = 1, where = "east", anchor = "center", ...) {
   S7_dispatch()
@@ -312,6 +318,7 @@ ob_array <- new_generic(name = "ob_array", dispatch_args = "x", fun = function(x
 #' bind(c(ob_circle(ob_point(0,0), radius = 1),
 #'        ob_circle(ob_point(1,1), radius = 2)))
 #' @export
+#' @return a bound object of same class as x (or list of objects if x contains objects of different types)
 bind <- new_generic(name = "bind", dispatch_args = "x")
 
 method(bind, class_list) <- function(x, ...) {
@@ -405,6 +412,7 @@ method(bind, ob_shape_list) <- function(x, ...) {
 #' Converts an object with k elements into a list of k objects
 #' @param x object
 #' @export
+#' @return a list of objects, each of length 1
 unbind <- S7::new_generic("unbind", dispatch_args = "x")
 
 method(unbind, has_style) <- function(x) {
@@ -462,6 +470,7 @@ method(`+`, list(class_character, class_numeric)) <- function(e1, e2) {
 #'
 #' @param x object
 #' @export
+#' @return a tibble
 get_tibble <- new_generic("get_tibble", "x", fun = function(x) {S7::S7_dispatch()})
 method(get_tibble, class_list) <- function(x) {
   purrr::map_df(S7_data(x), get_tibble)
@@ -476,6 +485,7 @@ method(get_tibble, class_list) <- function(x) {
 #' @param distance resect distance
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @export
+#' @return object of same class as x
 resect <- new_generic("resect", c("x", "distance"))
 
 
@@ -483,6 +493,7 @@ resect <- new_generic("resect", c("x", "distance"))
 #'
 #' @param x object
 #' @export
+#' @return tibble
 #' @rdname get_tibble
 get_tibble_defaults <- new_generic("get_tibble_defaults", "x", fun = function(x) S7_dispatch())
 method(get_tibble_defaults, class_any) <- function(x) {
@@ -501,15 +512,12 @@ method(get_tibble_defaults, class_any) <- function(x) {
 #' # Alternative to nudge:
 #' ob_circle() + ob_point(2, 0)
 #' @export
+#' @return object of same class as `object`
 nudge <- new_generic("nudge", c("object", "x", "y"))
-
-as_arrow <- new_generic("as_arrow", c("object"))
 
 # unions ----
 class_numeric_or_character <- new_union(class_numeric, class_character)
 class_numeric_or_unit <- new_union(class_numeric, class_unit)
-
-
 
 #' Make a variant of a function with alternate defaults
 #'
@@ -570,6 +578,7 @@ redefault <- function(.f, ...) {
 )
 
 #' @keywords internal
+#' @noRd
 cardinalpoint <- function(x) {
   .namedpositions
   if (!all(x %in% names(.namedpositions))) {
@@ -579,6 +588,7 @@ cardinalpoint <- function(x) {
 }
 
 #' @keywords internal
+#' @noRd
 allsameclass <- function(l, classname) {
   classname[classname == "ob_polar"] <- "ob_point"
   classname <- paste0("ggdiagram::", classname)
@@ -590,6 +600,7 @@ allsameclass <- function(l, classname) {
 }
 
 #' @keywords internal
+#' @noRd
 aes_injection <- function(bare_mapping,
                           identity_mapping,
                           omit_mapping = NULL) {
@@ -608,6 +619,7 @@ aes_injection <- function(bare_mapping,
 
 
 #' @keywords internal
+#' @noRd
 get_tibble_defaults_helper <- function(
     x,
     default_style,
@@ -633,6 +645,7 @@ get_tibble_defaults_helper <- function(
 
 
 #' @keywords internal
+#' @noRd
 get_non_empty_props <- function(x) {
   Filter(function(s) {
     ifelse(length(s) > 0,
@@ -647,11 +660,13 @@ get_non_empty_props <- function(x) {
 }
 
 #' @keywords internal
+#' @noRd
 get_non_empty_list <- function(l) {
   Filter(\(x) length(x) > 0, l)
 }
 
 #' @keywords internal
+#' @noRd
 get_non_empty_tibble <- function(d) {
   d <- Filter(\(x) length(x) > 0, d)
   d <- Filter(\(x) !is.null(x), d)
@@ -660,12 +675,14 @@ get_non_empty_tibble <- function(d) {
 }
 
 #' @keywords internal
+#' @noRd
 replace_na <- function(x, y) {
   ifelse(is.na(x), y, x)
 }
 
 
 #' @keywords internal
+#' @noRd
 ob_array_helper <- function(x, k = 2, sep = 1, where = "east", anchor = "center", ...) {
   if (x@length > 1) stop("The shape must start with an object of length 1.")
 
@@ -746,10 +763,10 @@ subscript <- function(x, subscript = seq(length(x))) {
 
 #' Create superscript
 #'
-#' @param x text
+#' @param x string
 #' @param superscript superscript
 #'
-#' @return text
+#' @return string
 #' @rdname subscript
 #' @export
 superscript <- function(x, superscript = seq(length(x))) {
@@ -1022,6 +1039,7 @@ prop_integer_coerce <- function(name) {
 #' @param x a shape
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> Pass arguments to ggplot2::geom_point
 #' @rdname as.geom
+#' @return geom
 #' @export
 #' @examples
 #' library(ggplot2)
@@ -1046,7 +1064,7 @@ method(`+`, list(class_ggplot, ob_shape_list)) <- function(e1, e2) {
 }
 
 
-
+#' @noRd
 #' @keywords internal
 make_geom_helper <- function(d = NULL,
                              aesthetics,
@@ -1147,6 +1165,7 @@ make_geom_helper <- function(d = NULL,
 }
 
 #' @keywords internal
+#' @noRd
 trimmer <- function(x) {
   notabs <- gsub(x = x,
                  pattern = "\\t",
@@ -1159,6 +1178,7 @@ trimmer <- function(x) {
 }
 
 #' @keywords internal
+#' @noRd
 rounder <- function(x, digits = 2, add = FALSE) {
   if (add) {
     r <- paste0(ifelse(x > 0, " + ", "
@@ -1182,6 +1202,7 @@ rounder <- function(x, digits = 2, add = FALSE) {
 #' @param type equation type. Can be `y`, `general`, or `parametric`
 #' @param digits rounding digits
 #' @export
+#' @return string
 equation <- new_generic(
   "equation",
   dispatch_args = "x",
@@ -1197,6 +1218,7 @@ equation <- new_generic(
 #' @param object object (e.g., line or segment)
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object
 #' @export
+#' @return ob_point
 projection <- new_generic("projection", c("p", "object"))
 
 
@@ -1209,6 +1231,7 @@ projection <- new_generic("projection", c("p", "object"))
 #' @param position numeric vector. 0 is start, 1 is end. Defaults to .5
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @export
+#' @return ob_point
 midpoint <- new_generic(
   "midpoint",
   c("x", "y"),
@@ -1219,6 +1242,7 @@ midpoint <- new_generic(
 
 
 #' @keywords internal
+#' @noRd
 rotate2columnmatrix <- function(x, theta) {
   if (all(theta == 0)) return(x)
   x_rotated <- x %*%  matrix(
@@ -1237,6 +1261,8 @@ rotate2columnmatrix <- function(x, theta) {
 #'
 #' @param object object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> additional arguments
+#' @return string
+#' @export
 label_object <- new_generic("label_object", "object")
 
 #' Arrow connect one shape to another
@@ -1245,6 +1271,7 @@ label_object <- new_generic("label_object", "object")
 #' @param y second shape object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> Arguments passed to style
 #' @export
+#' @return ob_segment
 connect <- new_generic("connect", c("x", "y"))
 
 #' Place an object a specified distance from another object
@@ -1255,6 +1282,7 @@ connect <- new_generic("connect", c("x", "y"))
 #' @param sep separation distance
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> Arguments passed to style
 #' @export
+#' @return object of same class as `x`
 place <- new_generic("place", c("x", "from"),
                      fun = function(x, from, where = "right", sep = 1, ...) {
                        S7::S7_dispatch()
@@ -1274,7 +1302,7 @@ place <- new_generic("place", c("x", "from"),
 #' @param rect_linewidth line with of rectangles
 #' @param theme_function ggplot2 theme
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> Arguments sent to ggplot2::theme
-#'
+#' @return ggplot function
 #' @export
 #'
 #' @examples

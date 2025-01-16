@@ -184,6 +184,7 @@ cr_props <- list(
 #' p <- ob_point(0,0)
 #' ob_circle(p, radius = 6)
 #' @export
+#' @return ob_circle object
 ob_circle <- new_class(
   name = "ob_circle",
   parent = centerpoint,
@@ -331,7 +332,7 @@ method(ob_array, ob_circle) <- function(x, k = 2, sep = 1, where = "east", ancho
 #' @param p2 an ob_point of length 1 or NULL
 #' @param p3 an ob_point of length 1 or NULL
 #'
-#' @return ob_point
+#' @return ob_point object
 #' @export
 #'
 #' @examples

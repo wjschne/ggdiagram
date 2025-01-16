@@ -10,7 +10,7 @@ mean_color(x)
 \item{x}{color}
 }
 \value{
-character
+string
 }
 \description{
 Average across colors

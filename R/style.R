@@ -93,6 +93,7 @@ prop_polar_just <- new_property(class_numeric, setter = function(self, value) {
 #' @param linetype type of lines
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> unused
 #' @export
+#' @return ob_style object
 ob_style <- new_class(
   name = "ob_style",
   properties = list(

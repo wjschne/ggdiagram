@@ -209,7 +209,6 @@ bp +
 ```
 
 
-
 # Reuleaux Polygons
 
 Start with a regular polygon with an odd number of sides. For each pair of adjacent vertices, draw an arc with its center on the vertex of the opposite side. Amazingly, if you roll a Reuleaux polygon, its height is constant. This means that a Reuleaux polygon can roll smoothly. In @fig-reuleaux3, a Reuleaux triangle is made with the `ob_reuleaux` function.

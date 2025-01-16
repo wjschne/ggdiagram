@@ -287,6 +287,7 @@ el_props <- list(
 #' p <- ob_point(0,0)
 #' ob_ellipse(p, a = 2, b = 3)
 #' @export
+#' @return ob_ellipse object
 ob_ellipse <- new_class(
   name = "ob_ellipse",
   parent = centerpoint,

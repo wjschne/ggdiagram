@@ -11,6 +11,9 @@ intersection_angle(x, y)
 
 \item{y}{an object (point, segment, line)}
 }
+\value{
+ob_angle object
+}
 \description{
 Compute the angle of the intersection of two objects
 }

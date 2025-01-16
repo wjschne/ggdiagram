@@ -13,6 +13,9 @@ intersection(x, y, ...)
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
 }
+\value{
+shape object
+}
 \description{
 intersection of 2 objects (e.g., lines)
 }

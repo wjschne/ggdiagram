@@ -32,6 +32,9 @@ class_aesthetics_list(
 
 \item{inherit.aes}{Defaults to \code{FALSE} so that ggdiagram objects do not interfere with other layers in the ggplot}
 }
+\value{
+a class_aesthetics_list object
+}
 \description{
 list of aesthetics
 }

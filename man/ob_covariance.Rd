@@ -32,6 +32,9 @@ ob_covariance(
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
 }
+\value{
+An \code{ob_bezier} object
+}
 \description{
 create double-headed arrow paths indicating variance
 }

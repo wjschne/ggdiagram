@@ -9,6 +9,7 @@
 #' @param brightness get or set the brightness of a color (i.e., the v in the hsv model)
 #' @param alpha get or set the transparency of a color
 #' @export
+#' @return class_color object
 #' @examples
 #' mycolor <- class_color("blue")
 #' mycolor
@@ -41,7 +42,14 @@ class_color <- new_class(
       getter = function(self) {
         \(amount = 0.2) {
           tibble::tibble(amount = amount, x = c(self)) |>
-            purrr::pmap_chr(tinter::lighten) |>
+            purrr::pmap(\(amount, x) {
+              if (amount == 0) {
+                return("#FFFFFF")
+                } else {
+                tinter::lighten(x = x, amount = amount)
+              }
+            } ) |>
+            unlist() %>%
             class_color()
         }
       }
@@ -51,7 +59,14 @@ class_color <- new_class(
       getter = function(self) {
         \(amount = 0.2) {
           tibble::tibble(amount = amount, x = c(self)) |>
-            purrr::pmap_chr(tinter::darken) |>
+            purrr::pmap(\(amount, x) {
+              if (amount == 0) {
+                return(x)
+              } else {
+                tinter::darken(x = x, amount = amount)
+              }
+            } ) |>
+            unlist() %>%
             class_color()
         }
       }
@@ -167,14 +182,70 @@ class_color <- new_class(
       paste0("\\color[HTML]{", substring(self@color, 2, 7), "}")
     })
   ), constructor = function(color = character(0), hue = NULL, saturation = NULL, brightness = NULL, alpha = NULL) {
-    decoded <- farver::decode_colour(color, alpha = TRUE)
 
-    if (!is.null(hue)) decodec <- farver::get_channel(decoded, channel = "h", space = "hsv")
-    if (!is.null(saturation)) decodec <- farver::get_channel(decoded, channel = "s", space = "hsv")
-    if (!is.null(brightness)) decodec <- farver::get_channel(decoded, channel = "v", space = "hsv")
-    if (!is.null(alpha)) decodec <- farver::get_channel(decoded, channel = "alpha", space = "hsv")
+    if (length(color) == 0) {
+      decoded <- farver::decode_colour("red", alpha = TRUE, to = "hsv")
+      } else {
+        decoded <- farver::decode_colour(color, alpha = TRUE, to = "hsv")
+      }
 
-    new_object(farver::encode_colour(decoded, alpha = decoded[,"alpha"]))
+    d <- tibble::as_tibble(decoded) %>% as.list()
+
+
+    if (!is.null(hue)) {
+      # Make sure hue is between 0 and 360
+      hue <- degree(hue)@positive@degree
+      # Make sure hue is of same length as color
+      max_length <- purrr::map_int(d, length) %>% max()
+      if (max_length == 1 | max_length == length(hue) | length(hue) == 1) {
+        d$h <- hue
+      }  else {
+        stop("Hue must be of same length as color.")
+      }
+
+    }
+
+    if (!is.null(saturation)) {
+      # Make sure saturation is between 0 and 1
+      saturation <- ifelse(abs(saturation) > 1, 1, abs(saturation))
+      # Make sure saturation is of same length as color
+      max_length <- purrr::map_int(d, length) %>% max()
+      if (max_length == 1 | max_length == length(saturation) | length(saturation) == 1) {
+        d$s <- saturation
+      }  else {
+        stop("Saturation must be of same length as color.")
+      }
+    }
+
+
+    if (!is.null(brightness)) {
+      # Make sure brightness is between 0 and 1
+      brightness <- ifelse(abs(brightness) > 1, 1, abs(brightness))
+      # Make sure brightness is of same length as color
+      max_length <- purrr::map_int(d, length) %>% max()
+      if (max_length == 1 | max_length == length(brightness) | length(brightness) == 1) {
+        d$v <- brightness
+      }  else {
+        stop("Brightness must be of same length as color.")
+      }
+    }
+
+    if (!is.null(alpha)) {
+      # Make sure alpha is between 0 and 1
+      alpha <- ifelse(abs(alpha) > 1, 1, abs(alpha))
+      # Make sure alpha is of same length as color
+      max_length <- purrr::map_int(d, length) %>% max()
+      if (max_length == 1 | max_length == length(alpha) | length(alpha) == 1) {
+        d$alpha <- alpha
+      }  else {
+        stop("Alpha must be of same length as color.")
+      }
+    }
+
+    decoded <- d %>% tibble::as_tibble() %>% as.matrix
+
+
+    new_object(farver::encode_colour(decoded[,c("h", "s", "v"), drop = FALSE], alpha = decoded[,"alpha"], from = "hsv"))
   }
 )
 
@@ -214,7 +285,7 @@ method(mean, class_color) <- function(x, ...) {
 #'
 #' @param x color
 #'
-#' @return character
+#' @return string
 #' @export
 #'
 #' @examples
@@ -229,7 +300,7 @@ mean_color <- function(x) {
 #' @param x TeX expression
 #' @param color color
 #'
-#' @return character string
+#' @return string
 #' @export
 #'
 #' @examples

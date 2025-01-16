@@ -7,6 +7,7 @@
 #' @param origin length 2 vector  or point about which rotation occurs
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @export
+#' @return shape object
 rotate <- new_generic(
   name = "rotate",
   dispatch_args = c("x", "theta"),

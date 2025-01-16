@@ -56,6 +56,9 @@ ob_intercept(
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
 }
+\value{
+ob_polygon object
+}
 \description{
 Triangle polygons used in path diagrams.
 }

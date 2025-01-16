@@ -141,6 +141,7 @@ info = list(
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @inherit ob_style params
 #' @export
+#' @return ob_line object
 ob_line <- new_class(
   "ob_line",
   parent = shape,

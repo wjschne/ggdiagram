@@ -13,6 +13,9 @@ projection(p, object, ...)
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> arguments passed to style object}
 }
+\value{
+ob_point
+}
 \description{
 Find projection of a point on an object (e.g., line or segment)
 }

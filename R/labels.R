@@ -181,6 +181,7 @@ lb_props <- list(
 #' @inherit ob_style params
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @export
+#' @return ob_label object
 ob_label <- new_class(
   name = "ob_label",
   parent = has_style,

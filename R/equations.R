@@ -21,6 +21,7 @@
 #' @param force_recompile Will re-run xelatex even if .pdf file exists already
 #' @inherit ob_style params
 #' @export
+#' @return ob_latex object
 ob_latex <- new_class(
   name = "ob_latex",
   properties = list(
@@ -58,6 +59,7 @@ ob_latex <- new_class(
     latex_packages = class_character,
     preamble = class_character,
     force_recompile = new_property(class = class_logical, default = TRUE),
+    delete_files = new_property(class_logical, default = TRUE),
     image = class_list,
     place = pr_place),
   constructor = function(
@@ -78,7 +80,8 @@ ob_latex <- new_class(
     density = 300,
     latex_packages = character(0),
     preamble = character(0),
-    force_recompile = TRUE) {
+    force_recompile = TRUE,
+    delete_files = TRUE) {
     if (!S7_inherits(angle, ob_angle)) angle <- degree(angle)
 
     latex_color <- ""
@@ -169,9 +172,9 @@ ob_latex <- new_class(
     n <- nrow(d)
 
     image <- purrr::pmap_df(d, \(tx, fn, imgsz, center, theta, hj, vj) {
+      f_pdf <- paste0(fn, ".pdf")
+      f_tex <- paste0(fn, ".tex")
       if (force_recompile || !file.exists(f_pdf)) {
-        f_pdf <- paste0(fn, ".pdf")
-        f_tex <- paste0(fn, ".tex")
         cat(tx, file = f_tex)
         if (tinytex::is_tinytex()) {
           try(tinytex::xelatex(f_tex))
@@ -192,8 +195,11 @@ ob_latex <- new_class(
       i <- magick::image_read_pdf(f_pdf, density = density)
       i <- magick::image_raster(i, tidy = FALSE)
 
-      file.remove(f_pdf)
-      file.remove(f_tex)
+      if (delete_files) {
+        file.remove(f_pdf)
+        file.remove(f_tex)
+      }
+
 
       tibble::tibble(
         image = list(i),
@@ -226,6 +232,7 @@ ob_latex <- new_class(
       latex_packages = latex_packages,
       preamble = preamble,
       force_recompile = force_recompile,
+      delete_files = delete_files,
       image = image$image,
       math_mode = math_mode
     )

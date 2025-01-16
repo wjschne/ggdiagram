@@ -10,7 +10,7 @@ ob_label(
   angle = numeric(0),
   alpha = numeric(0),
   color = character(0),
-  family = "sans",
+  family = character(0),
   fill = character(0),
   fontface = character(0),
   hjust = numeric(0),
@@ -94,6 +94,9 @@ ob_label(
 \item{y}{x-coordinate of center point. If specified, overrides y-coordinate of \verb{@center}.}
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
+}
+\value{
+ob_label object
 }
 \description{
 ob_label class

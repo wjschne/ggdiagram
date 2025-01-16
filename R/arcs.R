@@ -392,7 +392,7 @@ arc_props <- list(
 #' @slot auto_label Places a label at the arc's midpoint
 #' @slot chord `ob_segment` from `start_point` to `end_point`
 #' @slot geom A function that converts the object to a geom. Any additional parameters are passed to `ggarrow::geom_arrow`.
-#' @slot hatch A function that puts hatch (tally) marks on arcs. Often used to indicate which arcs have the same angle. The `k` parameter controls how many hatch marks to display. The `height` parameter controls how long the hatch mark segment is. The `sep` paramater controls the separation between hatch marks when `k > 2`. Additional parameters sent to `ob_segment`.
+#' @slot hatch A function that puts hatch (tally) marks on arcs. Often used to indicate which arcs have the same angle. The `k` parameter controls how many hatch marks to display. The `height` parameter controls how long the hatch mark segment is. The `sep` parameter controls the separation between hatch marks when `k > 2`. Additional parameters sent to `ob_segment`.
 #' @slot length The number of arcs in the arc object
 #' @slot midpoint A function that selects 1 or more midpoints of the ob_arc. The `position` argument can be between 0 and 1. Additional arguments are passed to `ob_point`.
 #' @slot point_at A function that finds a point on the arc at the specified angle.
@@ -422,6 +422,7 @@ arc_props <- list(
 #'  p_center +
 #'  a_90
 #' @export
+#' @return ob_arc object
 ob_arc <- new_class(
   name = "ob_arc",
   parent = centerpoint,

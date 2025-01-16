@@ -15,6 +15,9 @@ rotate(x, theta, ..., origin = ob_point(0, 0))
 
 \item{origin}{length 2 vector  or point about which rotation occurs}
 }
+\value{
+shape object
+}
 \description{
 Rotate an object in 2 dimensions
 }

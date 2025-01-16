@@ -14,7 +14,7 @@ circle_from_3_points(p1, p2 = NULL, p3 = NULL, ...)
 \item{p3}{an ob_point of length 1 or NULL}
 }
 \value{
-ob_point
+ob_point object
 }
 \description{
 Get a circle from 3 points

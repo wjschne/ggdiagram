@@ -10,7 +10,7 @@ subscript(x, subscript = seq(length(x)))
 superscript(x, superscript = seq(length(x)))
 }
 \arguments{
-\item{x}{text}
+\item{x}{string}
 
 \item{subscript}{subscript}
 
@@ -19,7 +19,7 @@ superscript(x, superscript = seq(length(x)))
 \value{
 text
 
-text
+string
 }
 \description{
 Create subscripts

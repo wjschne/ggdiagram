@@ -55,6 +55,9 @@ ob_polar(
 
 \item{r}{Radius = Distance from the origin to the ob_point}
 }
+\value{
+ob_point object
+}
 \description{
 Points are specified with x and y coordinates.
 

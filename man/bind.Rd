@@ -11,6 +11,9 @@ bind(x, ...)
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
 }
+\value{
+a bound object of same class as x (or list of objects if x contains objects of different types)
+}
 \description{
 bind method
 }

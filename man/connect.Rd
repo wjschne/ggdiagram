@@ -13,6 +13,9 @@ connect(x, y, ...)
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> Arguments passed to style}
 }
+\value{
+ob_segment
+}
 \description{
 Arrow connect one shape to another
 }

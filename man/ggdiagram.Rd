@@ -29,6 +29,9 @@ ggdiagram(
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> Arguments sent to ggplot2::theme}
 }
+\value{
+ggplot function
+}
 \description{
 This is a convenient way to specify geom defaults
 }

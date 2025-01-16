@@ -13,6 +13,9 @@ equation(x, type = c("y", "general", "parametric"), digits = 2)
 
 \item{digits}{rounding digits}
 }
+\value{
+string
+}
 \description{
 Get equation for object
 }

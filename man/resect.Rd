@@ -15,6 +15,9 @@ resect(x, distance, ...)
 
 \item{resect}{a numeric distance}
 }
+\value{
+object of same class as x
+}
 \description{
 Shorten segments
 }

@@ -12,6 +12,11 @@ get_tibble_defaults(x)
 \arguments{
 \item{x}{object}
 }
+\value{
+a tibble
+
+tibble
+}
 \description{
 Get object data with styles in a tibble
 

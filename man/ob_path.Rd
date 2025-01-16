@@ -77,6 +77,9 @@ ob_path(
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
 }
+\value{
+ob_path object
+}
 \description{
 A \code{ob_path} is specified with an \code{ob_point} object that contains at least 2 points, the start and the end. Any number of intermediate points are possible.
 }

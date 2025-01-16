@@ -47,6 +47,9 @@ ob_circle(
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> arguments passed to style object}
 }
+\value{
+ob_circle object
+}
 \description{
 ob_circle class
 }

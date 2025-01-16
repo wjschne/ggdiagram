@@ -19,6 +19,9 @@ ob_array(x, k = 2, sep = 1, where = "east", anchor = "center", ...)
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to shape}
 }
+\value{
+An array of shapes of the same class as object passed to x
+}
 \description{
 make an array of shapes along a line
 }

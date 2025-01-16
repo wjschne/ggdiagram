@@ -83,6 +83,9 @@ ob_bezier(
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}>  properties passed to style}
 }
+\value{
+ob_bezier object
+}
 \description{
 The ob_bezier is specified with an ob_point object that contains at least 2 points, the start and the end. Such a "curve" would actually be a straight line segment. If three points are specified, the middle point is a control point, and a quadratic bezier curve will result. Higher-order bezier curves can be created by having more control points in the middle.
 }

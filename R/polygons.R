@@ -161,6 +161,7 @@ ob_polygon_props <- list(
 #'
 #' If you wish to specify multiple polygons, you must supply a list of ob_points. When plotted, the ob_polygon function uses the ggforce::geom_shape function to create the geom.
 #' @export
+#' @return ob_polygon object
 #' @param p ob_point or list of ob_point objects
 #' @param label A character, angle, or label object
 #' @param vertex_radius A numeric or unit vector of length one, specifying the corner radius
@@ -366,6 +367,7 @@ method(connect, list(ob_polygon, centerpoint)) <- function(x,y, ...) {
 #' @inherit ob_style params
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @export
+#' @return ob_polygon object
 ob_intercept <- new_class(
   name = "ob_intercept",
   parent = has_style,
@@ -692,6 +694,7 @@ ob_ngon_props <- list(
 #'
 #' An ngon is a regular polygon, meaning that each side is of equal length. The `ob_ngon` object can be specified with a center, n (number of sides), radius, and angle. Instead of specifying a radius, one can specify either the `side_length` or the length of the `apothem` (i.e., the distance from the center to a side's midpoint.
 #' @export
+#' @return ob_ngon object
 #' @param center point at center of the ngon
 #' @param n Number of sides
 #' @param radius Distance from center to a vertex
@@ -821,11 +824,11 @@ ob_ngon <- new_class(
 method(get_tibble, ob_ngon) <- function(x) {
   d <- x@tibble
   if ("radius" %in% colnames(d)) {
-    d <- dplyr::rename(x@tibble, r = radius)
+    d <- dplyr::rename(d, r = radius)
   }
 
   if ("vertex_radius" %in% colnames(d)) {
-    d <- dplyr::rename(x@tibble, radius = vertex_radius)
+    d <- dplyr::rename(d, radius = vertex_radius)
   }
 
   d %>%
@@ -896,8 +899,9 @@ method(connect, list(centerpoint, ob_ngon)) <- function(x,y, ...) {
 #' @param radius Distance from center to a vertex
 #' @inherit ob_style params
 #'
-#' @return ob_polygon
+
 #' @export
+#' @return ob_reuleaux object
 ob_reuleaux <- new_class(
   name = "ob_reuleaux",
   parent = centerpoint,

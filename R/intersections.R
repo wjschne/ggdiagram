@@ -4,6 +4,7 @@
 #' @param x an object (point, segment, line)
 #' @param y an object (point, segment, line)
 #' @export
+#' @return ob_angle object
 intersection_angle <- new_generic("intersection_angle", c("x", 'y'), function(x,y) S7_dispatch())
 method(intersection_angle, list(ob_line, ob_line)) <- function(x, y) {
   y@angle - x@angle
@@ -35,6 +36,7 @@ method(intersection_angle, list(ob_segment, ob_line)) <- function(x, y) {
 #' @param y object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @export
+#' @return shape object
 intersection <- new_generic("intersection", c("x", "y"))
 method(intersection, list(ob_line, ob_line)) <- function(x,y, ...) {
   c_p <- x@a * y@b - y@a * x@b

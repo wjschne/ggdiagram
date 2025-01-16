@@ -11,6 +11,9 @@ inside(x, y)
 
 \item{y}{object}
 }
+\value{
+logical
+}
 \description{
 is an ob_point inside a shape ?
 }

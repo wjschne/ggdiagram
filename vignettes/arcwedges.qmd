@@ -157,7 +157,7 @@ bp +
 As a example, I used the `start_point` argument to recreate a fun meme about a "square" object with 4 equal sides that meet at right angles:
 
 ```{r fig-square}
-#| fig-cap: A "square" with four equal sizes that meet at right angles.
+#| fig-cap: A "square" with four equal "sides" that meet at "right" angles.
 little_r <- 1 / (2 * pi - 1)
 ggdiagram(font_family = my_font,
           font_size = my_font_size) +

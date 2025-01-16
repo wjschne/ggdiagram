@@ -15,6 +15,9 @@ nudge(object, x, y, ...)
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
 }
+\value{
+object of same class as \code{object}
+}
 \description{
 Move an object
 }

@@ -1,5 +1,5 @@
 Package: ggdiagram
-Title: Object-oriented diagram plots with ggplot2
+Title: Object-Oriented Diagram Plots with ggplot2
 Version: 0.0.0.9000
 Authors@R: 
     person("W. Joel", "Schneider", , "w.joel.schneider@gmail.com", role = c("aut", "cre"),
@@ -39,13 +39,15 @@ Imports:
     utils
 Suggests: 
     knitr,
+    lavaan,
     rmarkdown,
+    simstandard,
     spelling,
     testthat (>= 3.0.0),
+    tidyverse,
     viridis,
     quarto
-VignetteBuilder: 
-    quarto
+VignetteBuilder: quarto, knitr
 Encoding: UTF-8
 Language: en-US
 Roxygen: list(markdown = TRUE)

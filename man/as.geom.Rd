@@ -11,6 +11,9 @@ as.geom(x, ...)
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> Pass arguments to ggplot2::geom_point}
 }
+\value{
+geom
+}
 \description{
 Converts a ggdiagram shape to a ggplot2 geom
 }

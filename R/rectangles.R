@@ -367,6 +367,7 @@ rc_props <- list(
 #' p <- ob_point(0,0)
 #' ob_rectangle(p, width = 2, height = 2)
 #' @export
+#' @return ob_rectangle object
 ob_rectangle <- new_class(
   name = "ob_rectangle",
   parent = centerpoint,

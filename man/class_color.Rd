@@ -23,6 +23,9 @@ class_color(
 
 \item{alpha}{get or set the transparency of a color}
 }
+\value{
+class_color object
+}
 \description{
 color class
 }

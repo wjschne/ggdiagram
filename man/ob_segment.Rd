@@ -89,6 +89,9 @@ ob_segment(
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
 }
+\value{
+ob_segment object
+}
 \description{
 ob_segment class
 }
@@ -97,7 +100,7 @@ ob_segment class
 \describe{
 \item{\code{geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggarrow::geom_arrow_segment}.}
 
-\item{\code{hatch}}{A function that puts hatch (tally) marks on segments. Often used to indicate which segments have the same length. The \code{k} parameter controls how many hatch marks to display. The \code{height} parameter controls how long the hatch mark segment is. The \code{sep} paramater controls the separation between hatch marks when \code{k > 2}. Additional parameters sent to \code{ob_segment}.}
+\item{\code{hatch}}{A function that puts hatch (tally) marks on segments. Often used to indicate which segments have the same length. The \code{k} parameter controls how many hatch marks to display. The \code{height} parameter controls how long the hatch mark segment is. The \code{sep} parameter controls the separation between hatch marks when \code{k > 2}. Additional parameters sent to \code{ob_segment}.}
 
 \item{\code{midpoint}}{A function that selects 1 or more midpoints of the ob_segment. The \code{position} argument can be between 0 and 1. Additional arguments are passed to \code{ob_point}.}
 

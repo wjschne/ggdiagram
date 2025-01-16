@@ -77,6 +77,9 @@ ob_rectangle(
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> arguments passed to style object}
 }
+\value{
+ob_rectangle object
+}
 \description{
 ob_rectangle class
 }

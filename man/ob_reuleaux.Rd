@@ -8,7 +8,7 @@ ob_reuleaux(
   center = ob_point(0, 0),
   n = 5,
   radius = 1,
-  angle = 0,
+  angle = 90,
   label = character(0),
   vertex_radius = numeric(0),
   alpha = numeric(0),
@@ -42,7 +42,7 @@ ob_reuleaux(
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> unused}
 }
 \value{
-ob_polygon
+ob_reuleaux object
 }
 \description{
 Reuleaux polygon

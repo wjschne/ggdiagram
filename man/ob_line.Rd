@@ -50,6 +50,9 @@ ob_line(
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
 }
+\value{
+ob_line object
+}
 \description{
 Creates a line
 }

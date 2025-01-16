@@ -196,11 +196,12 @@ sg_props <- list(
 #' @param style a style list
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @slot geom A function that converts the object to a geom. Any additional parameters are passed to `ggarrow::geom_arrow_segment`.
-#' @slot hatch A function that puts hatch (tally) marks on segments. Often used to indicate which segments have the same length. The `k` parameter controls how many hatch marks to display. The `height` parameter controls how long the hatch mark segment is. The `sep` paramater controls the separation between hatch marks when `k > 2`. Additional parameters sent to `ob_segment`.
+#' @slot hatch A function that puts hatch (tally) marks on segments. Often used to indicate which segments have the same length. The `k` parameter controls how many hatch marks to display. The `height` parameter controls how long the hatch mark segment is. The `sep` parameter controls the separation between hatch marks when `k > 2`. Additional parameters sent to `ob_segment`.
 #' @slot midpoint A function that selects 1 or more midpoints of the ob_segment. The `position` argument can be between 0 and 1. Additional arguments are passed to `ob_point`.
 #' @slot nudge A function to move the segment by x and y units.
 #' @inherit ob_style params
 #' @export
+#' @return ob_segment object
 ob_segment <- new_class(
   name = "ob_segment",
   parent = shape,

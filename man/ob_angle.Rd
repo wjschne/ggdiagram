@@ -33,6 +33,9 @@ turn(turn = numeric(0))
 
 \item{negative}{if angle is positive, subtracts a full turn to ensure the angle is negative}
 }
+\value{
+ob_angle
+}
 \description{
 Creates an angle in the metric of radians, degrees, and turns.
 }

@@ -38,6 +38,9 @@ ob_polygon(
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
 }
+\value{
+ob_polygon object
+}
 \description{
 A polygon is specified with an ob_point that contains at least 3 points, the start and the end. Any number of intermediate points are possible.
 }

@@ -11,6 +11,9 @@ label_object(object, ...)
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> additional arguments}
 }
+\value{
+string
+}
 \description{
 Automatic label for objects
 }

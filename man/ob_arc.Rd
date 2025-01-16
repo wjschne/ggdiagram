@@ -176,6 +176,9 @@ ob_circular_segment(
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> arguments passed to style object}
 }
+\value{
+ob_arc object
+}
 \description{
 Create arcs and wedges
 }
@@ -196,7 +199,7 @@ Create arcs and wedges
 
 \item{\code{geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggarrow::geom_arrow}.}
 
-\item{\code{hatch}}{A function that puts hatch (tally) marks on arcs. Often used to indicate which arcs have the same angle. The \code{k} parameter controls how many hatch marks to display. The \code{height} parameter controls how long the hatch mark segment is. The \code{sep} paramater controls the separation between hatch marks when \code{k > 2}. Additional parameters sent to \code{ob_segment}.}
+\item{\code{hatch}}{A function that puts hatch (tally) marks on arcs. Often used to indicate which arcs have the same angle. The \code{k} parameter controls how many hatch marks to display. The \code{height} parameter controls how long the hatch mark segment is. The \code{sep} parameter controls the separation between hatch marks when \code{k > 2}. Additional parameters sent to \code{ob_segment}.}
 
 \item{\code{length}}{The number of arcs in the arc object}
 

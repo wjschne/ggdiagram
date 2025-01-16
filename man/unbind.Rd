@@ -9,6 +9,9 @@ unbind(x, ...)
 \arguments{
 \item{x}{object}
 }
+\value{
+a list of objects, each of length 1
+}
 \description{
 Converts an object with k elements into a list of k objects
 }

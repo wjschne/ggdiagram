@@ -140,6 +140,9 @@ ob_style(
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> unused}
 }
+\value{
+ob_style object
+}
 \description{
 ob_style class
 }
