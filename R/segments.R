@@ -356,8 +356,6 @@ ob_segment <- S7::new_class(
       vjust = 0,
       angle = (p2 - p1)@theta)
 
-
-
     p1 <- set_props(p1, x = d$p1x, y = d$p1y)
     p2 <- set_props(p2, x = d$p2x, y = d$p2y)
 

@@ -40,14 +40,17 @@ Imports:
 Suggests: 
     knitr,
     lavaan,
+    quarto,
     rmarkdown,
     simstandard,
     spelling,
     testthat (>= 3.0.0),
     tidyverse,
-    viridis,
+    viridis
+VignetteBuilder: 
+    knitr,
     quarto
-VignetteBuilder: quarto, knitr
+Config/Needs/website: quarto
 Encoding: UTF-8
 Language: en-US
 Roxygen: list(markdown = TRUE)
@@ -77,4 +80,3 @@ Collate:
     'inside.R'
     'rotate.R'
     'zzz.R'
-Config/Needs/website: quarto

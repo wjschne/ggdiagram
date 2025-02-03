@@ -29,4 +29,3 @@ S7::method(inside, list(ob_point, ob_ellipse)) <- function(x,y) {
   xc <- rx - y@center
   -1 * sign((xc@x / y@a) ^ y@m1 + (xc@y / y@b) ^ y@m1 - 1)
 }
-

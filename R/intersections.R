@@ -97,8 +97,6 @@ S7::method(intersection, list(ob_segment, ob_segment)) <- function(x,y, ...) {
   p
 }
 
-
-
 S7::method(intersection, list(ob_line, ob_segment)) <- function(x,y, ...) {
   intersection(intersection(x, y@line), y, ...)
 }

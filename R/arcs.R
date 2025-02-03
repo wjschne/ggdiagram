@@ -189,9 +189,9 @@ arc_props <- list(
                 start_point@length,
                 ") differs from the number of ",
                 self@type,
-                ,"s (",
+                "s (",
                 self@length,
-                ,")."))
+                ")."))
         }
       } else stop("start_point must be of class ob_point or ob_polar")
         self
@@ -682,8 +682,6 @@ overrides <- get_non_empty_props(ob_style(...))
     arc_aesthetics <- x@aesthetics
   }
 
-
-
   gc <- make_geom_helper(
     d = d,
     user_overrides = overrides,
@@ -727,7 +725,6 @@ S7::method(get_tibble_defaults, ob_arc) <- function(x) {
 S7::method(midpoint,list(ob_arc, S7::class_missing)) <- function(x,y, position = .5, ...) {
     x@midpoint(position = position, ...)
 }
-
 
 S7::method(`[`, ob_arc) <- function(x, y) {
   d <- as.list(x@tibble[y,])

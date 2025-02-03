@@ -70,18 +70,19 @@ str_nest <- function(object,
 omit_props <- function(object, include = character(0), omit = character(0)) {
   if (length(include) > 0) {
     setdiff(
-      names(S7_class(object)@properties),
+      names(S7::S7_class(object)@properties),
       include)
   } else if (length(omit) > 0) {
     intersect(
       omit,
-      names(S7_class(object)@properties)
+      names(S7::S7_class(object)@properties)
     )
   } else {
     character(0)
   }
 
 }
+
 
 str_properties <- function(
     object,

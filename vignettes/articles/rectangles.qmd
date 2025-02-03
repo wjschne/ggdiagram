@@ -104,15 +104,15 @@ A rectangle has 4 corners (`northeast`, `northwest`, `southwest`, and `southeast
 ```{r}
 #| label: corners
 # northeast corner
-ne <- ob_point(4,2) 
+ne <- ob_point(4, 2)
 # northwest corner
-nw <- ob_point(0,2)
+nw <- ob_point(0, 2)
 # southwest corner
-sw <- ob_point(0,0)
+sw <- ob_point(0, 0)
 # southeast corner
-se <- ob_point(4,0)
+se <- ob_point(4, 0)
 # center point
-cent <- ob_point(2,1)
+cent <- ob_point(2, 1)
 # width
 w <- 4
 # height
@@ -170,11 +170,11 @@ rc_plot <- ggplot() +
 rc_center <- list(
   r1@center,
   r1@center@label(
-    fill = my_colors$primary@lighten(.15), 
+    fill = my_colors$primary@lighten(.15),
     vjust = -.15)) |>
   bind()
 
-rc_width <- s_north |> 
+rc_width <- s_north |>
   set_props(label = ob_label(
     label = paste0("Width = ", r1@width),
     center = midpoint(s_north),
@@ -183,7 +183,7 @@ rc_width <- s_north |>
     label.margin = ggplot2::margin(2, 2, 2, 2, "pt")
   ))
 
-rc_height <- s_east |> 
+rc_height <- s_east |>
   set_props(label = ob_label(
     label = paste0("Height = ", r1@height),
     center  = midpoint(s_east),
@@ -193,28 +193,28 @@ rc_height <- s_east |>
 
 
 rc_nw <- r1@northwest@label(
-  plot_point = T,
+  plot_point = TRUE,
   vjust = 1.1,
   hjust = 0,
   fill = my_colors$primary@lighten(.15)
 )
 
 rc_ne <- r1@northeast@label(
-  plot_point = T,
+  plot_point = TRUE,
   vjust = 1.1,
   hjust = 1,
   fill = my_colors$primary@lighten(.15)
 )
 
 rc_sw <- r1@southwest@label(
-  plot_point = T,
+  plot_point = TRUE,
   vjust = -.1,
   hjust = 0,
   fill = my_colors$primary@lighten(.15)
 )
 
 rc_se <- r1@southeast@label(
-  plot_point = T,
+  plot_point = TRUE,
   vjust = -.1,
   hjust = 1,
   fill = my_colors$primary@lighten(.15)
@@ -227,9 +227,10 @@ rc_plot + rc_center + rc_width + rc_height
 
 ```{r}
 #| label: hw_ne
-r1 == ob_rectangle(width = w,
-                height = h,
-                northeast = ne)
+r1 == ob_rectangle(
+  width = w,
+  height = h,
+  northeast = ne)
 ```
 
 ```{r}
@@ -248,8 +249,9 @@ For example:
 
 ```{r}
 #| label: center_ne
-r1 == ob_rectangle(center = cent, 
-                northeast = ne)
+r1 == ob_rectangle(
+  center = cent,
+  northeast = ne)
 ```
 
 ```{r}
@@ -272,7 +274,7 @@ For example,
 ```{r}
 #| label: ne_sw 
 r1 == ob_rectangle(
-  northeast = ne, 
+  northeast = ne,
   southwest = sw)
 ```
 
@@ -292,9 +294,10 @@ A rectangle can be specified with the width and 2 points from the left or right 
 
 ```{r}
 #| label: w_nw_sw
-r1 == ob_rectangle(width = w,
-                northwest = nw,
-                southwest = sw)
+r1 == ob_rectangle(
+  width = w,
+  northwest = nw,
+  southwest = sw)
 ```
 
 ```{r}
@@ -315,9 +318,10 @@ For example,
 
 ```{r}
 #| label: h_ne_nw
-r1 == ob_rectangle(height = h,
-                northwest = nw,
-                northeast = ne)
+r1 == ob_rectangle(
+  height = h,
+  northwest = nw,
+  northeast = ne)
 ```
 
 ```{r}
@@ -360,14 +364,18 @@ rc_plot +
       "center"
     ),
     \(x) {
-      v <- ifelse(grepl(x = x, "north"),
+      v <- ifelse(
+        grepl(x = x, "north"),
         1.1,
-        ifelse(grepl(x = x, "south|center"), 
-               -.1, 
-               .5))
-      h <- ifelse(grepl(x = x, "east"),
-                  1.1,
-                  ifelse(grepl(x = x, "west"), -.1, .5))
+        ifelse(
+          grepl(x = x, "south|center"),
+          -.1,
+          .5))
+      
+      h <- ifelse(
+        grepl(x = x, "east"),
+        1.1,
+        ifelse(grepl(x = x, "west"), -.1, .5))
       c(
         as.geom(
           prop(r1, x)@label(
@@ -379,17 +387,17 @@ rc_plot +
         ),
         as.geom(
           prop(r1, x)@label(hjust = 1 - h, vjust = 1 - v),
-          fill = ifelse(x == "center", 
-                        my_colors$primary@lighten(.15), 
+          fill = ifelse(x == "center",
+                        my_colors$primary@lighten(.15),
                         "white")
         ),
         as.geom(prop(r1, x))
       )
     }
   ) +
-  coord_equal(xlim = c(-.25, 4.25), ylim = c(-.25, 2.25))
-  
-
+  coord_equal(
+    xlim = c(-.25, 4.25),
+    ylim = c(-.25, 2.25))
 ```
 
 Points at any angle
@@ -411,14 +419,15 @@ r1_theta <- r1@point_at(theta)
 rc_plot +
   ob_segment(r1@center, r1_theta) +
   r1_theta@label(
-    polar_just = ob_polar(theta, 1.5), 
+    polar_just = ob_polar(theta, 1.5),
     plot_point = T) +
   ob_arc(center = r1@center,
       radius = .5,
       end = theta,
-      label = ob_label(theta, 
-                    fill = my_colors$primary@lighten(.15), 
-                    color = my_colors$primary@color)) 
+      label = ob_label(
+        theta,
+        fill = my_colors$primary@lighten(.15),
+        color = my_colors$primary@color))
 ```
 
 
@@ -437,11 +446,11 @@ r1@side@north
 #| fig-cap: The north side of a rectangle
 #| code-fold: true
 #| fig-height: 4.75
-rc_plot + 
+rc_plot +
   r1@side@north |>
     set_props(color = my_colors$secondary@color, linewidth = 2) +
   r1@north@label(label = "North Side",
-                 vjust = -.1, 
+                 vjust = -.1,
                  size = 20,
                  color = my_colors$secondary)
 ```
@@ -455,7 +464,7 @@ The `@radius` property controls the radius of the rounded corners. It must be of
 #| label: fig-rounded
 #| fig-cap: Specify a rectangle rounded corners
 ggplot() +
-  coord_equal(xlim = c(-4, 4), 
+  coord_equal(xlim = c(-4, 4),
               ylim = c(-4, 4)) +
   ob_rectangle(
     ob_point(0, 0),
@@ -473,7 +482,7 @@ It is possible to rotate a rectangle.
 #| label: fig-rotate
 #| fig-cap: "A rectangle rotated by 30&deg;"
 ggplot() +
-  coord_equal(xlim = c(-4, 4), 
+  coord_equal(xlim = c(-4, 4),
               ylim = c(-4, 4)) +
   ob_rectangle(
     center = ob_point(0, 0),
@@ -498,11 +507,11 @@ r_middle <- sqrt(2)
 w <- 4 - r_middle
 
 ggplot() +
-  coord_equal(xlim = c(-4, 4), 
-              ylim = c(-4, 4)) +
+  coord_equal(
+    xlim = c(-4, 4),
+    ylim = c(-4, 4)) +
   ob_rectangle(
-    center = ob_polar(theta = th, 
-                   r = w / 2 + r_middle),
+    center = ob_polar(theta = th, r = w / 2 + r_middle),
     width = w,
     height = .15,
     angle = th,

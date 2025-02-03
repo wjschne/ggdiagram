@@ -93,8 +93,6 @@ el_props <- list(
         d$n <- 360
       }
 
-
-
       d$xy <- unbind(self) |>
         purrr::map(\(x) {
           if (length(x@n) > 0) n <- x@n else n <- 360

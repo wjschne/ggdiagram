@@ -282,10 +282,6 @@ S7::method(get_tibble_defaults, ob_line) <- function(x) {
   d
 }
 
-
-
-
-
 # v_line_helper <- function(d, ...) {
 #
 #

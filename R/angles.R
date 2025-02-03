@@ -210,7 +210,6 @@ S7::method(tan, ob_angle) <- function(x) {
   tanpi(c(x) * 2)
 }
 
-
 # Angle Conversions ----
 S7::method(convert, list(S7::class_numeric, degree)) <- function(from, to) {
   degree(from * 360)

@@ -392,7 +392,7 @@ centerpoint <- S7::new_class(
 )
 
 S7::method(as.geom, centerpoint) <- function(x, ...) {
-  gc <- as.geom(super(x, has_style), ...)
+  gc <- as.geom(S7::super(x, has_style), ...)
   if (S7::S7_inherits(x@label, ob_label)) {
     gl <- as.geom(x@label)
     gc <- list(gc, gl)
@@ -447,7 +447,6 @@ S7::method(`%-|%`, list(ob_point, centerpoint)) <- function(e1,e2) {
 S7::method(`%-|%`, list(centerpoint, centerpoint)) <- function(e1,e2) {
   `%-|%`(e1@center, e2@center)
   }
-
 
 S7::method(str, ob_label) <- function(
     object,

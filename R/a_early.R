@@ -4,12 +4,10 @@ do_nothing <- function(x) {
     p1 <- ggforce::geom_circle()
     p2 <- arrowheadr::arrow_head_deltoid(d = 2.3, n = 100)
     p3 <- geomtextpath::geom_labelcurve()
-    p4 <- bezier::bezier(t = .5, p = c(0,0, 1,1))
+    p4 <- bezier::bezier(t = .5, p = c(0, 0, 1, 1))
     p5 <- tinter::tinter("red")
   }
 }
-
-# utils::globalVariables("properties")
 
 #' @export
 #' @importFrom S7 prop
@@ -22,7 +20,6 @@ S7::set_props
 #' @export
 #' @importFrom S7 props
 S7::props
-
 
 # internal states ----
 the <- new.env(parent = emptyenv())
@@ -98,9 +95,7 @@ class_margin <- S7::new_class(
         }
         if (all(purrr::map_lgl(x, \(o) {S7::S7_inherits(o, class_margin)}))) {
           return(purrr::map(x, class_margin))
-
         }
-
       }
 
       if ("margin" %in% class(x)) {
@@ -165,7 +160,7 @@ S7::method(print, has_style) <- function(x, ...) {
 #' @param .data a list of objects
 #' @export
 #' @return An object of `ob_shape_list` class. List of objects that can be converted to geoms
-ob_shape_list <- S7::new_class("ob_shape_list", S7::class_list,validator = function(self) {
+ob_shape_list <- S7::new_class("ob_shape_list", S7::class_list, validator = function(self) {
   if(!all(purrr::map_lgl(self, S7::S7_inherits, class = has_style))) "All objects must be ggdiagram objects that can be converted to geoms"
 })
 
@@ -496,7 +491,7 @@ resect <- S7::new_generic("resect", c("x", "distance"))
 #' @export
 #' @return tibble
 #' @rdname get_tibble
-get_tibble_defaults <- S7::new_generic("get_tibble_defaults", "x", fun = function(x) S7_dispatch())
+get_tibble_defaults <- S7::new_generic("get_tibble_defaults", "x", fun = function(x) S7::S7_dispatch())
 S7::method(get_tibble_defaults, S7::class_any) <- function(x) {
   get_tibble(x)
 }
@@ -995,7 +990,7 @@ make_geom_helper <- function(d = NULL,
 
   # add group so that I() function will not disturb drawing order
   if (!("group" %in% unique(c(omit_names, colnames(d))))) {
-    d$group <- seq(nrow(d))
+    d$group <- seq_len(nrow(d))
   }
   # 1 row per unique combination of not mappable arguments
   d_nested <- tidyr::nest(d, .by = dplyr::any_of(aesthetics@not_mappable))
@@ -1120,7 +1115,9 @@ equation <- S7::new_generic(
   dispatch_args = "x",
   fun = function(x,
                  type = c("y", "general", "parametric"),
-                 digits = 2) S7::S7_dispatch())
+                 digits = 2) {
+    S7::S7_dispatch()
+    })
 
 
 # Projection ----
@@ -1269,4 +1266,3 @@ ggdiagram <- function(
     ggplot2::coord_equal(clip = "off") +
     ggplot2::theme(...)
 }
-

@@ -351,12 +351,10 @@ ob_style <- S7::new_class(
 
   }
 
-
   S7::method(print, ob_style) <- function(x, ...) {
     str(x, ...)
     invisible(x)
   }
-
 
 S7::method(`+`, list(ob_style, ob_style)) <- function(e1, e2) {
   pn <- S7::prop_names(e1)

@@ -163,7 +163,6 @@ ob_latex <- S7::new_class(
 
     by_wh <- ifelse(length(width) > 0 || length(height) == 0, "width", "height")
 
-
     img_size <- ifelse(by_wh == "width",
                        ifelse(length(width) > 0, width, 1),
                        height)

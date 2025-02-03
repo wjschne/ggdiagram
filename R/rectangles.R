@@ -583,7 +583,6 @@ ob_rectangle <- S7::new_class(
     ) +
       ob_style(...)
 
-
     non_empty_list <- get_non_empty_props(rc_style)
     d <- tibble::tibble(
       x0 = center@x,

@@ -28,8 +28,6 @@ C <- (x@a - A) * origin@x + (x@b - B) * origin@y + x@c
 ob_line(a = A, b = B, c = C, ...)
 }
 
-
-
 # Rotate ----
 S7::method(rotate, list(ob_point, ob_angle_or_numeric)) <- function(
   x,

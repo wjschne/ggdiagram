@@ -299,7 +299,7 @@ S7::method(get_tibble, ob_polygon) <- function(x) {
 
 
 S7::method(as.geom, ob_polygon) <- function(x, ...) {
-  gp <- as.geom(super(x, has_style), ...)
+  gp <- as.geom(S7::super(x, has_style), ...)
   if (S7::S7_inherits(x@label, ob_label)) {
     gl <- as.geom(x@label)
     gp <- list(gp, gl)
@@ -510,7 +510,7 @@ S7::method(connect, list(ob_intercept, centerpoint)) <- function(x,y, ...) {
 }
 
 S7::method(as.geom, ob_intercept) <- function(x, ...) {
-  gp <- as.geom(super(x@polygon, has_style), ...)
+  gp <- as.geom(S7::super(x@polygon, has_style), ...)
   if (S7::S7_inherits(x@label, ob_label)) {
     gl <- as.geom(x@label)
     gp <- list(gp, gl)
@@ -841,7 +841,7 @@ S7::method(get_tibble, ob_ngon) <- function(x) {
 
 
 S7::method(as.geom, ob_ngon) <- function(x, ...) {
-  gp <- as.geom(super(x, has_style), ...)
+  gp <- as.geom(S7::super(x, has_style), ...)
   if (S7::S7_inherits(x@label, ob_label)) {
     gl <- as.geom(x@label)
     gp <- list(gp, gl)
@@ -1152,7 +1152,6 @@ S7::method(get_tibble, ob_reuleaux) <- function(x) {
     tidyr::unnest(p)
 }
 
-
 S7::method(str, ob_reuleaux) <- function(
     object,
     nest.lev = 0,
@@ -1168,7 +1167,7 @@ S7::method(str, ob_reuleaux) <- function(
 }
 
 S7::method(as.geom, ob_reuleaux) <- function(x, ...) {
-  gp <- as.geom(super(x, has_style), ...)
+  gp <- as.geom(S7::super(x, has_style), ...)
   if (S7::S7_inherits(x@label, ob_label)) {
     gl <- as.geom(x@label)
     gp <- list(gp, gl)

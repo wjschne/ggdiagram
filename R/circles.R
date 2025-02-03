@@ -325,7 +325,6 @@ S7::method(ob_array, ob_circle) <- function(x, k = 2, sep = 1, where = "east", a
                         !!!sa$dots))
 }
 
-
 #' Get a circle from 3 points
 #'
 #' @param p1 an ob_point of length 1 or length 3

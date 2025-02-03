@@ -53,7 +53,6 @@ S7::method(distance, list(ob_circle, ob_circle)) <- function(x,y) {
       d <- py - px
     }
 
-
   d@r
 }
 S7::method(distance, list(ob_point, ob_circle)) <- function(x,y) {

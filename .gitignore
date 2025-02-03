@@ -4,6 +4,7 @@
 .Rdata
 .Rapp.history
 .RDataTmp
+.RData
 .Ruserdata
 .Renviron
 *-Ex.R
@@ -21,5 +22,6 @@ vignettes/*.R
 **/.quarto/
 /*_cache/
 /cache/
+*_cache/
 /*_files/
 docs/

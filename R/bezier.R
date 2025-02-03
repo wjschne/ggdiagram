@@ -257,10 +257,6 @@ bz_style <- p_style + style +
       ) +
   ob_style(...)
 
-
-
-
-
     non_empty_list <- get_non_empty_props(bz_style)
 
     if (S7::S7_inherits(p, ob_point)) p <- list(p)

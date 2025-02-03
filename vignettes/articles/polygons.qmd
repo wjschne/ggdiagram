@@ -92,9 +92,11 @@ The `ob_polygon` function creates an object that connects points to make a polyg
 ```{r}
 #| label: fig-path
 #| fig-cap: Plotting a path.
-p <- ob_point(x = c(-4,-3, 4,  3, -1), 
-           y = c( 0, 4, 3, -3, -4))
-bp + 
+p <- ob_point(
+  x = c(-4, -3, 4, 3, -1),
+  y = c(0, 4, 3, -3, -4))
+
+bp +
   ob_polygon(p, fill = "dodgerblue3")
 ```
 
@@ -127,13 +129,13 @@ Connections between polygons are arrows that emanate from and point towards the 
 ```{r}
 #| label: fig-polygonconnect
 #| fig-cap: Arrow between two polygons
-bp + 
-  {p1 <- ob_polygon(.5 * p - ob_point(1.9,1.9), 
-              fill = "dodgerblue4")} + 
-  {p2 <- ob_polygon(.5 * p + ob_point(1.9, 1.9), 
-              fill = "orchid4")} + 
-  connect(p1, p2, 
-          resect = 1, 
+bp +
+  {p1 <- ob_polygon(.5 * p - ob_point(1.9, 1.9),
+                    fill = "dodgerblue4")} +
+  {p2 <- ob_polygon(.5 * p + ob_point(1.9, 1.9),
+                    fill = "orchid4")} +
+  connect(p1, p2,
+          resect = 1,
           label = ".45")
 ```
 
@@ -144,9 +146,9 @@ The `@radius` property controls the radius of the rounded vertices. It must be o
 ```{r}
 #| label: fig-roundedpolygon
 #| fig-cap: A polygon with rounded vertices
-bp + 
+bp +
   ob_polygon(
-    p, 
+    p,
     radius = unit(5, "mm"),
     fill = "dodgerblue4")
 ```
@@ -177,35 +179,39 @@ Alternately, instead of the `radius`, the `ob_ngon` object can be specified with
 
 ```{r fig-ngon}
 #| fig-cap: The `ob_ngon` object can be specificied with the `radius`, `side_length`, or `apothem`.
-bp + 
-  {ng <- ob_ngon(n = 8, 
-                 radius = 4, 
+bp +
+  {ng <- ob_ngon(n = 8,
+                 radius = 4,
                  angle = degree(22.5),
                  fill = "dodgerblue4")} +
   ob_segment(
     ng@center,
     ng@vertices[1],
     color = "white",
-    label = ob_label(paste0("Radius = ", ng@radius), 
-                     vjust = 1.2, 
-                     fill = NA,
-                     family = my_font)
+    label = ob_label(
+      paste0("Radius = ", ng@radius),
+      vjust = 1.2,
+      fill = NA,
+      family = my_font
+    )
   ) +
   ob_segment(
     ng@center,
     ng@segments[1]@midpoint(),
     color = "white",
-    label = ob_label(paste0("Apothem = ", round(ng@apothem, 2)), 
-                     vjust = -.2, 
-                     fill = NA,
-                     family = my_font)
-  ) + 
-  ob_label(paste0("Side = ", 
-                  round(ng@side_length, 2)), 
-           ng@segments[1]@midpoint(), 
-           angle = ng@segments[1]@line@angle, 
+    label = ob_label(
+      paste0("Apothem = ", round(ng@apothem, 2)),
+      vjust = -.2,
+      fill = NA,
+      family = my_font
+    )
+  ) +
+  ob_label(paste0("Side = ",
+                  round(ng@side_length, 2)),
+           ng@segments[1]@midpoint(),
+           angle = ng@segments[1]@line@angle,
            vjust = -0.2,
-           family = my_font) 
+           family = my_font)
 ```
 
 
@@ -221,8 +227,7 @@ ggdiagram() +
     n = 3,
     fill = NA,
     angle = 45
-  )} 
-
+  )}
 ```
 
 
@@ -236,14 +241,13 @@ ggdiagram() +
     n = seq(13, 3, -2),
     radius = seq(2, 1, -.2),
     fill = viridis::viridis(
-      n = 6, 
-      begin = .2, 
-      end = .8) %>% 
+      n = 6,
+      begin = .2,
+      end = .8) %>%
       tinter::lighten(.6),
     color = "white",
     linewidth = 1
   )
-
 ```
 
 
@@ -258,8 +262,7 @@ ggdiagram() +
     n = 4,
     fill = NA,
     angle = 45
-  ) 
-
+  )
 ```
 
 Specifying `n = 2` will create a symmetric lens, which is also not a Reuleaux polygon.
@@ -271,6 +274,5 @@ ggdiagram() +
   ob_reuleaux(
     n = 2,
     fill = NA
-  ) 
-
+  )
 ```

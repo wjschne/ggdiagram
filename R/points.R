@@ -122,8 +122,6 @@ pt_props <- list(
   }))
 )
 
-
-
 # ob_point----
 
 #' ob_point

@@ -249,8 +249,6 @@ ob_path <- S7::new_class(
 
     p_style <- bind(p_style)
 
-
-
     path_style <- p_style + style +
       ob_style(
         alpha = alpha,
