@@ -18,7 +18,7 @@ ob_ngon(
   fill = character(0),
   linewidth = numeric(0),
   linetype = numeric(0),
-  style = class_missing,
+  style = S7::class_missing,
   x0 = numeric(0),
   y0 = numeric(0),
   ...

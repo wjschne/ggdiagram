@@ -5,24 +5,24 @@
 #' @param y an object (point, segment, line)
 #' @export
 #' @return ob_angle object
-intersection_angle <- new_generic("intersection_angle", c("x", 'y'), function(x,y) S7_dispatch())
-method(intersection_angle, list(ob_line, ob_line)) <- function(x, y) {
+intersection_angle <- S7::new_generic("intersection_angle", c("x", 'y'), function(x,y) S7::S7_dispatch())
+S7::method(intersection_angle, list(ob_line, ob_line)) <- function(x, y) {
   y@angle - x@angle
 
 }
-method(intersection_angle, list(ob_segment, ob_segment)) <- function(x, y) {
+S7::method(intersection_angle, list(ob_segment, ob_segment)) <- function(x, y) {
   if (length(intersection(x, y)) > 0) {
     y@line@angle - x@line@angle
   } else
     NA_real_
 }
-method(intersection_angle, list(ob_line, ob_segment)) <- function(x, y) {
+S7::method(intersection_angle, list(ob_line, ob_segment)) <- function(x, y) {
   if (length(intersection(x, y)) > 0) {
     y@angle - x@line@angle
   } else
     NA_real_
 }
-method(intersection_angle, list(ob_segment, ob_line)) <- function(x, y) {
+S7::method(intersection_angle, list(ob_segment, ob_line)) <- function(x, y) {
   if (length(intersection(x, y)) > 0) {
     y@line@angle - x@angle
   } else
@@ -37,8 +37,8 @@ method(intersection_angle, list(ob_segment, ob_line)) <- function(x, y) {
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @export
 #' @return shape object
-intersection <- new_generic("intersection", c("x", "y"))
-method(intersection, list(ob_line, ob_line)) <- function(x,y, ...) {
+intersection <- S7::new_generic("intersection", c("x", "y"))
+S7::method(intersection, list(ob_line, ob_line)) <- function(x,y, ...) {
   c_p <- x@a * y@b - y@a * x@b
   if (identical(TRUE, all.equal(c_p, 0))) {
     p <- list()
@@ -50,7 +50,7 @@ method(intersection, list(ob_line, ob_line)) <- function(x,y, ...) {
   }
   p
 }
-method(intersection, list(ob_segment, ob_segment)) <- function(x,y, ...) {
+S7::method(intersection, list(ob_segment, ob_segment)) <- function(x,y, ...) {
 
   # i_line <- intersection(x@line, y@line, ...)
 
@@ -99,15 +99,15 @@ method(intersection, list(ob_segment, ob_segment)) <- function(x,y, ...) {
 
 
 
-method(intersection, list(ob_line, ob_segment)) <- function(x,y, ...) {
+S7::method(intersection, list(ob_line, ob_segment)) <- function(x,y, ...) {
   intersection(intersection(x, y@line), y, ...)
 }
 
-method(intersection, list(ob_segment, ob_line)) <- function(x,y, ...) {
+S7::method(intersection, list(ob_segment, ob_line)) <- function(x,y, ...) {
   intersection(y, x, ...)
 }
 
-method(intersection, list(ob_line, ob_circle)) <- function(x,y, ...) {
+S7::method(intersection, list(ob_line, ob_circle)) <- function(x,y, ...) {
   # https://cp-algorithms.com/geometry/circle-line-intersection.html
   c0 <- ob_circle(center = ob_point(0,0), radius = y@radius)
   A <- x@a
@@ -135,22 +135,22 @@ method(intersection, list(ob_line, ob_circle)) <- function(x,y, ...) {
 
 }
 
-method(intersection, list(ob_circle, ob_line)) <- function(x,y, ...) {
+S7::method(intersection, list(ob_circle, ob_line)) <- function(x,y, ...) {
   intersection(y,x, ...)
 }
 
-method(intersection, list(ob_segment, ob_circle)) <- function(x, y, ...) {
+S7::method(intersection, list(ob_segment, ob_circle)) <- function(x, y, ...) {
   p <- intersection(x@line, y, ...)
   betweenx <- .between(p@x, x@p1@x, x@p2@x)
   p[betweenx]
 }
 
-method(intersection, list(ob_circle, ob_segment)) <- function(x,y, ...) {
+S7::method(intersection, list(ob_circle, ob_segment)) <- function(x,y, ...) {
   intersection(y, x, ...)
 }
 
 
-method(intersection, list(ob_point, ob_line)) <- function(x, y, ...) {
+S7::method(intersection, list(ob_point, ob_line)) <- function(x, y, ...) {
   if (identical(TRUE, all.equal(0, y@a * x@x + y@b * x@y + y@c))) {
     s <- rlang::list2(...)
     rlang::inject(set_props(x, !!!s))
@@ -159,12 +159,12 @@ method(intersection, list(ob_point, ob_line)) <- function(x, y, ...) {
   }
 }
 
-method(intersection, list(ob_line, ob_point)) <- function(x, y, ...) {
+S7::method(intersection, list(ob_line, ob_point)) <- function(x, y, ...) {
   intersection(y, x, ...)
 }
 
 
-method(intersection, list(ob_point, ob_segment)) <- function(x, y, ...) {
+S7::method(intersection, list(ob_point, ob_segment)) <- function(x, y, ...) {
   if (identical(x, intersection(x, y@line))) {
     xp1 <- distance(x, y@p1)
     xp2 <- distance(x, y@p2)
@@ -180,11 +180,11 @@ method(intersection, list(ob_point, ob_segment)) <- function(x, y, ...) {
   }
 }
 
-method(intersection, list(ob_segment, ob_point)) <- function(x, y, ...) {
+S7::method(intersection, list(ob_segment, ob_point)) <- function(x, y, ...) {
   intersection(y, x, ...)
 }
 
-method(intersection, list(ob_line, ob_rectangle)) <- function(x, y, ...) {
+S7::method(intersection, list(ob_line, ob_rectangle)) <- function(x, y, ...) {
   unique(c(intersection(x, ob_segment(p1 = y@northeast,
                             p2 = y@northwest), ...),
     intersection(x, ob_segment(p1 = y@northwest,
@@ -195,11 +195,11 @@ method(intersection, list(ob_line, ob_rectangle)) <- function(x, y, ...) {
                             p2 = y@northeast), ...)
   ))
 }
-method(intersection, list(ob_rectangle, ob_line)) <- function(x, y, ...) {
+S7::method(intersection, list(ob_rectangle, ob_line)) <- function(x, y, ...) {
   intersection(y, x, ...)
 }
 
-method(intersection, list(ob_segment, ob_rectangle)) <- function(x, y, ...) {
+S7::method(intersection, list(ob_segment, ob_rectangle)) <- function(x, y, ...) {
   y@width <- ifelse(y@width == 0, .0001, y@width)
   y@height <- ifelse(y@height == 0, .0001, y@height)
 
@@ -213,11 +213,11 @@ method(intersection, list(ob_segment, ob_rectangle)) <- function(x, y, ...) {
                                    p2 = y@northeast), ...)
   ))
 }
-method(intersection, list(ob_rectangle, ob_segment)) <- function(x, y, ...) {
+S7::method(intersection, list(ob_rectangle, ob_segment)) <- function(x, y, ...) {
   intersection(y, x, ...)
 }
 
-method(intersection, list(ob_point, ob_rectangle)) <- function(x, y, ...) {
+S7::method(intersection, list(ob_point, ob_rectangle)) <- function(x, y, ...) {
   unique(c(intersection(x, ob_segment(p1 = y@northeast,
                                    p2 = y@northwest), ...),
            intersection(x, ob_segment(p1 = y@northwest,
@@ -229,12 +229,12 @@ method(intersection, list(ob_point, ob_rectangle)) <- function(x, y, ...) {
   ))
 }
 
-method(intersection, list(ob_rectangle, ob_point)) <- function(x, y, ...) {
+S7::method(intersection, list(ob_rectangle, ob_point)) <- function(x, y, ...) {
   intersection(y, x, ...)
 }
 
 
-method(intersection, list(ob_segment, ob_ellipse)) <- function(x, y, ...) {
+S7::method(intersection, list(ob_segment, ob_ellipse)) <- function(x, y, ...) {
          # https://raw.org/book/computer-graphics/line-segment-ellipse-intersection/
 
          A <- rotate(x@p1 - y@center, y@angle * -1)
@@ -277,11 +277,11 @@ method(intersection, list(ob_segment, ob_ellipse)) <- function(x, y, ...) {
 
 }
 
-method(intersection, list(ob_ellipse, ob_segment)) <- function(x,y, ...) {
+S7::method(intersection, list(ob_ellipse, ob_segment)) <- function(x,y, ...) {
   intersection(y, x, ...)
 }
 
-# method(intersection, list(ob_line, ob_ellipse)) <- function(x,y) {
+# S7::method(intersection, list(ob_line, ob_ellipse)) <- function(x,y) {
 #   x <- ob_ellipse()
 #   y <- ob_line(slope = 4, intercept = 1)
 #   p1 <- y@point_at_x(x@center - x@a - x@b)
@@ -293,7 +293,7 @@ method(intersection, list(ob_ellipse, ob_segment)) <- function(x,y, ...) {
 
 
 # points(x = intersect_line_segment@x, y = intersect_line_segment@y)
-method(intersection, list(ob_line, ob_ellipse)) <- function(x, y, ...) {
+S7::method(intersection, list(ob_line, ob_ellipse)) <- function(x, y, ...) {
   # theta <- angle(degree = seq(0, 360))
   x <- ob_line(slope = 1, intercept = 0)
   y <- ob_ellipse(center = ob_point(0,0),a = 1, b = 1)
@@ -439,7 +439,7 @@ method(intersection, list(ob_line, ob_ellipse)) <- function(x, y, ...) {
 }
 
 
-method(intersection, list(ob_circle, ob_circle)) <- function(x,y, ...) {
+S7::method(intersection, list(ob_circle, ob_circle)) <- function(x,y, ...) {
   # https://paulbourke.net/geometry/circlesphere/
   if (any(distance(x@center, y@center) > x@radius + y@radius)) {
     stop("At least one pair of circles is too far apart to intersect.")
@@ -478,15 +478,15 @@ method(intersection, list(ob_circle, ob_circle)) <- function(x,y, ...) {
 }
 
 
-method(intersection, list(ob_polygon, ob_segment)) <- function(x,y, ...) {
-  if (S7_inherits(x@p, ob_point)) {
+S7::method(intersection, list(ob_polygon, ob_segment)) <- function(x,y, ...) {
+  if (S7::S7_inherits(x@p, ob_point)) {
     x@p <- list(x@p)
   }
     i <- purrr::map(x@p, \(p) {
       l <- unbind(ob_segment(ob_point(tibble::as_tibble(rbind(p@xy, p@xy[1,]))))) |>
         purrr::map(\(s) intersection(s, y))
 
-      l <- Filter(\(x) S7_inherits(x, ob_point), l)
+      l <- Filter(\(x) S7::S7_inherits(x, ob_point), l)
       if (length(l) > 0) {
         l[[1]]
       }
@@ -496,16 +496,16 @@ method(intersection, list(ob_polygon, ob_segment)) <- function(x,y, ...) {
   }
 
 
-method(intersection, list(ob_segment, ob_polygon)) <- function(x,y, ...) {
+S7::method(intersection, list(ob_segment, ob_polygon)) <- function(x,y, ...) {
   intersection(y,x, ...)
 }
 
 
-method(intersection, list(ob_ngon, ob_segment)) <- function(x,y, ...) {
+S7::method(intersection, list(ob_ngon, ob_segment)) <- function(x,y, ...) {
   intersection(x@segments, y, ...)
 }
 
 
-method(intersection, list(ob_segment, ob_ngon)) <- function(x,y, ...) {
+S7::method(intersection, list(ob_segment, ob_ngon)) <- function(x,y, ...) {
   intersection(y,x@segments, ...)
 }

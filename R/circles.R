@@ -10,34 +10,34 @@ cr_styles <- c(
 cr_props <- list(
   # primary ----
   primary = list(
-    # center = new_property(class = ob_point, default = ob_point(0,0)),
-    radius = new_property(class = class_numeric, default = 1)
+    # center = S7::new_property(class = ob_point, default = ob_point(0,0)),
+    radius = S7::new_property(class = S7::class_numeric, default = 1)
   ),
   styles = ob_style@properties[cr_styles],
   # derived ----
   derived = list(
-    area = new_property(getter = function(self) {
+    area = S7::new_property(getter = function(self) {
       pi * self@radius ^ 2
     }),
-    bounding_box = new_property(getter = function(self) {
+    bounding_box = S7::new_property(getter = function(self) {
       ob_rectangle(
           southwest = ob_point(x = min(self@center@x - self@radius),
                             y = min(self@center@y - self@radius)),
           northeast = ob_point(x = max(self@center@x + self@radius),
                             y = max(self@center@y + self@radius)))
     }),
-    circumference = new_property(getter = function(self) {
+    circumference = S7::new_property(getter = function(self) {
       pi * self@radius * 2
     }),
-    diameter = new_property(getter = function(self) {
+    diameter = S7::new_property(getter = function(self) {
       self@radius * 2
     }),
-    length = new_property(
+    length = S7::new_property(
       getter = function(self) {
         nrow(self@tibble)
       }
     ),
-    polygon = new_property(getter = function(self) {
+    polygon = S7::new_property(getter = function(self) {
       d <- self@tibble
       if (!("n" %in% colnames(d))) {
         d$n <- 360
@@ -50,7 +50,7 @@ cr_props <- list(
                       y = y0 + r * sin(theta),
                       .by = group)
     }),
-    style = new_property(
+    style = S7::new_property(
       getter = function(self) {
         pr <- purrr::map(cr_styles,
                          prop, object = self) |>
@@ -64,7 +64,7 @@ cr_props <- list(
                   style = self@style + value)
       }
     ),
-    tibble = new_property(getter = function(self) {
+    tibble = S7::new_property(getter = function(self) {
       d <- list(
         x0 = self@center@x,
         y0 = self@center@y,
@@ -80,34 +80,34 @@ cr_props <- list(
   ),
   # functions ----
   funs = list(
-    geom = new_property(class_function, getter = function(self) {
+    geom = S7::new_property(S7::class_function, getter = function(self) {
       \(...) {
         as.geom(self, ...)
       }
     }),
-    arc = new_property(class_function, getter = \(self) {
+    arc = S7::new_property(S7::class_function, getter = \(self) {
       \(start, end, type = "arc", ...) {
         ob_arc(self@center, radius = self@radius, start = start, end = end, type = type, ...)
       }
     }),
-    angle_at = new_property(class_function, getter = function(self) {
+    angle_at = S7::new_property(S7::class_function, getter = function(self) {
       \(point) {
         dp <- point - self@center
         dp@theta
       }
     }),
-    normal_at = new_property(class_function, getter = function(self) {
+    normal_at = S7::new_property(S7::class_function, getter = function(self) {
       \(theta = degree(0), distance = 1, ...) {
-        if (S7_inherits(theta, ob_point)) theta <- projection(theta, self)@theta
-        if (!S7_inherits(theta, ob_angle)) theta <- degree(theta)
+        if (S7::S7_inherits(theta, ob_point)) theta <- projection(theta, self)@theta
+        if (!S7::S7_inherits(theta, ob_angle)) theta <- degree(theta)
         self@center + ob_polar(theta, self@radius + distance, ...)
       }
     }),
-    tangent_at = new_property(
-      class = class_function,
+    tangent_at = S7::new_property(
+      class = S7::class_function,
       getter = function(self) {
         \(theta = degree(0), ...) {
-          if (!S7_inherits(theta, ob_angle)) theta <- degree(theta)
+          if (!S7::S7_inherits(theta, ob_angle)) theta <- degree(theta)
           x0 <- self@center@x
           y0 <- self@center@y
           x1 <- cos(theta) * self@radius + self@center@x
@@ -123,11 +123,11 @@ cr_props <- list(
       }
     ),
     place = pr_place,
-    point_at = new_property(
-      class_function,
+    point_at = S7::new_property(
+      S7::class_function,
       getter = function(self) {
         \(theta = degree(0), ...) {
-          if (!S7_inherits(theta, ob_angle)) {
+          if (!S7::S7_inherits(theta, ob_angle)) {
             theta <- degree(theta)
             }
           self@center + ob_polar(theta = theta, r = self@radius, style = self@style, ...)
@@ -136,7 +136,7 @@ cr_props <- list(
     )),
   # info ----
   info = list(
-  aesthetics = new_property(getter = function(self) {
+  aesthetics = S7::new_property(getter = function(self) {
     class_aesthetics_list(
       geom = ggforce::geom_circle,
       mappable_bare = character(0),
@@ -185,7 +185,7 @@ cr_props <- list(
 #' ob_circle(p, radius = 6)
 #' @export
 #' @return ob_circle object
-ob_circle <- new_class(
+ob_circle <- S7::new_class(
   name = "ob_circle",
   parent = centerpoint,
   properties = rlang::inject(list(
@@ -203,7 +203,7 @@ ob_circle <- new_class(
                          linewidth = numeric(0),
                          linetype = numeric(0),
                          n = numeric(0),
-                         style = class_missing,
+                         style = S7::class_missing,
                          x0 = numeric(0),
                          y0 = numeric(0),
                          ...) {
@@ -239,7 +239,7 @@ ob_circle <- new_class(
 
     center = set_props(center, x = d$x0, y = d$y0)
 
-    if (S7_inherits(label, ob_label)) {
+    if (S7::S7_inherits(label, ob_label)) {
       if (all(label@center == ob_point(0,0))) {
         label@center <- center
       }
@@ -254,7 +254,7 @@ ob_circle <- new_class(
 
 
 
-     new_object(centerpoint(center = center, label = label),
+     S7::new_object(centerpoint(center = center, label = label),
                  radius = d$radius,
                  alpha = d[["alpha"]] %||% alpha,
                  color = d[["color"]] %||% color ,
@@ -266,7 +266,7 @@ ob_circle <- new_class(
 )
 
 
-method(str, ob_circle) <- function(
+S7::method(str, ob_circle) <- function(
   object,
   nest.lev = 0,
   additional = FALSE,
@@ -276,12 +276,12 @@ str_properties(object,
                    nest.lev = nest.lev)
 }
 
-method(get_tibble, ob_circle) <- function(x) {
+S7::method(get_tibble, ob_circle) <- function(x) {
   x@tibble
 }
 
 
-method(get_tibble_defaults, ob_circle) <- function(x) {
+S7::method(get_tibble_defaults, ob_circle) <- function(x) {
   sp <- ob_style(
     alpha = replace_na(as.double(ggforce::GeomCircle$default_aes$alpha), 1),
     color = replace_na(ggforce::GeomCircle$default_aes$colour, "black"),
@@ -295,7 +295,7 @@ method(get_tibble_defaults, ob_circle) <- function(x) {
   get_tibble_defaults_helper(x, sp,required_aes = c("x0", "y0", "r", "n"))
 }
 
-method(`[`, ob_circle) <- function(x, y) {
+S7::method(`[`, ob_circle) <- function(x, y) {
   d <- x@tibble[y,]
   dl <- as.list(dplyr::select(d, -.data$x0, -.data$y0))
   z <- rlang::inject(ob_circle(center = ob_point(d$x0, d$y0), !!!dl))
@@ -303,19 +303,19 @@ method(`[`, ob_circle) <- function(x, y) {
   z
 }
 
-method(`==`, list(ob_circle, ob_circle)) <- function(e1, e2) {
+S7::method(`==`, list(ob_circle, ob_circle)) <- function(e1, e2) {
   (e1@center == e2@center) & (e1@radius == e1@radius)
 }
 
 # Place ----
 
-method(place, list(ob_line, ob_circle)) <- function(x, from, where = "right", sep = 1) {
+S7::method(place, list(ob_line, ob_circle)) <- function(x, from, where = "right", sep = 1) {
   where <- degree(where)
   from@radius <- sep + from@radius
   from@tangent_at(where)
 }
 
-method(ob_array, ob_circle) <- function(x, k = 2, sep = 1, where = "east", anchor = "center", ...) {
+S7::method(ob_array, ob_circle) <- function(x, k = 2, sep = 1, where = "east", anchor = "center", ...) {
 
   sa <- ob_array_helper(x = x, k = k, sep = sep, where = where, anchor = anchor, ...)
 

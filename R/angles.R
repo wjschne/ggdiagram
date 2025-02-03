@@ -54,46 +54,46 @@ turn2angle <- function(x, object_name) {
 #' sin(degree(30))
 #' cos(degree(30))
 #' tan(degree(30))
-ob_angle <- new_class(
+ob_angle <- S7::new_class(
   name = "ob_angle",
-  parent = class_double,
+  parent = S7::class_double,
   properties = list(
-    degree = new_property(
-      class_numeric,
+    degree = S7::new_property(
+      S7::class_numeric,
       getter = function(self) {
         (c(self) %% ifelse(c(self) < 0, -1, 1)) * 360
       },
       setter = function(self, value) {
-        S7_data(self, TRUE) <- value / 360
+        S7::S7_data(self, TRUE) <- value / 360
         self
       }
     ),
-    radian = new_property(
-      class_numeric,
+    radian = S7::new_property(
+      S7::class_numeric,
       getter = function(self) {
         (c(self) %% ifelse(c(self) < 0, -1, 1)) * (2 * pi)
       },
       setter = function(self, value) {
-        S7_data(self, TRUE) <- value / (2 * pi)
+        S7::S7_data(self, TRUE) <- value / (2 * pi)
         self
       }
     ),
-    turn = new_property(
-      class_numeric,
+    turn = S7::new_property(
+      S7::class_numeric,
       getter = function(self) {
         (c(self) %% ifelse(c(self) < 0, -1, 1))
       },
       setter = function(self, value) {
-        S7_data(self, TRUE) <- value
+        S7::S7_data(self, TRUE) <- value
         self
       }
     ),
-    positive = new_property(getter = \(self) {
+    positive = S7::new_property(getter = \(self) {
       trn <- rep(0, length(c(self)))
       trn[self@turn < 0] <- floor(c(self))[self@turn < 0]
       turn(abs(trn)) + self
     }),
-    negative = new_property(getter = \(self) {
+    negative = S7::new_property(getter = \(self) {
       trn <- rep(0, length(c(self)))
       trn[self@turn > 0] <- floor(c(self))[self@turn > 0] + 1
       turn(-abs(trn)) + self
@@ -101,8 +101,8 @@ ob_angle <- new_class(
     ))
 
 
-ob_angle_or_numeric <- new_union(class_numeric, ob_angle)
-ob_angle_or_character <- new_union(class_character, ob_angle)
+ob_angle_or_numeric <- S7::new_union(S7::class_numeric, ob_angle)
+ob_angle_or_character <- S7::new_union(S7::class_character, ob_angle)
 
 
 
@@ -113,13 +113,13 @@ ob_angle_or_character <- new_union(class_character, ob_angle)
 #'
 #' @rdname ob_angle
 #' @export
-degree <- new_class(
+degree <- S7::new_class(
   name = "degree",
   parent = ob_angle,
   constructor = function(degree = numeric(0)) {
     if (is.character(degree)) degree <- cardinalpoint(degree)
-    if (S7_inherits(degree, ob_angle)) degree <- c(degree) * 360
-    new_object(degree / 360)
+    if (S7::S7_inherits(degree, ob_angle)) degree <- c(degree) * 360
+    S7::new_object(degree / 360)
   })
 
 
@@ -129,13 +129,13 @@ degree <- new_class(
 #'
 #' @rdname ob_angle
 #' @export
-radian <- new_class(
+radian <- S7::new_class(
   name = "radian",
   parent = ob_angle,
   constructor = function(radian = numeric(0)) {
     if (is.character(radian)) radian <- cardinalpoint(radian) * pi / 180
-    if (S7_inherits(radian, ob_angle)) radian <- c(radian) * 2 * pi
-    new_object(radian / (2 * pi))
+    if (S7::S7_inherits(radian, ob_angle)) radian <- c(radian) * 2 * pi
+    S7::new_object(radian / (2 * pi))
   })
 
 
@@ -143,95 +143,94 @@ radian <- new_class(
 #'
 #' @rdname ob_angle
 #' @export
-turn <- new_class(
+turn <- S7::new_class(
   name = "turn",
   parent = ob_angle,
   constructor = function(turn = numeric(0)) {
     if (is.character(turn)) turn <- cardinalpoint(turn) / 360
-    if (S7_inherits(turn, ob_angle)) turn <- c(turn)
-    new_object(turn)
+    if (S7::S7_inherits(turn, ob_angle)) turn <- c(turn)
+    S7::new_object(turn)
   })
 
 # arithmetic ----
 purrr::walk(list(`+`, `-`, `*`, `/`, `^`), \(.f) {
-  method(.f, list(ob_angle, ob_angle)) <- function(e1, e2) {
-    S7::convert(.f(c(e1), c(e2)), S7_class(e2))
+  S7::method(.f, list(ob_angle, ob_angle)) <- function(e1, e2) {
+    S7::convert(.f(c(e1), c(e2)), S7::S7_class(e2))
   }
 
-  method(.f, list(ob_angle, class_numeric)) <- function(e1, e2) {
-    S7::convert(num2turn(.f(prop(
-      e1, S7_class(e1)@name
-    ), e2), S7_class(e1)@name), S7_class(e1))
+  S7::method(.f, list(ob_angle, S7::class_numeric)) <- function(e1, e2) {
+    S7::convert(num2turn(.f(S7::prop(
+      e1, S7::S7_class(e1)@name
+    ), e2), S7::S7_class(e1)@name), S7::S7_class(e1))
   }
 
-  method(.f, list(class_numeric, ob_angle)) <- function(e1, e2) {
-    S7::convert(num2turn(.f(e1, prop(e2, S7_class(e2)@name)), S7_class(e2)@name), S7_class(e2))
+  S7::method(.f, list(S7::class_numeric, ob_angle)) <- function(e1, e2) {
+    S7::convert(num2turn(.f(e1, S7::prop(e2, S7::S7_class(e2)@name)), S7::S7_class(e2)@name), S7::S7_class(e2))
   }
 })
 
 # equality ----
-method(`==`, list(ob_angle, ob_angle)) <- function(e1, e2) {
+S7::method(`==`, list(ob_angle, ob_angle)) <- function(e1, e2) {
   abs(c(e1) - c(e2)) <= .Machine$double.eps
 }
 
-method(`==`, list(ob_angle, class_numeric)) <- function(e1, e2) {
+S7::method(`==`, list(ob_angle, S7::class_numeric)) <- function(e1, e2) {
   abs(c(e1) - num2turn(e2, e1)) <= .Machine$double.eps
 }
 
-method(`==`, list(class_numeric, ob_angle)) <- function(e1, e2) {
+S7::method(`==`, list(S7::class_numeric, ob_angle)) <- function(e1, e2) {
   abs(num2turn(e1, e2) - c(e2)) <= .Machine$double.eps
 }
 
 
-method(`!=`, list(ob_angle, ob_angle)) <- function(e1, e2) {
+S7::method(`!=`, list(ob_angle, ob_angle)) <- function(e1, e2) {
   abs(c(e1) - c(e2)) > .Machine$double.eps
 }
 
 purrr::walk(list(`<`, `<=`, `>`, `>=`), \(.f) {
-  method(.f, list(ob_angle, ob_angle)) <- function(e1, e2) {
+  S7::method(.f, list(ob_angle, ob_angle)) <- function(e1, e2) {
     .f(c(e1), c(e2))
   }
-  method(.f, list(ob_angle, class_numeric)) <- function(e1, e2) {
+  S7::method(.f, list(ob_angle, S7::class_numeric)) <- function(e1, e2) {
     .f(c(e1), num2turn(e2, e1))
   }
-  method(.f, list(class_numeric, ob_angle)) <- function(e1, e2) {
+  S7::method(.f, list(S7::class_numeric, ob_angle)) <- function(e1, e2) {
     .f(num2turn(e1, e2), c(e2))
   }
 })
 
 # Trigonometry ----
-method(cos, ob_angle) <- function(x) {
+S7::method(cos, ob_angle) <- function(x) {
   cospi(c(x) * 2)
 }
-method(sin, ob_angle) <- function(x) {
+S7::method(sin, ob_angle) <- function(x) {
   sinpi(c(x) * 2)
 }
-method(tan, ob_angle) <- function(x) {
+S7::method(tan, ob_angle) <- function(x) {
   tanpi(c(x) * 2)
 }
 
 
 # Angle Conversions ----
-
-method(convert, list(class_numeric, degree)) <- function(from, to) {
+S7::method(convert, list(S7::class_numeric, degree)) <- function(from, to) {
   degree(from * 360)
 }
-method(convert, list(class_numeric, turn)) <- function(from, to) {
+S7::method(convert, list(S7::class_numeric, turn)) <- function(from, to) {
   turn(from)
 }
-
-method(convert, list(class_numeric, radian)) <- function(from, to) {
+#
+S7::method(convert, list(S7::class_numeric, radian)) <- function(from, to) {
   radian(from * 2 * pi)
 }
 
 # str print ----
 
-method(print, ob_angle) <- function(x, ...) {
+S7::method(print, ob_angle) <- function(x, ...) {
  cat(as.character(x), "\n")
   invisible(x)
 }
 
-method(str, ob_angle) <- function(object,
+S7::method(str, ob_angle) <- function(object,
                                      nest.lev = 0,
                                      additional = FALSE,
                                      omit = c(".data", "positive", "negative")) {
@@ -241,7 +240,7 @@ method(str, ob_angle) <- function(object,
                  additional = additional)
 }
 
-method(str, degree) <- function(object,
+S7::method(str, degree) <- function(object,
                                 nest.lev = 0,
                                 additional = FALSE,
                                 omit = c(".data", "turn", "radian", "positive", "negative")) {
@@ -251,7 +250,7 @@ method(str, degree) <- function(object,
                  additional = additional)
 }
 
-method(str, radian) <- function(object,
+S7::method(str, radian) <- function(object,
                                 nest.lev = 0,
                                 additional = FALSE,
                                 omit = c(".data", "turn", "degree", "positive", "negative")) {
@@ -261,7 +260,7 @@ method(str, radian) <- function(object,
                  additional = additional)
 }
 
-method(str, turn) <- function(object,
+S7::method(str, turn) <- function(object,
                                 nest.lev = 0,
                                 additional = FALSE,
                                 omit = c(".data", "degree", "radian", "positive", "negative")) {
@@ -273,7 +272,7 @@ method(str, turn) <- function(object,
 
 # as.character ----
 
-method(as.character, ob_angle) <- function(x,
+S7::method(as.character, ob_angle) <- function(x,
   ...,
   digits = NULL,
   type = NULL) {
@@ -303,12 +302,12 @@ method(as.character, ob_angle) <- function(x,
 }
 
 # subset ----
-method(`[`, ob_angle) <- function(x, y) {
+S7::method(`[`, ob_angle) <- function(x, y) {
   S7::S7_data(x) <-  c(x)[y]
   x
 }
 
-method(`[<-`, ob_angle) <- function(x, y, value) {
+S7::method(`[<-`, ob_angle) <- function(x, y, value) {
   d <- c(x)
   d[y] <- c(value)
   S7::S7_data(x) <-  d
@@ -316,7 +315,7 @@ method(`[<-`, ob_angle) <- function(x, y, value) {
 }
 
 # unbind ----
-method(unbind, ob_angle) <- function(x) {
+S7::method(unbind, ob_angle) <- function(x) {
   purrr::map(seq(length(c(x))), \(i) x[i])
 }
 

@@ -1,4 +1,4 @@
-prop_hjust <- new_property(
+prop_hjust <- S7::new_property(
   class_numeric_or_character
   # validator = function(value) {
   #   if (is.character(value)) {
@@ -8,7 +8,7 @@ prop_hjust <- new_property(
   # }
 )
 
-prop_vjust = new_property(
+prop_vjust = S7::new_property(
   class_numeric_or_character
   # validator = function(value) {
   #   if (is.character(value)) {
@@ -18,13 +18,13 @@ prop_vjust = new_property(
   # }
 )
 
-prop_polar_just <- new_property(class_numeric, setter = function(self, value) {
+prop_polar_just <- S7::new_property(S7::class_numeric, setter = function(self, value) {
   if (length(value) > 0) {
   multiplier <- 1.2
-  if (S7_inherits(value, ob_point)) {
+  if (S7::S7_inherits(value, ob_point)) {
     theta = value@theta
     multiplier <- value@r
-  } else if (S7_inherits(value, ob_angle)) {
+  } else if (S7::S7_inherits(value, ob_angle)) {
       theta <- value
   } else {
     theta <- degree(value)
@@ -94,23 +94,23 @@ prop_polar_just <- new_property(class_numeric, setter = function(self, value) {
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> unused
 #' @export
 #' @return ob_style object
-ob_style <- new_class(
+ob_style <- S7::new_class(
   name = "ob_style",
   properties = list(
-    alpha = new_property(class_numeric, default = NULL),
+    alpha = S7::new_property(S7::class_numeric, default = NULL),
     angle = ob_angle_or_numeric,
-    arrow_fins = class_list,
-    arrow_head = class_list,
-    arrow_mid = class_list,
-    color = class_character,
-    family = class_character,
-    fill = class_character,
-    fontface = class_character,
+    arrow_fins = S7::class_list,
+    arrow_head = S7::class_list,
+    arrow_mid = S7::class_list,
+    color = S7::class_character,
+    family = S7::class_character,
+    fill = S7::class_character,
+    fontface = S7::class_character,
     hjust = prop_hjust,
-    justify = class_numeric,
-    label.color = class_character,
-    label.padding = class_list,
-    label.margin = class_list,
+    justify = S7::class_numeric,
+    label.color = S7::class_character,
+    label.padding = S7::class_list,
+    label.margin = S7::class_list,
     label.r = class_numeric_or_unit,
     label.size = class_numeric_or_unit,
     arrowhead_length = class_numeric_or_unit,
@@ -118,15 +118,15 @@ ob_style <- new_class(
     length_fins = class_numeric_or_unit,
     length_mid  = class_numeric_or_unit,
     lineend = class_numeric_or_character,
-    lineheight = class_numeric,
+    lineheight = S7::class_numeric,
     linejoin = class_numeric_or_character,
-    linewidth_fins = class_numeric,
-    linewidth_head = class_numeric,
-    linewidth = class_numeric,
+    linewidth_fins = S7::class_numeric,
+    linewidth_head = S7::class_numeric,
+    linewidth = S7::class_numeric,
     linetype = class_numeric_or_character,
-    n = class_numeric,
-    nudge_x = class_numeric,
-    nudge_y = class_numeric,
+    n = S7::class_numeric,
+    nudge_x = S7::class_numeric,
+    nudge_y = S7::class_numeric,
     polar_just = prop_polar_just,
     resect = class_numeric_or_unit,
     resect_fins = class_numeric_or_unit,
@@ -134,11 +134,11 @@ ob_style <- new_class(
     shape = class_numeric_or_character,
     size = class_numeric_or_unit,
     size.unit = class_numeric_or_unit,
-    straight = class_logical,
-    stroke = class_numeric,
-    stroke_color = class_character,
+    straight = S7::class_logical,
+    stroke = S7::class_numeric,
+    stroke_color = S7::class_character,
     stroke_width = class_numeric_or_unit,
-    text.color = class_character,
+    text.color = S7::class_character,
     vjust = prop_vjust
   ),
   constructor = function(alpha = numeric(0),
@@ -204,12 +204,12 @@ ob_style <- new_class(
 
     if (length(polar_just) > 0) {
 
-      if (S7_inherits(polar_just, ob_angle) || is.numeric(polar_just)) {
+      if (S7::S7_inherits(polar_just, ob_angle) || is.numeric(polar_just)) {
         polar_just <- ob_polar(theta = degree(polar_just), r = 1.2)
       }
       hjust <- polar2just(polar_just@theta, polar_just@r, axis = "h")
       vjust <- polar2just(polar_just@theta, polar_just@r, axis = "v")
-      polar_just <- class_missing
+      polar_just <- S7::class_missing
     }
 
 
@@ -225,7 +225,7 @@ ob_style <- new_class(
       arrow_mid <- class_arrowhead(arrow_mid)
     }
 
-    if (S7_inherits(angle, ob_angle)) {
+    if (S7::S7_inherits(angle, ob_angle)) {
       angle <- c(angle) * 360
     }
 
@@ -262,7 +262,7 @@ ob_style <- new_class(
       n = n,
       nudge_x = nudge_x,
       nudge_y = nudge_y,
-      polar_just = class_missing,
+      polar_just = S7::class_missing,
       resect = resect,
       resect_fins = resect_fins,
       resect_head = resect_head,
@@ -285,8 +285,8 @@ ob_style <- new_class(
 
 
 
-    new_object(
-      S7_object(),
+    S7::new_object(
+      S7::S7_object(),
       alpha = alpha,
       color = as.character(color),
       angle = angle,
@@ -317,7 +317,7 @@ ob_style <- new_class(
       n = n,
       nudge_x = nudge_x,
       nudge_y = nudge_y,
-      polar_just = class_missing,
+      polar_just = S7::class_missing,
       resect = resect,
       resect_fins = resect_fins,
       resect_head = resect_head,
@@ -335,13 +335,13 @@ ob_style <- new_class(
 
   })
 
-  method(str, ob_style) <- function(object,
+  S7::method(str, ob_style) <- function(object,
     nest.lev = 0,
     additional = FALSE,
     omit = NULL) {
 
     omit_names <- names(props(object))
-    omit <- omit %||% Filter(\(o_name) {length(prop(object, name = o_name)) == 0}, omit_names)
+    omit <- omit %||% Filter(\(o_name) {length(S7::prop(object, name = o_name)) == 0}, omit_names)
 
 
   str_properties(object,
@@ -352,18 +352,18 @@ ob_style <- new_class(
   }
 
 
-  method(print, ob_style) <- function(x, ...) {
+  S7::method(print, ob_style) <- function(x, ...) {
     str(x, ...)
     invisible(x)
   }
 
 
-method(`+`, list(ob_style, ob_style)) <- function(e1, e2) {
-  pn <- prop_names(e1)
+S7::method(`+`, list(ob_style, ob_style)) <- function(e1, e2) {
+  pn <- S7::prop_names(e1)
   pnames <- pn[pn != "tibble"]
   for (p in pnames) {
-    if (length(prop(e2,p)) > 0) {
-      prop(e1,p) <- prop(e2,p)
+    if (length(S7::prop(e2,p)) > 0) {
+      S7::prop(e1,p) <- S7::prop(e2,p)
     }
   }
   e1
@@ -371,34 +371,34 @@ method(`+`, list(ob_style, ob_style)) <- function(e1, e2) {
 
 
 
-method(`+`, list(class_missing, ob_style)) <- function(e1, e2) {
+S7::method(`+`, list(S7::class_missing, ob_style)) <- function(e1, e2) {
   e2
 }
 
-method(`+`, list(ob_style, class_missing)) <- function(e1, e2) {
+S7::method(`+`, list(ob_style, S7::class_missing)) <- function(e1, e2) {
   e1
 }
 
-method(`+`, list(class_any, ob_style)) <- function(e1, e2) {
+S7::method(`+`, list(S7::class_any, ob_style)) <- function(e1, e2) {
   e2
 }
 
-method(`+`, list(ob_style, class_any)) <- function(e1, e2) {
+S7::method(`+`, list(ob_style, S7::class_any)) <- function(e1, e2) {
   e1
 }
 
-method(get_tibble, ob_style) <- function(x) {
+S7::method(get_tibble, ob_style) <- function(x) {
   d <- get_non_empty_props(x)
 
    tibble::tibble(!!!d)
 }
 
-method(`[`, ob_style) <- function(x, y) {
+S7::method(`[`, ob_style) <- function(x, y) {
   d <- as.list(x@tibble[y,])
   rlang::inject(ob_style(!!!d))
 }
 
-method(as.geom, has_style) <- function(x, ...) {
+S7::method(as.geom, has_style) <- function(x, ...) {
   d <- get_tibble_defaults(x)
   make_geom_helper(
     d = d,

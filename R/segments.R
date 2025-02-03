@@ -21,15 +21,15 @@ sg_styles <- c(
 
 sg_props <- list(
   # primary ----
-  primary = list(p1 = new_property(class = ob_point),
-                 p2 = new_property(class = ob_point)),
+  primary = list(p1 = S7::new_property(class = ob_point),
+                 p2 = S7::new_property(class = ob_point)),
   extra = list(
-    label = new_property(label_or_character_or_angle)
+    label = S7::new_property(label_or_character_or_angle)
   ),
   styles = ob_style@properties[sg_styles],
   # derived ----
   derived = list(
-    bounding_box = new_property(getter = function(self) {
+    bounding_box = S7::new_property(getter = function(self) {
 
       d_rect <- self@tibble |>
         dplyr::summarise(xmin = min(c(x,xend)),
@@ -41,17 +41,17 @@ sg_props <- list(
                 northeast = ob_point(d_rect$xmax, d_rect$ymax))
 
     }),
-    distance = new_property(
+    distance = S7::new_property(
       getter = function(self) {
         distance(self)
       }
     ),
-    length = new_property(
+    length = S7::new_property(
       getter = function(self) {
         length(self@p1@x)
       }
     ),
-    line = new_property(
+    line = S7::new_property(
       getter = function(self) {
         ob_line(
           a = self@p1@y - self@p2@y,
@@ -61,7 +61,7 @@ sg_props <- list(
         )
       }
     ),
-    style = new_property(
+    style = S7::new_property(
       getter = function(self) {
         pr <- purrr::map(sg_styles, prop, object = self) |>
           `names<-`(sg_styles)
@@ -75,7 +75,7 @@ sg_props <- list(
         self
       }
     ),
-    tibble = new_property(
+    tibble = S7::new_property(
       getter = function(self) {
         d <- list(
           x = self@p1@x,
@@ -107,12 +107,12 @@ sg_props <- list(
   ),
   # functions ----
   funs = list(
-    geom = new_property(class_function, getter = function(self) {
+    geom = S7::new_property(S7::class_function, getter = function(self) {
       \(...) {
         as.geom(self, ...)
       }
     }),
-    hatch = new_property(class_function, getter = function(self) {
+    hatch = S7::new_property(S7::class_function, getter = function(self) {
       \(k = 1, sep = .05, height = .05, position = .5, ...) {
         h <- map_ob(self, \(s) {
           m <- s@midpoint(position = position)
@@ -126,14 +126,14 @@ sg_props <- list(
         h
 
     }}),
-    midpoint = new_property(
-      class_function,
+    midpoint = S7::new_property(
+      S7::class_function,
       getter = function(self) {
         \(position = .5, ...) midpoint(self, position = position, ...)
       }
     ),
-    nudge = new_property(
-      class_function,
+    nudge = S7::new_property(
+      S7::class_function,
       getter = function(self) {
         \(x = 0, y = 0) nudge(self, x, y)
       }
@@ -141,7 +141,7 @@ sg_props <- list(
   ),
   # info ----
   info = list(
-    aesthetics = new_property(class_function, getter = function(self) {
+    aesthetics = S7::new_property(S7::class_function, getter = function(self) {
       class_aesthetics_list(
         geom = ggarrow::geom_arrow_segment,
         mappable_bare = character(0),
@@ -202,7 +202,7 @@ sg_props <- list(
 #' @inherit ob_style params
 #' @export
 #' @return ob_segment object
-ob_segment <- new_class(
+ob_segment <- S7::new_class(
   name = "ob_segment",
   parent = shape,
   properties =  rlang::inject(
@@ -215,8 +215,8 @@ ob_segment <- new_class(
       !!!sg_props$info
     )
   ),
-  constructor = function(p1 = class_missing,
-                         p2 = class_missing,
+  constructor = function(p1 = S7::class_missing,
+                         p2 = S7::class_missing,
                          label = character(0),
                          alpha = numeric(0),
                          arrow_head = ggarrow::arrow_head_minimal(90),
@@ -236,11 +236,11 @@ ob_segment <- new_class(
                          resect_head = numeric(0),
                          stroke_color = character(0),
                          stroke_width = numeric(0),
-                         style = class_missing,
-                         x = class_missing,
-                         xend = class_missing,
-                         y = class_missing,
-                         yend = class_missing,
+                         style = S7::class_missing,
+                         x = S7::class_missing,
+                         xend = S7::class_missing,
+                         y = S7::class_missing,
+                         yend = S7::class_missing,
                          ...) {
 
     if ((length(x) > 0) || (length(xend) > 0)) {
@@ -336,7 +336,7 @@ ob_segment <- new_class(
     }
     pos <- .5
 
-    if (S7_inherits(label, ob_label)) {
+    if (S7::S7_inherits(label, ob_label)) {
       pos <- label@position
       if (all(label@center == ob_point(0,0))) {
         label@center <- midpoint(p1,p2, position = pos)
@@ -361,8 +361,8 @@ ob_segment <- new_class(
     p1 <- set_props(p1, x = d$p1x, y = d$p1y)
     p2 <- set_props(p2, x = d$p2x, y = d$p2y)
 
-    new_object(
-      S7_object(),
+    S7::new_object(
+      S7::S7_object(),
       p1 = p1,
       p2 = p2,
       label = label,
@@ -389,27 +389,27 @@ ob_segment <- new_class(
 
 )
 
-method(`+`, list(ob_segment, ob_point)) <- function(e1, e2) {
+S7::method(`+`, list(ob_segment, ob_point)) <- function(e1, e2) {
   e1p1 <- e1@p1 + e2
   e1p2 <- e1@p2 + e2
   ob_segment(e1p1, e1p2, style = e1@style)
 }
 
-method(`-`, list(ob_segment, ob_point)) <- function(e1, e2) {
+S7::method(`-`, list(ob_segment, ob_point)) <- function(e1, e2) {
   e1p1 <- e1@p1 - e2
   e1p2 <- e1@p2 - e2
   ob_segment(e1p1, e1p2, style = e1@style)
 }
 
-method(`+`, list(ob_point, ob_segment)) <- function(e1, e2) {
+S7::method(`+`, list(ob_point, ob_segment)) <- function(e1, e2) {
   e2 + e1
 }
 
-method(`-`, list(ob_point, ob_segment)) <- function(e1, e2) {
+S7::method(`-`, list(ob_point, ob_segment)) <- function(e1, e2) {
   e2 - e1
 }
 
-method(str, ob_segment) <- function(object,
+S7::method(str, ob_segment) <- function(object,
                                  nest.lev = 0,
                                  additional = FALSE,
                                  omit = omit_props(object, include = c("p1", "p2"))) {
@@ -419,17 +419,17 @@ method(str, ob_segment) <- function(object,
                  additional = FALSE)
 }
 
-method(midpoint, list(ob_segment, class_missing)) <- function(x, y, position = .5, ...) {
+S7::method(midpoint, list(ob_segment, S7::class_missing)) <- function(x, y, position = .5, ...) {
   x@p1@style <- x@p1@style + x@style
   x@p2@style <- x@p2@style + x@style
   midpoint(x@p1, x@p2, position = position, ...)
 }
 
-method(get_tibble, ob_segment) <- function(x) {
+S7::method(get_tibble, ob_segment) <- function(x) {
   x@tibble
 }
 
-method(get_tibble_defaults, ob_segment) <- function(x) {
+S7::method(get_tibble_defaults, ob_segment) <- function(x) {
   sp <- ob_style(
     alpha = replace_na(as.double(
       ggarrow::GeomArrowSegment$default_aes$alpha
@@ -450,7 +450,7 @@ method(get_tibble_defaults, ob_segment) <- function(x) {
 }
 
 
-method(as.geom, ob_segment) <- function(x, ...) {
+S7::method(as.geom, ob_segment) <- function(x, ...) {
   d <- get_tibble_defaults(x)
   if ("arrowhead_length" %in% colnames(d)) {
     d <- dplyr::rename(d, length = arrowhead_length)
@@ -462,7 +462,7 @@ method(as.geom, ob_segment) <- function(x, ...) {
     aesthetics = x@aesthetics
   )
 
-   if (S7_inherits(x@label, ob_label)) {
+   if (S7::S7_inherits(x@label, ob_label)) {
      gl <- as.geom(x@label)
      gs <- list(gs, gl)
    }
@@ -471,7 +471,7 @@ method(as.geom, ob_segment) <- function(x, ...) {
 }
 
 
-method(resect, list(ob_segment, class_numeric)) <- function(x, distance, distance_end = distance) {
+S7::method(resect, list(ob_segment, S7::class_numeric)) <- function(x, distance, distance_end = distance) {
   d <- x@p2 - x@p1
   x@p1 <- x@p1 + ob_polar(theta = d@theta, r = distance)
   x@p2 <- x@p2 + ob_polar(theta = d@theta + turn(.5), r = distance_end)
@@ -480,37 +480,37 @@ method(resect, list(ob_segment, class_numeric)) <- function(x, distance, distanc
 
 
 
-method(nudge, list(ob_segment, class_numeric, class_numeric)) <- function(object, x, y) {
+S7::method(nudge, list(ob_segment, S7::class_numeric, S7::class_numeric)) <- function(object, x, y) {
   object + ob_point(x, y)
 }
 
-method(nudge, list(ob_segment, class_missing, class_numeric)) <- function(object, x, y) {
+S7::method(nudge, list(ob_segment, S7::class_missing, S7::class_numeric)) <- function(object, x, y) {
   object + ob_point(0, y)
 }
 
-method(nudge, list(ob_segment, class_missing, class_missing)) <- function(object, x, y) {
+S7::method(nudge, list(ob_segment, S7::class_missing, S7::class_missing)) <- function(object, x, y) {
   object
 }
 
 
-method(nudge, list(ob_segment, class_numeric, class_missing)) <- function(object, x, y) {
+S7::method(nudge, list(ob_segment, S7::class_numeric, S7::class_missing)) <- function(object, x, y) {
   object + ob_point(x, 0)
 }
 
-method(nudge, list(ob_segment, ob_point, class_missing)) <- function(object, x, y) {
+S7::method(nudge, list(ob_segment, ob_point, S7::class_missing)) <- function(object, x, y) {
   object + x
 }
 
-method(nudge, list(ob_segment, ob_point, class_numeric)) <- function(object, x, y) {
+S7::method(nudge, list(ob_segment, ob_point, S7::class_numeric)) <- function(object, x, y) {
   object + (x + y)
 }
 
-method(nudge, list(ob_segment, ob_segment, class_missing)) <- function(object, x, y) {
+S7::method(nudge, list(ob_segment, ob_segment, S7::class_missing)) <- function(object, x, y) {
   object + x
 }
 
 
-method(`[`, ob_segment) <- function(x, y) {
+S7::method(`[`, ob_segment) <- function(x, y) {
   d <- x@tibble[y,]
   p1 <- x@p1[y]
   p2 <- x@p2[y]
@@ -521,6 +521,6 @@ method(`[`, ob_segment) <- function(x, y) {
 }
 
 
-method(`==`, list(ob_segment, ob_segment)) <- function(e1, e2) {
+S7::method(`==`, list(ob_segment, ob_segment)) <- function(e1, e2) {
   (e1@p1 == e2@p1) & (e1@p2 == e2@p2)
 }

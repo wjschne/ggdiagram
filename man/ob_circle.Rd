@@ -14,7 +14,7 @@ ob_circle(
   linewidth = numeric(0),
   linetype = numeric(0),
   n = numeric(0),
-  style = class_missing,
+  style = S7::class_missing,
   x0 = numeric(0),
   y0 = numeric(0),
   ...

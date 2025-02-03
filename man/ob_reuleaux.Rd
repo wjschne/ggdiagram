@@ -16,7 +16,7 @@ ob_reuleaux(
   fill = character(0),
   linewidth = numeric(0),
   linetype = numeric(0),
-  style = class_missing,
+  style = S7::class_missing,
   ...
 )
 }

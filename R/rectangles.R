@@ -1,6 +1,6 @@
 find_side <- function(theta, width = 1, height = 1) {
   my_pi <- turn(.5)
-  if (!S7_inherits(theta, ob_angle)) theta <- radian(theta)
+  if (!S7::S7_inherits(theta, ob_angle)) theta <- radian(theta)
   theta <- turn(theta@turn + 1 * (theta@turn < 0))
   ne <- radian(atan2(height, width))
   corners <- c(ne, my_pi - ne, ne + my_pi, 2 * my_pi - ne)
@@ -9,7 +9,7 @@ find_side <- function(theta, width = 1, height = 1) {
   side
 }
 
-rectangle_side <- new_class(
+rectangle_side <- S7::new_class(
   name = "retangle_side",
   properties = list(
     east = ob_segment,
@@ -52,23 +52,23 @@ rc_aesthetics_list <- class_aesthetics_list(
 rc_props <- list(
   # Primary ----
   primary = list(
-      width = new_property(class = class_numeric, default = 1),
-      height = new_property(class = class_numeric, default = 1),
-      angle = new_property(ob_angle_or_numeric, default = 0)
+      width = S7::new_property(class = S7::class_numeric, default = 1),
+      height = S7::new_property(class = S7::class_numeric, default = 1),
+      angle = S7::new_property(ob_angle_or_numeric, default = 0)
   ),
   # extra ----
   extra = list(
-    vertex_radius = new_property(class = class_numeric_or_unit, validator = function(value) {
+    vertex_radius = S7::new_property(class = class_numeric_or_unit, validator = function(value) {
       if (length(value) > 1) stop("The vertex_radius property must be of length 1.")
     })
   ),
   styles = ob_style@properties[rc_styles],
   # Derived ----
   derived = list(
-    area = new_property(getter = function(self) {
+    area = S7::new_property(getter = function(self) {
       self@width * self@height
     }),
-    bounding_box = new_property(getter = function(self) {
+    bounding_box = S7::new_property(getter = function(self) {
 
       d_rect <- tibble::tibble(
         x0 = c(
@@ -93,10 +93,10 @@ rc_props <- list(
                 northeast = ob_point(d_rect$xmax, d_rect$ymax))
 
     }),
-    perimeter = new_property(getter = function(self) {
+    perimeter = S7::new_property(getter = function(self) {
       self@width * 2 + self@height * 2
     }),
-    northeast = new_property(
+    northeast = S7::new_property(
       ob_point,
       getter = function(self) {
         rotate(ob_point(self@width / 2,
@@ -105,7 +105,7 @@ rc_props <- list(
                self@angle) + self@center
       }
     ),
-    northwest = new_property(
+    northwest = S7::new_property(
       ob_point,
       getter = function(self) {
         rotate(ob_point(self@width / -2,
@@ -114,7 +114,7 @@ rc_props <- list(
                self@angle) + self@center
       }
     ),
-    southwest = new_property(
+    southwest = S7::new_property(
       ob_point,
       getter = function(self) {
         rotate(ob_point(self@width / -2,
@@ -123,7 +123,7 @@ rc_props <- list(
                self@angle) + self@center
       }
     ),
-    southeast = new_property(
+    southeast = S7::new_property(
       ob_point,
       getter = function(self) {
         rotate(ob_point(self@width / 2,
@@ -132,7 +132,7 @@ rc_props <- list(
                self@angle) + self@center
       }
     ),
-    east = new_property(
+    east = S7::new_property(
       ob_point,
       getter = function(self) {
         rotate(ob_point(self@width / 2,
@@ -141,7 +141,7 @@ rc_props <- list(
                self@angle) + self@center
       }
     ),
-    north = new_property(
+    north = S7::new_property(
       ob_point,
       getter = function(self) {
         rotate(ob_point(0,
@@ -150,7 +150,7 @@ rc_props <- list(
                self@angle) + self@center
       }
     ),
-    west = new_property(
+    west = S7::new_property(
       ob_point,
       getter = function(self) {
         rotate(ob_point(self@width / -2,
@@ -159,7 +159,7 @@ rc_props <- list(
                self@angle) + self@center
       }
     ),
-    south = new_property(
+    south = S7::new_property(
       ob_point,
       getter = function(self) {
         rotate(ob_point(0,
@@ -168,7 +168,7 @@ rc_props <- list(
                self@angle) + self@center
       }
     ),
-    side = new_property(rectangle_side, getter = function(self) {
+    side = S7::new_property(rectangle_side, getter = function(self) {
       re = rectangle_side(
         east = ob_segment(p1 = self@northeast, p2 = self@southeast, style = self@style),
         north = ob_segment(p1 = self@northwest, p2 = self@northeast, style = self@style),
@@ -176,12 +176,12 @@ rc_props <- list(
         south = ob_segment(p1 = self@southwest, p2 = self@southeast, style = self@style)
       )
     }),
-    length = new_property(
+    length = S7::new_property(
       getter = function(self) {
         length(self@width)
       }
     ),
-    style = new_property(
+    style = S7::new_property(
       getter = function(self) {
         pr <- purrr::map(rc_styles,
                          prop, object = self) |>
@@ -198,7 +198,7 @@ rc_props <- list(
           style = self@style + value)
       }
     ),
-    tibble = new_property(getter = function(self) {
+    tibble = S7::new_property(getter = function(self) {
 
 
 
@@ -219,14 +219,14 @@ rc_props <- list(
   ),
   # Functions ----
   funs = list(
-    geom = new_property(class_function,  getter = function(self) {
+    geom = S7::new_property(S7::class_function,  getter = function(self) {
       \(...) {
         as.geom(self, ...)
       }
     }),
-    normal_at = new_property(class_function, getter = function(self) {
+    normal_at = S7::new_property(S7::class_function, getter = function(self) {
       \(theta = degree(0), distance = 1) {
-        if (!S7_inherits(theta, ob_angle)) {
+        if (!S7::S7_inherits(theta, ob_angle)) {
           theta <- degree(theta)
         }
         dl <- list(
@@ -277,11 +277,11 @@ rc_props <- list(
       }
     }),
     place = pr_place,
-    point_at = new_property(
-      class_function,
+    point_at = S7::new_property(
+      S7::class_function,
       getter = function(self) {
         \(theta = degree(0), ...) {
-          if (!S7_inherits(theta, ob_angle)) {
+          if (!S7::S7_inherits(theta, ob_angle)) {
             theta <- degree(theta)
           }
 
@@ -337,7 +337,7 @@ rc_props <- list(
     )),
   # Information ----
   info = list(
-    aesthetics = new_property(getter = function(self) {
+    aesthetics = S7::new_property(getter = function(self) {
       rc_aesthetics_list
     })))
 
@@ -368,7 +368,7 @@ rc_props <- list(
 #' ob_rectangle(p, width = 2, height = 2)
 #' @export
 #' @return ob_rectangle object
-ob_rectangle <- new_class(
+ob_rectangle <- S7::new_class(
   name = "ob_rectangle",
   parent = centerpoint,
   properties = rlang::inject(list(
@@ -378,17 +378,17 @@ ob_rectangle <- new_class(
     !!!rc_props$derived,
     !!!rc_props$funs,
     !!!rc_props$info)),
-  constructor = function(center = class_missing,
+  constructor = function(center = S7::class_missing,
                          width = numeric(0),
                          height = numeric(0),
-                         east = class_missing,
-                         north = class_missing,
-                         west = class_missing,
-                         south = class_missing,
-                         northeast = class_missing,
-                         northwest = class_missing,
-                         southwest = class_missing,
-                         southeast = class_missing,
+                         east = S7::class_missing,
+                         north = S7::class_missing,
+                         west = S7::class_missing,
+                         south = S7::class_missing,
+                         northeast = S7::class_missing,
+                         northwest = S7::class_missing,
+                         southwest = S7::class_missing,
+                         southeast = S7::class_missing,
                          angle = numeric(0),
                          vertex_radius = numeric(0),
                          label = character(0),
@@ -397,7 +397,7 @@ ob_rectangle <- new_class(
                          fill = character(0),
                          linewidth = numeric(0),
                          linetype = numeric(0),
-                         style = class_missing,
+                         style = S7::class_missing,
                          x0 = numeric(0),
                          y0 = numeric(0),
                          ...) {
@@ -407,7 +407,7 @@ ob_rectangle <- new_class(
     if (length(angle) == 0) angle <- degree(0)
 
 
-    if (!S7_inherits(angle, ob_angle)) {
+    if (!S7::S7_inherits(angle, ob_angle)) {
       angle <- degree(angle)
       }
 
@@ -606,7 +606,7 @@ ob_rectangle <- new_class(
       angle = angle
     )
 
-    new_object(
+    S7::new_object(
       centerpoint(center = center),
       width = d$width,
       height = d$height,
@@ -623,7 +623,7 @@ ob_rectangle <- new_class(
 )
 
 
-method(str, ob_rectangle) <- function(
+S7::method(str, ob_rectangle) <- function(
     object,
     nest.lev = 0,
     additional = FALSE,
@@ -635,7 +635,7 @@ method(str, ob_rectangle) <- function(
 }
 
 
-method(print, ob_rectangle) <- function(x, ...) {
+S7::method(print, ob_rectangle) <- function(x, ...) {
   str(x, ...)
   invisible(x)
 }
@@ -645,7 +645,7 @@ method(print, ob_rectangle) <- function(x, ...) {
 
 
 
-method(get_tibble, ob_rectangle) <- function(x) {
+S7::method(get_tibble, ob_rectangle) <- function(x) {
   xx <- x
   d <- list(
     p = tibble::tibble(
@@ -679,7 +679,7 @@ method(get_tibble, ob_rectangle) <- function(x) {
 }
 
 
-method(get_tibble_defaults, ob_rectangle) <- function(x) {
+S7::method(get_tibble_defaults, ob_rectangle) <- function(x) {
   sp <- ob_style(
     alpha = replace_na(as.double(ggforce::GeomShape$default_aes$alpha), 1),
     color = replace_na(ggforce::GeomShape$default_aes$colour, "black"),
@@ -694,14 +694,14 @@ method(get_tibble_defaults, ob_rectangle) <- function(x) {
     required_aes = c(rc_aesthetics_list@required_aes, "radius"))
 }
 
-method(`==`, list(ob_rectangle, ob_rectangle)) <- function(e1, e2) {
+S7::method(`==`, list(ob_rectangle, ob_rectangle)) <- function(e1, e2) {
   (e1@center == e2@center) &&
     (e1@width == e2@width) &&
     (e1@height == e2@height) &&
     (e1@angle == e2@angle)
 }
 
-method(`[`, ob_rectangle) <- function(x, y) {
+S7::method(`[`, ob_rectangle) <- function(x, y) {
 
   d <- list(
     x = x@center@x,
@@ -728,7 +728,7 @@ method(`[`, ob_rectangle) <- function(x, y) {
 }
 
 
-method(place, list(ob_point, ob_rectangle)) <- function(x, from, where = "right", sep = 1) {
+S7::method(place, list(ob_point, ob_rectangle)) <- function(x, from, where = "right", sep = 1) {
   where <- degree(where)
   p <- from@point_at(where)
   p_sep <- ob_polar((p - from@center)@theta, sep)
@@ -738,18 +738,18 @@ method(place, list(ob_point, ob_rectangle)) <- function(x, from, where = "right"
 
 }
 
-method(place, list(ob_rectangle, ob_point)) <- function(x, from, where = "right", sep = 1) {
+S7::method(place, list(ob_rectangle, ob_point)) <- function(x, from, where = "right", sep = 1) {
   where <- degree(where)
   p_sep <- ob_polar(where, sep)
   p <- x@center - x@point_at(where + degree(180))
   x@center@x <- from@x + p@x + p_sep@x
   x@center@y <- from@y + p@y + p_sep@y
-  if (S7_inherits(x@label)) x@label@center <- x@center
+  if (S7::S7_inherits(x@label)) x@label@center <- x@center
   x
 }
 
 
-method(ob_array, ob_rectangle) <- function(
+S7::method(ob_array, ob_rectangle) <- function(
     x,
     k = 2,
     sep = 1,

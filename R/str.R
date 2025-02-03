@@ -5,7 +5,7 @@ obj_type <- function(x) {
   if (identical(x, quote(expr = ))) {
     "missing"
   }
-  else if (inherits(x, "S7_object")) {
+  else if (inherits(x, "S7::S7_object")) {
     "S7"
   }
   else if (isS4(x)) {
@@ -59,7 +59,6 @@ str_nest <- function(object,
 
     if (is.function(xi)) {
       str_function(xi, nest.lev = nest.lev + 1)
-    } else if (S7::S7_inherits(xi)) {
       utils::str(xi, ..., nest.lev = nest.lev + 1)
     } else {
       utils::str(xi, ...)
@@ -89,7 +88,7 @@ str_properties <- function(
     nest.lev = 0,
     additional = TRUE,
     omit) {
-  p_names <- prop_names(object)
+  p_names <- S7::prop_names(object)
   cat(if (nest.lev > 0) " ")
   cat(obj_desc(object))
 
@@ -114,12 +113,12 @@ str_properties <- function(
 
 
 
-method(print, class_arrowhead) <- function(x, ...) {
+S7::method(print, class_arrowhead) <- function(x, ...) {
   str(x, ...)
   invisible(x)
 }
 
-method(str, class_arrowhead) <- function(
+S7::method(str, class_arrowhead) <- function(
   object,
   nest.lev = 0,
   additional = TRUE,
@@ -130,12 +129,12 @@ method(str, class_arrowhead) <- function(
 
   cat("\n")
 
-  for (i in S7_data(object)) {
+  for (i in S7::S7_data(object)) {
     print(head(i))
   }
 }
 
-method(str, class_margin) <- function(
+S7::method(str, class_margin) <- function(
   object,
   nest.lev = 0,
   additional = FALSE,
@@ -145,13 +144,13 @@ method(str, class_margin) <- function(
 
   cat("\n")
 
-  for (i in S7_data(object)) {
+  for (i in S7::S7_data(object)) {
     print(i)
   }
 }
 
 
-method(str, class_aesthetics_list) <- function(
+S7::method(str, class_aesthetics_list) <- function(
     object,
     nest.lev = 0,
     additional = TRUE,
@@ -161,16 +160,16 @@ method(str, class_aesthetics_list) <- function(
 
   cat("\n")
 
-  for (i in S7_data(object)) {
+  for (i in S7::S7_data(object)) {
     print(i)
   }
 }
 
-method(str, ob_shape_list) <- function(
+S7::method(str, ob_shape_list) <- function(
     object,
     nest.lev = 0,
     additional = TRUE,
     omit = "") {
   cat("<ob_shape_list>\n")
-  lapply(S7_data(object), str, nest.lev = nest.lev, additional = additional)
+  lapply(S7::S7_data(object), str, nest.lev = nest.lev, additional = additional)
 }

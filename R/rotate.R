@@ -8,19 +8,19 @@
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @export
 #' @return shape object
-rotate <- new_generic(
+rotate <- S7::new_generic(
   name = "rotate",
   dispatch_args = c("x", "theta"),
   fun = function(x, theta, ..., origin = ob_point(0, 0)) {
-    S7_dispatch()})
+    S7::S7_dispatch()})
 
 # Rotate Line
-method(rotate, list(ob_line, ob_angle_or_numeric)) <- function(
+S7::method(rotate, list(ob_line, ob_angle_or_numeric)) <- function(
   x,
   theta,
   origin = ob_point(0, 0), ...) {
 # https://math.stackexchange.com/a/2278909
-  if (!S7_inherits(theta, ob_angle)) theta = degree(theta)
+  if (!S7::S7_inherits(theta, ob_angle)) theta = degree(theta)
 
 A <- x@a * cos(theta) + x@b * sin(theta)
 B <- x@b * cos(theta) - x@a * sin(theta)
@@ -31,12 +31,12 @@ ob_line(a = A, b = B, c = C, ...)
 
 
 # Rotate ----
-method(rotate, list(ob_point, ob_angle_or_numeric)) <- function(
+S7::method(rotate, list(ob_point, ob_angle_or_numeric)) <- function(
   x,
   theta,
   origin = ob_point(0, 0), ...) {
 
-  if (!S7_inherits(theta, ob_angle)) theta <- degree(theta)
+  if (!S7::S7_inherits(theta, ob_angle)) theta <- degree(theta)
 
   d <- tibble::tibble(
     x0 = x@x - origin@x,
@@ -52,7 +52,7 @@ ob_point(x = d$xr, y = d$yr, style = x@style, ...)
 
 
 # Rotate segment
-method(rotate, list(ob_segment, ob_angle_or_numeric)) <- function(x, theta, origin = ob_point(0, 0), ...) {
+S7::method(rotate, list(ob_segment, ob_angle_or_numeric)) <- function(x, theta, origin = ob_point(0, 0), ...) {
   p1r <- rotate(x@p1, theta, origin = origin)
   p2r <- rotate(x@p2, theta, origin = origin)
   style <- ob_style(...)
@@ -68,7 +68,7 @@ method(rotate, list(ob_segment, ob_angle_or_numeric)) <- function(x, theta, orig
 
 
 # Rotate centerpoint
-method(rotate, list(centerpoint, ob_angle_or_numeric)) <- function(
+S7::method(rotate, list(centerpoint, ob_angle_or_numeric)) <- function(
       x,
     theta,
     origin = ob_point(0, 0),
@@ -80,7 +80,7 @@ method(rotate, list(centerpoint, ob_angle_or_numeric)) <- function(
   }
 
 # Rotate ob_ellipse
-method(rotate,
+S7::method(rotate,
        list(ob_ellipse, ob_angle_or_numeric)) <- function(
     x,
     theta,
@@ -92,7 +92,7 @@ method(rotate,
   rlang::inject(set_props(x,!!!s))
        }
 # Rotate rectangle
-method(rotate, list(ob_rectangle, ob_angle_or_numeric)) <- function(x, theta, origin = ob_point(0, 0), ...) {
+S7::method(rotate, list(ob_rectangle, ob_angle_or_numeric)) <- function(x, theta, origin = ob_point(0, 0), ...) {
 
   ob_point(c(
     rotate(ob_point(x.northeast), theta),

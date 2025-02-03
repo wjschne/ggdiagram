@@ -5,8 +5,8 @@
 \title{ob_segment class}
 \usage{
 ob_segment(
-  p1 = class_missing,
-  p2 = class_missing,
+  p1 = S7::class_missing,
+  p2 = S7::class_missing,
   label = character(0),
   alpha = numeric(0),
   arrow_head = ggarrow::arrow_head_minimal(90),
@@ -26,11 +26,11 @@ ob_segment(
   resect_head = numeric(0),
   stroke_color = character(0),
   stroke_width = numeric(0),
-  style = class_missing,
-  x = class_missing,
-  xend = class_missing,
-  y = class_missing,
-  yend = class_missing,
+  style = S7::class_missing,
+  x = S7::class_missing,
+  xend = S7::class_missing,
+  y = S7::class_missing,
+  yend = S7::class_missing,
   ...
 )
 }

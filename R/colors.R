@@ -21,24 +21,24 @@
 #' mycolor@lighten(.5)
 #' # Darken color
 #' mycolor@darken(.5)
-class_color <- new_class(
+class_color <- S7::new_class(
   name = "class_color",
-  parent = class_character,
+  parent = S7::class_character,
   properties = list(
-    color = new_property(
-      class = class_character,
+    color = S7::new_property(
+      class = S7::class_character,
       getter = function(self) {
         as.character(self)
       }
     ),
-    transparentize = new_property(
-      class = class_function,
+    transparentize = S7::new_property(
+      class = S7::class_function,
       getter = function(self) {
         \(alpha = .5) class_color(scales::alpha(alpha = alpha, colour = self))
       }
     ),
-    lighten = new_property(
-      class = class_function,
+    lighten = S7::new_property(
+      class = S7::class_function,
       getter = function(self) {
         \(amount = 0.2) {
           tibble::tibble(amount = amount, x = c(self)) |>
@@ -54,8 +54,8 @@ class_color <- new_class(
         }
       }
     ),
-    darken = new_property(
-      class = class_function,
+    darken = S7::new_property(
+      class = S7::class_function,
       getter = function(self) {
         \(amount = 0.2) {
           tibble::tibble(amount = amount, x = c(self)) |>
@@ -71,14 +71,14 @@ class_color <- new_class(
         }
       }
     ),
-    saturation = new_property(
-      class = class_integer,
+    saturation = S7::new_property(
+      class = S7::class_integer,
       getter = function(self) {
         farver::get_channel(c(self), channel = "s", space = "hsv")
 
       },
       setter = function(self, value) {
-        S7_data(self) <- farver::set_channel(
+        S7::S7_data(self) <- farver::set_channel(
           colour = c(self),
           value = value,
           channel = "s",
@@ -87,25 +87,25 @@ class_color <- new_class(
         self
       }
     ),
-    hue = new_property(
-      class = class_integer,
+    hue = S7::new_property(
+      class = S7::class_integer,
       getter = function(self) {
         farver::get_channel(colour = c(self),
                             channel = "h",
                             space = "hsv")
       },
       setter = function(self, value) {
-        S7_data(self) <- farver::set_channel(c(self), value, channel = "h", space = "hsv")
+        S7::S7_data(self) <- farver::set_channel(c(self), value, channel = "h", space = "hsv")
         self
       }
     ),
-    brightness = new_property(
-      class = class_integer,
+    brightness = S7::new_property(
+      class = S7::class_integer,
       getter = function(self) {
         farver::get_channel(c(self), channel = "v", space = "hsv")
       },
       setter = function(self, value) {
-        S7_data(self) <- farver::set_channel(
+        S7::S7_data(self) <- farver::set_channel(
           colour = c(self),
           value = value,
           channel = "v",
@@ -114,14 +114,14 @@ class_color <- new_class(
         self
       }
     ),
-    alpha = new_property(
-      class = class_integer,
+    alpha = S7::new_property(
+      class = S7::class_integer,
       getter = function(self) {
         farver::get_channel(c(self), channel = "alpha", space = "hsv")
 
       },
       setter = function(self, value) {
-        S7_data(self) <- farver::set_channel(
+        S7::S7_data(self) <- farver::set_channel(
           colour = c(self),
           value = value,
           channel = "alpha",
@@ -130,43 +130,43 @@ class_color <- new_class(
         self
       }
     ),
-    red = new_property(
-      class = class_integer,
+    red = S7::new_property(
+      class = S7::class_integer,
       getter = function(self) {
         farver::get_channel(colour = c(self),
                             channel = "r",
                             space = "rgb")
       },
       setter = function(self, value) {
-        S7_data(self) <- farver::set_channel(c(self), value, channel = "r", space = "rgb")
+        S7::S7_data(self) <- farver::set_channel(c(self), value, channel = "r", space = "rgb")
         self
       }
     ),
-    green = new_property(
-      class = class_integer,
+    green = S7::new_property(
+      class = S7::class_integer,
       getter = function(self) {
         farver::get_channel(colour = c(self),
                             channel = "g",
                             space = "rgb")
       },
       setter = function(self, value) {
-        S7_data(self) <- farver::set_channel(c(self), value, channel = "g", space = "rgb")
+        S7::S7_data(self) <- farver::set_channel(c(self), value, channel = "g", space = "rgb")
         self
       }
     ),
-    blue = new_property(
-      class = class_integer,
+    blue = S7::new_property(
+      class = S7::class_integer,
       getter = function(self) {
         farver::get_channel(colour = c(self),
                             channel = "b",
                             space = "rgb")
       },
       setter = function(self, value) {
-        S7_data(self) <- farver::set_channel(c(self), value, channel = "b", space = "rgb")
+        S7::S7_data(self) <- farver::set_channel(c(self), value, channel = "b", space = "rgb")
         self
       }
     ),
-    mean = new_property(getter = \(self) {
+    mean = S7::new_property(getter = \(self) {
       r <- mean(self@red)
       g <- mean(self@green)
       b <- mean(self@blue)
@@ -178,7 +178,7 @@ class_color <- new_class(
       x@alpha <- a
       x
     }),
-    tex = new_property(getter = function(self) {
+    tex = S7::new_property(getter = function(self) {
       paste0("\\color[HTML]{", substring(self@color, 2, 7), "}")
     })
   ), constructor = function(color = character(0), hue = NULL, saturation = NULL, brightness = NULL, alpha = NULL) {
@@ -245,13 +245,13 @@ class_color <- new_class(
     decoded <- d %>% tibble::as_tibble() %>% as.matrix
 
 
-    new_object(farver::encode_colour(decoded[,c("h", "s", "v"), drop = FALSE], alpha = decoded[,"alpha"], from = "hsv"))
+    S7::new_object(farver::encode_colour(decoded[,c("h", "s", "v"), drop = FALSE], alpha = decoded[,"alpha"], from = "hsv"))
   }
 )
 
-class_color_or_character <- new_union(class_color, class_character)
+class_color_or_character <- S7::new_union(class_color, S7::class_character)
 
-method(str, class_color) <- function(
+S7::method(str, class_color) <- function(
     object,
     nest.lev = 0,
     additional = FALSE,
@@ -262,17 +262,17 @@ method(str, class_color) <- function(
     nest.lev = nest.lev)
 }
 
-method(print, class_color) <- function(x, ...) {
+S7::method(print, class_color) <- function(x, ...) {
   str(x, ...)
   invisible(x)
 }
 
-method(`[`, class_color) <- function(x, y) {
+S7::method(`[`, class_color) <- function(x, y) {
   S7::S7_data(x) <-  c(x)[y]
   x
 }
 
-method(mean, class_color) <- function(x, ...) {
+S7::method(mean, class_color) <- function(x, ...) {
   y <- class_color("white")
   y@hue <- mean(x@hue)
   y@saturation <- mean(x@saturation)
@@ -306,7 +306,7 @@ mean_color <- function(x) {
 #' @examples
 #' latex_color("X^2", "red")
 latex_color <- function(x, color) {
-  if (!S7_inherits(color, class_color)) {
+  if (!S7::S7_inherits(color, class_color)) {
     color <- class_color(color)
   }
   paste0("{",color@tex," ", x,"}")

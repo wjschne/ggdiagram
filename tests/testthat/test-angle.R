@@ -1,6 +1,6 @@
 test_that("add, subtract, multiply, divide, and exponentiate degrees, radians, and turns", {
   purrr::map(list(degree, radian, turn), \(.f) {
-    expect_equal(prop(.f(.1), S7_class(.f(0))@name), .1)
+    expect_equal(S7::prop(.f(.1), S7::S7_class(.f(0))@name), .1)
     expect_equal(.f(.1) + .f(.1), .f(.2))
     expect_equal(.f(.1) - .f(.1), .f(0))
     expect_equal(.f(.1) * .1, .f(.01))

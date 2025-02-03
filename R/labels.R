@@ -37,21 +37,21 @@ gtextcurve_aes <- class_aesthetics_list(
 lb_props <- list(
   # primary ----
   primary = list(
-    label = new_property(class = class_character),
-    center = new_property(class = ob_point)
+    label = S7::new_property(class = S7::class_character),
+    center = S7::new_property(class = ob_point)
   ),
   styles = ob_style@properties[lb_styles],
   # derived ----
   derived = list(
-    auto_label = new_property(getter = function(self) {
+    auto_label = S7::new_property(getter = function(self) {
       label_object(self@center)
     }),
-   length = new_property(
+   length = S7::new_property(
       getter = function(self) {
         length(self@label)
       }
     ),
-   style = new_property(
+   style = S7::new_property(
      getter = function(self) {
        pr <- `names<-`(purrr::map(lb_styles,
                                   prop, object = self),
@@ -64,9 +64,9 @@ lb_props <- list(
        self <- rlang::inject(set_props(self, !!!s_list))
        self
      }),
-    tibble = new_property(getter = function(self) {
+    tibble = S7::new_property(getter = function(self) {
       if (length(self@angle) > 0) {
-        if (S7_inherits(self@angle, ob_angle)) {
+        if (S7::S7_inherits(self@angle, ob_angle)) {
           self@angle <- self@angle@degree
         }
       }
@@ -97,13 +97,13 @@ lb_props <- list(
       d <- get_non_empty_tibble(d)
       if (!is.null(d$label.margin)) {
         d$label.margin <- purrr::map(d$label.margin, \(m) {
-          if (S7_inherits(m, class_margin)) m <- c(m)[[1]]
+          if (S7::S7_inherits(m, class_margin)) m <- c(m)[[1]]
           m
         })
       }
       if (!is.null(d$label.padding)) {
         d$label.padding <- purrr::map(d$label.padding, \(m) {
-          if (S7_inherits(m, class_margin)) m <- c(m)[[1]]
+          if (S7::S7_inherits(m, class_margin)) m <- c(m)[[1]]
           m
         })
       }
@@ -113,7 +113,7 @@ lb_props <- list(
   ),
   # functions ----
   funs = list(
-    geom = new_property(class_function, getter = function(self) {
+    geom = S7::new_property(S7::class_function, getter = function(self) {
       \(...) {
         as.geom(self, ...)
       }
@@ -121,15 +121,15 @@ lb_props <- list(
     place = pr_place
   ),
   extras = list(
-    plot_point = new_property(class_logical, validator = function(value) {
+    plot_point = S7::new_property(S7::class_logical, validator = function(value) {
       if (length(value) != 1) {
         stop("The plot_point property must be a TRUE/FALSE value of length 1.")
       }
     }),
-    position = new_property(class_numeric),
-    spacing = new_property(class_numeric)
+    position = S7::new_property(S7::class_numeric),
+    spacing = S7::new_property(S7::class_numeric)
   ),
-  info = list(aesthetics = new_property(
+  info = list(aesthetics = S7::new_property(
     getter = function(self) {
       class_aesthetics_list(
         geom = ggtext::geom_richtext,
@@ -182,7 +182,7 @@ lb_props <- list(
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @export
 #' @return ob_label object
-ob_label <- new_class(
+ob_label <- S7::new_class(
   name = "ob_label",
   parent = has_style,
   properties = rlang::inject(list(
@@ -193,7 +193,7 @@ ob_label <- new_class(
     !!!lb_props$funs,
     !!!lb_props$info)),
   constructor = function(label = character(0),
-                         center = class_missing,
+                         center = S7::class_missing,
                          angle = numeric(0),
                          alpha = numeric(0),
                          color = character(0),
@@ -214,12 +214,12 @@ ob_label <- new_class(
                          straight = logical(0),
                          text.color = character(0),
                          vjust = numeric(0),
-                         style = class_missing,
+                         style = S7::class_missing,
                          plot_point = FALSE,
                          position = .5,
                          spacing = numeric(0),
-                         x = class_missing,
-                         y = class_missing,
+                         x = S7::class_missing,
+                         y = S7::class_missing,
                          ...) {
 
     # If center is missing, assign x and y
@@ -250,12 +250,12 @@ ob_label <- new_class(
 
 
     if (length(polar_just) > 0) {
-      if (S7_inherits(polar_just, S7_class(degree(0))@parent) || is.numeric(polar_just)) {
+      if (S7::S7_inherits(polar_just, S7::S7_class(degree(0))@parent) || is.numeric(polar_just)) {
         polar_just <- ob_polar(theta = radian(polar_just), r = 1.2)
       }
       hjust <- polar2just(polar_just@theta, polar_just@r, axis = "h")
       vjust <- polar2just(polar_just@theta, polar_just@r, axis = "v")
-      polar_just <- class_missing
+      polar_just <- S7::class_missing
     }
     if (missing(label)) {
 
@@ -273,8 +273,8 @@ ob_label <- new_class(
 
     if (length(angle) > 0) {
       if (nrow(d) > 1 && length(angle) == 1) {
-        if (S7_inherits(angle, ob_angle)) {
-          S7_data(angle) <- rep(S7_data(angle), nrow(d))
+        if (S7::S7_inherits(angle, ob_angle)) {
+          S7::S7_data(angle) <- rep(S7::S7_data(angle), nrow(d))
         } else {
           angle <- degree(rep(angle, nrow(d)))
         }
@@ -347,8 +347,8 @@ ob_label <- new_class(
     center@x <- d$x
     center@y <- d$y
     alpha = d[["alpha"]] %||% alpha
-    new_object(
-      S7_object(),
+    S7::new_object(
+      S7::S7_object(),
       label = d[["label"]],
       center = center,
       alpha = d[["alpha"]] %||% alpha,
@@ -378,78 +378,78 @@ ob_label <- new_class(
   }
 )
 
-label_or_character_or_angle <- new_union(ob_label, class_character, ob_angle)
+label_or_character_or_angle <- S7::new_union(ob_label, S7::class_character, ob_angle)
 
 # Centerpoint----
-centerpoint <- new_class(
+centerpoint <- S7::new_class(
   name = "centerpoint",
   parent = xy,
-  properties = list(center = new_property(
+  properties = list(center = S7::new_property(
     class = ob_point,
     default = ob_point(0, 0)
   ),
-  label = new_property(label_or_character_or_angle))
+  label = S7::new_property(label_or_character_or_angle))
 )
 
-method(as.geom, centerpoint) <- function(x, ...) {
+S7::method(as.geom, centerpoint) <- function(x, ...) {
   gc <- as.geom(super(x, has_style), ...)
-  if (S7_inherits(x@label, ob_label)) {
+  if (S7::S7_inherits(x@label, ob_label)) {
     gl <- as.geom(x@label)
     gc <- list(gc, gl)
   }
   gc
 }
 
-method(`+`, list(centerpoint, ob_point)) <- function(e1, e2) {
+S7::method(`+`, list(centerpoint, ob_point)) <- function(e1, e2) {
   e1@center <- e1@center + e2
-  if (S7_inherits(e1@label, ob_label)) e1@label@center <- e1@label@center + e2
+  if (S7::S7_inherits(e1@label, ob_label)) e1@label@center <- e1@label@center + e2
   e1
 }
 
-method(`-`, list(centerpoint, ob_point)) <- function(e1, e2) {
+S7::method(`-`, list(centerpoint, ob_point)) <- function(e1, e2) {
   e1@center <- e1@center - e2
-  if (S7_inherits(e1@label, ob_label)) e1@label@center <- e1@label@center - e2
+  if (S7::S7_inherits(e1@label, ob_label)) e1@label@center <- e1@label@center - e2
   e1
 }
 
-method(`+`, list(ob_point, centerpoint)) <- function(e1, e2) {
+S7::method(`+`, list(ob_point, centerpoint)) <- function(e1, e2) {
   e2@center <- e1 + e2@center
-  if (S7_inherits(e2@label, ob_label)) e2@label@center <- e2@label@center + e1
+  if (S7::S7_inherits(e2@label, ob_label)) e2@label@center <- e2@label@center + e1
   e2
 }
 
-method(`-`, list(ob_point, centerpoint)) <- function(e1, e2) {
+S7::method(`-`, list(ob_point, centerpoint)) <- function(e1, e2) {
   e2@center <- e1 - e2@center
-  if (S7_inherits(e2@label, ob_label)) e2@label@center <- e2@label@center - e1
+  if (S7::S7_inherits(e2@label, ob_label)) e2@label@center <- e2@label@center - e1
   e2
 }
 
-method(`%|-%`, list(centerpoint, ob_point)) <- function(e1,e2) {
+S7::method(`%|-%`, list(centerpoint, ob_point)) <- function(e1,e2) {
   `%|-%`(e1@center, e2)
   }
 
-method(`%|-%`, list(ob_point, centerpoint)) <- function(e1,e2) {
+S7::method(`%|-%`, list(ob_point, centerpoint)) <- function(e1,e2) {
   `%|-%`(e1, e2@center)
   }
 
-method(`%|-%`, list(centerpoint, centerpoint)) <- function(e1,e2) {
+S7::method(`%|-%`, list(centerpoint, centerpoint)) <- function(e1,e2) {
   `%|-%`(e1@center, e2@center)
   }
 
-method(`%-|%`, list(centerpoint, ob_point)) <- function(e1,e2) {
+S7::method(`%-|%`, list(centerpoint, ob_point)) <- function(e1,e2) {
   `%-|%`(e1@center, e2)
 }
 
-method(`%-|%`, list(ob_point, centerpoint)) <- function(e1,e2) {
+S7::method(`%-|%`, list(ob_point, centerpoint)) <- function(e1,e2) {
   `%-|%`(e1, e2@center)
   }
 
-method(`%-|%`, list(centerpoint, centerpoint)) <- function(e1,e2) {
+S7::method(`%-|%`, list(centerpoint, centerpoint)) <- function(e1,e2) {
   `%-|%`(e1@center, e2@center)
   }
 
 
-method(str, ob_label) <- function(
+S7::method(str, ob_label) <- function(
     object,
     nest.lev = 0,
     additional = TRUE,
@@ -461,18 +461,18 @@ method(str, ob_label) <- function(
 
 
 
-method(get_tibble, ob_label) <- function(x) {
+S7::method(get_tibble, ob_label) <- function(x) {
   d <- x@tibble
   if (!is.null(d$label.margin)) {
     d$label.margin <- purrr::map(d$label.margin, \(m) {
-      if (S7_inherits(m, class_margin)) m <- S7_data(m)
+      if (S7::S7_inherits(m, class_margin)) m <- S7::S7_data(m)
       m
     })
   }
 
   if (!is.null(d$label.padding)) {
     d$label.padding <- purrr::map(d$label.padding, \(m) {
-      if (S7_inherits(m, class_margin)) m <- S7_data(m)
+      if (S7::S7_inherits(m, class_margin)) m <- S7::S7_data(m)
       m
     })
   }
@@ -480,7 +480,7 @@ method(get_tibble, ob_label) <- function(x) {
   d
 }
 
-method(get_tibble_defaults, ob_label) <- function(x) {
+S7::method(get_tibble_defaults, ob_label) <- function(x) {
   sp <- ob_style(
     alpha = replace_na(ggtext::GeomRichText$default_aes$alpha, 1),
     color = replace_na(ggtext::GeomRichText$default_aes$colour, "black"),
@@ -505,7 +505,7 @@ method(get_tibble_defaults, ob_label) <- function(x) {
 
 
 
-method(as.geom, ob_label) <- function(x, ...) {
+S7::method(as.geom, ob_label) <- function(x, ...) {
   overides <- get_non_empty_props(ob_style(...))
   if ("size" %in% names(overides)) {
     overides$size <- overides$size / ggplot2::.pt
@@ -532,13 +532,13 @@ method(as.geom, ob_label) <- function(x, ...) {
 
 }
 
-method(label_object, ob_label) <- function(object, accuracy = .1) {
+S7::method(label_object, ob_label) <- function(object, accuracy = .1) {
   label_object(object@center, accuracy = accuracy)
 }
 
 
 
-method(`[`, ob_label) <- function(x, y) {
+S7::method(`[`, ob_label) <- function(x, y) {
   d <- as.list(x@tibble[y,])
   new_x <- rlang::inject(ob_label(!!!d))
 
@@ -551,7 +551,7 @@ method(`[`, ob_label) <- function(x, y) {
   new_x
 }
 
-method(`[<-`, ob_label) <- function(x, y, value) {
+S7::method(`[<-`, ob_label) <- function(x, y, value) {
   dx <- x@tibble
   dv <- value@tibble
   dx[y, ] <- value@tibble
@@ -569,17 +569,17 @@ method(`[<-`, ob_label) <- function(x, y, value) {
 }
 
 
-method(unbind, ob_label) <- function(x) {
+S7::method(unbind, ob_label) <- function(x) {
   purrr::map(seq(1, x@length), \(i) x[i])
 }
 
 centerpoint_label <- function(label, center, d, shape_name = "shape", ...) {
 
-  if (S7_inherits(label, ob_label)) {
+  if (S7::S7_inherits(label, ob_label)) {
     label@center <- center
   }
 
-  if ((is.character(label) && length(label) > 0) || S7_inherits(label, ob_angle) || is.numeric(label)) {
+  if ((is.character(label) && length(label) > 0) || S7::S7_inherits(label, ob_angle) || is.numeric(label)) {
     label <- ob_label(label = label, center = center, fill = NA, ...)
   }
 
@@ -608,39 +608,39 @@ centerpoint_label <- function(label, center, d, shape_name = "shape", ...) {
   label
 }
 
-method(nudge, list(ob_label, class_numeric, class_numeric)) <- function(object, x, y) {
+S7::method(nudge, list(ob_label, S7::class_numeric, S7::class_numeric)) <- function(object, x, y) {
   object@center <- object@center + ob_point(x, y)
   object
 }
 
-method(nudge, list(ob_label, class_numeric, class_missing)) <- function(object, x, y) {
+S7::method(nudge, list(ob_label, S7::class_numeric, S7::class_missing)) <- function(object, x, y) {
   object@center <- object@center + ob_point(x, 0)
   object
 }
 
-method(nudge, list(ob_label, class_missing, class_numeric)) <- function(object, x, y) {
+S7::method(nudge, list(ob_label, S7::class_missing, S7::class_numeric)) <- function(object, x, y) {
   object@center <- object@center + ob_point(0, y)
   object
 }
 
 
-method(nudge, list(centerpoint, class_numeric, class_numeric)) <- function(object, x, y) {
+S7::method(nudge, list(centerpoint, S7::class_numeric, S7::class_numeric)) <- function(object, x, y) {
   object@center <- object@center + ob_point(x, y)
   object
 }
 
-method(nudge, list(centerpoint, class_numeric, class_missing)) <- function(object, x, y) {
+S7::method(nudge, list(centerpoint, S7::class_numeric, S7::class_missing)) <- function(object, x, y) {
   object@center <- object@center + ob_point(x, 0)
   object
 }
 
-method(nudge, list(centerpoint, class_missing, class_numeric)) <- function(object, x, y) {
+S7::method(nudge, list(centerpoint, S7::class_missing, S7::class_numeric)) <- function(object, x, y) {
   object@center <- object@center + ob_point(0, y)
   object
 }
 
 
-method(place, list(ob_label, ob_point)) <- function(
+S7::method(place, list(ob_label, ob_point)) <- function(
     x,
     from,
     where = "right",
@@ -652,7 +652,7 @@ method(place, list(ob_label, ob_point)) <- function(
   x
 }
 
-method(place, list(ob_label, ob_label)) <- function(
+S7::method(place, list(ob_label, ob_label)) <- function(
     x,
     from,
     where = "right",

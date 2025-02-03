@@ -28,7 +28,7 @@ bz_styles <- c(
 bz_props <- list(
   # primary ----
   primary = list(
-    p = new_property(class = point_or_list, validator = function(value) {
+    p = S7::new_property(class = point_or_list, validator = function(value) {
       if ("list" %in% class(value)) {
         allsameclass(value, "ob_point")
       }
@@ -36,12 +36,12 @@ bz_props <- list(
   ),
   extra = list(
     label = label_or_character_or_angle,
-    label_sloped = new_property(class_logical)
+    label_sloped = S7::new_property(S7::class_logical)
   ),
   styles = ob_style@properties[bz_styles],
   # derived ----
   derived = list(
-    bounding_box = new_property(getter = function(self) {
+    bounding_box = S7::new_property(getter = function(self) {
 
       d_rect <- get_tibble(self) |>
         dplyr::summarise(xmin = min(x),
@@ -53,7 +53,7 @@ bz_props <- list(
                 northeast = ob_point(d_rect$xmax, d_rect$ymax))
 
     }),
-    length = new_property(
+    length = S7::new_property(
       getter = function(self) {
         if ("list" %in% class(self@p)) {
           l <- length(self@p)
@@ -61,7 +61,7 @@ bz_props <- list(
         l
       }
     ),
-    style = new_property(
+    style = S7::new_property(
       getter = function(self) {
         pr <- purrr::map(bz_styles,
                          prop,
@@ -74,9 +74,9 @@ bz_props <- list(
         ob_path(self@p, label = self@label, style = self@style + value)
       }
     ),
-    tibble = new_property(getter = function(self) {
+    tibble = S7::new_property(getter = function(self) {
       p <- self@p
-      if (S7_inherits(self@p, ob_point)) p <- list(p)
+      if (S7::S7_inherits(self@p, ob_point)) p <- list(p)
       d <- list(
         p = p,
         group = seq(1, self@length),
@@ -107,17 +107,17 @@ bz_props <- list(
   ),
   # functions ----
   funs = list(
-    geom = new_property(class_function, getter = function(self) {
+    geom = S7::new_property(S7::class_function, getter = function(self) {
       \(...) {
         as.geom(self, ...)
       }
     }),
-    midpoint = new_property(class_function, getter = function(self) {
+    midpoint = S7::new_property(S7::class_function, getter = function(self) {
       \(position = .5, ...) midpoint(self, position = position, ...)
     })
   ),
   # info ----
-  info = list(aesthetics = new_property(
+  info = list(aesthetics = S7::new_property(
     getter = function(self) {
       class_aesthetics_list(
         geom = ggarrow::geom_arrow,
@@ -186,7 +186,7 @@ bz_props <- list(
 #'   ob_bezier(control_points, color = "blue") +
 #'   ob_path(control_points, linetype = "dashed", linewidth = .5) +
 #'   control_points
-ob_bezier <- new_class(
+ob_bezier <- S7::new_class(
   name = "ob_bezier",
   parent = has_style,
   properties = rlang::inject(
@@ -199,13 +199,13 @@ ob_bezier <- new_class(
       !!!bz_props$info
     )
   ),
-  constructor = function(p = class_missing,
+  constructor = function(p = S7::class_missing,
                          label = character(0),
                          label_sloped = TRUE,
                          n = 360,
                          alpha = numeric(0),
-                         arrow_head = class_missing,
-                         arrow_fins = class_missing,
+                         arrow_head = S7::class_missing,
+                         arrow_fins = S7::class_missing,
                          arrowhead_length = numeric(0),
                          length_head = numeric(0),
                          length_fins = numeric(0),
@@ -222,10 +222,10 @@ ob_bezier <- new_class(
                          resect_head = numeric(0),
                          stroke_color = character(0),
                          stroke_width = numeric(0),
-                         style = class_missing,
+                         style = S7::class_missing,
                          ...) {
 
-    if (S7_inherits(p, ob_point)) p <- list(p)
+    if (S7::S7_inherits(p, ob_point)) p <- list(p)
     p_style <- purrr::map(p, \(x) {
       purrr::map(unbind(x), \(xx) xx@style) |>
         purrr::reduce(`+`)
@@ -263,7 +263,7 @@ bz_style <- p_style + style +
 
     non_empty_list <- get_non_empty_props(bz_style)
 
-    if (S7_inherits(p, ob_point)) p <- list(p)
+    if (S7::S7_inherits(p, ob_point)) p <- list(p)
     d <- tibble::tibble(
       p = p
     )
@@ -274,7 +274,7 @@ bz_style <- p_style + style +
     if (length(label) == 0) label = character(0)
 
 
-    new_object(.parent = S7_object(),
+    S7::new_object(.parent = S7::S7_object(),
       p =  d$p,
       label = label,
       label_sloped = label_sloped,
@@ -303,7 +303,7 @@ bz_style <- p_style + style +
 
 
 
-method(str, ob_bezier) <- function(
+S7::method(str, ob_bezier) <- function(
     object,
     nest.lev = 0,
     additional = TRUE,
@@ -328,7 +328,7 @@ method(str, ob_bezier) <- function(
 
 }
 
-method(get_tibble, ob_bezier) <- function(x) {
+S7::method(get_tibble, ob_bezier) <- function(x) {
   x@tibble |>
     dplyr::mutate(p = purrr::map(p, \(x) {
       x@tibble |> dplyr::select(x,y) |> as.matrix()
@@ -345,7 +345,7 @@ method(get_tibble, ob_bezier) <- function(x) {
 }
 
 
-method(get_tibble_defaults, ob_bezier) <- function(x) {
+S7::method(get_tibble_defaults, ob_bezier) <- function(x) {
   sp <- ob_style(
     alpha = replace_na(as.double(ggarrow::GeomArrow$default_aes$alpha), 1),
     arrow_head = ggarrow::arrow_head_minimal(90),
@@ -365,7 +365,7 @@ method(get_tibble_defaults, ob_bezier) <- function(x) {
 }
 
 
-method(as.geom, ob_bezier) <- function(x, ...) {
+S7::method(as.geom, ob_bezier) <- function(x, ...) {
 
   d <- get_tibble_defaults(x)
   if ("arrowhead_length" %in% colnames(d)) {
@@ -382,7 +382,7 @@ method(as.geom, ob_bezier) <- function(x, ...) {
     user_overrides = overrides,
     aesthetics = x@aesthetics)
 
-  if (S7_inherits(x@label, ob_label)) {
+  if (S7::S7_inherits(x@label, ob_label)) {
 
 
 
@@ -464,7 +464,7 @@ method(as.geom, ob_bezier) <- function(x, ...) {
   gc
 }
 
-method(`[`, ob_bezier) <- function(x, y) {
+S7::method(`[`, ob_bezier) <- function(x, y) {
   d <- x@tibble[y,]
   dl <- d |>
     dplyr::select(-.data$x, -.data$y, -.data$group) |>
@@ -475,7 +475,7 @@ method(`[`, ob_bezier) <- function(x, y) {
   z
 }
 
-method(midpoint, list(ob_bezier, class_missing)) <- function(x,y, position = .5, ...) {
+S7::method(midpoint, list(ob_bezier, S7::class_missing)) <- function(x,y, position = .5, ...) {
 
 
   purrr::map(x@p, \(xx) {

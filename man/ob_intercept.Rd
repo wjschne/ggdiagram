@@ -8,9 +8,9 @@ ob_intercept(
   center = ob_point(0, 0),
   width = 1,
   label = character(0),
-  top = class_missing,
-  left = class_missing,
-  right = class_missing,
+  top = S7::class_missing,
+  left = S7::class_missing,
+  right = S7::class_missing,
   vertex_radius = numeric(0),
   alpha = numeric(0),
   color = character(0),
@@ -19,7 +19,7 @@ ob_intercept(
   linetype = numeric(0),
   x0 = numeric(0),
   y0 = numeric(0),
-  style = class_missing,
+  style = S7::class_missing,
   ...
 )
 }

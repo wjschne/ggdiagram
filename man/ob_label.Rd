@@ -6,7 +6,7 @@
 \usage{
 ob_label(
   label = character(0),
-  center = class_missing,
+  center = S7::class_missing,
   angle = numeric(0),
   alpha = numeric(0),
   color = character(0),
@@ -27,12 +27,12 @@ ob_label(
   straight = logical(0),
   text.color = character(0),
   vjust = numeric(0),
-  style = class_missing,
+  style = S7::class_missing,
   plot_point = FALSE,
   position = 0.5,
   spacing = numeric(0),
-  x = class_missing,
-  y = class_missing,
+  x = S7::class_missing,
+  y = S7::class_missing,
   ...
 )
 }

@@ -49,6 +49,7 @@ chorda
 circ
 cov
 definitional
+farver
 foci
 frac
 geoms
@@ -78,6 +79,7 @@ pixelated
 programmatically
 purrr
 resect
+reuleaux
 roundedness
 sagitta
 squircle
@@ -85,6 +87,7 @@ superellipse
 superellipses
 tex
 tibble
+tinter
 tinytex
 underbrace
 vjust

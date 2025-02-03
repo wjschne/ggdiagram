@@ -22,24 +22,24 @@
 #' @inherit ob_style params
 #' @export
 #' @return ob_latex object
-ob_latex <- new_class(
+ob_latex <- S7::new_class(
   name = "ob_latex",
   properties = list(
-    tex = class_character,
+    tex = S7::class_character,
     center = ob_point,
-    width = class_numeric,
-    height = class_numeric,
-    hjust = class_numeric,
-    vjust = class_numeric,
+    width = S7::class_numeric,
+    height = S7::class_numeric,
+    hjust = S7::class_numeric,
+    vjust = S7::class_numeric,
     angle = ob_angle_or_character,
-    rectangle = new_property(
+    rectangle = S7::new_property(
       getter = function(self) {
         cc <- rotate(ob_point((self@hjust - .5) * -1 * self@width,
                               (self@vjust - .5) * -1 * self@height),
                      self@angle) + self@center
         ob_rectangle(cc, width = self@width, height = self@height, angle = self@angle)
     }, setter = function(self, value) {
-      if (!S7_inherits(value, ob_rectangle)) {
+      if (!S7::S7_inherits(value, ob_rectangle)) {
         stop("The `rectangle` must be the output of the function `ob_rectangle`.")
         }
       self@center <- value@center
@@ -48,19 +48,19 @@ ob_latex <- new_class(
       self@angle <- value@angle
       self
     }),
-    aspect_ratio = new_property(class_numeric, default = 1),
-    border = class_numeric,
-    family = class_character,
-    math_mode = new_property(class_logical, default = TRUE),
-    filename = class_character,
+    aspect_ratio = S7::new_property(S7::class_numeric, default = 1),
+    border = S7::class_numeric,
+    family = S7::class_character,
+    math_mode = S7::new_property(S7::class_logical, default = TRUE),
+    filename = S7::class_character,
     color = class_color_or_character,
     fill = class_color_or_character,
-    density = new_property(class_numeric, default = 300),
-    latex_packages = class_character,
-    preamble = class_character,
-    force_recompile = new_property(class = class_logical, default = TRUE),
-    delete_files = new_property(class_logical, default = TRUE),
-    image = class_list,
+    density = S7::new_property(S7::class_numeric, default = 300),
+    latex_packages = S7::class_character,
+    preamble = S7::class_character,
+    force_recompile = S7::new_property(class = S7::class_logical, default = TRUE),
+    delete_files = S7::new_property(S7::class_logical, default = TRUE),
+    image = S7::class_list,
     place = pr_place),
   constructor = function(
     tex = character(0),
@@ -82,11 +82,11 @@ ob_latex <- new_class(
     preamble = character(0),
     force_recompile = TRUE,
     delete_files = TRUE) {
-    if (!S7_inherits(angle, ob_angle)) angle <- degree(angle)
+    if (!S7::S7_inherits(angle, ob_angle)) angle <- degree(angle)
 
     latex_color <- ""
     if (length(color) > 0) {
-      if (S7_inherits(color, class_color)) {
+      if (S7::S7_inherits(color, class_color)) {
         latex_color <- c(color)
       } else {
         latex_color <- c(class_color(color))
@@ -106,7 +106,7 @@ ob_latex <- new_class(
 
     fill_tex <- ""
     if (length(fill) > 0) {
-      if (S7_inherits(fill, class_color)) {
+      if (S7::S7_inherits(fill, class_color)) {
         latex_fill <- c(fill)
       } else {
         latex_fill <- c(class_color(fill))
@@ -213,8 +213,8 @@ ob_latex <- new_class(
     })
 
 
-    new_object(
-      S7_object(),
+    S7::new_object(
+      S7::S7_object(),
       tex = d$tx,
       center = bind(d$center),
       width = image$width,
@@ -241,7 +241,7 @@ ob_latex <- new_class(
 
 
 
-method(as.geom, ob_latex) <- function(x, ...) {
+S7::method(as.geom, ob_latex) <- function(x, ...) {
 
   purrr::pmap(list(x@image, x@width, x@height, unbind(x@center), unbind(x@angle), x@hjust, x@vjust, x@fill), \(i,width, height, center, angle, hjust, vjust, fill) {
 
@@ -275,17 +275,17 @@ method(as.geom, ob_latex) <- function(x, ...) {
 
 }
 
-method(`+`, list(class_ggplot, ob_latex)) <- function(e1, e2) {
+S7::method(`+`, list(class_ggplot, ob_latex)) <- function(e1, e2) {
   e1 + as.geom(e2)
 }
 
-method(place, list(ob_latex, centerpoint)) <- function(x, from, where = "right", sep = 1) {
+S7::method(place, list(ob_latex, centerpoint)) <- function(x, from, where = "right", sep = 1) {
   r1 <- x@rectangle
   x@rectangle <- place(r1, from, where, sep)
   x
 }
 
-method(place, list(ob_latex, ob_point)) <- function(x, from, where = "right", sep = 1) {
+S7::method(place, list(ob_latex, ob_point)) <- function(x, from, where = "right", sep = 1) {
   r1 <- x@rectangle
   x@rectangle <- place(r1, from, where, sep)
   x

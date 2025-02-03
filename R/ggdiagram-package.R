@@ -2,7 +2,7 @@
 "_PACKAGE"
 
 ## usethis namespace: start
-#' @import S7
+#' @importFrom S7 convert
 #' @importFrom rlang .data
 ## usethis namespace: end
 NULL

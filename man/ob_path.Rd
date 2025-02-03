@@ -5,11 +5,11 @@
 \title{The ob_path class}
 \usage{
 ob_path(
-  p = class_missing,
+  p = S7::class_missing,
   label = character(0),
   alpha = numeric(0),
-  arrow_head = class_missing,
-  arrow_fins = class_missing,
+  arrow_head = S7::class_missing,
+  arrow_fins = S7::class_missing,
   arrowhead_length = numeric(0),
   length_head = numeric(0),
   length_fins = numeric(0),
@@ -26,7 +26,7 @@ ob_path(
   resect_head = numeric(0),
   stroke_color = character(0),
   stroke_width = numeric(0),
-  style = class_missing,
+  style = S7::class_missing,
   ...
 )
 }

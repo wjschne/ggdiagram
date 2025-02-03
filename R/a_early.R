@@ -1,5 +1,3 @@
-library(S7)
-
 do_nothing <- function(x) {
   # Helps devtools:check find packages
   if (FALSE) {
@@ -11,7 +9,7 @@ do_nothing <- function(x) {
   }
 }
 
-utils::globalVariables("properties")
+# utils::globalVariables("properties")
 
 #' @export
 #' @importFrom S7 prop
@@ -46,24 +44,24 @@ the$arrow_head <- arrowheadr::arrow_head_deltoid(d = 2.3, n = 100)
 #' @keywords internal
 #' @return a class_aesthetics_list object
 #' @export
-class_aesthetics_list <- new_class(
+class_aesthetics_list <- S7::new_class(
   name = "class_aesthetics_list",
   properties = list(
-    geom = class_function,
-    style = class_character,
-    mappable_bare = class_character,
-    mappable_identity = class_character,
-    not_mappable = class_character,
-    required_aes = class_character,
-    omit_names = class_character,
-    inherit.aes = class_logical
+    geom = S7::class_function,
+    style = S7::class_character,
+    mappable_bare = S7::class_character,
+    mappable_identity = S7::class_character,
+    not_mappable = S7::class_character,
+    required_aes = S7::class_character,
+    omit_names = S7::class_character,
+    inherit.aes = S7::class_logical
   )
                                      )
 ## class_ggplot ----
-class_ggplot <- new_S3_class("ggplot")
+class_ggplot <- S7::new_S3_class("ggplot")
 
 ## class_unit ----
-class_unit <- new_S3_class(
+class_unit <- S7::new_S3_class(
   "unit",
   constructor = function(.data = numeric(), units = "mm") {
     if ("unit" %in% class(.data)) {
@@ -79,12 +77,12 @@ class_unit <- new_S3_class(
 )
 
 ## class_margin ----
-class_margin <- new_class(
+class_margin <- S7::new_class(
   name = "class_margin",
-  parent = class_list,
+  parent = S7::class_list,
   constructor = function(x = numeric(0), units = "pt") {
 
-    if (S7_inherits(x, class_margin))
+    if (S7::S7_inherits(x, class_margin))
       return(x)
     if (length(x) > 0) {
       if (is.numeric(x) && !grid::is.unit(x)) {
@@ -98,7 +96,7 @@ class_margin <- new_class(
         if (all(purrr::map_lgl(x, \(o) {"unit" %in% class(o)}))) {
           return(purrr::map(x, class_margin))
         }
-        if (all(purrr::map_lgl(x, \(o) {S7_inherits(o, class_margin)}))) {
+        if (all(purrr::map_lgl(x, \(o) {S7::S7_inherits(o, class_margin)}))) {
           return(purrr::map(x, class_margin))
 
         }
@@ -126,16 +124,16 @@ class_margin <- new_class(
 
       }
     }
-    new_object(list(x))
+    S7::new_object(list(x))
   }
 )
 
 ## class_arrowhead ----
-class_arrowhead <- new_class(
+class_arrowhead <- S7::new_class(
   "class_arrowhead",
-  class_list,
+  S7::class_list,
   constructor = function(x) {
-    if (S7_inherits(x, class_arrowhead))
+    if (S7::S7_inherits(x, class_arrowhead))
       return(x)
     if (is.list(x))
       return(purrr::map(x, class_arrowhead))
@@ -144,11 +142,22 @@ class_arrowhead <- new_class(
           ncol(x) == 2))
       stop("Arrowheads must be a 2-column matrix of numbers.")
 
-    new_object(list(x))
+    S7::new_object(list(x))
 
 
   }
 )
+
+
+
+
+## has_style ----
+has_style <- S7::new_class(name = "has_style", abstract = TRUE)
+S7::S4_register(has_style)
+S7::method(print, has_style) <- function(x, ...) {
+  str(x, ...)
+  invisible(x)
+}
 
 #' ob_shape_list
 #'
@@ -156,17 +165,9 @@ class_arrowhead <- new_class(
 #' @param .data a list of objects
 #' @export
 #' @return An object of `ob_shape_list` class. List of objects that can be converted to geoms
-ob_shape_list <- new_class("ob_shape_list", class_list,validator = function(self) {
-  if(!all(purrr::map_lgl(self, S7_inherits, class = has_style))) "All objects must be ggdiagram objects that can be converted to geoms"
+ob_shape_list <- S7::new_class("ob_shape_list", S7::class_list,validator = function(self) {
+  if(!all(purrr::map_lgl(self, S7::S7_inherits, class = has_style))) "All objects must be ggdiagram objects that can be converted to geoms"
 })
-
-
-## has_style ----
-has_style <- new_class(name = "has_style", abstract = TRUE)
-method(print, has_style) <- function(x, ...) {
-  str(x, ...)
-  invisible(x)
-}
 
 assign_data <- function(x,y, value) {
   dx <- x@tibble
@@ -202,8 +203,8 @@ assign_data <- function(x,y, value) {
   as.list(dx)
 }
 
-method(`[<-`, has_style) <- function(x, y, value) {
-  .fn <- S7_class(x)
+S7::method(`[<-`, has_style) <- function(x, y, value) {
+  .fn <- S7::S7_class(x)
   d <- assign_data(x,y,value)
   l <- x@label
   if (length(l) > 0) {
@@ -228,10 +229,10 @@ method(`[<-`, has_style) <- function(x, y, value) {
 }
 
 
-shape <- new_class(name = "shape",
+shape <- S7::new_class(name = "shape",
                    parent = has_style,
                    abstract = TRUE)
-xy <- new_class(name = "xy",
+xy <- S7::new_class(name = "xy",
                 parent = shape,
                 abstract = TRUE)
 
@@ -253,7 +254,7 @@ xy <- new_class(name = "xy",
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @return Returns an object of type `ob_bezier`
 #' @export
-ob_variance <- new_generic("ob_variance", dispatch_args = "x", fun = function(
+ob_variance <- S7::new_generic("ob_variance", dispatch_args = "x", fun = function(
     x,
     where = "north",
     theta = 50,
@@ -262,7 +263,7 @@ ob_variance <- new_generic("ob_variance", dispatch_args = "x", fun = function(
     arrow_head = arrowheadr::arrow_head_deltoid(d = 2.3, n = 100),
     resect = 2,
     ...) {
-  S7_dispatch()
+  S7::S7_dispatch()
 })
 
 
@@ -278,7 +279,7 @@ ob_variance <- new_generic("ob_variance", dispatch_args = "x", fun = function(
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @return An `ob_bezier` object
 #' @export
-ob_covariance <- new_generic(
+ob_covariance <- S7::new_generic(
   "ob_covariance",
   dispatch_args = c("x", "y"),
   fun = function(x,
@@ -289,7 +290,7 @@ ob_covariance <- new_generic(
                  arrow_head = arrowheadr::arrow_head_deltoid(d = 2.3, n = 100),
                  resect = 2,
                  ...) {
-    S7_dispatch()
+    S7::S7_dispatch()
   }
 )
 
@@ -304,8 +305,8 @@ ob_covariance <- new_generic(
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to shape
 #' @return An array of shapes of the same class as object passed to x
 #' @export
-ob_array <- new_generic(name = "ob_array", dispatch_args = "x", fun = function(x, k = 2, sep = 1, where = "east", anchor = "center", ...) {
-  S7_dispatch()
+ob_array <- S7::new_generic(name = "ob_array", dispatch_args = "x", fun = function(x, k = 2, sep = 1, where = "east", anchor = "center", ...) {
+  S7::S7_dispatch()
 })
 
 ## bind ----
@@ -319,17 +320,17 @@ ob_array <- new_generic(name = "ob_array", dispatch_args = "x", fun = function(x
 #'        ob_circle(ob_point(1,1), radius = 2)))
 #' @export
 #' @return a bound object of same class as x (or list of objects if x contains objects of different types)
-bind <- new_generic(name = "bind", dispatch_args = "x")
+bind <- S7::new_generic(name = "bind", dispatch_args = "x")
 
-method(bind, class_list) <- function(x, ...) {
+S7::method(bind, S7::class_list) <- function(x, ...) {
 
   all_angles <- all(sapply(lapply(x, class), function(xx)
     "ob_angle" %in% xx))
   if (all_angles) {
     trns <- unlist(x)
-    if (S7_inherits(x[[1]], turn)) {
+    if (S7::S7_inherits(x[[1]], turn)) {
       return(turn(trns))
-    } else if (S7_inherits(x[[1]], radian)) {
+    } else if (S7::S7_inherits(x[[1]], radian)) {
       return(radian(trns * pi * 2))
     } else {
       return(degree(trns * 360))
@@ -337,7 +338,7 @@ method(bind, class_list) <- function(x, ...) {
   }
 
   x <- unlist(x)
-  .f <- S7_class(x[[1]])@name
+  .f <- S7::S7_class(x[[1]])@name
   allsame <- allsameclass(x, .f)
   if (length(allsame) > 0) {
     return(bind(ob_shape_list(x)))
@@ -348,7 +349,7 @@ method(bind, class_list) <- function(x, ...) {
       purrr::map(
         x,
         \(o) {
-          if (S7_inherits(o, ob_style)) get_tibble(o) else o@tibble
+          if (S7::S7_inherits(o, ob_style)) get_tibble(o) else o@tibble
           }
         )))
 
@@ -373,9 +374,9 @@ method(bind, class_list) <- function(x, ...) {
   dots <- rlang::list2(...)
   o <- rlang::inject(S7::set_props(o, !!!dots))
   if (S7::prop_exists(x[[1]], "label") &&
-      !S7_inherits(x[[1]], ob_label)) {
+      !S7::S7_inherits(x[[1]], ob_label)) {
     x_label <- purrr::map(x, \(xx) xx@label)
-    if (any(purrr::map_lgl(x_label, S7_inherits, class = ob_label))) {
+    if (any(purrr::map_lgl(x_label, S7::S7_inherits, class = ob_label))) {
       o@label <- bind(x_label)
 
     }
@@ -384,18 +385,18 @@ method(bind, class_list) <- function(x, ...) {
 }
 
 
-method(bind, ob_shape_list) <- function(x, ...) {
+S7::method(bind, ob_shape_list) <- function(x, ...) {
   .f <- unique(lapply(x, S7::S7_class))
 
   csl <- lapply(.f, \(.ff) {
     Filter(f = \(xx){
-      S7_inherits(xx, .ff)
-    } ,x = S7_data(x)) |>
+      S7::S7_inherits(xx, .ff)
+    } ,x = S7::S7_data(x)) |>
       bind()
   })
 
   if (length(csl) > 1) {
-    csl_names <- purrr::map_chr(csl, \(xx) S7_class(xx)@name)
+    csl_names <- purrr::map_chr(csl, \(xx) S7::S7_class(xx)@name)
     ob_shape_list(csl) |>
       `names<-`(csl_names)
 
@@ -415,11 +416,11 @@ method(bind, ob_shape_list) <- function(x, ...) {
 #' @return a list of objects, each of length 1
 unbind <- S7::new_generic("unbind", dispatch_args = "x")
 
-method(unbind, has_style) <- function(x) {
+S7::method(unbind, has_style) <- function(x) {
   purrr::map(seq(1, x@length), \(i) x[i])
 }
 
-method(unbind, ob_shape_list) <- function(x) {
+S7::method(unbind, ob_shape_list) <- function(x) {
   as.list(x)
 }
 
@@ -434,7 +435,7 @@ method(unbind, ob_shape_list) <- function(x) {
 #' @return a ggdiagram object
 #' @export
 map_ob <- function(.x, .f, ..., .progress = FALSE) {
-  if (S7_inherits(.x, has_style) | S7_inherits(.x, ob_angle)) {
+  if (S7::S7_inherits(.x, has_style) | S7::S7_inherits(.x, ob_angle)) {
     .x <- unbind(.x)
      }
   purrr::map(.x, .f, ..., .progress = .progress) |>
@@ -446,22 +447,22 @@ map_ob <- function(.x, .f, ..., .progress = FALSE) {
 
 # class(ob_bezier(ob_point(1:3)))
 ## str----
-str <- new_external_generic(package = "utils", name = "str", dispatch_args = "object")
+str <- S7::new_external_generic(package = "utils", name = "str", dispatch_args = "object")
 
 
 
 ## plus----
-method(`+`, list(class_any, class_any)) <- function(e1, e2) {
+S7::method(`+`, list(S7::class_any, S7::class_any)) <- function(e1, e2) {
   .Primitive("+")(e1, e2)
 }
 
-method(`+`, list(class_character, class_character)) <- function(e1, e2) {
+S7::method(`+`, list(S7::class_character, S7::class_character)) <- function(e1, e2) {
   paste0(e1, e2)
 }
-method(`+`, list(class_numeric, class_character)) <- function(e1, e2) {
+S7::method(`+`, list(S7::class_numeric, S7::class_character)) <- function(e1, e2) {
   paste0(e1, e2)
 }
-method(`+`, list(class_character, class_numeric)) <- function(e1, e2) {
+S7::method(`+`, list(S7::class_character, S7::class_numeric)) <- function(e1, e2) {
   paste0(e1, e2)
 }
 
@@ -471,9 +472,9 @@ method(`+`, list(class_character, class_numeric)) <- function(e1, e2) {
 #' @param x object
 #' @export
 #' @return a tibble
-get_tibble <- new_generic("get_tibble", "x", fun = function(x) {S7::S7_dispatch()})
-method(get_tibble, class_list) <- function(x) {
-  purrr::map_df(S7_data(x), get_tibble)
+get_tibble <- S7::new_generic("get_tibble", "x", fun = function(x) {S7::S7_dispatch()})
+S7::method(get_tibble, S7::class_list) <- function(x) {
+  purrr::map_df(S7::S7_data(x), get_tibble)
 }
 
 # Resect ----
@@ -486,7 +487,7 @@ method(get_tibble, class_list) <- function(x) {
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @export
 #' @return object of same class as x
-resect <- new_generic("resect", c("x", "distance"))
+resect <- S7::new_generic("resect", c("x", "distance"))
 
 
 #' Get object data in a tibble, filling in any missing styles with defaults
@@ -495,8 +496,8 @@ resect <- new_generic("resect", c("x", "distance"))
 #' @export
 #' @return tibble
 #' @rdname get_tibble
-get_tibble_defaults <- new_generic("get_tibble_defaults", "x", fun = function(x) S7_dispatch())
-method(get_tibble_defaults, class_any) <- function(x) {
+get_tibble_defaults <- S7::new_generic("get_tibble_defaults", "x", fun = function(x) S7_dispatch())
+S7::method(get_tibble_defaults, S7::class_any) <- function(x) {
   get_tibble(x)
 }
 
@@ -513,11 +514,11 @@ method(get_tibble_defaults, class_any) <- function(x) {
 #' ob_circle() + ob_point(2, 0)
 #' @export
 #' @return object of same class as `object`
-nudge <- new_generic("nudge", c("object", "x", "y"))
+nudge <- S7::new_generic("nudge", c("object", "x", "y"))
 
 # unions ----
-class_numeric_or_character <- new_union(class_numeric, class_character)
-class_numeric_or_unit <- new_union(class_numeric, class_unit)
+class_numeric_or_character <- S7::new_union(S7::class_numeric, S7::class_character)
+class_numeric_or_unit <- S7::new_union(S7::class_numeric, class_unit)
 
 #' Make a variant of a function with alternate defaults
 #'
@@ -628,7 +629,7 @@ get_tibble_defaults_helper <- function(
   d <- get_tibble(x)
 
   for (n in setdiff(colnames(d), required_aes)) {
-    d_prop <- prop(default_style, n)
+    d_prop <- S7::prop(default_style, n)
     if (!(is.null(d_prop) || identical(d_prop, list()))) {
       d_prop <- ifelse(is.vector(d_prop), d_prop, c(d_prop))
       missings <- is.na(`[[`(d, n))
@@ -650,8 +651,8 @@ get_non_empty_props <- function(x) {
   Filter(function(s) {
     ifelse(length(s) > 0,
            ifelse(
-             S7_inherits(s),
-             length(S7_data(s)) > 0,
+             S7::S7_inherits(s),
+             length(S7::S7_data(s)) > 0,
              !rlang::is_function(s)
            ),
            FALSE)
@@ -707,7 +708,7 @@ ob_array_helper <- function(x, k = 2, sep = 1, where = "east", anchor = "center"
 
   l <- character(0)
 
-  if (S7_inherits(x@label, ob_label)) {
+  if (S7::S7_inherits(x@label, ob_label)) {
     if (x@label@length == 1) {
       l <- ob_label(subscript(x@label@label, seq(k)),
                  style = x@style,
@@ -726,7 +727,7 @@ ob_array_helper <- function(x, k = 2, sep = 1, where = "east", anchor = "center"
       dots$label <- l
     }
   } else {
-    if (S7_inherits(dots$label, ob_label)) {
+    if (S7::S7_inherits(dots$label, ob_label)) {
       dots$label <- ob_label(center = p_center,
                           label = dots$label@label,
                           style = dots$label@style)
@@ -906,82 +907,19 @@ round_probability <- function(p,
 
 # https://github.com/RConsortium/S7/issues/370
 prop_integer_coerce <- function(name) {
-  new_property(
+  S7::new_property(
     name = name,
-    class = class_integer,
+    class = S7::class_integer,
     setter = function(self, value) {
       if (rlang::is_integerish(value)) {
         value <- as.integer(value)
       }
-      prop(self, name) <- value
+      S7::prop(self, name) <- value
       self
     }
   )
 }
 
-# prop_props <- list(point = list(
-#   required = c("x", "y"),
-#   style = c("alpha", "color", "fill", "shape", "size", "stroke")
-# ),
-# label = list(
-#   required = c("p", "label"),
-#   style = c(
-#     "alpha",
-#     "color",
-#     "angle",
-#     "family",
-#     "fill",
-#     "fontface",
-#     "hjust",
-#     "label.color",
-#     "label.margin",
-#     "label.padding",
-#     "label.r",
-#     "label.size",
-#     "lineheight",
-#     "nudge_x",
-#     "nudge_y",
-#     "polar_just",
-#     "size",
-#     "text.color",
-#     "vjust"
-#   )
-# ))
-#
-# get_prop_length <- function(prop) {
-#   if (S7_inherits(prop, has_style)) {
-#     get_shape_length(prop)
-#   } else {
-#     length(prop)
-#   }
-# }
-#
-# reclass <- c(polar = "point",
-#              point = "point",
-#              label = "label")
-#
-# get_prop_n <- function(object) {
-#   check_is_S7(object)
-#   object_class <- S7_class(object)@name
-#   object_class <- reclass[object_class]
-#   required <- prop_props[[object_class]][["required"]]
-#   required_ns <- `names<-`(
-#     purrr::map_int(required,
-#                    \(pr) get_prop_length(prop(object, pr))),
-#     required)
-#   styles <- prop_props[[object_class]][["style"]]
-#   styles_ns <- `names<-`(
-#     purrr::map_int(styles,
-#                    \(pr) get_prop_length(prop(object, pr))),
-#     styles)
-#
-#   c(required_ns, styles_ns)
-#
-# }
-#
-# get_shape_length <- function(object) {
-#   max(get_prop_n(object))
-# }
 
 .simpleCap <- function(x) {
   s <- strsplit(x, " ")[[1]]
@@ -991,33 +929,7 @@ prop_integer_coerce <- function(name) {
         collapse = " ")
 }
 
-# check_inconsistent <- function(object) {
-#   prop_n <- get_prop_n(object)
-#   max_n <- max(prop_n)
-#   prop_inconsistent <- prop_n[!(prop_n %in% unique(c(0, 1, max_n)))]
-#   if (length(prop_inconsistent) > 0) {
-#     msg <- tibble::enframe(prop_n[!(prop_n %in% unique(c(0, 1)))]) |>
-#       dplyr::summarize(.by = .data$value,
-#                        name = paste0(.data$name, collapse = ", ")) |>
-#       dplyr::mutate(v = paste0(
-#         "Size ",
-#         .data$value,
-#         ": Properties: ",
-#         .data$name)) |>
-#       dplyr::pull(.data$v) |>
-#       paste0(collapse = "\n")
-#     object_class <- .simpleCap(S7_class(object)@name)
-#
-#
-#     stop(
-#       paste0(
-#         object_class,
-#         " properties should have 0, 1, or consistently numbered elements.\nInconsistent elements:\n",
-#         msg
-#       )
-#     )
-#   }
-# }
+
 
 .between <- function(x, lb, ub) {
   b <- cbind(lb = lb, ub = ub)
@@ -1048,18 +960,18 @@ prop_integer_coerce <- function(name) {
 #'   as.geom(c1, fill = "black") +
 #'   coord_equal()
 #'
-as.geom <- new_generic("as.geom", "x")
+as.geom <- S7::new_generic("as.geom", "x")
 
-method(as.geom, ob_shape_list) <- function(x, ...) {
+S7::method(as.geom, ob_shape_list) <- function(x, ...) {
   lapply(c(x), \(g) as.geom(g, ...)) |>
     unlist()
 }
 
-method(`+`, list(class_ggplot, has_style)) <- function(e1, e2) {
+S7::method(`+`, list(class_ggplot, has_style)) <- function(e1, e2) {
   e1 + as.geom(e2)
 }
 
-method(`+`, list(class_ggplot, ob_shape_list)) <- function(e1, e2) {
+S7::method(`+`, list(class_ggplot, ob_shape_list)) <- function(e1, e2) {
   e1 + as.geom(e2)
 }
 
@@ -1203,12 +1115,12 @@ rounder <- function(x, digits = 2, add = FALSE) {
 #' @param digits rounding digits
 #' @export
 #' @return string
-equation <- new_generic(
+equation <- S7::new_generic(
   "equation",
   dispatch_args = "x",
   fun = function(x,
                  type = c("y", "general", "parametric"),
-                 digits = 2) S7_dispatch())
+                 digits = 2) S7::S7_dispatch())
 
 
 # Projection ----
@@ -1219,7 +1131,7 @@ equation <- new_generic(
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object
 #' @export
 #' @return ob_point
-projection <- new_generic("projection", c("p", "object"))
+projection <- S7::new_generic("projection", c("p", "object"))
 
 
 # midpoint----
@@ -1232,7 +1144,7 @@ projection <- new_generic("projection", c("p", "object"))
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @export
 #' @return ob_point
-midpoint <- new_generic(
+midpoint <- S7::new_generic(
   "midpoint",
   c("x", "y"),
   fun = function(x, y, position = .5, ...) {
@@ -1263,7 +1175,7 @@ rotate2columnmatrix <- function(x, theta) {
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> additional arguments
 #' @return string
 #' @export
-label_object <- new_generic("label_object", "object")
+label_object <- S7::new_generic("label_object", "object")
 
 #' Arrow connect one shape to another
 #'
@@ -1272,7 +1184,7 @@ label_object <- new_generic("label_object", "object")
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> Arguments passed to style
 #' @export
 #' @return ob_segment
-connect <- new_generic("connect", c("x", "y"))
+connect <- S7::new_generic("connect", c("x", "y"))
 
 #' Place an object a specified distance from another object
 #'
@@ -1283,7 +1195,7 @@ connect <- new_generic("connect", c("x", "y"))
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> Arguments passed to style
 #' @export
 #' @return object of same class as `x`
-place <- new_generic("place", c("x", "from"),
+place <- S7::new_generic("place", c("x", "from"),
                      fun = function(x, from, where = "right", sep = 1, ...) {
                        S7::S7_dispatch()
                      })

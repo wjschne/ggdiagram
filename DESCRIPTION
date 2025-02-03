@@ -77,3 +77,4 @@ Collate:
     'inside.R'
     'rotate.R'
     'zzz.R'
+Config/Needs/website: quarto

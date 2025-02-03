@@ -5,7 +5,7 @@
 \title{The ob_polygon class}
 \usage{
 ob_polygon(
-  p = class_missing,
+  p = S7::class_missing,
   label = character(0),
   vertex_radius = numeric(0),
   alpha = numeric(0),
@@ -13,7 +13,7 @@ ob_polygon(
   fill = character(0),
   linewidth = numeric(0),
   linetype = numeric(0),
-  style = class_missing,
+  style = S7::class_missing,
   ...
 )
 }

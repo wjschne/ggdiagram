@@ -5,8 +5,8 @@
 #' @param y object
 #' @export
 #' @return logical
-inside <- new_generic("inside", c("x", "y"), fun = function(x,y) S7_dispatch())
-method(inside, list(ob_point, ob_rectangle)) <- function(x,y) {
+inside <- S7::new_generic("inside", c("x", "y"), fun = function(x,y) S7::S7_dispatch())
+S7::method(inside, list(ob_point, ob_rectangle)) <- function(x,y) {
  insideTF <-  (x@x <= y@northeast@x &&
     x@x >= y@northwest@x &&
     x@y <= y@northeast@y &&
@@ -19,12 +19,12 @@ method(inside, list(ob_point, ob_rectangle)) <- function(x,y) {
  insideTF
 }
 
-method(inside, list(ob_point, ob_circle)) <- function(x,y) {
+S7::method(inside, list(ob_point, ob_circle)) <- function(x,y) {
   xc <- x - y@center
   -1 * sign(xc@r - y@radius)
 }
 
-method(inside, list(ob_point, ob_ellipse)) <- function(x,y) {
+S7::method(inside, list(ob_point, ob_ellipse)) <- function(x,y) {
   rx <- rotate(x, theta = -1*y@angle, origin = y@center)
   xc <- rx - y@center
   -1 * sign((xc@x / y@a) ^ y@m1 + (xc@y / y@b) ^ y@m1 - 1)

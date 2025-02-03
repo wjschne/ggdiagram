@@ -25,24 +25,24 @@
 #' c2 <- ob_circle(p2, radius = 2)
 #' distance(c1, c2)
 #' @export
-distance <- new_generic(name = "distance", c("x", "y"))
-method(distance, list(ob_point, ob_point)) <- function(x,y) {
+distance <- S7::new_generic(name = "distance", c("x", "y"))
+S7::method(distance, list(ob_point, ob_point)) <- function(x,y) {
   d <- (y - x)
   d@r
 }
-method(distance, list(ob_point, class_missing)) <- function(x,y) {
+S7::method(distance, list(ob_point, S7::class_missing)) <- function(x,y) {
   x@r
 }
-method(distance, list(ob_point, ob_line)) <- function(x,y) {
+S7::method(distance, list(ob_point, ob_line)) <- function(x,y) {
   abs(y@a * x@x + y@b * x@y + y@c) / sqrt(y@a * y@a + y@b * y@b)
 }
-method(distance, list(ob_line, ob_point)) <- function(x,y) {
+S7::method(distance, list(ob_line, ob_point)) <- function(x,y) {
   distance(y, x)
 }
-method(distance, list(ob_segment, class_missing)) <- function(x,y) {
+S7::method(distance, list(ob_segment, S7::class_missing)) <- function(x,y) {
   distance(x@p1, x@p2)
 }
-method(distance, list(ob_circle, ob_circle)) <- function(x,y) {
+S7::method(distance, list(ob_circle, ob_circle)) <- function(x,y) {
   d <- (y@center - x@center)
 
     if (x@radius + y@radius > distance(d)) {
@@ -56,7 +56,7 @@ method(distance, list(ob_circle, ob_circle)) <- function(x,y) {
 
   d@r
 }
-method(distance, list(ob_point, ob_circle)) <- function(x,y) {
+S7::method(distance, list(ob_point, ob_circle)) <- function(x,y) {
   d <- y@center - x
 
     py <- y@point_at(radian(pi) + d@theta)
@@ -64,6 +64,6 @@ method(distance, list(ob_point, ob_circle)) <- function(x,y) {
 
   d@r
 }
-method(distance, list(ob_circle, ob_point)) <- function(x,y) {
+S7::method(distance, list(ob_circle, ob_point)) <- function(x,y) {
   distance(y, x)
 }

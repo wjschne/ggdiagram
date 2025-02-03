@@ -25,7 +25,7 @@ path_styles <- c(
 path_props <- list(
   # primary ----
   primary = list(
-    p = new_property(class = point_or_list, validator = function(value) {
+    p = S7::new_property(class = point_or_list, validator = function(value) {
       if ("list" %in% class(value)) {
         allsameclass(value, "ob_point")
       }
@@ -37,7 +37,7 @@ path_props <- list(
   styles = ob_style@properties[path_styles],
   # derived ----
   derived = list(
-    bounding_box = new_property(getter = function(self) {
+    bounding_box = S7::new_property(getter = function(self) {
 
       d_rect <- self@tibble |>
         dplyr::summarise(xmin = min(x),
@@ -49,7 +49,7 @@ path_props <- list(
                 northeast = ob_point(d_rect$xmax, d_rect$ymax))
 
     }),
-    length = new_property(
+    length = S7::new_property(
       getter = function(self) {
         if ("list" %in% class(self@p)) {
           l <- length(self@p)
@@ -57,11 +57,11 @@ path_props <- list(
         l
       }
     ),
-    segments = new_property(getter = function(self) {
+    segments = S7::new_property(getter = function(self) {
       purrr::map(self@p, ob_segment, style = self@style) %>%
         bind()
     }),
-    style = new_property(
+    style = S7::new_property(
       getter = function(self) {
         pr <- purrr::map(path_styles,
                          prop,
@@ -77,9 +77,9 @@ path_props <- list(
                 label_sloped = self@label_sloped)
       }
     ),
-    tibble = new_property(getter = function(self) {
+    tibble = S7::new_property(getter = function(self) {
       p <- self@p
-      if (S7_inherits(self@p, ob_point)) p <- list(p)
+      if (S7::S7_inherits(self@p, ob_point)) p <- list(p)
       d <- list(
         p = p,
         group = seq(1, self@length),
@@ -108,7 +108,7 @@ path_props <- list(
         tidyr::unnest(p)
 
     }),
-    vertex_angle = new_property(getter = function(self) {
+    vertex_angle = S7::new_property(getter = function(self) {
       a <- purrr::map(self@p, \(pp) {
         if (pp@length > 3) {
           aa <- purrr::map(seq(2,pp@length - 1), \(i) {
@@ -139,17 +139,17 @@ path_props <- list(
   ),
   # functions ----
   funs = list(
-    geom = new_property(class_function, getter = function(self) {
+    geom = S7::new_property(S7::class_function, getter = function(self) {
       \(...) {
         as.geom(self, ...)
       }
     }),
-    midpoint = new_property(class_function, getter = function(self) {
+    midpoint = S7::new_property(S7::class_function, getter = function(self) {
       \(position = .5, ...) midpoint(self, position = position, ...)
     })
   ),
   # info ----
-  info = list(aesthetics = new_property(
+  info = list(aesthetics = S7::new_property(
     getter = function(self) {
       class_aesthetics_list(
         geom = ggarrow::geom_arrow,
@@ -204,7 +204,7 @@ path_props <- list(
 #' @slot length The number of paths in the ob_path object
 #' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggarrow::geom_arrow`.
 #' @inherit ob_style params
-ob_path <- new_class(
+ob_path <- S7::new_class(
   name = "ob_path",
   parent = has_style,
   properties = rlang::inject(
@@ -217,11 +217,11 @@ ob_path <- new_class(
       !!!path_props$info
     )
   ),
-  constructor = function(p = class_missing,
+  constructor = function(p = S7::class_missing,
                          label = character(0),
                          alpha = numeric(0),
-                         arrow_head = class_missing,
-                         arrow_fins = class_missing,
+                         arrow_head = S7::class_missing,
+                         arrow_fins = S7::class_missing,
                          arrowhead_length = numeric(0),
                          length_head = numeric(0),
                          length_fins = numeric(0),
@@ -238,10 +238,10 @@ ob_path <- new_class(
                          resect_head = numeric(0),
                          stroke_color = character(0),
                          stroke_width = numeric(0),
-                         style = class_missing,
+                         style = S7::class_missing,
                          ...) {
 
-    if (S7_inherits(p, ob_point)) p <- list(p)
+    if (S7::S7_inherits(p, ob_point)) p <- list(p)
     p_style <- purrr::map(p, \(x) {
       purrr::map(unbind(x), \(xx) xx@style) |>
         purrr::reduce(`+`)
@@ -294,7 +294,7 @@ ob_path <- new_class(
       } else {
         d_l <- get_tibble(path_style)
         cnames <- dplyr::intersect(colnames(d_l), lb_styles)
-        if (S7_inherits(label, ob_label)) {
+        if (S7::S7_inherits(label, ob_label)) {
           if ("color" %in% cnames && all(length(label@color) == 0)) {
             label@color <- d_l$color
           }
@@ -303,7 +303,7 @@ ob_path <- new_class(
         }
     }
 
-    new_object(.parent = S7_object(),
+    S7::new_object(.parent = S7::S7_object(),
                p =  d$p,
                label = label,
                alpha = d[["alpha"]] %||% alpha,
@@ -328,7 +328,7 @@ ob_path <- new_class(
     )
   })
 
-method(str, ob_path) <- function(
+S7::method(str, ob_path) <- function(
     object,
     nest.lev = 0,
     additional = TRUE,
@@ -354,11 +354,11 @@ method(str, ob_path) <- function(
 
 
 
-method(get_tibble, ob_path) <- function(x) {
+S7::method(get_tibble, ob_path) <- function(x) {
   x@tibble
 }
 
-method(as.geom, ob_path) <- function(x, ...) {
+S7::method(as.geom, ob_path) <- function(x, ...) {
   d <- get_tibble_defaults(x)
   if ("arrowhead_length" %in% colnames(d)) {
     d <- dplyr::rename(d, length = arrowhead_length)
@@ -374,7 +374,7 @@ method(as.geom, ob_path) <- function(x, ...) {
     user_overrides = overrides,
     aesthetics = x@aesthetics)
 
-  if (S7_inherits(x@label, ob_label)) {
+  if (S7::S7_inherits(x@label, ob_label)) {
     d <- tidyr::nest(d |> dplyr::select(x,y,group), .by = group) |>
       dplyr::bind_cols(x@label@tibble |> select(-c(x,y)))
 
@@ -409,7 +409,7 @@ method(as.geom, ob_path) <- function(x, ...) {
 }
 
 
-method(`[`, ob_path) <- function(x, y) {
+S7::method(`[`, ob_path) <- function(x, y) {
   d <- x@tibble[y,]
   dl <- d |>
     dplyr::select(-.data$x, -.data$y, -.data$group) |>

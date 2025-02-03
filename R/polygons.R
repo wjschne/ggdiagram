@@ -33,12 +33,12 @@ ob_polygon_aesthetics <- class_aesthetics_list(
 ob_polygon_props <- list(
   # primary ----
   primary = list(
-    p = new_property(class = point_or_list, validator = function(value) {
+    p = S7::new_property(class = point_or_list, validator = function(value) {
       if ("list" %in% class(value)) {
         allsameclass(value, "ob_point")
       }
 
-      if (S7_inherits(value, ob_point)) value <- list(value)
+      if (S7::S7_inherits(value, ob_point)) value <- list(value)
 
       chk_points <- purrr::imap_chr(value, \(x, idx) {
         if (x@length < 3) {
@@ -55,14 +55,14 @@ ob_polygon_props <- list(
   # extra ----
   extra = list(
     label = label_or_character_or_angle,
-    vertex_radius = new_property(class = class_numeric_or_unit, validator = function(value) {
+    vertex_radius = S7::new_property(class = class_numeric_or_unit, validator = function(value) {
       if (length(value) > 1) stop("The vertex_radius property must be of length 1.")
     })
   ),
   styles = ob_style@properties[ob_polygon_styles],
   # derived ----
   derived = list(
-    bounding_box = new_property(getter = function(self) {
+    bounding_box = S7::new_property(getter = function(self) {
 
       d_rect <- get_tibble(self) |>
         dplyr::summarise(xmin = min(x),
@@ -74,7 +74,7 @@ ob_polygon_props <- list(
                 northeast = ob_point(d_rect$xmax, d_rect$ymax))
 
     }),
-    center = new_property(ob_point, getter = function(self) {
+    center = S7::new_property(ob_point, getter = function(self) {
       d <- self@tibble
       gr <- dplyr::intersect(colnames(d), c("group", pt_styles))
       d <- dplyr::summarise(d, .by = dplyr::any_of(gr),
@@ -84,7 +84,7 @@ ob_polygon_props <- list(
 
       rlang::inject(ob_point(!!!d))
     }),
-    length = new_property(
+    length = S7::new_property(
       getter = function(self) {
         if ("list" %in% class(self@p)) {
           l <- length(self@p)
@@ -92,14 +92,14 @@ ob_polygon_props <- list(
         l
       }
     ),
-    segment = new_property(getter = function(self) {
+    segment = S7::new_property(getter = function(self) {
       self@p |>
         purrr::map(\(pp) {
           k <- pp@length
           ob_segment(pp[c(1:k, 1)])
         })
     }),
-    style = new_property(
+    style = S7::new_property(
       getter = function(self) {
         pr <- purrr::map(ob_polygon_styles,
                          prop,
@@ -117,9 +117,9 @@ ob_polygon_props <- list(
           self
         }}
     ),
-    tibble = new_property(getter = function(self) {
+    tibble = S7::new_property(getter = function(self) {
       p <- self@p
-      if (S7_inherits(self@p, ob_point)) p <- list(p)
+      if (S7::S7_inherits(self@p, ob_point)) p <- list(p)
       d <- list(
         p = p,
         group = seq(1, self@length),
@@ -138,14 +138,14 @@ ob_polygon_props <- list(
   ),
   # functions ----
   funs = list(
-    geom = new_property(class_function, getter = function(self) {
+    geom = S7::new_property(S7::class_function, getter = function(self) {
       \(...) {
         as.geom(self, ...)
       }
     })
   ),
   # info ----
-  info = list(aesthetics = new_property(
+  info = list(aesthetics = S7::new_property(
     getter = function(self) {
       ob_polygon_aesthetics
     }
@@ -170,7 +170,7 @@ ob_polygon_props <- list(
 #' @param style Gets and sets the styles associated with polygons
 #' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggforce::geom_shape`.
 #' @inherit ob_style params
-ob_polygon <- new_class(
+ob_polygon <- S7::new_class(
   name = "ob_polygon",
   parent = has_style,
   properties = rlang::inject(
@@ -183,7 +183,7 @@ ob_polygon <- new_class(
       !!!ob_polygon_props$info
     )
   ),
-  constructor = function(p = class_missing,
+  constructor = function(p = S7::class_missing,
                          label = character(0),
                          vertex_radius = numeric(0),
                          alpha = numeric(0),
@@ -191,7 +191,7 @@ ob_polygon <- new_class(
                          fill = character(0),
                          linewidth = numeric(0),
                          linetype = numeric(0),
-                         style = class_missing,
+                         style = S7::class_missing,
                          ...) {
 
 
@@ -208,7 +208,7 @@ ob_polygon <- new_class(
 
     non_empty_list <- get_non_empty_props(ob_polygon_style)
 
-    if (S7_inherits(p, ob_point)) p <- list(p)
+    if (S7::S7_inherits(p, ob_point)) p <- list(p)
 
     d <- tibble::tibble(
       p = p
@@ -234,7 +234,7 @@ ob_polygon <- new_class(
         ob_point()
 
       center@style <- ob_polygon_style
-      if (S7_inherits(label, ob_label)) {
+      if (S7::S7_inherits(label, ob_label)) {
         if (all(label@center@x == 0) && all(label@center@y == 0)) {
           label@center <- center
         }
@@ -247,7 +247,7 @@ ob_polygon <- new_class(
 
       }
 
-    new_object(.parent = S7_object(),
+    S7::new_object(.parent = S7::S7_object(),
                p =  d$p,
                label = label,
                vertex_radius = vertex_radius,
@@ -260,7 +260,7 @@ ob_polygon <- new_class(
   })
 
 
-method(str, ob_polygon) <- function(
+S7::method(str, ob_polygon) <- function(
     object,
     nest.lev = 0,
     additional = TRUE,
@@ -284,12 +284,12 @@ method(str, ob_polygon) <- function(
 
 }
 
-method(print, ob_polygon) <- function(x, ...) {
+S7::method(print, ob_polygon) <- function(x, ...) {
   str(x, ...)
   invisible(x)
 }
 
-method(get_tibble, ob_polygon) <- function(x) {
+S7::method(get_tibble, ob_polygon) <- function(x) {
   d <- x@tibble
   if ("vertex_radius" %in% colnames(d)) {
     d <- dplyr::rename(x@tibble, radius = vertex_radius)
@@ -298,9 +298,9 @@ method(get_tibble, ob_polygon) <- function(x) {
 }
 
 
-method(as.geom, ob_polygon) <- function(x, ...) {
+S7::method(as.geom, ob_polygon) <- function(x, ...) {
   gp <- as.geom(super(x, has_style), ...)
-  if (S7_inherits(x@label, ob_label)) {
+  if (S7::S7_inherits(x@label, ob_label)) {
     gl <- as.geom(x@label)
     gp <- list(gp, gl)
   }
@@ -308,7 +308,7 @@ method(as.geom, ob_polygon) <- function(x, ...) {
 }
 
 
-method(`[`, ob_polygon) <- function(x, y) {
+S7::method(`[`, ob_polygon) <- function(x, y) {
   d <- x@tibble[y,]
   dl <- d |>
     dplyr::select(-.data$x, -.data$y, -.data$group) |>
@@ -319,36 +319,36 @@ method(`[`, ob_polygon) <- function(x, y) {
   z
 }
 
-method(connect, list(ob_polygon, ob_polygon)) <- function(x,y, ...) {
+S7::method(connect, list(ob_polygon, ob_polygon)) <- function(x,y, ...) {
   centroid_segment <- ob_segment(x@center, y@center)
   connect(intersection(x, centroid_segment), intersection(y, centroid_segment), ...)
 }
 
-method(connect, list(ob_polygon, ob_point)) <- function(x,y, ...) {
+S7::method(connect, list(ob_polygon, ob_point)) <- function(x,y, ...) {
   centroid_segment <- ob_segment(x@center, y)
   connect(intersection(x, centroid_segment), y, ...)
 }
 
-method(connect, list(ob_point, ob_polygon)) <- function(x,y, ...) {
+S7::method(connect, list(ob_point, ob_polygon)) <- function(x,y, ...) {
   centroid_segment <- ob_segment(x, y@center)
   connect(x, intersection(y, centroid_segment), ...)
 }
 
 
-method(connect, list(centerpoint, ob_polygon)) <- function(x,y, ...) {
+S7::method(connect, list(centerpoint, ob_polygon)) <- function(x,y, ...) {
   centroid_segment <- ob_segment(x@center, y@center)
   p <- intersection(y, centroid_segment)
   connect(x, p, ...)
 }
 
 
-method(connect, list(ob_polygon, centerpoint)) <- function(x,y, ...) {
+S7::method(connect, list(ob_polygon, centerpoint)) <- function(x,y, ...) {
   centroid_segment <- ob_segment(x@center, y@center)
   p <- intersection(x, centroid_segment)
   connect(p, y, ...)
 }
 
-# Intercepts ----
+# ob_intercept ----
 #' ob_intercept
 #'
 #' Triangle polygons used in path diagrams.
@@ -368,31 +368,30 @@ method(connect, list(ob_polygon, centerpoint)) <- function(x,y, ...) {
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @export
 #' @return ob_polygon object
-ob_intercept <- new_class(
+ob_intercept <- S7::new_class(
   name = "ob_intercept",
-  parent = has_style,
+  parent = centerpoint,
   properties = rlang::inject(
     list(
-      center = ob_point,
-      width = class_numeric,
-      p = new_property(getter = function(self) {
+      width = S7::class_numeric,
+      p = S7::new_property(getter = function(self) {
         purrr::map(unbind(self@center), \(cc) {
           cc + ob_polar(degree(c(90, 210, 330)),
                         r = self@width * .5 / cos(degree(30)))
         })
       }),
-      polygon = new_property(getter = function(self) {
+      polygon = S7::new_property(getter = function(self) {
         ob_polygon(self@p, style = self@style, vertex_radius = self@vertex_radius)
       }),
-      top = new_property(getter = function(self) {
+      top = S7::new_property(getter = function(self) {
         self@center + ob_polar(degree(90),
                                r = self@width * .5 / cos(degree(30)))
       }),
-      left = new_property(getter = function(self) {
+      left = S7::new_property(getter = function(self) {
         self@center + ob_polar(degree(210),
                                r = self@width * .5 / cos(degree(30)))
       }),
-      right = new_property(getter = function(self) {
+      right = S7::new_property(getter = function(self) {
         self@center + ob_polar(degree(330),
                                r = self@width * .5 / cos(degree(30)))
       }),
@@ -406,9 +405,9 @@ ob_intercept <- new_class(
   constructor = function(center = ob_point(0,0),
                          width = 1,
                          label = character(0),
-                         top = class_missing,
-                         left = class_missing,
-                         right = class_missing,
+                         top = S7::class_missing,
+                         left = S7::class_missing,
+                         right = S7::class_missing,
                          vertex_radius = numeric(0),
                          alpha = numeric(0),
                          color = character(0),
@@ -417,7 +416,7 @@ ob_intercept <- new_class(
                          linetype = numeric(0),
                          x0 = numeric(0),
                          y0 = numeric(0),
-                         style = class_missing,
+                         style = S7::class_missing,
                          ...) {
 
     if ((length(x0) > 0) || (length(y0) > 0)) {
@@ -452,7 +451,7 @@ ob_intercept <- new_class(
 
     center = set_props(center, x = d$x0, y = d$y0)
 
-    if (S7_inherits(label, ob_label)) {
+    if (S7::S7_inherits(label, ob_label)) {
       if (all(label@center == ob_point(0,0))) {
         label@center <- center
       }
@@ -465,7 +464,7 @@ ob_intercept <- new_class(
 
 
 
-    new_object(.parent = S7_object(),
+    S7::new_object(.parent = S7::S7_object(),
                center =  center,
                width = d$width %||% width,
                label = label,
@@ -479,7 +478,7 @@ ob_intercept <- new_class(
   })
 
 
-method(get_tibble, ob_intercept) <- function(x) {
+S7::method(get_tibble, ob_intercept) <- function(x) {
   d <- x@tibble
   if ("vertex_radius" %in% colnames(d)) {
     d <- dplyr::rename(x@tibble, radius = vertex_radius)
@@ -487,32 +486,32 @@ method(get_tibble, ob_intercept) <- function(x) {
   d
 }
 
-method(connect, list(ob_intercept, ob_intercept)) <- function(x,y, ...) {
+S7::method(connect, list(ob_intercept, ob_intercept)) <- function(x,y, ...) {
   connect(x@polygon, y@polygon, ...)
 }
 
-method(connect, list(ob_intercept, ob_point)) <- function(x,y, ...) {
+S7::method(connect, list(ob_intercept, ob_point)) <- function(x,y, ...) {
   centroid_segment <- ob_segment(x@center, y)
   connect(x@polygon, y, ...)
 }
 
-method(connect, list(ob_point, ob_intercept)) <- function(x,y, ...) {
+S7::method(connect, list(ob_point, ob_intercept)) <- function(x,y, ...) {
   connect(x, y@polygon, ...)
 }
 
 
-method(connect, list(centerpoint, ob_intercept)) <- function(x,y, ...) {
+S7::method(connect, list(centerpoint, ob_intercept)) <- function(x,y, ...) {
   connect(x, y@polygon, ...)
 }
 
 
-method(connect, list(ob_intercept, centerpoint)) <- function(x,y, ...) {
+S7::method(connect, list(ob_intercept, centerpoint)) <- function(x,y, ...) {
   connect(x@polygon, y, ...)
 }
 
-method(as.geom, ob_intercept) <- function(x, ...) {
+S7::method(as.geom, ob_intercept) <- function(x, ...) {
   gp <- as.geom(super(x@polygon, has_style), ...)
-  if (S7_inherits(x@label, ob_label)) {
+  if (S7::S7_inherits(x@label, ob_label)) {
     gl <- as.geom(x@label)
     gp <- list(gp, gl)
   }
@@ -524,42 +523,42 @@ method(as.geom, ob_intercept) <- function(x, ...) {
 ob_ngon_props <- list(
   ## primary ----
   primary = list(
-    n = new_property(class_numeric, validator = \(value) {
+    n = S7::new_property(S7::class_numeric, validator = \(value) {
       if (!all(value >= 3))
         stop("There must be at least three sides to a regular polygon.")
     }),
-    radius = class_numeric,
+    radius = S7::class_numeric,
     angle = ob_angle_or_character
   ),
   ## derived----
   derived = list(
-    side_length = new_property(getter = \(self) {
+    side_length = S7::new_property(getter = \(self) {
       self@radius * 2 * sin(pi / self@n)
     }),
-    apothem = new_property(getter = \(self) {
+    apothem = S7::new_property(getter = \(self) {
       self@radius * cos(pi / self@n)
     }),
-    area = new_property(getter = \(self) {
+    area = S7::new_property(getter = \(self) {
       self@n * self@side_length * self@apothem / 2
     }),
-    bounding_box = new_property(getter = \(self) {
+    bounding_box = S7::new_property(getter = \(self) {
       self@vertices@bounding_box
     }),
-    circumscribed = new_property(getter = \(self) {
+    circumscribed = S7::new_property(getter = \(self) {
       ob_circle(self@center, radius = self@radius, style = self@style)
     }),
-    inscribed = new_property(getter = \(self) {
+    inscribed = S7::new_property(getter = \(self) {
       ob_circle(self@center, radius = self@apothem, style = self@style)
     }),
-    length = new_property(
+    length = S7::new_property(
       getter = function(self) {
         self@center@length
       }
     ),
-    perimeter = new_property(getter = \(self) {
+    perimeter = S7::new_property(getter = \(self) {
       self@n * self@side_length
     }),
-    segments = new_property(getter = \(self) {
+    segments = S7::new_property(getter = \(self) {
       map_ob(self, \(s) {
         theta <- degree(seq(0, 360, length.out = s@n + 1)) + s@angle
 
@@ -568,7 +567,7 @@ ob_ngon_props <- list(
         ob_segment(p[seq(1, s@n)], p[seq(2, s@n + 1)], style = s@style)
       })
     }),
-    style = new_property(
+    style = S7::new_property(
       getter = function(self) {
         pr <- purrr::map(ob_polygon_styles, prop, object = self) |>
           `names<-`(ob_polygon_styles)
@@ -582,7 +581,7 @@ ob_ngon_props <- list(
         self
       }
     ),
-    tibble = new_property(
+    tibble = S7::new_property(
       getter = function(self) {
         d <- list(
           x0 = self@center@x,
@@ -600,7 +599,7 @@ ob_ngon_props <- list(
         get_non_empty_tibble(d)
       }
     ),
-    vertices = new_property(getter = \(self) {
+    vertices = S7::new_property(getter = \(self) {
       map_ob(self, \(s) {
         theta <- degree(seq(0, 360 - 360 / s@n, length.out = s@n)) + s@angle
 
@@ -610,8 +609,8 @@ ob_ngon_props <- list(
   ),
   # functions ----
   funs = list(
-    angle_at = new_property(
-      class_function,
+    angle_at = S7::new_property(
+      S7::class_function,
       getter = function(self) {
         \(point) {
           dp <- point - self@center
@@ -619,18 +618,18 @@ ob_ngon_props <- list(
         }
       }
     ),
-    normal_at = new_property(
-      class_function,
+    normal_at = S7::new_property(
+      S7::class_function,
       getter = function(self) {
         \(theta = degree(0), distance = 1, ...) {
-          if (S7_inherits(theta, ob_point)) {
+          if (S7::S7_inherits(theta, ob_point)) {
             theta <- projection(theta, self)@theta
           }
-          if (!S7_inherits(theta, ob_angle)) {
+          if (!S7::S7_inherits(theta, ob_angle)) {
             theta <- degree(theta)
           }
 
-          if (!S7_inherits(theta, ob_angle))
+          if (!S7::S7_inherits(theta, ob_angle))
             theta <- degree(theta)
           p <- purrr::map2(unbind(self), unbind(theta), \(s, th) {
             th_p <- th@turn - s@angle@turn
@@ -647,13 +646,13 @@ ob_ngon_props <- list(
         }
       }
     ),
-    point_at = new_property(
-      class_function,
+    point_at = S7::new_property(
+      S7::class_function,
       getter = function(self) {
         \(theta = degree(0), ...) {
           st <- rlang::list2(...)
 
-          if (!S7_inherits(theta, ob_angle))
+          if (!S7::S7_inherits(theta, ob_angle))
             theta <- degree(theta)
           p <- purrr::map(unbind(self), \(s) {
             s_radius <- ob_segment(s@center, s@center + ob_polar(theta = theta, r = s@radius))
@@ -664,14 +663,14 @@ ob_ngon_props <- list(
         }
       }
     ),
-    tangent_at = new_property(
-      class_function,
+    tangent_at = S7::new_property(
+      S7::class_function,
       getter = function(self) {
         \(theta = degree(0), ...) {
-          if (S7_inherits(theta, ob_point)) {
+          if (S7::S7_inherits(theta, ob_point)) {
             theta <- projection(theta, self)@theta
           }
-          if (!S7_inherits(theta, ob_angle)) {
+          if (!S7::S7_inherits(theta, ob_angle)) {
             theta <- degree(theta)
           }
 
@@ -715,7 +714,7 @@ ob_ngon_props <- list(
 #' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggforce::geom_shape`.
 #' @slot vertices points on the regular polygon
 #' @inherit ob_style params
-ob_ngon <- new_class(
+ob_ngon <- S7::new_class(
   name = "ob_ngon",
   parent = centerpoint,
   properties = rlang::inject(
@@ -742,11 +741,11 @@ ob_ngon <- new_class(
                          fill = character(0),
                          linewidth = numeric(0),
                          linetype = numeric(0),
-                         style = class_missing,
+                         style = S7::class_missing,
                          x0 = numeric(0),
                          y0 = numeric(0),
                          ...) {
-    if (!S7_inherits(angle, ob_angle)) angle <- degree(angle)
+    if (!S7::S7_inherits(angle, ob_angle)) angle <- degree(angle)
 
     if (length(side_length) > 0) {
       radius <- side_length / (2 * sin(turn(1 / (2 * n))))
@@ -795,7 +794,7 @@ ob_ngon <- new_class(
 
     center = set_props(center, x = d$x0, y = d$y0)
 
-    if (S7_inherits(label, ob_label)) {
+    if (S7::S7_inherits(label, ob_label)) {
       if (all(label@center == ob_point(0,0))) {
         label@center <- center
       }
@@ -806,7 +805,7 @@ ob_ngon <- new_class(
                                d = d,
                                shape_name = "ob_intercept")
 
-    new_object(.parent = S7_object(),
+    S7::new_object(.parent = S7::S7_object(),
                center =  center,
                n = d$n %||% n,
                radius = d$radius %||% radius,
@@ -821,7 +820,7 @@ ob_ngon <- new_class(
     )
   })
 
-method(get_tibble, ob_ngon) <- function(x) {
+S7::method(get_tibble, ob_ngon) <- function(x) {
   d <- x@tibble
   if ("radius" %in% colnames(d)) {
     d <- dplyr::rename(d, r = radius)
@@ -841,16 +840,16 @@ method(get_tibble, ob_ngon) <- function(x) {
 }
 
 
-method(as.geom, ob_ngon) <- function(x, ...) {
+S7::method(as.geom, ob_ngon) <- function(x, ...) {
   gp <- as.geom(super(x, has_style), ...)
-  if (S7_inherits(x@label, ob_label)) {
+  if (S7::S7_inherits(x@label, ob_label)) {
     gl <- as.geom(x@label)
     gp <- list(gp, gl)
   }
   gp
 }
 
-method(str, ob_ngon) <- function(
+S7::method(str, ob_ngon) <- function(
     object,
     nest.lev = 0,
     additional = FALSE,
@@ -860,7 +859,7 @@ method(str, ob_ngon) <- function(
                  nest.lev = nest.lev)
 }
 
-method(`[`, ob_ngon) <- function(x, y) {
+S7::method(`[`, ob_ngon) <- function(x, y) {
   d <- x@tibble[y,]
   dl <- as.list(dplyr::select(d, -.data$x0, -.data$y0))
   z <- rlang::inject(ob_ngon(center = ob_point(d$x0, d$y0), !!!dl))
@@ -869,23 +868,23 @@ method(`[`, ob_ngon) <- function(x, y) {
 }
 
 
-method(connect, list(ob_ngon, ob_ngon)) <- function(x,y, ...) {
+S7::method(connect, list(ob_ngon, ob_ngon)) <- function(x,y, ...) {
   s <- ob_segment(x@center, y@center)
   connect(intersection(x, s), intersection(y, s), ...)
 }
 
-method(connect, list(ob_ngon, ob_point)) <- function(x,y, ...) {
+S7::method(connect, list(ob_ngon, ob_point)) <- function(x,y, ...) {
   s <- ob_segment(x@center, y)
   connect(intersection(x, s), y, ...)
 }
 
-method(connect, list(ob_point, ob_ngon)) <- function(x,y, ...) {
+S7::method(connect, list(ob_point, ob_ngon)) <- function(x,y, ...) {
   s <- ob_segment(x, y@center)
   connect(x, intersection(y, s), ...)
 }
 
 
-method(connect, list(centerpoint, ob_ngon)) <- function(x,y, ...) {
+S7::method(connect, list(centerpoint, ob_ngon)) <- function(x,y, ...) {
   s <- ob_segment(x@center, y@center)
   p <- intersection(y, s)
   connect(x, p, ...)
@@ -902,15 +901,15 @@ method(connect, list(centerpoint, ob_ngon)) <- function(x,y, ...) {
 
 #' @export
 #' @return ob_reuleaux object
-ob_reuleaux <- new_class(
+ob_reuleaux <- S7::new_class(
   name = "ob_reuleaux",
   parent = centerpoint,
   properties = list(
-    n = class_integer,
-    radius = class_double,
+    n = S7::class_integer,
+    radius = S7::class_double,
     angle = ob_angle_or_numeric,
     label = label_or_character_or_angle,
-    vertex_radius = new_property(class = class_numeric_or_unit, validator = function(value) {
+    vertex_radius = S7::new_property(class = class_numeric_or_unit, validator = function(value) {
       if (length(value) > 1) stop("The vertex_radius property must be of length 1.")
     }),
     ob_style@properties$alpha,
@@ -919,10 +918,10 @@ ob_reuleaux <- new_class(
     ob_style@properties$linewidth,
     ob_style@properties$linetype,
     ob_polygon@properties$style,
-    arc_radius = new_property(getter = \(self) {
+    arc_radius = S7::new_property(getter = \(self) {
       self@chord_length * sin((degree(180) - self@inscribed_angle) / 2) / sin(self@inscribed_angle)
     }),
-    arcs = new_property(getter = \(self) {
+    arcs = S7::new_property(getter = \(self) {
       map_ob(self, \(s) {
         ntheta <- 360 / s@n
         theta <- seq(0, 360, length.out = s@n + 1)[1:s@n] + s@angle@degree
@@ -948,20 +947,20 @@ ob_reuleaux <- new_class(
 
       })
     }),
-    central_angle = new_property(getter = \(self) {
+    central_angle = S7::new_property(getter = \(self) {
       degree(360 / self@n)
     }),
-    chord_length = new_property(getter = \(self) {
+    chord_length = S7::new_property(getter = \(self) {
       sqrt((2 * self@radius ^ 2) * (1 - cos(self@inscribed_angle)))
     }),
-    circumscribed = new_property(getter = \(self) {
+    circumscribed = S7::new_property(getter = \(self) {
       ob_circle(self@center, radius = self@radius, style = self@style)
     }),
-    inscribed_angle = new_property(getter = \(self) {
+    inscribed_angle = S7::new_property(getter = \(self) {
       degree(180 / self@n)
     }),
     length = ob_ngon@properties$length,
-    tibble = new_property(
+    tibble = S7::new_property(
       getter = function(self) {
         d <- list(
           x0 = self@center@x,
@@ -982,15 +981,15 @@ ob_reuleaux <- new_class(
     vertices = ob_ngon@properties$vertices,
     aesthetics = ob_polygon_props$info$aesthetics,
     # functions ----
-    angle_at = new_property(class_function, getter = function(self) {
+    angle_at = S7::new_property(S7::class_function, getter = function(self) {
       \(point) {
         dp <- point - self@center
         dp@theta
       }
     }),
-    arc_at = new_property(class_function, getter = \(self) {
+    arc_at = S7::new_property(S7::class_function, getter = \(self) {
       \(theta, ...) {
-        if (!S7_inherits(theta, ob_angle)) {
+        if (!S7::S7_inherits(theta, ob_angle)) {
           theta <- degree(theta)
         }
         th <- theta - self@angle
@@ -1016,10 +1015,10 @@ ob_reuleaux <- new_class(
 
       }
     }),
-    normal_at = new_property(class_function, getter = function(self) {
+    normal_at = S7::new_property(S7::class_function, getter = function(self) {
       \(theta = degree(0), distance = 1, ...) {
-        if (S7_inherits(theta, ob_point)) theta <- self@angle_at(theta)
-        if (!S7_inherits(theta, ob_angle)) theta <- degree(theta)
+        if (S7::S7_inherits(theta, ob_point)) theta <- self@angle_at(theta)
+        if (!S7::S7_inherits(theta, ob_angle)) theta <- degree(theta)
         p <- self@point_at(theta)
         a <- self@arc_at(theta)
         theta_a <- (p - a@center)@theta
@@ -1027,11 +1026,11 @@ ob_reuleaux <- new_class(
 
       }
     }),
-    point_at = new_property(
-      class_function,
+    point_at = S7::new_property(
+      S7::class_function,
       getter = function(self) {
         \(theta = degree(0), ...) {
-          if (!S7_inherits(theta, ob_angle)) theta <- degree
+          if (!S7::S7_inherits(theta, ob_angle)) theta <- degree
           s <- ob_segment(self@center,
                           self@circumscribed@point_at(theta))
           a <- self@arc_at(theta)@circle
@@ -1053,9 +1052,9 @@ ob_reuleaux <- new_class(
                             fill = character(0),
                             linewidth = numeric(0),
                             linetype = numeric(0),
-                            style = class_missing,
+                            style = S7::class_missing,
                             ...) {
-    if (!S7_inherits(angle, ob_angle)) angle <- degree(angle)
+    if (!S7::S7_inherits(angle, ob_angle)) angle <- degree(angle)
     n <- as.integer(n)
 
     ob_polygon_style <- ob_style() + center@style + style +
@@ -1083,7 +1082,7 @@ ob_reuleaux <- new_class(
 
     center = set_props(center, x = d$x0, y = d$y0)
 
-    if (S7_inherits(label, ob_label)) {
+    if (S7::S7_inherits(label, ob_label)) {
       if (all(label@center == ob_point(0,0))) {
         label@center <- center
       }
@@ -1094,7 +1093,7 @@ ob_reuleaux <- new_class(
                                d = d,
                                shape_name = "ob_reuleaux")
 
-    new_object(.parent = S7_object(),
+    S7::new_object(.parent = S7::S7_object(),
                center =  center,
                n = d$n %||% n,
                radius = d$radius %||% radius,
@@ -1113,7 +1112,7 @@ ob_reuleaux <- new_class(
     )
 
 
-method(get_tibble, ob_reuleaux) <- function(x) {
+S7::method(get_tibble, ob_reuleaux) <- function(x) {
   d <- x@tibble
   if ("radius" %in% colnames(d)) {
     d <- dplyr::rename(d, r = radius)
@@ -1154,7 +1153,7 @@ method(get_tibble, ob_reuleaux) <- function(x) {
 }
 
 
-method(str, ob_reuleaux) <- function(
+S7::method(str, ob_reuleaux) <- function(
     object,
     nest.lev = 0,
     additional = FALSE,
@@ -1168,16 +1167,16 @@ method(str, ob_reuleaux) <- function(
                  nest.lev = nest.lev)
 }
 
-method(as.geom, ob_reuleaux) <- function(x, ...) {
+S7::method(as.geom, ob_reuleaux) <- function(x, ...) {
   gp <- as.geom(super(x, has_style), ...)
-  if (S7_inherits(x@label, ob_label)) {
+  if (S7::S7_inherits(x@label, ob_label)) {
     gl <- as.geom(x@label)
     gp <- list(gp, gl)
   }
   gp
 }
 
-method(`[`, ob_reuleaux) <- function(x, y) {
+S7::method(`[`, ob_reuleaux) <- function(x, y) {
   d <- x@tibble[y,]
   dl <- as.list(dplyr::select(d, -.data$x0, -.data$y0))
   z <- rlang::inject(ob_reuleaux(center = ob_point(d$x0, d$y0), !!!dl))
