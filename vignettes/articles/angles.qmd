@@ -13,7 +13,6 @@ vignette: >
 ```{r}
 #| label: presetup
 #| include: false
-#| cache: false
 library(ggdiagram)
 library(ggplot2)
 library(dplyr)
@@ -76,7 +75,7 @@ $1$            | $\tau=2\pi$                        | $360^\circ$ |
 #| fig-height: 8
 theta <- degree(seq(0,330, 30))
 angle_types <- c("Turns", "Radians", "Degrees")
-theta_list <- lapply(list(turn, radian, degree), \(.f) .f(theta))
+theta_list <- lapply(list(turn, radian, degree), \(.a) .a(theta))
 
 p <- ob_polar(theta, r = 1)
 

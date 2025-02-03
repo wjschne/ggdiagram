@@ -25,3 +25,4 @@ vignettes/*.R
 *_cache/
 /*_files/
 docs/
+docs

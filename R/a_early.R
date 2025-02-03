@@ -217,7 +217,7 @@ S7::method(`[<-`, has_style) <- function(x, y, value) {
       }
     }
   new_x <- rlang::inject(.fn(!!!d))
-  if (prop_exists(new_x, "vertex_radius")) {
+  if (S7::prop_exists(new_x, "vertex_radius")) {
     new_x@vertex_radius <- x@vertex_radius
   }
   new_x

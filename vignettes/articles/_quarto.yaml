@@ -1,0 +1,5 @@
+execute:
+  freeze: true
+project:
+  render:
+  - '*.qmd'
