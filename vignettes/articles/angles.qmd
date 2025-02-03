@@ -325,6 +325,21 @@ $$
 2 * degree(180)
 ```
 
+
+## Positive and Negative Angles
+
+You can ensure that an angle is always positive or negative with the `@positive` and `@negative` attributes.
+
+```{r}
+# Display a negative angle a as positive angle
+degree(-30)@positive
+
+# Display a positive angle as a negative angle
+degree(330)@negative
+```
+
+
+
 # Trigonometry
 
 The outputs of `degree`, `radian`, and `turn` can take the three standard trigonometric functions
