@@ -14,3 +14,4 @@
 ^vignettes/articles/*_files$
 ^vignettes/articles$
 vignettes/.quarto/
+^vignettes/

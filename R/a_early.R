@@ -1013,7 +1013,7 @@ make_geom_helper <- function(d = NULL,
   purrr::pmap(d_all, \(data, unmappable) {
 
     if ("p_unnest" %in% colnames(data)) {
-      data <- tidyr::unnest(data = data, p_unnest)
+      data <- tidyr::unnest(data = data, .data$p_unnest)
     }
 
     # make list of not mapped arguments
