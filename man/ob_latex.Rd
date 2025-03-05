@@ -62,6 +62,8 @@ ob_latex(
 \item{preamble}{additional latex commands to load in preamble}
 
 \item{force_recompile}{Will re-run xelatex even if .pdf file exists already}
+
+\item{delete_files}{Delete .tex and .pdf files after image is generated.}
 }
 \value{
 ob_latex object

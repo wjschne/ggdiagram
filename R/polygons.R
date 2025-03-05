@@ -319,33 +319,33 @@ S7::method(`[`, ob_polygon) <- function(x, y) {
   z
 }
 
-S7::method(connect, list(ob_polygon, ob_polygon)) <- function(x,y, ...) {
-  centroid_segment <- ob_segment(x@center, y@center)
-  connect(intersection(x, centroid_segment), intersection(y, centroid_segment), ...)
+S7::method(connect, list(ob_polygon, ob_polygon)) <- function(from,to, ...) {
+  centroid_segment <- ob_segment(from@center, to@center)
+  connect(intersection(from, centroid_segment), intersection(to, centroid_segment), ...)
 }
 
-S7::method(connect, list(ob_polygon, ob_point)) <- function(x,y, ...) {
-  centroid_segment <- ob_segment(x@center, y)
-  connect(intersection(x, centroid_segment), y, ...)
+S7::method(connect, list(ob_polygon, ob_point)) <- function(from,to, ...) {
+  centroid_segment <- ob_segment(from@center, to)
+  connect(intersection(from, centroid_segment), to, ...)
 }
 
-S7::method(connect, list(ob_point, ob_polygon)) <- function(x,y, ...) {
-  centroid_segment <- ob_segment(x, y@center)
-  connect(x, intersection(y, centroid_segment), ...)
-}
-
-
-S7::method(connect, list(centerpoint, ob_polygon)) <- function(x,y, ...) {
-  centroid_segment <- ob_segment(x@center, y@center)
-  p <- intersection(y, centroid_segment)
-  connect(x, p, ...)
+S7::method(connect, list(ob_point, ob_polygon)) <- function(from,to, ...) {
+  centroid_segment <- ob_segment(from, to@center)
+  connect(from, intersection(to, centroid_segment), ...)
 }
 
 
-S7::method(connect, list(ob_polygon, centerpoint)) <- function(x,y, ...) {
-  centroid_segment <- ob_segment(x@center, y@center)
-  p <- intersection(x, centroid_segment)
-  connect(p, y, ...)
+S7::method(connect, list(centerpoint, ob_polygon)) <- function(from,to, ...) {
+  centroid_segment <- ob_segment(from@center, to@center)
+  p <- intersection(to, centroid_segment)
+  connect(from, p, ...)
+}
+
+
+S7::method(connect, list(ob_polygon, centerpoint)) <- function(from,to, ...) {
+  centroid_segment <- ob_segment(from@center, to@center)
+  p <- intersection(from, centroid_segment)
+  connect(p, to, ...)
 }
 
 # ob_intercept ----
@@ -486,27 +486,27 @@ S7::method(get_tibble, ob_intercept) <- function(x) {
   d
 }
 
-S7::method(connect, list(ob_intercept, ob_intercept)) <- function(x,y, ...) {
-  connect(x@polygon, y@polygon, ...)
+S7::method(connect, list(ob_intercept, ob_intercept)) <- function(from, to, ...) {
+  connect(from@polygon, to@polygon, ...)
 }
 
-S7::method(connect, list(ob_intercept, ob_point)) <- function(x,y, ...) {
-  centroid_segment <- ob_segment(x@center, y)
-  connect(x@polygon, y, ...)
+S7::method(connect, list(ob_intercept, ob_point)) <- function(from, to, ...) {
+  centroid_segment <- ob_segment(from@center, to)
+  connect(from@polygon, to, ...)
 }
 
-S7::method(connect, list(ob_point, ob_intercept)) <- function(x,y, ...) {
-  connect(x, y@polygon, ...)
-}
-
-
-S7::method(connect, list(centerpoint, ob_intercept)) <- function(x,y, ...) {
-  connect(x, y@polygon, ...)
+S7::method(connect, list(ob_point, ob_intercept)) <- function(from, to, ...) {
+  connect(from, to@polygon, ...)
 }
 
 
-S7::method(connect, list(ob_intercept, centerpoint)) <- function(x,y, ...) {
-  connect(x@polygon, y, ...)
+S7::method(connect, list(centerpoint, ob_intercept)) <- function(from, to, ...) {
+  connect(from, to@polygon, ...)
+}
+
+
+S7::method(connect, list(ob_intercept, centerpoint)) <- function(from, to, ...) {
+  connect(from@polygon, to, ...)
 }
 
 S7::method(as.geom, ob_intercept) <- function(x, ...) {
@@ -713,6 +713,8 @@ ob_ngon_props <- list(
 #' @slot tangent_at A function that finds the tangent line at the specified angle.
 #' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggforce::geom_shape`.
 #' @slot vertices points on the regular polygon
+#' @param x0 overrides x-coordinate in `center@x`
+#' @param y0 overrides y-coordinate in `center@y`
 #' @inherit ob_style params
 ob_ngon <- S7::new_class(
   name = "ob_ngon",
@@ -868,26 +870,26 @@ S7::method(`[`, ob_ngon) <- function(x, y) {
 }
 
 
-S7::method(connect, list(ob_ngon, ob_ngon)) <- function(x,y, ...) {
-  s <- ob_segment(x@center, y@center)
-  connect(intersection(x, s), intersection(y, s), ...)
+S7::method(connect, list(ob_ngon, ob_ngon)) <- function(from, to, ...) {
+  s <- ob_segment(from@center, y@center)
+  connect(intersection(from, s), intersection(to, s), ...)
 }
 
-S7::method(connect, list(ob_ngon, ob_point)) <- function(x,y, ...) {
-  s <- ob_segment(x@center, y)
-  connect(intersection(x, s), y, ...)
+S7::method(connect, list(ob_ngon, ob_point)) <- function(from, to, ...) {
+  s <- ob_segment(from@center, to)
+  connect(intersection(from, s), to, ...)
 }
 
-S7::method(connect, list(ob_point, ob_ngon)) <- function(x,y, ...) {
-  s <- ob_segment(x, y@center)
-  connect(x, intersection(y, s), ...)
+S7::method(connect, list(ob_point, ob_ngon)) <- function(from, to, ...) {
+  s <- ob_segment(from, to@center)
+  connect(from, intersection(to, s), ...)
 }
 
 
-S7::method(connect, list(centerpoint, ob_ngon)) <- function(x,y, ...) {
-  s <- ob_segment(x@center, y@center)
-  p <- intersection(y, s)
-  connect(x, p, ...)
+S7::method(connect, list(centerpoint, ob_ngon)) <- function(from, to, ...) {
+  s <- ob_segment(from@center, to@center)
+  p <- intersection(to, s)
+  connect(from, p, ...)
 }
 
 # ob_reuleaux ----
@@ -897,8 +899,8 @@ S7::method(connect, list(centerpoint, ob_ngon)) <- function(x,y, ...) {
 #' @param n Number of sides. True Reuleaux polygons have an odd number of sides, but Reauleaux-like shapes with an even number of sides are possible.
 #' @param radius Distance from center to a vertex
 #' @inherit ob_style params
+#' @inherit ob_polygon params
 #'
-
 #' @export
 #' @return ob_reuleaux object
 ob_reuleaux <- S7::new_class(

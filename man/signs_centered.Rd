@@ -21,11 +21,3 @@ a vector of numbers converted to characters
 \description{
 A wrapper function for the signs::signs function. It adds a space to the right side of negative numbers so that it appear as if the minus sign does not affect the number's centering.
 }
-\examples{
-library(ggplot2)
-d <- data.frame(x = -4:0, y = -4:0)
-# In these 2 plots, Compare the centering of the negative numbers on the x-axis
-ggplot(d, aes(x,y))
-ggplot(d, aes(x,y)) +
-  scale_x_continuous(labels = signs_centered)
-}

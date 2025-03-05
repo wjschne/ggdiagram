@@ -28,10 +28,6 @@ turn(turn = numeric(0))
 \item{radian}{radians}
 
 \item{turn}{proportion of full turns of a circle (1 turn = 2 * pi radians)}
-
-\item{positive}{if angle is negative, adds a full turn to ensure the angle is positive}
-
-\item{negative}{if angle is positive, subtracts a full turn to ensure the angle is negative}
 }
 \value{
 ob_angle
@@ -42,6 +38,14 @@ Creates an angle in the metric of radians, degrees, and turns.
 \details{
 Angles turns can be any real number, but degrees are displayed as values between -360 and +360, and radians are between -2pi and +2pi.
 }
+\section{Slots}{
+
+\describe{
+\item{\code{positive}}{if angle is negative, adds a full turn to ensure the angle is positive}
+
+\item{\code{negative}}{if angle is positive, subtracts a full turn to ensure the angle is negative}
+}}
+
 \examples{
 # Three Different ways to make a right angle
 ## 90 degrees

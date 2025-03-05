@@ -4,12 +4,12 @@
 \alias{connect}
 \title{Arrow connect one shape to another}
 \usage{
-connect(x, y, ...)
+connect(from, to, ...)
 }
 \arguments{
-\item{x}{first shape object}
+\item{from}{first shape object}
 
-\item{y}{second shape object}
+\item{to}{second shape object}
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> Arguments passed to style}
 }

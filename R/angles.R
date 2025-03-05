@@ -22,8 +22,8 @@ turn2angle <- function(x, object_name) {
 #' @param radian radians
 #' @param degree degrees
 #' @param turn proportion of full turns of a circle (1 turn = 2 * pi radians)
-#' @param positive if angle is negative, adds a full turn to ensure the angle is positive
-#' @param negative if angle is positive, subtracts a full turn to ensure the angle is negative
+#' @slot positive if angle is negative, adds a full turn to ensure the angle is positive
+#' @slot negative if angle is positive, subtracts a full turn to ensure the angle is negative
 #' @export
 #' @return ob_angle
 #' @examples
@@ -122,9 +122,6 @@ degree <- S7::new_class(
     S7::new_object(degree / 360)
   })
 
-
-
-
 #' degree class
 #'
 #' @rdname ob_angle
@@ -155,17 +152,32 @@ turn <- S7::new_class(
 # arithmetic ----
 purrr::walk(list(`+`, `-`, `*`, `/`, `^`), \(.f) {
   S7::method(.f, list(ob_angle, ob_angle)) <- function(e1, e2) {
-    S7::convert(.f(c(e1), c(e2)), S7::S7_class(e2))
+    S7::convert(
+      .f(c(e1), c(e2)),
+      S7::S7_class(e2))
   }
 
   S7::method(.f, list(ob_angle, S7::class_numeric)) <- function(e1, e2) {
-    S7::convert(num2turn(.f(S7::prop(
-      e1, S7::S7_class(e1)@name
-    ), e2), S7::S7_class(e1)@name), S7::S7_class(e1))
+    S7::convert(
+      num2turn(
+        .f(
+          S7::prop(
+            e1,
+            S7::S7_class(e1)@name),
+          e2),
+        S7::S7_class(e1)@name),
+      S7::S7_class(e1))
   }
 
   S7::method(.f, list(S7::class_numeric, ob_angle)) <- function(e1, e2) {
-    S7::convert(num2turn(.f(e1, S7::prop(e2, S7::S7_class(e2)@name)), S7::S7_class(e2)@name), S7::S7_class(e2))
+    S7::convert(
+      num2turn(
+        .f(
+          e1,
+          S7::prop(
+            e2, S7::S7_class(e2)@name)),
+        S7::S7_class(e2)@name),
+      S7::S7_class(e2))
   }
 })
 

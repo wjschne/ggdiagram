@@ -283,6 +283,8 @@ ob_covariance <- S7::new_generic(
                  bend = 0,
                  looseness = 1,
                  arrow_head = arrowheadr::arrow_head_deltoid(d = 2.3, n = 100),
+                 length_head = 7,
+                 length_fins = 7,
                  resect = 2,
                  ...) {
     S7::S7_dispatch()
@@ -386,7 +388,7 @@ S7::method(bind, ob_shape_list) <- function(x, ...) {
   csl <- lapply(.f, \(.ff) {
     Filter(f = \(xx){
       S7::S7_inherits(xx, .ff)
-    } ,x = S7::S7_data(x)) |>
+    } , x = S7::S7_data(x)) |>
       bind()
   })
 
@@ -407,6 +409,7 @@ S7::method(bind, ob_shape_list) <- function(x, ...) {
 #'
 #' Converts an object with k elements into a list of k objects
 #' @param x object
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> additional arguments (not used at this time)
 #' @export
 #' @return a list of objects, each of length 1
 unbind <- S7::new_generic("unbind", dispatch_args = "x")
@@ -781,14 +784,6 @@ superscript <- function(x, superscript = seq(length(x))) {
 #'
 #' @return a vector of numbers converted to characters
 #' @export
-#'
-#' @examples
-#' library(ggplot2)
-#' d <- data.frame(x = -4:0, y = -4:0)
-#' # In these 2 plots, Compare the centering of the negative numbers on the x-axis
-#' ggplot(d, aes(x,y))
-#' ggplot(d, aes(x,y)) +
-#'   scale_x_continuous(labels = signs_centered)
 signs_centered <- function(x, space = "\u2007", encoding = "UTF-8", ...) {
   x_new <- paste0(signs::signs(x, ...), ifelse(x < 0, space, ""))
   Encoding(x_new) <- encoding
@@ -1176,12 +1171,12 @@ label_object <- S7::new_generic("label_object", "object")
 
 #' Arrow connect one shape to another
 #'
-#' @param x first shape object
-#' @param y second shape object
+#' @param from first shape object
+#' @param to second shape object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> Arguments passed to style
 #' @export
 #' @return ob_segment
-connect <- S7::new_generic("connect", c("x", "y"))
+connect <- S7::new_generic("connect", c("from", "to"))
 
 #' Place an object a specified distance from another object
 #'
@@ -1254,6 +1249,14 @@ ggdiagram <- function(
 
   ggplot2::update_geom_defaults(
     geom = ggplot2::GeomPolygon,
+    list(linewidth = linewidth))
+
+  ggplot2::update_geom_defaults(
+    geom = ggforce::GeomCircle,
+    list(linewidth = linewidth))
+
+  ggplot2::update_geom_defaults(
+    geom = ggforce::GeomShape,
     list(linewidth = linewidth))
 
   ggplot2::ggplot() +

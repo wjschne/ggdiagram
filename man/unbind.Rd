@@ -8,6 +8,8 @@ unbind(x, ...)
 }
 \arguments{
 \item{x}{object}
+
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> additional arguments (not used at this time)}
 }
 \value{
 a list of objects, each of length 1

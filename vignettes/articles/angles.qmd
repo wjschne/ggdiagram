@@ -331,7 +331,7 @@ $$
 You can ensure that an angle is always positive or negative with the `@positive` and `@negative` attributes.
 
 ```{r}
-# Display a negative angle a as positive angle
+# Display a negative angle as a positive angle
 degree(-30)@positive
 
 # Display a positive angle as a negative angle

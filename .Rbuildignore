@@ -9,9 +9,11 @@
 ^vignettes/*_files$
 ^README\.Rmd$
 ^README\.qmd$
-^vignettes/*.qmd
 ^vignettes/articles/\.quarto$
 ^vignettes/articles/*_files$
 ^vignettes/articles$
 vignettes/.quarto/
-^vignettes/
+^vignettes/\.quarto$
+^vignettes/_freeze/*
+^doc$
+^Meta$

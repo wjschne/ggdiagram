@@ -45,8 +45,6 @@ To avoid repetitive code, we make a base plot:
 
 ```{r}
 #| label: baseplot
-
-
 my_font <- "Roboto Condensed"
 my_font_size <- 20
 my_point_size <- 2
@@ -56,12 +54,9 @@ my_arrowhead <- arrowheadr::arrow_head_deltoid(d = 2.3, n = 100)
 my_colors <- c("#3B528B", "#21908C")
 
 theme_set(
-  theme_minimal(
-    base_size = my_font_size, 
-    base_family = my_font) +
-    theme(axis.title.y = element_text(
-      angle = 0,
-      vjust = 0.5)))
+  theme_minimal(base_size = my_font_size, base_family = my_font) +
+    theme(axis.title.y = element_text(angle = 0, vjust = 0.5))
+)
 
 bp <- ggdiagram(
   font_family = my_font,
@@ -74,14 +69,11 @@ bp <- ggdiagram(
     face = "italic",
     angle = 0,
     hjust = .5,
-    vjust = .5)) +
-  scale_x_continuous(
-    labels = signs_centered,
-    limits = c(-4, 4)) +
-  scale_y_continuous(
-    labels = signs::signs,
-    limits = c(-4, 4))
-
+    vjust = .5
+  )
+) +
+  scale_x_continuous(labels = signs_centered, limits = c(-4, 4)) +
+  scale_y_continuous(labels = signs::signs, limits = c(-4, 4))
 ```
 
 # Specifying a segment

@@ -1,0 +1,126 @@
+---
+title: "Using ggdiagram"
+vignette: >
+  %\VignetteIndexEntry{Using ggdiagram}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+    dev: "ragg_png"
+---
+
+```{r}
+#| label: setup
+library(ggplot2)
+library(ggdiagram)
+```
+
+
+Making diagrams with a point-and-click drawing program saves time and can produce good results if handled with care. However, making a complex diagram worthy of publication can take many hours of fuss and bother.
+
+When I discovered [TikZ](https://tikz.dev/), I was amazed at how much better my diagrams could be. TikZ knows things about the objects it draws---like where lines and objects intersect and how far they are from each other. Instead of eyeballing where to place objects, I could tell TikZ exactly where to draw objects in relation to each other (e.g., draw a circle to the right of rectangle with 4cm of space between them). I suspect that the precision, consistency, and beauty of TikZ diagrams add to their persuasive power because readers intuit that such figures are the product of careful deliberation.
+
+Because I mainly compute statistical models in R, getting information from R to TikZ was an intensive process, and integrating TikZ graphics with R graphics was often an exercise in frustration. Though I very much respect the labor of those who have made the TikZ ecosystem open and flexible, I never felt at ease when trying to automate TikZ or extending its capabilities. 
+
+When the S7 package became available, it seemed that what I wanted was within my grasp: to draw diagrams with an object-oriented approach, welding the precision of TikZ with the flexibility of R. The ggdiagram package makes objects that can hold or compute various properties and can be placed directly in a ggplot2 plot. I do not imagine that ggdiagram will ever duplicate the full functionality of TikZ, but being able to make TikZ-like diagrams within R eliminates many pain points from my previous workflow and offers a world of possibilities.
+
+# First steps
+
+The ggplot2 ecosystem already has the ability to create points, lines, and shapes, and it is ideally suited for the display of data and statistical trends. There is no reason to use ggdiagram for the tasks that ggplot2 already does fabulously well. However, once ggplot2 creates points, lines, and shapes, it is not always easy to extract information about them to create new objects. For example, if I draw a line segment from the center of an ellipse to the center of a rectangle, where does the line intersect with the ellipse and the rectangle? Where is the point midway between those intersection points? These quantities can be computed with a bit of algebra and trigonometry, but when making complex figures, such computations are tedious distractions.
+
+The functions in ggdiagram with the `ob_` prefix (e.g,. `ob_point`, `ob_line`, and `ob_circle`) create object using [S7](https://rconsortium.github.io/S7/), which allows the objects to hold information about the object's properties (e.g., location, color, and rotation angle) and to compute the location of its edges and points of intersection with other objects. Properties of S7 objects are extracted with the `@` operator. For example, we can create a circle with the `ob_circle` function and extract various properties:
+
+```{r circle}
+x <- ob_circle()
+x@radius
+x@circumference
+x@area
+x@diameter
+```
+
+# Simple Plots
+
+As seen in @fig-ob, objects with the `ob_` prefix can be added to any ggplot object in the usual manner.
+
+```{r}
+#| label: fig-ob
+#| fig-cap: Adding objects using the `ggplot` function
+
+# Plot
+ggplot() +
+  ob_circle(radius = 1) +
+  ob_rectangle(width = 2, 
+               height = 2) + 
+  coord_equal() + 
+  theme_void()
+```
+
+The `ggdiagram` function calls the `ggplot` function, sets the ggplot2 theme (defaults to `theme_void`), and also sets the defaults of key geoms so that font families, font sizes, line widths, and point sizes do not have to be specified repeatedly.
+
+
+In @fig-theta, we can locate points on a circle's circumference at any angle. The `degree` function makes it easy to compute and label angles as degrees. 
+
+```{r}
+#| label: fig-theta
+#| fig-cap: The center of a circle and a point at an angle.
+theta <- degree(c(0, 53, 90, 138, 180, 241, 270, 338))
+
+ggdiagram(font_size = 18) +
+  x +
+  x@center +
+  x@point_at(theta)@label(theta)
+```
+# Building Plots Sequentially
+
+Often we want to build a diagram in which newer objects depend on previously specified objects. To assign a variable in the middle of a ggplot2 workflow, we can enclose an assignment statement in curly braces.
+
+@fig-indicators makes use of a curly braces to create:
+
+* Latent variable *A* as a circle with radius 2, 
+* Observed variables *A*~1~--*A*~3~ 3 units below *A* 
+* Loading paths (connecting arrows) from the latent *A* to observed variables *A*~1~--*A*~3~
+* Error variance paths for each observed variable.
+
+```{r}
+#| label: fig-indicators
+#| fig-cap: A latent variable with 3 observed indicators
+#| fig-width: 5.5
+#| fig-height: 7
+
+# Loadings
+l <- c(.86, .79, .90)
+
+ggdiagram(font_size = 16) +
+  # Latent variable
+  {A <- ob_circle(radius = 2, label = ob_label("A", size = 96))} +
+  # Observed variables (array of 3 superellipses below A)
+  {A_3 <- ob_ellipse(m1 = 20) %>%
+    place(from = A, where = "below", sep = 3) %>%
+    ob_array(
+      k = 3,
+      sep = .5,
+      label = ob_label(
+        label = paste0("A~", 1:3, "~"),
+        size = 32,
+        vjust = .6
+      )
+    )} +
+  # Observed variable loadings
+  connect(
+    from = A,
+    to = A_3,
+    resect = 2,
+    label = ob_label(round_probability(l), 
+                     angle = 0)
+  ) +
+  # Error variances
+  ob_variance(
+    A_3,
+    where = "south",
+    bend = -15,
+    label = ob_label(round_probability(sqrt(1 - l^2)))
+  ) 
+```
+

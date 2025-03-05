@@ -12,6 +12,8 @@ circle_from_3_points(p1, p2 = NULL, p3 = NULL, ...)
 \item{p2}{an ob_point of length 1 or NULL}
 
 \item{p3}{an ob_point of length 1 or NULL}
+
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> Pass arguments to ob_circle}
 }
 \value{
 ob_point object

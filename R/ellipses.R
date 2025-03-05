@@ -433,34 +433,36 @@ S7::method(`[`, ob_ellipse) <- function(x, y) {
   z
 }
 
-S7::method(connect, list(centerpoint, centerpoint)) <- function(x,y, ...) {
-  theta <- radian(atan2(y@center@y - x@center@y, y@center@x - x@center@x))
-  connect(x@point_at(theta), y@point_at(theta + degree(180)), ...)
+S7::method(connect, list(centerpoint, centerpoint)) <- function(from,to, ...) {
+  theta <- radian(atan2(to@center@y - from@center@y, to@center@x - x@center@x))
+  connect(from@point_at(theta), to@point_at(theta + degree(180)), ...)
 }
 
-S7::method(connect, list(centerpoint, ob_point)) <- function(x,y, ...) {
-  theta <- radian(atan2(y@y - x@center@y, y@x - x@center@x))
-  connect(x@point_at(theta), y, ...)
+S7::method(connect, list(centerpoint, ob_point)) <- function(from,to, ...) {
+  theta <- radian(atan2(to@y - from@center@y,
+                        to@x - from@center@x))
+  connect(from@point_at(theta), to, ...)
 }
 
-S7::method(connect, list(ob_point, centerpoint)) <- function(x,y, ...) {
-  theta <- radian(atan2(y@center@y - x@y, y@center@x - x@x))
-  connect(x, y@point_at(theta + degree(180)), ...)
+S7::method(connect, list(ob_point, centerpoint)) <- function(from,to, ...) {
+  theta <- radian(atan2(y@center@y - from@y,
+                        to@center@x - from@x))
+  connect(from, to@point_at(theta + degree(180)), ...)
 }
 
-S7::method(connect, list(centerpoint, ob_line)) <- function(x,y, ...) {
-  p2 <- projection(x@center, y)
-  connect(x, p2, ...)
+S7::method(connect, list(centerpoint, ob_line)) <- function(from,to, ...) {
+  p2 <- projection(from@center, to)
+  connect(from, p2, ...)
 }
 
-S7::method(connect, list(ob_line, centerpoint)) <- function(x,y, ...) {
-  p1 <- projection(y@center, x)
-  connect(p1, y, ...)
+S7::method(connect, list(ob_line, centerpoint)) <- function(from,to, ...) {
+  p1 <- projection(to@center, from)
+  connect(p1, to, ...)
 }
 
-S7::method(connect, list(S7::class_list, centerpoint)) <- function(x,y, ...) {
-  purrr::map(unbind(x), \(xx) {
-    connect(xx,y,...)
+S7::method(connect, list(S7::class_list, centerpoint)) <- function(from,to, ...) {
+  purrr::map(unbind(from), \(xx) {
+    connect(xx,to,...)
   }) |>
     bind()
 
@@ -571,6 +573,8 @@ S7::method(ob_covariance, list(centerpoint, centerpoint)) <- function(
     bend = 0,
     looseness = 1,
     arrow_head = arrowheadr::arrow_head_deltoid(d = 2.3, n = 100),
+    length_head = 7,
+    length_fins = 7,
     resect = 2,
     ...) {
   if (!S7::S7_inherits(where, ob_angle) && !is.null(where)) where <- degree(where)
@@ -589,10 +593,7 @@ S7::method(ob_covariance, list(centerpoint, centerpoint)) <- function(
       y_angle <- degree(180) - where
     }
     s <- xx@point_at(x_angle)
-    # m <- el@point_at(where)
     e <- yy@point_at(y_angle)
-    # s_dist <- (s - m)@r * looseness * 2
-    # e_dist <- (e - m)@r * looseness * 2
     m_dist <- looseness * (s - e)@r / 2
 
     bind(c(

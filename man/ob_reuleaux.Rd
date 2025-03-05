@@ -29,6 +29,10 @@ ob_reuleaux(
 
 \item{angle}{angle of text}
 
+\item{label}{A character, angle, or label object}
+
+\item{vertex_radius}{A numeric or unit vector of length one, specifying the corner radius}
+
 \item{alpha}{numeric value for alpha transparency}
 
 \item{color}{character string for color}
@@ -38,6 +42,8 @@ ob_reuleaux(
 \item{linewidth}{Width of lines}
 
 \item{linetype}{type of lines}
+
+\item{style}{Gets and sets the styles associated with polygons}
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> unused}
 }

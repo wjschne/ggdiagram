@@ -87,7 +87,12 @@ cr_props <- list(
     }),
     arc = S7::new_property(S7::class_function, getter = \(self) {
       \(start, end, type = "arc", ...) {
-        ob_arc(self@center, radius = self@radius, start = start, end = end, type = type, ...)
+        dots <- rlang::list2(...)
+        if (is.null(dots$radius)) {
+          dots$radius <- self@radius
+          }
+
+        rlang::inject(ob_arc(self@center, start = start, end = end, type = type, style = self@style, !!!dots))
       }
     }),
     angle_at = S7::new_property(S7::class_function, getter = function(self) {
@@ -330,7 +335,7 @@ S7::method(ob_array, ob_circle) <- function(x, k = 2, sep = 1, where = "east", a
 #' @param p1 an ob_point of length 1 or length 3
 #' @param p2 an ob_point of length 1 or NULL
 #' @param p3 an ob_point of length 1 or NULL
-#'
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> Pass arguments to ob_circle
 #' @return ob_point object
 #' @export
 #'

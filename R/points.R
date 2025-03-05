@@ -430,8 +430,8 @@ S7::method(`[<-`, ob_point) <- function(x, y, value) {
 }
 
 
-S7::method(connect, list(ob_point, ob_point)) <- function(x,y, arrow_head = arrowheadr::arrow_head_deltoid(d = 2.3, n = 100), length_head = 7, ...) {
-  s <- ob_segment(x,y, arrow_head = arrow_head, length_head = length_head, ...)
+S7::method(connect, list(ob_point, ob_point)) <- function(from,to, arrow_head = arrowheadr::arrow_head_deltoid(d = 2.3, n = 100), length_head = 7, ...) {
+  s <- ob_segment(from,to, arrow_head = arrow_head, length_head = length_head, ...)
   s
 
 }
@@ -481,6 +481,8 @@ S7::method(ob_covariance, list(ob_point, ob_point)) <- function(
     bend = 0,
     looseness = 1,
     arrow_head = arrowheadr::arrow_head_deltoid(d = 2.3, n = 100),
+    length_head = 7,
+    length_fins = 7,
     resect = 2,
     ...) {
   if (!S7::S7_inherits(where, ob_angle) && !is.null(where)) where <- degree(where)
@@ -499,10 +501,7 @@ S7::method(ob_covariance, list(ob_point, ob_point)) <- function(
       y_angle <- degree(180) - where
     }
     s <- xx
-    # m <- el@point_at(where)
     e <- yy
-    # s_dist <- (s - m)@r * looseness * 2
-    # e_dist <- (e - m)@r * looseness * 2
     m_dist <- looseness * (s - e)@r / 2
 
     bind(c(

@@ -26,3 +26,5 @@ vignettes/*.R
 /*_files/
 docs/
 docs
+/doc/
+/Meta/

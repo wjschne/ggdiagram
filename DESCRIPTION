@@ -1,6 +1,6 @@
 Package: ggdiagram
 Title: Object-Oriented Diagram Plots with ggplot2
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: 
     person("W. Joel", "Schneider", , "w.joel.schneider@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-8393-5316"))
@@ -25,6 +25,7 @@ Imports:
     janitor,
     magick,
     magrittr,
+    methods,
     pdftools,
     purrr,
     rlang,

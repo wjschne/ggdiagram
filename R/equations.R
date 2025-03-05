@@ -19,6 +19,7 @@
 #' @param math_mode include dollar signs automatically. Set to `FALSE` when the latex command is not in math mode
 #' @param filename bare file name without extension (e.g., `myequation`)
 #' @param force_recompile Will re-run xelatex even if .pdf file exists already
+#' @param delete_files Delete .tex and .pdf files after image is generated.
 #' @inherit ob_style params
 #' @export
 #' @return ob_latex object

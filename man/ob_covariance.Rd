@@ -11,6 +11,8 @@ ob_covariance(
   bend = 0,
   looseness = 1,
   arrow_head = arrowheadr::arrow_head_deltoid(d = 2.3, n = 100),
+  length_head = 7,
+  length_fins = 7,
   resect = 2,
   ...
 )
@@ -27,6 +29,10 @@ ob_covariance(
 \item{looseness}{distance of control points as a ratio of the distance to the object's center (e.g., in a circle of radius 1, looseness = 1.5 means that that the control points will be 1.5 units from the start and end points.)}
 
 \item{arrow_head}{A 2-column matrix of polygon points}
+
+\item{length_head}{Determines the size of the arrow head. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner. From ggarrow.}
+
+\item{length_fins}{Determines the size of the arrow fins. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner. From ggarrow.}
 
 \item{resect}{A numeric(1) denoting millimeters or \if{html}{\out{<unit>}} to shorten the arrow head and fins.}
 

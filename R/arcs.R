@@ -401,26 +401,12 @@ arc_props <- list(
 #' @slot theta interior angle (end - start)
 #' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggarrow::geom_arrow`.
 #' @examples
-#' library(ggplot2)
-#'
-#' # center point
-#' p_center <- ob_point(0,0)
-#'
 #' # 90-degree arc
-#' a_90 <- ob_arc(
-#'  center = p_center,
+#' ob_arc(
 #'  radius = 6,
 #'  start = degree(0),
 #'  end = degree(90)
 #'  )
-#'
-#'  # Print arc
-#'  a_90
-#'
-#' # Plot arc and its center point
-#' ggplot() + coord_equal() + theme_minimal() +
-#'  p_center +
-#'  a_90
 #' @export
 #' @return ob_arc object
 ob_arc <- S7::new_class(
