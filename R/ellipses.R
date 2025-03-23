@@ -434,7 +434,7 @@ S7::method(`[`, ob_ellipse) <- function(x, y) {
 }
 
 S7::method(connect, list(centerpoint, centerpoint)) <- function(from,to, ...) {
-  theta <- radian(atan2(to@center@y - from@center@y, to@center@x - x@center@x))
+  theta <- radian(atan2(to@center@y - from@center@y, to@center@x - from@center@x))
   connect(from@point_at(theta), to@point_at(theta + degree(180)), ...)
 }
 
@@ -445,7 +445,7 @@ S7::method(connect, list(centerpoint, ob_point)) <- function(from,to, ...) {
 }
 
 S7::method(connect, list(ob_point, centerpoint)) <- function(from,to, ...) {
-  theta <- radian(atan2(y@center@y - from@y,
+  theta <- radian(atan2(to@center@y - from@y,
                         to@center@x - from@x))
   connect(from, to@point_at(theta + degree(180)), ...)
 }
@@ -632,6 +632,8 @@ S7::method(ob_covariance, list(centerpoint, centerpoint)) <- function(
                         label_sloped = FALSE,
                         arrow_head = arrow_head,
                         arrow_fins = arrow_head,
+                        length_head = length_head,
+                        length_fins = length_fins,
                         resect = resect,
                         !!!dots))
 }

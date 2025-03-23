@@ -533,6 +533,8 @@ S7::method(ob_covariance, list(ob_point, ob_point)) <- function(
                         label_sloped = FALSE,
                         arrow_head = arrow_head,
                         arrow_fins = arrow_head,
+                        length_head = length_head,
+                        length_fins = length_fins,
                         resect = resect,
                         !!!dots))
 }

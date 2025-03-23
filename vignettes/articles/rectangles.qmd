@@ -144,8 +144,8 @@ r1
 
 
 
-```{r fig-rectangle}
-#| label: fig-angles
+```{r}
+#| label: fig-rectangle
 #| code-fold: true
 #| fig-cap: "Center, Width, and Height"
 #| fig-width: 8

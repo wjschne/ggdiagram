@@ -99,7 +99,8 @@ A common way to specify an ellipse is with a center point and the two distances 
 $$\left(\frac{x-c_x}{a}\right)^2+\left(\frac{y-c_y}{b}\right)^2=1$$
 
 
-```{r abellipse}
+```{r}
+#| label: abellipse
 a <- 4
 b <- 3
 c1 <- ob_point(0,0)
@@ -107,7 +108,8 @@ e1 <- ob_ellipse(c1, a = a, b = b)
 ```
 
 
-```{r fig-abellipse}
+```{r}
+#| label: fig-abellipse
 #| fig-cap: An ellipse can be specified with a center, and semi-major radii.
 #| code-fold: true
 bp + 
@@ -126,25 +128,27 @@ bp +
 
 A circle has one focus, the center. If *a* &ne; *b*, an ellipse has two foci. 
 
-```{r fig-foci}
+```{r}
+#| label: fig-foci
 #| fig-cap: An ellipse has two foci
 bp + 
   e1 + 
-  ob_label("*F*~1~", e1@focus_1, plot_point = T, vjust = 1.2) +
-  ob_label("*F*~2~", e1@focus_2, plot_point = T, vjust = 1.2)
+  ob_label("*F*~1~", e1@focus_1, plot_point = TRUE, vjust = 1.2) +
+  ob_label("*F*~2~", e1@focus_2, plot_point = TRUE, vjust = 1.2)
 ```
 
 
 For any point *P* on the ellipse, the sum of PF~1~ and PF~2~ is 2*a* if *a* > *b* and 2*b* if *b* > *a*.
 
-```{r fig-focilength}
+```{r}
+#| label: fig-focilength
 #| fig-cap: The sum of distances from the foci is constant.
 deg <- degree(61.5)
 
 bp + 
   e1 + 
-  ob_label("*F*~1~", e1@focus_1, plot_point = T, vjust = 1.2) +
-  ob_label("*F*~2~", e1@focus_2, plot_point = T, vjust = 1.2) + 
+  ob_label("*F*~1~", e1@focus_1, plot_point = TRUE, vjust = 1.2) +
+  ob_label("*F*~2~", e1@focus_2, plot_point = TRUE, vjust = 1.2) + 
   {p <- e1@point_at(deg)} +
   p@label("*P*", polar_just = ob_polar(deg, 1.5)) +
   ob_segment(e1@focus_1, 
@@ -169,12 +173,14 @@ bp +
 
 The `@point_at` property of an `ob_ellipse` object is a function that can find a point at a specific angle.
 
-```{r ptheta}
+```{r}
+#| label: ptheta
 e1@point_at(degree(60))
 ```
 
 
-```{r fig-ptheta}
+```{r}
+#| label: fig-ptheta
 #| fig-cap: Point on ellipse that is 45&deg; from the x-axis.
 #| code-fold: true
 
@@ -204,7 +210,8 @@ t&=[0,2\pi)\\
 \end{aligned}
 $$
 
-```{r fig-definitionalpoints}
+```{r}
+#| label: fig-definitionalpoints
 #| fig-cap: The ellipse's definitional parameter *t* does not always line up with angles on a circle
 #| code-fold: true
 
@@ -225,7 +232,8 @@ bp +
 
 If the definitional point at *t* is desired:
 
-```{r definitional}
+```{r}
+#| label: definitional
 ob_ellipse(a = 2)@point_at(degree(60), definitional = TRUE)
 ```
 
@@ -246,6 +254,8 @@ The `@tangent` function can also take a point instead of an angle.
 
 
 ```{r}
+#| label: fig-tangentpoint
+#| fig-cap: Tangent line at a specific point on an ellipse
 bp + 
   e1 + 
   {p1 <- e1@point_at(60)} +
@@ -256,6 +266,8 @@ bp +
 If the point is not on the ellipse, the tangent will be at the point's projection onto the ellipse:
 
 ```{r}
+#| label: fig-tangentpointprojection
+#| fig-cap: Tangent line at a specific point projected onto an ellipse
 bp + 
   e1 + 
   {p1 <- ob_point(3, 2, color = "firebrick4")} +
@@ -277,17 +289,17 @@ $$
 If *m*~1~ is 4, and *a* and *b* are equal, we can make a *squircle*, which is a square-ish circle.
 
 
-```{r fig-squircle}
+```{r}
+#| label: fig-squircle
 #| fig-cap: A squircle 
-bp + 
-  ob_ellipse(a = 3, 
-          b = 3, 
-          m1 = 4)
+bp +
+  ob_ellipse(a = 3, b = 3, m1 = 4)
 ```
 
-If we increase *m*~1~ to a high value like 10, we can a rectangle with pleasingly rounded corners.
+If we increase *m*~1~ to a high value like 10, we can create a rectangle with pleasingly rounded corners.
 
-```{r fig-myvariable}
+```{r}
+#| label: fig-myvariable
 #| fig-cap: A superellipse can look like a rectangle with rounded corners.
 bp +
   ob_ellipse(
@@ -303,12 +315,12 @@ bp +
       size = 70
     )
   )
-  
 ```
 
 # Connection Paths Among Ellipses
 
-```{r fig-connectellipse}
+```{r}
+#| label: fig-connectellipse
 #| fig-cap: Connections between ellipses
 bp + 
   {e1 <- ob_ellipse(ob_point(-2,0), a = 2)} +
@@ -321,21 +333,22 @@ bp +
 
 The `place` function will set an object at a position and distance from another object. Here we set an ellipse to the the right of `e1` (i.e., "east" or 0 degrees) with a separation of 2.
 
-```{r fig-placeellipse}
+```{r}
+#| label: fig-placeellipse
 #| fig-cap: Place an ellipse 2 units to the right of another ellipse.
-bp + 
-  {e1 <- ob_ellipse(center = ob_point(-2, 0), 
-                 a = 2)} +
-  place(ob_ellipse(b = 2), 
-        from = e1, 
-        where = "right", 
+bp +
+  {e1 <- ob_ellipse(center = ob_point(-2, 0), a = 2)} +
+  place(ob_ellipse(b = 2),
+        from = e1,
+        where = "right",
         sep = 2)
 ```
 
 
 The `sep` parameter in the `place` function is not necessarily the shortest distance between ellipses. Instead, it is the distance between the ellipses on the segment connecting the center points. 
 
-```{r fig-placedistance}
+```{r}
+#| label: fig-placedistance
 #| fig-cap: The separation distance between ellipses is along the path that connects their centers.
 deg <- degree(30)
 
@@ -370,7 +383,8 @@ bp +
 
 You can place many ellipses at once. In @fig-manyconnections, 12 ellipses are placed around the central ellipse. Connection paths are then drawn to each ellipse.
 
-```{r fig-manyconnections}
+```{r}
+#| label: fig-manyconnections
 #| fig-cap: Many ellipses can be placed at once.
 
 # Number of ellipses
@@ -417,7 +431,8 @@ bp +
 
 Lines can be placed in relation to ellipses:
 
-```{r fig-placeline}
+```{r}
+#| label: fig-placeline
 #| fig-cap: A line placed 3 units and 45 degrees from a squircle.
 bp + 
   {e1 <- ob_ellipse(m1 = 4)} +

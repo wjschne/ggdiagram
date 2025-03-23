@@ -94,67 +94,7 @@ s1 <- ob_segment(p1, p2)
 bp + s1 + p1 + p2
 ```
 
-# Styling a segment
 
-The primary options for styling a segment are alpha, color, linetype, and linewidth. However, it can take any style from `ggarrow::geom_arrow_segment`
-
-If you are not sure which properties can be set, you an see them in the `@aesthetics@style` slot.
-
-```{r}
-#| label: segstyle
-s1@aesthetics@style
-```
-
-
-Styles can be specified when the segment is created.
-
-```{r}
-#| label: segcolor
-s2 <- ob_segment(p1, p2, color = "green4")
-bp + s2
-```
-
-Styles can be modified after the segment is created:
-
-```{r}
-#| label: seglinewidth
-s2@linewidth <- 3
-bp + s2
-```
-
-The `as.geom` function passes style arguments to the `ggarrow::geom_arrow_segment` function without modifying the segment's style property:
-
-```{r}
-#| label: fig-asgeom
-#| fig-cap: Make s1 appear red temporarily using `as.geom` function
-bp +
-  as.geom(s1, color = "red4")
-```
-
-As an alternative, the `geom` property is a function that calls `as.geom`. 
-
-```{r}
-#| label: fig-geom
-#| fig-cap: Make s1 appear red temporarily via the `geom` property
-bp + s1@geom(color = "blue3")
-```
-
-To verify that s1 has not changed its color:
-
-```{r}
-#| label: fig-verify
-#| fig-cap: The `s1 object has not changed
-bp + s1
-```
-
-A "pipe-friendly" way to modify any ggdiagram object is to use S7's `set_props` function, which has been re-exported to ggdiagram for the sake of convenience. Like `as.geom`, this function does not modify `s1`, but unlike `as.geom`, `set_props` can be used to save a new object with the specified modifications by assigning it to a new variable. That is, `as.geom` creates a ggplot2 geom, whereas `set_props` will create a modified a ggdiagram object (or any other S7 class).
-
-```{r}
-#| label: setprops
-bp +
-  s1 |>
-    set_props(color = "red")
-```
 
 # Features of a segment
 

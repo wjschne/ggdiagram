@@ -159,7 +159,8 @@ An `ob_ngon` (regular polygon) can be be created by specifying the center point,
 
 In @fig-regon, many regular polygons are displayed concentrically.
 
-```{r fig-regon}
+```{r}
+#| label: fig-regon
 #| fig-cap: Regular polygons
 n <- 10
 bp +
@@ -177,7 +178,8 @@ bp +
 Alternately, instead of the `radius`, the `ob_ngon` object can be specified with either the `side_length` or the `apothem` (the distance from the center to a side's midpoint). 
 
 
-```{r fig-ngon}
+```{r}
+#| label: fig-ngon
 #| fig-cap: The `ob_ngon` object can be specificied with the `radius`, `side_length`, or `apothem`.
 bp +
   {ng <- ob_ngon(n = 8,
@@ -219,7 +221,8 @@ bp +
 
 Start with a regular polygon with an odd number of sides. For each pair of adjacent vertices, draw an arc with its center on the vertex of the opposite side. Amazingly, if you roll a Reuleaux polygon, its height is constant. This means that a Reuleaux polygon can roll smoothly. In @fig-reuleaux3, a Reuleaux triangle is made with the `ob_reuleaux` function.
 
-```{r fig-reuleaux3}
+```{r}
+#| label: fig-reuleaux3
 #| fig-cap: "A Reuleaux triangle"
 th <- 275
 ggdiagram() +
@@ -233,7 +236,8 @@ ggdiagram() +
 
 In @fig-reuleaux we draw 6 Reuleaux polygons with sides ranging from 3 to 13.
 
-```{r fig-reuleaux}
+```{r}
+#| label: fig-reuleaux
 #| fig-cap: "Six Reuleaux polygons arranged concentrically"
 
 ggdiagram() +
@@ -254,7 +258,8 @@ ggdiagram() +
 
 A true Reuleaux polygon with an even number of sides is not possible, but it is possible to draw even-sided figures that resemble Reuleaux polygons (@fig-reuleaux4). These figures do not have same height as they roll.
 
-```{r fig-reuleaux4}
+```{r}
+#| label: fig-reuleaux4
 #| fig-cap: A Reuleaux-like square
 
 ggdiagram() +
@@ -267,7 +272,8 @@ ggdiagram() +
 
 Specifying `n = 2` will create a symmetric lens, which is also not a Reuleaux polygon.
 
-```{r fig-reuleaux2}
+```{r}
+#| label: fig-reuleaux2
 #| fig-cap: A symmetric lens
 
 ggdiagram() +

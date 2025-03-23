@@ -763,17 +763,16 @@ S7::method(ob_array, ob_rectangle) <- function(
     anchor = anchor,
     ...
   )
-  dot_style <- rlang::inject(ob_style(!!!sa$dots))
 
-
-  ob_rectangle(
+  rlang::inject(ob_rectangle(
     center = sa$p_center,
     width = x@width,
     height = x@height,
     angle = x@angle@degree,
-    style = x@style + dot_style,
-    vertex_radius = x@vertex_radius
-  )
+    style = x@style,
+    vertex_radius = x@vertex_radius,
+    !!!sa$dots
+  ))
 }
 
 

@@ -14,49 +14,56 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup}
+```{r}
+#| label: setup
 library(ggdiagram)
 ```
 
-The `class_color` object has some useful utilities for working with colors. It mostly makes use of functions from the tinter and farver packages.
+The `class_color` object has some useful utilities for working with colors. It mostly makes use of functions from the [tinter](https://github.com/sebdalgarno/tinter) and [farver](https://github.com/thomasp85/farver) packages.
 
 The `class_color` object takes R color names or hex strings as input.
 
-```{r orchid}
+```{r}
+#| label: orchid
 my_color <- class_color("orchid")
 ```
 
 The underlying data of `class_color` can be retrieved with the `c` function or via the `@color` property:
 
-```{r getdata}
+```{r}
+#| label: getdata
 c(my_color)
 my_color@color
 ```
 
 The `ob_*` classes have fill and color properties that can take direct character strings or `class_color` objects as input.
 
-```{r ob_circle}
+```{r}
+#| label: ob_circle
 ggdiagram() +
   ob_circle(fill = my_color)
 ```
 
 A variety of color manipulation functions are available. Colors can be darkened:
 
-```{r darken}
+```{r}
+#| label: darken
 ggdiagram() +
   ob_circle(fill = my_color@darken(.5))
 ```
 
 Colors can be lightened:
 
-```{r lighten}
+```{r}
+#| label: lighten
 ggdiagram() +
   ob_circle(fill = my_color@lighten(.5))
 ```
 
 Colors can be made transparent:
 
-```{r transparent}
+```{r}
+#| label: transparent
 ggdiagram() +
   ob_circle(fill = my_color@transparentize(.5)) +
   ob_circle(fill = my_color@transparentize(.5), 
@@ -65,7 +72,8 @@ ggdiagram() +
 
 Here we create sequences of shades with the `@lighten` and `@darken` properties:
 
-```{r makesequence}
+```{r}
+#| label: makesequence
 #| fig-height: 2.5
 ggdiagram() + 
   {my_array <- ob_circle(color = NA) %>% 
@@ -86,7 +94,8 @@ The `@lighten` function makes colors appear the same as `@transparentize` with a
 
 Different properties of colors and be retrieved and set. Using the HSV color model for Hue (0--360), Saturation (0--1), and Value/Brightness (0--1)
 
-```{r hsv}
+```{r}
+#| label: hsv
 my_color@hue
 my_color@saturation
 my_color@brightness
@@ -94,7 +103,8 @@ my_color@brightness
 
 We can set a sequence of colors with the same brightness and saturation as the original color but with different hues:
 
-```{r hsvsequence}
+```{r}
+#| label: hsvsequence
 #| fig-height: 1.5
 my_color_array <- class_color(
   my_color, 
@@ -110,7 +120,8 @@ ggdiagram() +
 
 We can set an array of colors with the same hue as the original color but with different saturation and/or brightness:
 
-```{r samehue}
+```{r}
+#| label: samehue
 #| fig-height: 1.5
 my_color_array <- class_color(my_color, 
                               saturation = seq(.1, .6, .1))
@@ -124,7 +135,8 @@ ggdiagram() +
 
 Alternately, the RGB (Red/Green/Blue) color properties can also be retrieved or set. Values are integers ranging from 0 to 255.
 
-```{r rgb}
+```{r}
+#| label: rgb
 my_color@red
 my_color@green
 my_color@blue

@@ -48,8 +48,6 @@ To avoid repetitive code, we set defaults and make a base plot:
 ```{r}
 #| label: baseplot
 
-#| label: baseplot
-
 my_font <- "Roboto Condensed"
 my_font_size <- 20
 my_point_size <- 2

@@ -512,8 +512,8 @@ ggdiagram(font_family = my_font) +
   # direct effects from o to pc
   map(
     unbind(pc), \(pci) {
-      connect(x = o@point_at("north"), 
-              y = pci, 
+      connect(from = o@point_at("north"), 
+              to = pci, 
               color = pci@fill,
               resect = 2)@geom()
     }
@@ -1160,7 +1160,7 @@ $$
 
 Here we have an outcome (*Y*), 2 level-1 predictors (*X*~1~ and *X*~2~), and 1 level-2 predictor (*W*~1~). The random intercept (*β*~0*j*~) has as fixed component (*&gamma;*~00~&nbsp;+&nbsp;*&gamma;*~01~*W*~1*j*~) and a random component (*u*~0*j*~). The random intercept is partly predicted by the level-2 variable, *W*~1*j*~. The random slopes also have fixed and random components, as well as being predicted by the level-2 variable. The *&tau;* matrix is variance-covariance matrix of the level-2 random variables *u* (i.e., *u*~0*j*~, *u*~1*j*~, and *u*~1*j*~).
 
-These equations specify the model unambiguously, but it is easy to lose one's way in them. It can facilitate interpretation if they equations are presented in a visual mode.
+These equations specify the model unambiguously, but it is easy to lose one's way in them. It can facilitate interpretation if the equations are presented in a visual mode.
 
 @curranBuildingPathDiagrams2007 developed a set of extensions to path diagrams to incorporate random slopes and intercepts from multilevel models. Their core innovation is to treat random slopes and intercepts as latent variables that sit atop direct paths. An example of this approach is in @fig-multilevel. It displays the same information as the equations listed previously, but in terms that are easier to understand and use. 
 

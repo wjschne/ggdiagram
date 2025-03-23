@@ -5,7 +5,7 @@ obj_type <- function(x) {
   if (identical(x, quote(expr = ))) {
     "missing"
   }
-  else if (inherits(x, "S7::S7_object")) {
+  else if (S7::S7_inherits(x)) {
     "S7"
   }
   else if (isS4(x)) {

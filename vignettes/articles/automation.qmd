@@ -63,7 +63,8 @@ library(purrr)
 
 Any ggdiagram object made with `ob_*` functions can be made into a list, either with the `list` function or the `c` function.
 
-```{r p}
+```{r}
+#| label: p
 p1 <- ob_point(1, 2)
 p2 <- ob_point(3, 4)
 c(p1,p2)
@@ -72,14 +73,16 @@ c(p1,p2)
 
 The `bind` function will take a list of the ggdiagram objects and a create single object. If all objects in the list are of a single type (e.g., `ob_point`), `bind` will return an object of that type. If the objects are of multiple types, `bind` will bind each type of object separately and return a `ob_shape_list`.
 
-```{r bindp}
+```{r}
+#| label: bindp
 p <- bind(c(p1,p2))
 p
 ```
 
 Binding objects can make subsequent tasks easier and less repetitive. For example, from the new object `p`, we can create two circles with one line of code rather than the two lines that would otherwise be needed to create separate circles from `p1` and `p2`.
 
-```{r circle}
+```{r}
+#| label: circle
 ggdiagram() +
   ob_circle(center = p)
 ```
@@ -88,7 +91,8 @@ With only two points, the time savings is small. When many objects are bound, th
 
 If the list of objects are of different types, the `bind` function will bind all objects of the same type and the resulting list will be an `ob_shape_list`. In @fig-osl we bind 2 points and 2 circles into a `ob_shape_list` that has 1 `ob_point` and 1 `ob_circle`.
 
-```{r fig-osl}
+```{r}
+#| label: fig-osl
 #| fig-cap: An ob_shape_list
 #| fig-height: 6
 p1 <- ob_point(0,0)
@@ -108,7 +112,8 @@ There is not much benefit to making an `ob_shape_list` as shown here. It would s
 
 An `ob_shape_list`'s underlying data is a named list. The names are the functions that were used to create the objects. For example,
 
-```{r oslsubset}
+```{r}
+#| label: oslsubset
 osl[["ob_point"]]
 osl[["ob_circle"]]
 ```
@@ -119,7 +124,8 @@ osl[["ob_circle"]]
 
 The `unbind` function will perform the opposite operation as `bind`. It converts the elements of an object into a list of singleton objects. For example, object `p` has two points. Unbinding it will create a list of 2 `ob_point` objects.
 
-```{r aslistp}
+```{r}
+#| label: aslistp
 unbind(p)
 ```
 
@@ -179,7 +185,8 @@ ggdiagram() +
 
 To `unbind`, `map`, and then `bind` can be tedious every time a loop is needed. The `map_ob` function is a wrapper for `map` that unbinds the input and binds the output automatically.
 
-```{r fig-obmap}
+```{r}
+#| label: fig-obmap
 ggdiagram() +
   {o <- ob_point()} +
   {p <- ob_polar(degree(c(0, 90, 180, 270)))} +
@@ -196,7 +203,8 @@ ggdiagram() +
 
 The `ob_map` function can output a list of different object types simultaneously.
 
-```{r fig-map}
+```{r}
+#| label: fig-map
 #| fig-cap: Outputting a list of different object types in `map_ob`.
 theta <- degree(seq(0,300, 60))
 
@@ -232,7 +240,8 @@ ggdiagram() +
 
 In a more practical example, every variable in the left column is connected to every variable on the right.
 
-```{r fig-bindt1t2}
+```{r}
+#| label: fig-bindt1t2
 #| fig-cap: Using `map_ob` to the connect variables
 k <- 5
 clr <- viridis::viridis(k, begin = .3, end = .7)
@@ -255,14 +264,16 @@ ggdiagram() +
 The `[` operator can subset ggdiagram objects created with `ob_*` functions. Object `p` has 2 points in  it. To select the first point only:
 
 
-```{r p1}
+```{r}
+#| label: p1
 p[1]
 ```
 
 
 The strategic use of subsetting can make otherwise repetitive tasks much less tedious. In @fig-c12 we connect a ring of 12 circles with one command rather than 12.
 
-```{r fig-c12}
+```{r}
+#| label: fig-c12
 #| fig-cap: A ring of connected circles.
 theta <- degree(seq(0,330,30))
 clr <- hsv(theta@degree / 360, s = .4, v = .6)
@@ -278,7 +289,8 @@ ggdiagram() +
 
 Subsetting can be used for assignment in ggdiagram objects. For example, in @fig-subsetting, the first of four points is changed from (1,5) to (0,0)
 
-```{r fig-subsetting}
+```{r}
+#| label: fig-subsetting
 #| fig-cap: Subsetting objects
 #| fig-height: 5
 #| fig-width: 4
@@ -294,7 +306,8 @@ ggplot() +
 
 In @fig-path, there are  8 variables with 13 arrows connecting them. Rather than making a separate connection for each arrow, subsetting allows us to make all 13 connections with a single `connect` command. Using subsetting to assign variables within a `for` loop allows for placing the variables programmatically. If more or fewer variables are desired, setting `k` to another value, will create *k* variables and 2*k*&nbsp;&minus;&nbsp;3 connections.
 
-```{r fig-path}
+```{r}
+#| label: fig-path
 #| fig-cap: A model with 8 variables and 13 causal paths
 #| fig-height: 5.6
 

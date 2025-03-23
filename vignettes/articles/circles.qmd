@@ -126,7 +126,7 @@ bp +
     color = my_colors[1],
     label = ob_label(paste0("*r* = ", c1@radius), angle = 0, vjust = 0)
   ) +
-  c1@center@label(vjust = 1.2, plot_point = T) 
+  c1@center@label(vjust = 1.2, plot_point = TRUE) 
 
 ```
 
@@ -265,7 +265,7 @@ bp +
 
 ## Placing circles next to points and points next to circles
 
-This works the same as placing circles next to each other. Here we create a point in the center, place six circles around it, and then place 12 points around each circle using the `map_ob` function to "map" objects like the `map_*` functions in the purrr package.
+This works the same as placing circles next to each other. Here we create a point in the center, place six circles around it, and then place 12 points around each circle using the [`map_ob`](reference/map_ob.html) function to "map" objects like the [`map_*` functions](https://purrr.tidyverse.org/reference/map.html) in the purrr package.
 
 ```{r}
 #| label: fig-multimulti
@@ -353,6 +353,8 @@ bp +
 
 # Paths between circles and lines
 
+To connect a circle and the shortest distance to a line:
+
 ```{r}
 #| label: fig-connectcircleline
 #| fig-cap: Connect a circle to a line and a line to a circle
@@ -364,3 +366,14 @@ bp +
   connect(l1, c2)
 ```
 
+To connect a circle to some other point on the line, we can use the the `@point_at_x` or `@point_at_y` function from the `ob_line` object. For example, to connect from a circle to a line horizontally and vertically:
+
+```{r}
+#| label: fig-connectcirclelinehv
+#| fig-cap: Connect a circle to a line via horiztonal and vertical lines
+bp + 
+  c1 +
+  l1 +
+  connect(c1, l1@point_at_x(c1@center@x)) +
+  connect(c1, l1@point_at_y(c1@center@y)) 
+```

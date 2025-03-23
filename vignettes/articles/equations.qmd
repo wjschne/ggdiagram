@@ -3,7 +3,6 @@ title: "Equations with LaTeX"
 format: 
   html:
     toc: true
-    html-math-method: katex
 vignette: >
   %\VignetteIndexEntry{equations}
   %\VignetteEngine{quarto::html}
@@ -295,3 +294,9 @@ The `ob_latex` function works through these steps:
 
 When rendered in ggplot2, the bitmap is displayed via `ggplot2::annotation_raster`.
 
+
+# The xdvir Package: A Cool Alternative to `ob_latex`
+
+If you want the best image quality possible for a LaTeX snippet in a ggplot2 plot, then give the [xdvir](https://cran.r-project.org/package=xdvir) package a try. It can put LaTeX in plot titles, subtitles, and captains, as well as anywhere on the plot. It gets the typography right as well.
+
+Of course, you can use ggdiagram functions to place LaTeX snippets but use xdvir functions to render them.

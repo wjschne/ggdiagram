@@ -1,0 +1,274 @@
+---
+title: "Using ggdiagram"
+vignette: >
+  %\VignetteIndexEntry{Using ggdiagram}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+    dev: "ragg_png"
+---
+
+```{r}
+#| label: setup
+library(ggplot2)
+library(ggdiagram)
+```
+
+
+Making a simple diagram with a point-and-click drawing program saves time and can produce good results if handled with care. However, making a complex diagram worthy of publication can take many hours of fuss and bother.
+
+When I discovered [TikZ](https://tikz.dev/), I was amazed at how much better my diagrams could be. TikZ knows things about the objects it draws---like where lines and objects intersect and how far they are from each other. Instead of eyeballing where to place objects, I could tell TikZ exactly where to draw objects in relation to each other (e.g., draw a circle to the right of rectangle with 4cm of space between them). I suspect that the precision, consistency, and beauty of TikZ diagrams add to their persuasive power because readers intuit that such figures are the product of careful deliberation.
+
+Because I mainly compute statistical models in R, getting information from R to TikZ was an intensive process, and integrating TikZ graphics with R graphics was often an exercise in frustration. Though I very much respect the labor of those who have made the TikZ ecosystem open and flexible, I never felt at ease when trying to automate TikZ or extending its capabilities. 
+
+When the [S7 package](https://rconsortium.github.io/S7/) became available, it seemed that what I wanted was within my grasp: to draw diagrams with an object-oriented approach, welding the precision of TikZ with the flexibility of R. The ggdiagram package makes objects that can hold or compute various properties and can be placed directly in a ggplot2 plot. I do not imagine that ggdiagram will ever duplicate the full functionality of TikZ, but being able to make TikZ-like diagrams within R eliminates many pain points from my previous workflow and offers a world of possibilities.
+
+# First steps
+
+The ggplot2 ecosystem already has the ability to create points, lines, and shapes, and it is ideally suited for the display of data and statistical trends. There is no reason to use ggdiagram for the tasks that ggplot2 already does fabulously well. However, once ggplot2 creates points, lines, and shapes, it is not always easy to extract information about them to create new objects. For example, if I draw a line segment from the center of an ellipse to the center of a rectangle, where does the line intersect with the ellipse and the rectangle? Where is the point midway between those intersection points? These quantities can be computed with a bit of algebra and trigonometry, but when making complex figures, such computations are tedious distractions.
+
+The functions in ggdiagram with the `ob_` prefix (e.g,. `ob_point`, `ob_line`, and `ob_circle`) create objects using [S7](https://rconsortium.github.io/S7/), which allows the objects to hold information about the object's properties (e.g., location, color, and rotation angle) and to compute the location of its edges and points of intersection with other objects. Properties of S7 objects are extracted with the `@` operator. For example, we can create a circle with the `ob_circle` function and extract various properties:
+
+```{r}
+#| label: circle
+x <- ob_circle()
+x@radius
+x@circumference
+x@area
+x@diameter
+```
+
+# Simple Plots
+
+As seen in @fig-ob, objects with the `ob_` prefix can be added to any ggplot object in the usual manner.
+
+```{r}
+#| label: fig-ob
+#| fig-cap: Adding objects using the `ggplot` function
+
+# Plot
+ggplot() +
+  ob_circle(radius = 1) +
+  ob_rectangle(width = 2, 
+               height = 2) + 
+  coord_equal() + 
+  theme_void()
+```
+
+The `ggdiagram` function calls the `ggplot` function, sets the ggplot2 theme (defaults to `theme_void`), and also sets the defaults of key geoms so that font families, font sizes, line widths, and point sizes do not have to be specified repeatedly.
+
+
+In @fig-theta, we can locate points on a circle's circumference at any angle. The `degree` function makes it easy to compute and label angles as degrees. 
+
+```{r}
+#| label: fig-theta
+#| fig-cap: The center of a circle and a point at an angle.
+theta <- degree(c(0, 53, 90, 138, 180, 241, 270, 338))
+
+ggdiagram(font_size = 18) +
+  x +
+  x@center +
+  x@point_at(theta)@label(theta)
+```
+
+# Styling an object
+
+Objects in ggdiagram can be styled in any way that its underlying geom can be styled. Let's create a segment and its two endpoints.
+
+```{r}
+#| label: s1
+p1 <- ob_point(-3, 2)
+p2 <- ob_point(1, 5)
+s1 <- ob_segment(p1, p2)
+bp <- ggdiagram(theme_function = ggplot2::theme_minimal, 
+                font_size = 18)
+bp +
+  p1 +
+  p2 + 
+  s1
+```
+
+
+The primary options for styling a segment are alpha, color, linetype, and linewidth. However, it can take any style from [`ggarrow::geom_arrow_segment`](https://teunbrand.github.io/ggarrow/reference/geom_arrow_segment.html)
+
+If you are not sure which properties can be set, you an see them in the `@aesthetics@style` slot.
+
+```{r}
+#| label: segstyle
+s1@aesthetics@style
+```
+
+
+Styles can be specified when the object is created.
+
+```{r}
+#| label: fig-segcolor
+#| fig-cap: Styling an object
+s2 <- ob_segment(p1, p2, color = "green4")
+bp + s2
+```
+
+Styles can be modified after the segment is created:
+
+```{r}
+#| label: fig-seglinewidth
+#| fig-cap: Changing an object's style after it has been created.
+s2@linewidth <- 3
+bp + s2
+```
+
+The `as.geom` function passes style arguments to the `ggarrow::geom_arrow_segment` function without modifying the segment's style property:
+
+```{r}
+#| label: fig-asgeom
+#| fig-cap: Make s1 appear red temporarily using `as.geom` function
+bp +
+  as.geom(s1, color = "red4")
+```
+
+As an alternative, the `geom` property is a function that calls `as.geom`. 
+
+```{r}
+#| label: fig-geom
+#| fig-cap: Make s1 appear red temporarily via the `geom` property
+bp + s1@geom(color = "blue3")
+```
+
+To verify that s1 has not changed its color:
+
+```{r}
+#| label: fig-verify
+#| fig-cap: The `s1` object has not changed
+bp + s1
+```
+
+A "pipe-friendly" way to modify any ggdiagram object is to use S7's `set_props` function, which has been re-exported to ggdiagram for the sake of convenience. Like `as.geom`, this function does not modify `s1`, but unlike `as.geom`, `set_props` can be used to save a new object with the specified modifications by assigning it to a new variable. That is, `as.geom` creates a ggplot2 geom, whereas `set_props` will create a modified a ggdiagram object (or any other S7 class).
+
+```{r}
+#| label: fig-setprops
+#| fig-cap: Setting styles in a ggplot pipeline.
+bp +
+  s1 |> set_props(color = "red")
+```
+
+
+# Placing Objects in Relation to Other Objects
+
+The `place` function will place an object a specified distance and direction from another object. Here we place a 1 &times; 1 rectangle below unit circle `x` such that the separation between them is .5 units. The `connect` function draws an arrow between them, with 2mm of space resected.
+
+```{r}
+#| label: fig-place
+x <- ob_circle()
+y <- ob_rectangle() %>% 
+  place(from = x, where = "below", sep = .5)
+
+ggdiagram() +
+  x +
+  y + 
+  connect(x,y, resect = 2)
+```
+
+The `where` parameter can be specified with 
+
+- Direction words like *left*, *right*, *above*, *top*, *below*, *bottom*, *above left*, *top right*, *below right*, *bottom left*, etc.
+- Cardinal points like *north*, *south*, *east*, *west*, *northeast*, *southwest*,  *north-northeast*, *west-southwest*, etc.
+- Degrees using the `degree` function (e.g., `degree(21)`)
+- Radians using the `radian` function (e.g., `radian(pi)`)
+- Turns using the `turn` function (e.g., `turn(1/5)`)
+
+# Object Arrays
+
+Sometimes it is useful to make arrays of objects. The `ob_array` function makes `k` copies of an object and arranges them along a direct and separates them by a specified amount. By default, the array is arranged horizontally, centered on the original object, separated by 1 unit. Here we make an array of 5 circles.
+
+```{r}
+#| label: fig-array1
+#| fig-cap: "A horizontal array of 5 unit circles, separated by 1 unit"
+ggdiagram(font_size = 18) +
+  ob_circle() %>% 
+  ob_array(k = 5, label = 1:5) 
+```
+
+Arrays can go in any direction:
+
+```{r}
+#| label: fig-array2
+#| fig-cap: "An array of 6 rectangles, separated by .2 units along an angle of negative 45 degrees"
+ggdiagram(font_size = 18) +
+  ob_rectangle() %>% 
+  ob_array(k = 6, 
+           sep = .2, 
+           where = degree(-45),
+           label = 1:6) 
+```
+
+Arrays can be anchored at any point on the rectangle that contains the array. For example, here we create a vertical array of 3 ellipses anchored at the bottom of the bounding box that contains the array.
+
+```{r}
+#| label: fig-array3
+#| fig-cap: "A vertical array of 3 ellipses anchored at the bottom"
+ggdiagram(font_size = 18, theme_function = ggplot2::theme_minimal) +
+  ob_ellipse(a = 2) %>% 
+  ob_array(k = 3, 
+           sep = .2, 
+           where = "north",
+           label = 1:3,
+           anchor = "south") +
+  ob_point()
+```
+
+
+# Building Plots Sequentially in a ggplot2 Pipeline
+
+Often we want to build a diagram in which newer objects depend on previously specified objects. To assign a variable in the middle of a ggplot2 workflow, we can enclose an assignment statement in curly braces `{}`.
+
+@fig-indicators makes use of a curly braces to create:
+
+* Latent variable *A* as a circle with radius 2, 
+* Observed variables *A*~1~--*A*~3~ 3 units below *A* 
+* Loading paths (connecting arrows) from the latent *A* to observed variables *A*~1~--*A*~3~
+* Error variance paths for each observed variable.
+
+```{r}
+#| label: fig-indicators
+#| fig-cap: A latent variable with 3 observed indicators
+#| fig-width: 5.5
+#| fig-height: 7
+
+# Loadings
+loadings <- c(.86, .79, .90)
+
+ggdiagram(font_size = 16) +
+  # Latent variable
+  {A <- ob_circle(radius = 2, label = ob_label("A", size = 96))} +
+  # Observed variables (array of 3 superellipses below A)
+  {A_3 <- ob_ellipse(m1 = 20) %>%
+    place(from = A, where = "below", sep = 3) %>%
+    ob_array(
+      k = 3,
+      sep = .5,
+      label = ob_label(
+        label = paste0("A~", 1:3, "~"),
+        size = 32,
+        vjust = .6
+      )
+    )} +
+  # Observed variable loadings
+  connect(
+    from = A,
+    to = A_3,
+    resect = 2,
+    label = ob_label(round_probability(loadings), 
+                     angle = 0)
+  ) +
+  # Error variances
+  ob_variance(
+    A_3,
+    where = "south",
+    bend = -15,
+    label = ob_label(round_probability(sqrt(1 - loadings ^ 2)))
+  ) 
+```
+
