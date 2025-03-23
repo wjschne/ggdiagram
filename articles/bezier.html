@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Bézier Curves • ggdiagram</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="48x48" href="../favicon-48x48.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
 <link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
 <link rel="icon" sizes="any" href="../favicon.ico">
@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggdiagram</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,6 +38,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="../articles/ggdiagram.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
@@ -104,9 +105,7 @@
 <p>To avoid repetitive code, we set defaults and make a base plot:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#| label: baseplot</span></span>
-<span></span>
-<span><span class="va">my_font</span> <span class="op">&lt;-</span> <span class="st">"Roboto Condensed"</span></span>
+<code class="sourceCode R"><span><span class="va">my_font</span> <span class="op">&lt;-</span> <span class="st">"Roboto Condensed"</span></span>
 <span><span class="va">my_font_size</span> <span class="op">&lt;-</span> <span class="fl">20</span></span>
 <span><span class="va">my_point_size</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
 <span><span class="va">my_arrowhead</span> <span class="op">&lt;-</span> <span class="fu">arrowheadr</span><span class="fu">::</span><span class="fu"><a href="https://wjschne.github.io/arrowheadr/reference/arrow_head_hypotrochoid.html" class="external-link">arrow_head_deltoid</a></span><span class="op">(</span><span class="fl">2.1</span><span class="op">)</span></span>

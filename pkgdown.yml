@@ -1,6 +1,6 @@
 pandoc: 3.1.11
 pkgdown: 2.1.1.9000
-pkgdown_sha: 18cca452d736fea33d47b19b4ef4973db9104a75
+pkgdown_sha: 66477c0dbb4f4925ec872cf64d5eaa316cc70bac
 articles:
   articles/angles: angles.html
   articles/arcwedges: arcwedges.html
@@ -11,13 +11,14 @@ articles:
   articles/colors: colors.html
   articles/ellipses: ellipses.html
   articles/equations: equations.html
+  ggdiagram: ggdiagram.html
   articles/lines: lines.html
   articles/paths: paths.html
   articles/points: points.html
   articles/polygons: polygons.html
   articles/rectangles: rectangles.html
   articles/segments: segments.html
-last_built: 2025-02-03T22:56Z
+last_built: 2025-03-23T22:01Z
 urls:
   reference: https://wjschne.github.io/ggdiagram/reference
   article: https://wjschne.github.io/ggdiagram/articles

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Rectangles • ggdiagram</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="48x48" href="../favicon-48x48.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
 <link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
 <link rel="icon" sizes="any" href="../favicon.ico">
@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggdiagram</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,6 +38,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="../articles/ggdiagram.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
@@ -188,8 +189,8 @@
 <span>  linewidth <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">r1</span></span>
-<span><span class="co">#&gt; S3&lt;ggdiagram::ob_rectangle/ggdiagram::centerpoint/ggdiagram::xy/ggdiagram::shape/ggdiagram::has_style/S7_object&gt;</span></span>
-<span><span class="co">#&gt; @ center:S3&lt;ggdiagram::ob_point/ggdiagram::xy/ggdiagram::shape/ggdiagram::has_style/S7_object&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_rectangle&gt;</span></span>
+<span><span class="co">#&gt; @ center:&lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 2</span></span>
 <span><span class="co">#&gt; @ y: num 1</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
@@ -277,11 +278,11 @@
 <span></span>
 <span><span class="va">rc_plot</span> <span class="op">+</span> <span class="va">rc_center</span> <span class="op">+</span> <span class="va">rc_width</span> <span class="op">+</span> <span class="va">rc_height</span></span></code></pre></div>
 </details><div class="cell-output-display">
-<div id="fig-angles" class="quarto-float quarto-figure quarto-figure-center">
-<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-angles-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="rectangles_files/figure-html/fig-angles-1.png" width="768">
+<div id="fig-rectangle" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-rectangle-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="rectangles_files/figure-html/fig-rectangle-1.png" width="768">
 </div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-angles-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rectangle-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 1: Center, Width, and Height
 </figcaption></figure>
 </div>
@@ -418,7 +419,7 @@ Figure 6: Specify a rectangle with the height and the top corners
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">r1</span><span class="op">@</span><span class="va">north</span></span>
-<span><span class="co">#&gt; S3&lt;ggdiagram::ob_point/ggdiagram::xy/ggdiagram::shape/ggdiagram::has_style/S7_object&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 2</span></span>
 <span><span class="co">#&gt; @ y: num 2</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
@@ -491,7 +492,7 @@ Figure 7: The named points of a rectangle
 <div class="sourceCode cell-code" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">60</span><span class="op">)</span></span>
 <span><span class="va">r1</span><span class="op">@</span><span class="va">point_at</span><span class="op">(</span><span class="va">theta</span><span class="op">)</span></span>
-<span><span class="co">#&gt; S3&lt;ggdiagram::ob_point/ggdiagram::xy/ggdiagram::shape/ggdiagram::has_style/S7_object&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 2.58</span></span>
 <span><span class="co">#&gt; @ y: num 2</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
@@ -531,14 +532,14 @@ Figure 8: The point on a rectangle at angle θ = 60°
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">r1</span><span class="op">@</span><span class="va">side</span><span class="op">@</span><span class="va">north</span></span>
-<span><span class="co">#&gt; S3&lt;ggdiagram::ob_segment/ggdiagram::shape/ggdiagram::has_style/S7_object&gt;</span></span>
-<span><span class="co">#&gt; @ p1:S3&lt;ggdiagram::ob_point/ggdiagram::xy/ggdiagram::shape/ggdiagram::has_style/S7_object&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_segment&gt;</span></span>
+<span><span class="co">#&gt; @ p1:&lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 0</span></span>
 <span><span class="co">#&gt; @ y: num 2</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
 <span><span class="co">#&gt;              bounding_box, centroid, length, r, theta, style,</span></span>
 <span><span class="co">#&gt;              tibble, xy, geom, label, place, aesthetics</span></span>
-<span><span class="co">#&gt; @ p2:S3&lt;ggdiagram::ob_point/ggdiagram::xy/ggdiagram::shape/ggdiagram::has_style/S7_object&gt;</span></span>
+<span><span class="co">#&gt; @ p2:&lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 4</span></span>
 <span><span class="co">#&gt; @ y: num 2</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Points • ggdiagram</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="48x48" href="../favicon-48x48.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
 <link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
 <link rel="icon" sizes="any" href="../favicon.ico">
@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggdiagram</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,6 +38,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="../articles/ggdiagram.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
@@ -160,8 +161,8 @@ Figure 1: Creating points
 </div>
 </div>
 </div>
-<section class="level2"><h3 id="polar-coordinates">Polar Coordinates<a class="anchor" aria-label="anchor" href="#polar-coordinates"></a>
-</h3>
+</section><section class="section level2"><h2 id="polar-coordinates">Polar Coordinates<a class="anchor" aria-label="anchor" href="#polar-coordinates"></a>
+</h2>
 <p>A point’s x and y coordinates can be specified in polar coordinates</p>
 <ul>
 <li>
@@ -171,13 +172,10 @@ Figure 1: Creating points
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p2</span></span>
-<span><span class="co">#&gt; S3&lt;ggdiagram::ob_point/ggdiagram::xy/ggdiagram::shape/ggdiagram::has_style/S7_object&gt;</span></span>
-<span><span class="co">#&gt; @ x: num 3</span></span>
-<span><span class="co">#&gt; @ y: num 4</span></span>
-<span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
-<span><span class="co">#&gt;              bounding_box, centroid, length, r, theta, style,</span></span>
-<span><span class="co">#&gt;              tibble, xy, geom, label, place, aesthetics</span></span>
+<code class="sourceCode R"><span><span class="va">p2</span><span class="op">@</span><span class="va">x</span></span>
+<span><span class="co">#&gt; [1] 3</span></span>
+<span><span class="va">p2</span><span class="op">@</span><span class="va">y</span></span>
+<span><span class="co">#&gt; [1] 4</span></span>
 <span><span class="va">p2</span><span class="op">@</span><span class="va">r</span></span>
 <span><span class="co">#&gt; [1] 5</span></span>
 <span><span class="va">p2</span><span class="op">@</span><span class="va">theta</span></span>
@@ -223,15 +221,15 @@ Figure 2: Polar Coordinates
 </div>
 </div>
 </div>
-<p>A point can be created with polar coordinates</p>
+<p>A point can be created with polar coordinates with <code>ob_polar</code> function:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span>r <span class="op">=</span> <span class="fl">5</span>, theta <span class="op">=</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">60</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; S3&lt;ggdiagram::ob_polar/ggdiagram::ob_point/ggdiagram::xy/ggdiagram::shape/ggdiagram::has_style/S7_object&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_polar&gt;</span></span>
 <span><span class="co">#&gt; @ x    : num 2.5</span></span>
 <span><span class="co">#&gt; @ y    : num 4.33</span></span>
 <span><span class="co">#&gt; @ r    : num 5</span></span>
-<span><span class="co">#&gt; @ theta:S3&lt;ggdiagram::radian/ggdiagram::ob_angle/double/S7_object&gt;</span></span>
+<span><span class="co">#&gt; @ theta:&lt;ggdiagram::radian&gt;</span></span>
 <span><span class="co">#&gt; @ radian: num 1.05</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
@@ -244,7 +242,7 @@ Figure 2: Polar Coordinates
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span>r <span class="op">=</span> <span class="fl">1</span>, theta <span class="op">=</span> <span class="va">pi</span><span class="op">)</span><span class="op">@</span><span class="va">theta</span></span>
 <span><span class="co">#&gt; π</span></span></code></pre></div>
 </div>
-</section></section><section class="section level2"><h2 id="convert-to-tibble">Convert to tibble<a class="anchor" aria-label="anchor" href="#convert-to-tibble"></a>
+</section><section class="section level2"><h2 id="convert-to-tibble">Convert to tibble<a class="anchor" aria-label="anchor" href="#convert-to-tibble"></a>
 </h2>
 <p>This will extract any styles that have been set.</p>
 <div class="cell">
@@ -283,14 +281,14 @@ Figure 2: Polar Coordinates
 <span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">p3</span> <span class="op">&lt;-</span> <span class="va">p1</span> <span class="op">+</span> <span class="va">p2</span></span>
 <span><span class="va">p3</span></span>
-<span><span class="co">#&gt; S3&lt;ggdiagram::ob_point/ggdiagram::xy/ggdiagram::shape/ggdiagram::has_style/S7_object&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 4</span></span>
 <span><span class="co">#&gt; @ y: num 4</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
 <span><span class="co">#&gt;              bounding_box, centroid, length, r, theta, style,</span></span>
 <span><span class="co">#&gt;              tibble, xy, geom, label, place, aesthetics</span></span>
 <span><span class="va">p3</span> <span class="op">-</span> <span class="va">p2</span></span>
-<span><span class="co">#&gt; S3&lt;ggdiagram::ob_point/ggdiagram::xy/ggdiagram::shape/ggdiagram::has_style/S7_object&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 2</span></span>
 <span><span class="co">#&gt; @ y: num 3</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
@@ -301,14 +299,14 @@ Figure 2: Polar Coordinates
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p2</span> <span class="op">*</span> <span class="fl">2</span></span>
-<span><span class="co">#&gt; S3&lt;ggdiagram::ob_point/ggdiagram::xy/ggdiagram::shape/ggdiagram::has_style/S7_object&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 4</span></span>
 <span><span class="co">#&gt; @ y: num 2</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
 <span><span class="co">#&gt;              bounding_box, centroid, length, r, theta, style,</span></span>
 <span><span class="co">#&gt;              tibble, xy, geom, label, place, aesthetics</span></span>
 <span><span class="va">p3</span> <span class="op">/</span> <span class="fl">4</span></span>
-<span><span class="co">#&gt; S3&lt;ggdiagram::ob_point/ggdiagram::xy/ggdiagram::shape/ggdiagram::has_style/S7_object&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 1</span></span>
 <span><span class="co">#&gt; @ y: num 1</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
@@ -319,14 +317,14 @@ Figure 2: Polar Coordinates
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p1</span> <span class="op">/</span> <span class="va">p3</span></span>
-<span><span class="co">#&gt; S3&lt;ggdiagram::ob_point/ggdiagram::xy/ggdiagram::shape/ggdiagram::has_style/S7_object&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 0.5</span></span>
 <span><span class="co">#&gt; @ y: num 0.75</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
 <span><span class="co">#&gt;              bounding_box, centroid, length, r, theta, style,</span></span>
 <span><span class="co">#&gt;              tibble, xy, geom, label, place, aesthetics</span></span>
 <span><span class="va">p1</span> <span class="op">*</span> <span class="va">p3</span></span>
-<span><span class="co">#&gt; S3&lt;ggdiagram::ob_point/ggdiagram::xy/ggdiagram::shape/ggdiagram::has_style/S7_object&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 8</span></span>
 <span><span class="co">#&gt; @ y: num 12</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
@@ -352,7 +350,7 @@ Figure 2: Polar Coordinates
 <p>The shortest distance from a point to a circle’s edge:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">c1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_circle.html">ob_circle</a></span><span class="op">(</span>center <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>, radius <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">c1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_circle.html">ob_circle</a></span><span class="op">(</span>center <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span>, radius <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="va">c1</span><span class="op">@</span><span class="va">center</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span></span>
 <span>  r <span class="op">=</span> <span class="va">c1</span><span class="op">@</span><span class="va">radius</span> <span class="op">*</span> <span class="fl">1</span>, </span>
 <span>  theta <span class="op">=</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">115</span><span class="op">)</span>, </span>
@@ -423,14 +421,7 @@ Figure 2: Polar Coordinates
 <span>  <span class="va">seg_c1_p3</span><span class="op">@</span><span class="va">midpoint</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="va">seg_c1_p3</span><span class="op">@</span><span class="va">midpoint</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">@</span><span class="va">label</span><span class="op">(</span></span>
 <span>    label <span class="op">=</span> <span class="va">p_labels</span><span class="op">[</span><span class="fl">3</span><span class="op">]</span>,</span>
-<span>    polar_just <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span>theta <span class="op">=</span> <span class="va">seg_c1_p3</span><span class="op">@</span><span class="va">line</span><span class="op">@</span><span class="va">angle</span>, <span class="fl">1.5</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Removed 1 rows containingmissingvalues (`geom_arrow_segment()`).</span></span>
-<span><span class="co">#&gt; Warning: Removed 1 row containing missing values or values outside the scale range</span></span>
-<span><span class="co">#&gt; (`geom_rich_text()`).</span></span>
-<span><span class="co">#&gt; Warning: Removed 1 row containing missing values or values outside the scale range</span></span>
-<span><span class="co">#&gt; (`geom_point()`).</span></span>
-<span><span class="co">#&gt; Warning: Removed 1 row containing missing values or values outside the scale range</span></span>
-<span><span class="co">#&gt; (`geom_rich_text()`).</span></span></code></pre></div>
+<span>    polar_just <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span>theta <span class="op">=</span> <span class="va">seg_c1_p3</span><span class="op">@</span><span class="va">line</span><span class="op">@</span><span class="va">angle</span>, <span class="fl">1.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </details><div class="cell-output-display">
 <div id="fig-pointcircle" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-pointcircle-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">

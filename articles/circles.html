@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Circles • ggdiagram</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="48x48" href="../favicon-48x48.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
 <link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
 <link rel="icon" sizes="any" href="../favicon.ico">
@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggdiagram</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,6 +38,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="../articles/ggdiagram.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
@@ -150,8 +151,8 @@
 <span><span class="va">r</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
 <span><span class="va">c1</span> <span class="op">&lt;-</span>  <span class="fu"><a href="../reference/ob_circle.html">ob_circle</a></span><span class="op">(</span>center <span class="op">=</span> <span class="va">p</span>, radius <span class="op">=</span> <span class="va">r</span><span class="op">)</span></span>
 <span><span class="va">c1</span></span>
-<span><span class="co">#&gt; S3&lt;ggdiagram::ob_circle/ggdiagram::centerpoint/ggdiagram::xy/ggdiagram::shape/ggdiagram::has_style/S7_object&gt;</span></span>
-<span><span class="co">#&gt; @ center:S3&lt;ggdiagram::ob_point/ggdiagram::xy/ggdiagram::shape/ggdiagram::has_style/S7_object&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_circle&gt;</span></span>
+<span><span class="co">#&gt; @ center:&lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 0</span></span>
 <span><span class="co">#&gt; @ y: num 0</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
@@ -173,7 +174,7 @@
 <span>    color <span class="op">=</span> <span class="va">my_colors</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span>
 <span>    label <span class="op">=</span> <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"*r* = "</span>, <span class="va">c1</span><span class="op">@</span><span class="va">radius</span><span class="op">)</span>, angle <span class="op">=</span> <span class="fl">0</span>, vjust <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="va">c1</span><span class="op">@</span><span class="va">center</span><span class="op">@</span><span class="va">label</span><span class="op">(</span>vjust <span class="op">=</span> <span class="fl">1.2</span>, plot_point <span class="op">=</span> <span class="cn">T</span><span class="op">)</span> </span></code></pre></div>
+<span>  <span class="va">c1</span><span class="op">@</span><span class="va">center</span><span class="op">@</span><span class="va">label</span><span class="op">(</span>vjust <span class="op">=</span> <span class="fl">1.2</span>, plot_point <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> </span></code></pre></div>
 </details><div class="cell-output-display">
 <div id="fig-circle" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-circle-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -191,11 +192,11 @@ Figure 1: A circle can be specified with a center and a radius,
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">c1</span><span class="op">@</span><span class="va">point_at</span><span class="op">(</span><span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">60</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; S3&lt;ggdiagram::ob_polar/ggdiagram::ob_point/ggdiagram::xy/ggdiagram::shape/ggdiagram::has_style/S7_object&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_polar&gt;</span></span>
 <span><span class="co">#&gt; @ x    : num 1.5</span></span>
 <span><span class="co">#&gt; @ y    : num 2.6</span></span>
 <span><span class="co">#&gt; @ r    : num 3</span></span>
-<span><span class="co">#&gt; @ theta:S3&lt;ggdiagram::radian/ggdiagram::ob_angle/double/S7_object&gt;</span></span>
+<span><span class="co">#&gt; @ theta:&lt;ggdiagram::radian&gt;</span></span>
 <span><span class="co">#&gt; @ radian: num 1.05</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
@@ -363,7 +364,7 @@ Figure 7: Place mutliple circles with styling
 </div>
 </section><section class="level2"><h3 id="placing-circles-next-to-points-and-points-next-to-circles">Placing circles next to points and points next to circles<a class="anchor" aria-label="anchor" href="#placing-circles-next-to-points-and-points-next-to-circles"></a>
 </h3>
-<p>This works the same as placing circles next to each other. Here we create a point in the center, place six circles around it, and then place 12 points around each circle using the <code>map_ob</code> function to “map” objects like the <code>map_*</code> functions in the purrr package.</p>
+<p>This works the same as placing circles next to each other. Here we create a point in the center, place six circles around it, and then place 12 points around each circle using the <a href="reference/map_ob.html"><code>map_ob</code></a> function to “map” objects like the <a href="https://purrr.tidyverse.org/reference/map.html" class="external-link"><code>map_*</code> functions</a> in the purrr package.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
@@ -479,6 +480,7 @@ Figure 11: Connect two circles with labels and styles
 </div>
 </section><section class="section level2"><h2 id="paths-between-circles-and-lines">Paths between circles and lines<a class="anchor" aria-label="anchor" href="#paths-between-circles-and-lines"></a>
 </h2>
+<p>To connect a circle and the shortest distance to a line:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
@@ -494,6 +496,25 @@ Figure 11: Connect two circles with labels and styles
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-connectcircleline-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 12: Connect a circle to a line and a line to a circle
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>To connect a circle to some other point on the line, we can use the the <code>@point_at_x</code> or <code>@point_at_y</code> function from the <code>ob_line</code> object. For example, to connect from a circle to a line horizontally and vertically:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
+<span>  <span class="va">c1</span> <span class="op">+</span></span>
+<span>  <span class="va">l1</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/connect.html">connect</a></span><span class="op">(</span><span class="va">c1</span>, <span class="va">l1</span><span class="op">@</span><span class="va">point_at_x</span><span class="op">(</span><span class="va">c1</span><span class="op">@</span><span class="va">center</span><span class="op">@</span><span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/connect.html">connect</a></span><span class="op">(</span><span class="va">c1</span>, <span class="va">l1</span><span class="op">@</span><span class="va">point_at_y</span><span class="op">(</span><span class="va">c1</span><span class="op">@</span><span class="va">center</span><span class="op">@</span><span class="va">y</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
+<div class="cell-output-display">
+<div id="fig-connectcirclelinehv" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-connectcirclelinehv-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="circles_files/figure-html/fig-connectcirclelinehv-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-connectcirclelinehv-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 13: Connect a circle to a line via horiztonal and vertical lines
 </figcaption></figure>
 </div>
 </div>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Lines • ggdiagram</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="48x48" href="../favicon-48x48.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
 <link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
 <link rel="icon" sizes="any" href="../favicon.ico">
@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggdiagram</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,6 +38,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="../articles/ggdiagram.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
@@ -143,7 +144,7 @@
 <div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_line.html">ob_line</a></span><span class="op">(</span>slope <span class="op">=</span> <span class="fl">2</span>, intercept <span class="op">=</span> <span class="fl">1</span>, color <span class="op">=</span> <span class="va">my_colors</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">l</span></span>
-<span><span class="co">#&gt; S3&lt;ggdiagram::ob_line/ggdiagram::shape/ggdiagram::has_style/S7_object&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_line&gt;</span></span>
 <span><span class="co">#&gt; @ slope     : num 2</span></span>
 <span><span class="co">#&gt; @ intercept : num 1</span></span>
 <span><span class="co">#&gt; @ xintercept: num -0.5</span></span></code></pre></div>
@@ -169,7 +170,7 @@ Figure 1: A line with slope of 2 and intercept of 1
 <div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">h</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_line.html">ob_line</a></span><span class="op">(</span>intercept <span class="op">=</span> <span class="fl">2</span>, color <span class="op">=</span> <span class="va">my_colors</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">h</span></span>
-<span><span class="co">#&gt; S3&lt;ggdiagram::ob_line/ggdiagram::shape/ggdiagram::has_style/S7_object&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_line&gt;</span></span>
 <span><span class="co">#&gt; @ slope     : num 0</span></span>
 <span><span class="co">#&gt; @ intercept : num 2</span></span>
 <span><span class="co">#&gt; @ xintercept: num -Inf</span></span></code></pre></div>
@@ -195,7 +196,7 @@ Figure 2: A horizontal line intercept of 2
 <div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">v</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_line.html">ob_line</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="op">-</span><span class="fl">2</span>, color <span class="op">=</span> <span class="va">my_colors</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">v</span></span>
-<span><span class="co">#&gt; S3&lt;ggdiagram::ob_line/ggdiagram::shape/ggdiagram::has_style/S7_object&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_line&gt;</span></span>
 <span><span class="co">#&gt; @ slope     : num -Inf</span></span>
 <span><span class="co">#&gt; @ intercept : num -Inf</span></span>
 <span><span class="co">#&gt; @ xintercept: num -2</span></span></code></pre></div>
@@ -258,7 +259,7 @@ Figure 4: Line with slope = 0 and intercept = −2
 <span></span>
 <span><span class="co"># Alternately:</span></span>
 <span><span class="va">l</span><span class="op">@</span><span class="va">projection</span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span>
-<span><span class="co">#&gt; S3&lt;ggdiagram::ob_point/ggdiagram::xy/ggdiagram::shape/ggdiagram::has_style/S7_object&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num -1</span></span>
 <span><span class="co">#&gt; @ y: num 0</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>

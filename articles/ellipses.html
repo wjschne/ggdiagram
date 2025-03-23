@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Ellipses • ggdiagram</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="48x48" href="../favicon-48x48.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
 <link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
 <link rel="icon" sizes="any" href="../favicon.ico">
@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggdiagram</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,6 +38,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="../articles/ggdiagram.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
@@ -175,8 +176,8 @@ Figure 1: An ellipse can be specified with a center, and semi-major radii.
 <div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
 <span>  <span class="va">e1</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="st">"*F*~1~"</span>, <span class="va">e1</span><span class="op">@</span><span class="va">focus_1</span>, plot_point <span class="op">=</span> <span class="cn">T</span>, vjust <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="st">"*F*~2~"</span>, <span class="va">e1</span><span class="op">@</span><span class="va">focus_2</span>, plot_point <span class="op">=</span> <span class="cn">T</span>, vjust <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="st">"*F*~1~"</span>, <span class="va">e1</span><span class="op">@</span><span class="va">focus_1</span>, plot_point <span class="op">=</span> <span class="cn">TRUE</span>, vjust <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="st">"*F*~2~"</span>, <span class="va">e1</span><span class="op">@</span><span class="va">focus_2</span>, plot_point <span class="op">=</span> <span class="cn">TRUE</span>, vjust <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div id="fig-foci" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-foci-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -195,8 +196,8 @@ Figure 2: An ellipse has two foci
 <span></span>
 <span><span class="va">bp</span> <span class="op">+</span> </span>
 <span>  <span class="va">e1</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="st">"*F*~1~"</span>, <span class="va">e1</span><span class="op">@</span><span class="va">focus_1</span>, plot_point <span class="op">=</span> <span class="cn">T</span>, vjust <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="st">"*F*~2~"</span>, <span class="va">e1</span><span class="op">@</span><span class="va">focus_2</span>, plot_point <span class="op">=</span> <span class="cn">T</span>, vjust <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="st">"*F*~1~"</span>, <span class="va">e1</span><span class="op">@</span><span class="va">focus_1</span>, plot_point <span class="op">=</span> <span class="cn">TRUE</span>, vjust <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="st">"*F*~2~"</span>, <span class="va">e1</span><span class="op">@</span><span class="va">focus_2</span>, plot_point <span class="op">=</span> <span class="cn">TRUE</span>, vjust <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="op">{</span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">e1</span><span class="op">@</span><span class="va">point_at</span><span class="op">(</span><span class="va">deg</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
 <span>  <span class="va">p</span><span class="op">@</span><span class="va">label</span><span class="op">(</span><span class="st">"*P*"</span>, polar_just <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span><span class="va">deg</span>, <span class="fl">1.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/ob_segment.html">ob_segment</a></span><span class="op">(</span><span class="va">e1</span><span class="op">@</span><span class="va">focus_1</span>, </span>
@@ -229,7 +230,7 @@ Figure 3: The sum of distances from the foci is constant.
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">e1</span><span class="op">@</span><span class="va">point_at</span><span class="op">(</span><span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">60</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; S3&lt;ggdiagram::ob_point/ggdiagram::xy/ggdiagram::shape/ggdiagram::has_style/S7_object&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 1.59</span></span>
 <span><span class="co">#&gt; @ y: num 2.75</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
@@ -301,7 +302,7 @@ Figure 5: The ellipse’s definitional parameter <em>t</em> does not always lin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ob_ellipse.html">ob_ellipse</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">@</span><span class="va">point_at</span><span class="op">(</span><span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">60</span><span class="op">)</span>, definitional <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; S3&lt;ggdiagram::ob_point/ggdiagram::xy/ggdiagram::shape/ggdiagram::has_style/S7_object&gt;</span></span>
+<span><span class="co">#&gt; &lt;ggdiagram::ob_point&gt;</span></span>
 <span><span class="co">#&gt; @ x: num 1</span></span>
 <span><span class="co">#&gt; @ y: num 1.73</span></span>
 <span><span class="co">#&gt; Other props: alpha, color, fill, shape, size, stroke, auto_label,</span></span>
@@ -336,9 +337,13 @@ Figure 6: Tangent lines on an ellipse
 <span>  <span class="op">{</span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="va">e1</span><span class="op">@</span><span class="va">point_at</span><span class="op">(</span><span class="fl">60</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
 <span>  <span class="va">e1</span><span class="op">@</span><span class="va">tangent_at</span><span class="op">(</span><span class="va">p1</span><span class="op">)</span> </span></code></pre></div>
 <div class="cell-output-display">
-<div>
-<figure><p><img src="ellipses_files/figure-html/unnamed-chunk-5-1.png" width="672"></p>
-</figure>
+<div id="fig-tangentpoint" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-tangentpoint-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="ellipses_files/figure-html/fig-tangentpoint-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tangentpoint-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 7: Tangent line at a specific point on an ellipse
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -351,9 +356,13 @@ Figure 6: Tangent lines on an ellipse
 <span>  <span class="va">e1</span><span class="op">@</span><span class="va">tangent_at</span><span class="op">(</span><span class="va">p1</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/projection.html">projection</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">e1</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
-<div>
-<figure><p><img src="ellipses_files/figure-html/unnamed-chunk-6-1.png" width="672"></p>
-</figure>
+<div id="fig-tangentpointprojection" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-tangentpointprojection-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="ellipses_files/figure-html/fig-tangentpointprojection-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tangentpointprojection-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 8: Tangent line at a specific point projected onto an ellipse
+</figcaption></figure>
 </div>
 </div>
 </div>
@@ -367,22 +376,20 @@ Figure 6: Tangent lines on an ellipse
 <p>If <em>m</em><sub>1</sub> is 4, and <em>a</em> and <em>b</em> are equal, we can make a <em>squircle</em>, which is a square-ish circle.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/ob_ellipse.html">ob_ellipse</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">3</span>, </span>
-<span>          b <span class="op">=</span> <span class="fl">3</span>, </span>
-<span>          m1 <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_ellipse.html">ob_ellipse</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">3</span>, b <span class="op">=</span> <span class="fl">3</span>, m1 <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div id="fig-squircle" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-squircle-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="ellipses_files/figure-html/fig-squircle-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-squircle-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 7: A squircle
+Figure 9: A squircle
 </figcaption></figure>
 </div>
 </div>
 </div>
-<p>If we increase <em>m</em><sub>1</sub> to a high value like 10, we can a rectangle with pleasingly rounded corners.</p>
+<p>If we increase <em>m</em><sub>1</sub> to a high value like 10, we can create a rectangle with pleasingly rounded corners.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
@@ -398,15 +405,14 @@ Figure 7: A squircle
 <span>      color <span class="op">=</span> <span class="st">"white"</span>,</span>
 <span>      size <span class="op">=</span> <span class="fl">70</span></span>
 <span>    <span class="op">)</span></span>
-<span>  <span class="op">)</span></span>
-<span>  </span></code></pre></div>
+<span>  <span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div id="fig-myvariable" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-myvariable-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="ellipses_files/figure-html/fig-myvariable-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-myvariable-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 8: A superellipse can look like a rectangle with rounded corners.
+Figure 10: A superellipse can look like a rectangle with rounded corners.
 </figcaption></figure>
 </div>
 </div>
@@ -425,7 +431,7 @@ Figure 8: A superellipse can look like a rectangle with rounded corners.
 <img src="ellipses_files/figure-html/fig-connectellipse-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-connectellipse-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 9: Connections between ellipses
+Figure 11: Connections between ellipses
 </figcaption></figure>
 </div>
 </div>
@@ -435,12 +441,11 @@ Figure 9: Connections between ellipses
 <p>The <code>place</code> function will set an object at a position and distance from another object. Here we set an ellipse to the the right of <code>e1</code> (i.e., “east” or 0 degrees) with a separation of 2.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
-<span>  <span class="op">{</span><span class="va">e1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_ellipse.html">ob_ellipse</a></span><span class="op">(</span>center <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="fl">0</span><span class="op">)</span>, </span>
-<span>                 a <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/place.html">place</a></span><span class="op">(</span><span class="fu"><a href="../reference/ob_ellipse.html">ob_ellipse</a></span><span class="op">(</span>b <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>, </span>
-<span>        from <span class="op">=</span> <span class="va">e1</span>, </span>
-<span>        where <span class="op">=</span> <span class="st">"right"</span>, </span>
+<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
+<span>  <span class="op">{</span><span class="va">e1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_ellipse.html">ob_ellipse</a></span><span class="op">(</span>center <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="fl">0</span><span class="op">)</span>, a <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/place.html">place</a></span><span class="op">(</span><span class="fu"><a href="../reference/ob_ellipse.html">ob_ellipse</a></span><span class="op">(</span>b <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span>
+<span>        from <span class="op">=</span> <span class="va">e1</span>,</span>
+<span>        where <span class="op">=</span> <span class="st">"right"</span>,</span>
 <span>        sep <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div id="fig-placeellipse" class="quarto-float quarto-figure quarto-figure-center">
@@ -448,7 +453,7 @@ Figure 9: Connections between ellipses
 <img src="ellipses_files/figure-html/fig-placeellipse-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-placeellipse-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 10: Place an ellipse 2 units to the right of another ellipse.
+Figure 12: Place an ellipse 2 units to the right of another ellipse.
 </figcaption></figure>
 </div>
 </div>
@@ -490,12 +495,12 @@ Figure 10: Place an ellipse 2 units to the right of another ellipse.
 <img src="ellipses_files/figure-html/fig-placedistance-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-placedistance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 11: The separation distance between ellipses is along the path that connects their centers.
+Figure 13: The separation distance between ellipses is along the path that connects their centers.
 </figcaption></figure>
 </div>
 </div>
 </div>
-<p>You can place many ellipses at once. In <a href="#fig-manyconnections" class="quarto-xref">Figure 12</a>, 12 ellipses are placed around the central ellipse. Connection paths are then drawn to each ellipse.</p>
+<p>You can place many ellipses at once. In <a href="#fig-manyconnections" class="quarto-xref">Figure 14</a>, 12 ellipses are placed around the central ellipse. Connection paths are then drawn to each ellipse.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Number of ellipses</span></span>
@@ -544,7 +549,7 @@ Figure 11: The separation distance between ellipses is along the path that conn
 <img src="ellipses_files/figure-html/fig-manyconnections-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-manyconnections-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 12: Many ellipses can be placed at once.
+Figure 14: Many ellipses can be placed at once.
 </figcaption></figure>
 </div>
 </div>
@@ -582,7 +587,7 @@ Figure 12: Many ellipses can be placed at once.
 <img src="ellipses_files/figure-html/fig-placeline-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-placeline-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 13: A line placed 3 units and 45 degrees from a squircle.
+Figure 15: A line placed 3 units and 45 degrees from a squircle.
 </figcaption></figure>
 </div>
 </div>
