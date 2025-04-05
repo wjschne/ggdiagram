@@ -267,7 +267,7 @@ ob_segment <- S7::new_class(
       stop("p1 must be a ob_point object with one or more points.")
     } else {
       if (length(p2) == 0) {
-        if (p1@length == 1) {
+        if (p1@length < 2) {
           stop("If p2 is missing, p1 must be a ob_point object with multiple points.")
         } else {
           p2 <- p1
@@ -327,6 +327,7 @@ ob_segment <- S7::new_class(
       p2y = p2@y
     ))
 
+
     d_names <- colnames(d)
 
     non_empty_list <- get_non_empty_props(s_style)
@@ -356,8 +357,19 @@ ob_segment <- S7::new_class(
       vjust = 0,
       angle = (p2 - p1)@theta)
 
-    p1 <- set_props(p1, x = d$p1x, y = d$p1y)
-    p2 <- set_props(p2, x = d$p2x, y = d$p2y)
+    # If there is one object but many labels, make multiple objects
+    if (S7::S7_inherits(label, ob_label)) {
+      if (label@length > 1 & nrow(d) == 1) {
+        d <- dplyr::mutate(d, k = label@length) %>%
+          tidyr::uncount(.data$k)
+      }
+    }
+
+      p1 <- set_props(p1, x = d$p1x, y = d$p1y)
+      p2 <- set_props(p2, x = d$p2x, y = d$p2y)
+
+
+
 
     S7::new_object(
       S7::S7_object(),

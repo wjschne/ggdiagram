@@ -13,10 +13,6 @@ The ggdiagram package takes an object-oriented approach to making
 diagrams and plots the results using
 [ggplot2](https://ggplot2.tidyverse.org/).
 
-This package is still experimental, and functions are likely to change
-in many ways. Every time I run into speed bumps or inconveniences as I
-use the program in practice, I adapt it to anticipate user needs.
-
 My motivation in making ggdiagram was to find a way to approach the
 functionality of [TikZ](https://tikz.dev/) but with the flexibility and
 convenience of R. The ggdiagram package is built atop
@@ -34,7 +30,14 @@ be thought of as extensions of `ggplot2::annotate`.
 
 ## Installation
 
-You can install the development version of ggdiagram like so:
+You can install ggdiagram from CRAN like so:
+
+``` r
+install.packages("ggdiagram")
+```
+
+Assuming the [remotes package](https://remotes.r-lib.org/) is already
+installed, you can install the development version of ggdiagram like so:
 
 ``` r
 remotes::install_github("wjschne/ggdiagram")
@@ -75,7 +78,7 @@ ggdiagram() +
 <div id="fig-example">
 
 <img src="man/figures/README-fig-example-1.png" style="width:100.0%"
-data-fig-alt="An arrow points from a circle to a square." />
+data-fig-alt="Diagram of a circle on the left  and a square on the right  with an arrow connecting the two shapes." />
 
 Figure 1: Connecting a circle and a square with an arrow.
 

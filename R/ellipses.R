@@ -364,6 +364,14 @@ ob_ellipse <- S7::new_class(
                                shape_name = "ob_ellipse",
                                angle = angle)
 
+    # If there is one ellipse but many labels, make multiple ellipses
+    if (S7::S7_inherits(label, ob_label)) {
+      if (label@length > 1 & nrow(d) == 1) {
+        d <- dplyr::mutate(d, k = label@length) %>%
+          tidyr::uncount(.data$k)
+      }
+    }
+
 
 
      S7::new_object(centerpoint(center = center, label = label),
@@ -433,34 +441,34 @@ S7::method(`[`, ob_ellipse) <- function(x, y) {
   z
 }
 
-S7::method(connect, list(centerpoint, centerpoint)) <- function(from,to, ...) {
+S7::method(connect, list(centerpoint, centerpoint)) <- function(from, to, ...) {
   theta <- radian(atan2(to@center@y - from@center@y, to@center@x - from@center@x))
   connect(from@point_at(theta), to@point_at(theta + degree(180)), ...)
 }
 
-S7::method(connect, list(centerpoint, ob_point)) <- function(from,to, ...) {
+S7::method(connect, list(centerpoint, ob_point)) <- function(from, to, ...) {
   theta <- radian(atan2(to@y - from@center@y,
                         to@x - from@center@x))
   connect(from@point_at(theta), to, ...)
 }
 
-S7::method(connect, list(ob_point, centerpoint)) <- function(from,to, ...) {
+S7::method(connect, list(ob_point, centerpoint)) <- function(from, to, ...) {
   theta <- radian(atan2(to@center@y - from@y,
                         to@center@x - from@x))
   connect(from, to@point_at(theta + degree(180)), ...)
 }
 
-S7::method(connect, list(centerpoint, ob_line)) <- function(from,to, ...) {
+S7::method(connect, list(centerpoint, ob_line)) <- function(from, to, ...) {
   p2 <- projection(from@center, to)
   connect(from, p2, ...)
 }
 
-S7::method(connect, list(ob_line, centerpoint)) <- function(from,to, ...) {
+S7::method(connect, list(ob_line, centerpoint)) <- function(from, to, ...) {
   p1 <- projection(to@center, from)
   connect(p1, to, ...)
 }
 
-S7::method(connect, list(S7::class_list, centerpoint)) <- function(from,to, ...) {
+S7::method(connect, list(S7::class_list, centerpoint)) <- function(from, to, ...) {
   purrr::map(unbind(from), \(xx) {
     connect(xx,to,...)
   }) |>

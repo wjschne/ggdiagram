@@ -313,17 +313,17 @@ S7::method(as.character, ob_angle) <- function(x,
 }
 
 # subset ----
-S7::method(`[`, ob_angle) <- function(x, y) {
-  S7::S7_data(x) <-  c(x)[y]
+S7::method(`[`, ob_angle) <- function(x, i) {
+  S7::S7_data(x) <-  c(x)[i]
   x
 }
 
-S7::method(`[<-`, ob_angle) <- function(x, y, value) {
-  d <- c(x)
-  d[y] <- c(value)
-  S7::S7_data(x) <-  d
-  x
-}
+# S7::method(`[<-`, ob_angle) <- function(x, i, value) {
+#   d <- c(x)
+#   d[i] <- c(value)
+#   S7::S7_data(x) <-  d
+#   x
+# }
 
 # unbind ----
 S7::method(unbind, ob_angle) <- function(x) {

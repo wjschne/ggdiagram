@@ -299,6 +299,14 @@ ob_path <- S7::new_class(
         } else {
           label <- rlang::inject(ob_label(label = label, !!!d_l[, cnames]))
         }
+      }
+
+    # If there is one object but many labels, make multiple objects
+    if (S7::S7_inherits(label, ob_label)) {
+      if (label@length > 1 & nrow(d) == 1) {
+        d <- dplyr::mutate(d, k = label@length) %>%
+          tidyr::uncount(.data$k)
+      }
     }
 
     S7::new_object(.parent = S7::S7_object(),

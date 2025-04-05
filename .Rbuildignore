@@ -17,3 +17,4 @@ vignettes/.quarto/
 ^vignettes/_freeze/*
 ^doc$
 ^Meta$
+^cran-comments\.md$

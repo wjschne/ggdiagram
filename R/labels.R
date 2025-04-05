@@ -250,7 +250,7 @@ ob_label <- S7::new_class(
 
 
     if (length(polar_just) > 0) {
-      if (S7::S7_inherits(polar_just, S7::S7_class(degree(0))@parent) || is.numeric(polar_just)) {
+      if (S7::S7_inherits(polar_just, S7::S7_class(ob_angle)) || is.numeric(polar_just)) {
         polar_just <- ob_polar(theta = radian(polar_just), r = 1.2)
       }
       hjust <- polar2just(polar_just@theta, polar_just@r, axis = "h")
@@ -537,35 +537,18 @@ S7::method(label_object, ob_label) <- function(object, accuracy = .1) {
 
 
 
-S7::method(`[`, ob_label) <- function(x, y) {
-  d <- as.list(x@tibble[y,])
-  new_x <- rlang::inject(ob_label(!!!d))
-
-  # if (!is.null(d$label.margin)) {
-  #   new_x@label.margin = x@label.margin[y]
-  # }
-  # if (!is.null(d$label.padding)) {
-  #   new_x@label.padding = x@label.padding[y]
-  # }
-  new_x
+S7::method(`[`, ob_label) <- function(x, i) {
+  d <- as.list(x@tibble[i,])
+  rlang::inject(ob_label(!!!d))
 }
 
-S7::method(`[<-`, ob_label) <- function(x, y, value) {
-  dx <- x@tibble
-  dv <- value@tibble
-  dx[y, ] <- value@tibble
-  d <- as.list(dx)
-  new_x <- rlang::inject(ob_label(!!!d))
-  # if (!is.null(d$label.margin)) {
-  #   x@label.margin[y] <- value@label.margin
-  #   new_x@label.margin = x@label.margin
-  # }
-  # if (!is.null(d$label.padding)) {
-  #   x@label.padding[y] <- value@label.padding
-  #   new_x@label.padding = x@label.padding
-  # }
-  new_x
-}
+# S7::method(`[<-`, ob_label) <- function(x, i, value) {
+#   dx <- x@tibble
+#   dv <- value@tibble
+#   dx[i, ] <- value@tibble
+#   d <- as.list(dx)
+#   rlang::inject(ob_label(!!!d))
+# }
 
 
 S7::method(unbind, ob_label) <- function(x) {

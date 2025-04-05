@@ -298,7 +298,7 @@ Subsetting can be used for assignment in ggdiagram objects. For example, in @fig
 p <- ob_point(x = 1:4, 
               y = 2:5)
 p[1] <- ob_point(0,0, color = "firebrick", size = 5)
-
+class(p)
 ggplot() + 
   coord_equal() +
   p 

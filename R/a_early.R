@@ -164,7 +164,7 @@ ob_shape_list <- S7::new_class("ob_shape_list", S7::class_list, validator = func
   if(!all(purrr::map_lgl(self, S7::S7_inherits, class = has_style))) "All objects must be ggdiagram objects that can be converted to geoms"
 })
 
-assign_data <- function(x,y, value) {
+assign_data <- function(x,i, value) {
   dx <- x@tibble
   dx_unit <- sapply(dx, grid::is.unit)
   dx_unit <- names(dx_unit[dx_unit])
@@ -192,36 +192,36 @@ assign_data <- function(x,y, value) {
   dv <- d_combined |>
     dplyr::add_row(dv)
 
-  dx[y, ] <- dv
+  dx[i, ] <- dv
 
 
   as.list(dx)
 }
 
-S7::method(`[<-`, has_style) <- function(x, y, value) {
-  .fn <- S7::S7_class(x)
-  d <- assign_data(x,y,value)
-  l <- x@label
-  if (length(l) > 0) {
-    if (length(value@label) > 0) {
-      l[y] <- value@label
-    } else {
-      l[y] <- ob_label(NA)
-    }
-    d$label <- l
-  } else {
-      if (length(value@label) > 0 && !is.na(value@label)) {
-        l <- bind(rep(value@label, x@length))
-        l@label <- rep(NA_character_, x@length)
-        l@label[y] <- value@label
-      }
-    }
-  new_x <- rlang::inject(.fn(!!!d))
-  if (S7::prop_exists(new_x, "vertex_radius")) {
-    new_x@vertex_radius <- x@vertex_radius
-  }
-  new_x
-}
+# S7::method(`[<-`, has_style) <- function(x, i, value) {
+#   .fn <- S7::S7_class(x)
+#   d <- assign_data(x, i, value)
+#   l <- x@label
+#   if (length(l) > 0) {
+#     if (length(value@label) > 0) {
+#       l[i] <- value@label
+#     } else {
+#       l[i] <- ob_label(NA)
+#     }
+#     d$label <- l
+#   } else {
+#       if (length(value@label) > 0 && !is.na(value@label)) {
+#         l <- bind(rep(value@label, x@length))
+#         l@label <- rep(NA_character_, x@length)
+#         l@label[i] <- value@label
+#       }
+#     }
+#   new_x <- rlang::inject(.fn(!!!d))
+#   if (S7::prop_exists(new_x, "vertex_radius")) {
+#     new_x@vertex_radius <- x@vertex_radius
+#   }
+#   new_x
+# }
 
 
 shape <- S7::new_class(name = "shape",

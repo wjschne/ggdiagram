@@ -44,7 +44,7 @@ cr_props <- list(
       }
       d |>
         dplyr::mutate(group = factor(dplyr::row_number())) |>
-        tidyr::uncount(n, .remove = FALSE) |>
+        tidyr::uncount(.data$n, .remove = FALSE) |>
         dplyr::mutate(theta = 2 * pi * (dplyr::row_number() - 1) / n,
                       x = x0 + r * cos(theta),
                       y = y0 + r * sin(theta),
@@ -254,6 +254,14 @@ ob_circle <- S7::new_class(
                                center = center,
                                d = d,
                                shape_name = "ob_circle")
+
+    # If there is one object but many labels, make multiple objects
+    if (S7::S7_inherits(label, ob_label)) {
+      if (label@length > 1 & nrow(d) == 1) {
+        d <- dplyr::mutate(d, k = label@length) %>%
+          tidyr::uncount(.data$k)
+      }
+    }
 
 
 

@@ -1,0 +1,351 @@
+---
+title: "Tutorial: Euclid's Amber Version of the Elements"
+format: 
+  html:
+    toc: true
+    code-fold: true
+    html-math-method: katex
+    backgroundcolor: "#fcf3d9"
+    mainfont: "Libre Caslon Text"
+vignette: >
+  %\VignetteIndexEntry{elements}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r}
+#| label: setup
+#| include: false
+
+library(ggdiagram)
+library(ggplot2)
+red <- "#d42a20"
+yellow <- "#FAC22B"
+blue <- "#0C7AA5"
+black <- "#000000"
+bg <- "#fcf3d9"
+my_font <- "Libre Caslon Text"
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  dev = "ragg_png",
+  dev.args = list(background = bg),
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 7
+)
+
+ggplot2::update_geom_defaults(ggforce::GeomCircle, list(linewidth = 2))
+baseplot <- ggdiagram(
+  panel.background = element_rect(bg, color = NA),
+  plot.background = element_rect(bg, 
+                                 color = NA),
+  font_family = my_font, 
+  linewidth = 2, font_size = 18)
+```
+
+**NOTE** The text of this tutorial is an adaptation of a [TikZ tutorial of the same name](https://tikz.dev/tutorial-Euclid). I adapted the tutorial to see if ggdiagram could duplicate TikZ's capabilities.
+
+In this tutorial, we have a look at how ggdigram can be used to draw geometric constructions.
+
+Euclid is currently quite busy writing his new book series, whose working title is *Elements* (Euclid is not quite sure whether this title will convey the message of the series to future generations correctly, but he intends to change the title before it goes to the publisher). Up to now, he wrote down his text and graphics on papyrus, but his publisher suddenly insists that he must submit in electronic form. Euclid tries to argue with the publisher that electronics will only be discovered thousands of years later, but the publisher informs him that the use of papyrus is no longer cutting edge technology, and Euclid will just have to keep up with modern tools.
+
+Slightly disgruntled, Euclid starts converting his papyrus entitled *Book I, Proposition I* to an amber version.
+
+# Book I, Proposition I
+
+:::{.callout-note}
+
+## Proposition I
+
+To construct an equilateral triangle on a given finite straight-line.
+
+Let AB be the given finite straight-line.
+
+So it is required to construct an equilateral triangle on the straight-line AB.
+
+Let the circle BCD with center A and radius AB have been drawn, and again let the circle ACE with center B and radius BA have been drawn. And let the straight-lines CA and CB have been joined from the point C, where the circles cut one another, to the points A and B (respectively).
+
+And since the point A is the center of the circle CDB, AC is equal to AB. Again, since the point B is the center of the circle CAE, BC is equal to BA. But CA was also shown (to be) equal to AB. Thus, CA and CB are each equal to AB. But things equal to the same thing are also equal to one another. Thus, CA is also equal to CB. Thus, the three (straight lines) CA, AB, and BC are equal to one another.
+
+Thus, the triangle ABC is equilateral, and has been constructed on the given finite straight-line AB.
+
+:::
+
+```{r}
+#| label: fig-equilateral
+#| fig-width: 6
+#| fig-height: 4
+#| fig-cap: "Make an equilateral trigangle starting with line AB."
+
+# Radius
+r <- 1
+
+# Points A and B
+pA <- ob_point(0, 0)
+pB <- ob_polar(degree(0), r)
+
+# Circles
+cBCD <- ob_circle(pA, r, color = blue)
+cACE <- ob_circle(pB, r, color = red)
+
+# Intersection of circles to make equilateral triangle
+pC <- intersection(cBCD, cACE)[1]
+
+# Points to label circles
+pD <- cBCD@point_at(180)
+pE <- cACE@point_at(0)
+
+# Segments AC and BC
+sAB <- ob_segment(pA, pB, color = black)
+sAC <- ob_segment(pA, pC, color = yellow)
+sBC <- ob_segment(pB, pC, color = red)
+
+# Bind segments
+sABC <- bind(c(sAB, sAC, sBC))
+
+# Hatch marks to note congruence
+hABC <- sABC@hatch(linewidth = .75) 
+
+# Make point labels
+lABCDE <- ob_label(
+  LETTERS[1:5],
+  bind(c(pA, pB, pC, pD, pE)),
+  fill = bg,
+  color = c(red, blue, black, blue, red),
+  size = 18,
+  family = my_font,
+  vjust = .5,
+  label.padding = margin(4,3,0,3),
+  label.r = unit(9, units = "pt")
+)
+
+baseplot +
+  sABC +
+  cBCD +
+  cACE +
+  lABCDE +
+  hABC
+```
+
+Let us have a look at how Euclid can turn this into R code with ggdiagram.
+
+## Setting up the Environment
+
+First we need to load some R packages and define some colors:
+
+
+```{r loading}
+library(ggdiagram)
+red <- "#d42a20"
+yellow <- "#FAC22B"
+blue <- "#0C7AA5"
+black <- "#000000"
+```
+
+## The Line *AB*
+
+The first part of the picture that Euclid wishes to draw is the line *AB*. That is easy enough, something like `ob_segment(x = 0, xend = 0, y = 2, yend = 1)` might do. However, Euclid does not wish to reference the two points *A* and *B* as raw numbers. Rather, he wishes to just write `A` and `B`. Indeed, the whole point of his book is that the points *A* and *B* can be arbirary and all other points (like *C*) are constructed in terms of their positions. It would not do if Euclid were to write down the coordinates of *C* explicitly. 
+ explicitly.
+
+So, Euclid starts with defining two coordinates using the `ob_point` function:
+
+```{r fig-ab}
+A <- ob_point(0, 0)
+B <- ob_point(2, 1)
+AB <- ob_segment(A, B, color = blue)
+
+ggdiagram() +
+  AB
+```
+
+
+That was easy enough. What is missing at this point are the labels for the coordinates. Euclid does not want them on the points, but next to them. He decides to use the label slot on points `A` and `B`:
+
+
+```{r fig-ablabel}
+ggdiagram(font_size = 16) +
+  AB +
+  A@label("A", hjust = 1, color = blue) +
+  B@label("B", hjust = 0, color = blue)
+```
+
+At this point, Euclid decides that it would be even nicer if the points *A* and 
+*B* were in some sense "random." Then, neither Euclid nor the reader can make the mistake of taking "anything for granted" concerning these position of these points. Euclid is pleased to learn that there is a rand function in R that does exactly what he needs: `runif`. It produces a number between any two numbers. Here we want a unit vector between &minus;1 and 1. Since R can do a bit of math, Euclid can change the coordinates of the points as follows:
+
+
+```{r randomab}
+A <- ob_point(
+  x = 0 + 0.1 * runif(1, -1, 1),
+  y = 0 + 0.1 * runif(1, -1, 1)
+)
+
+B <- ob_point(
+  x = 1.25 + 0.1 * runif(1, -1, 1),
+  y = 0.25 + 0.1 * runif(1, -1, 1)
+)
+
+AB <- ob_segment(A, B, color = blue)
+```
+
+
+This works fine. However, Euclid is not quite satisfied since he would prefer that the "main coordinates" (0, 0) and (1.25, 0.25) are "kept separate" from the perturbation &pm;0.1. This means, he would like to specify that coordinate *A* as the point that is at (0, 0) plus one tenth of a random unit vector.
+
+It turns out that the R allows him to do exactly this kind of computation. We can define a custom function `rvector` that creates a random unit vector that is scaled by any amount we like.
+
+The new code for the coordinates is the following:
+
+```{r}
+rvector <- function(scalar = 1) {
+  scalar * ob_point(
+    runif(n = 1, min = -.1, max = .1),
+    runif(n = 1, min = -.1, max = .1)
+  )
+}
+A <- ob_point(0, 0) + rvector(.1)
+B <- ob_point(1.25, 0.25) + rvector(.1)
+AB <- ob_segment(A, B, color = blue)
+
+ggdiagram(font_size = 16) +
+  AB +
+  A@label("A", hjust = 1, color = blue) +
+  B@label("B", hjust = 0, color = blue)
+```
+
+## The Circle Around A
+
+The first tricky construction is the circle around *A*. We will see later how to do this in a very simple manner, but first let us do it the "hard" way.
+
+The idea is the following: We draw a circle around the point *A* whose radius is given by the length of the line *AB*. The difficulty lies in computing the length of this line.
+
+Euclid could compute the distance by hand using the Euclidean distance (Ha!):
+
+$$
+d=\sqrt{(B_x-A_x)^2 + (B_y-A_y)^2}
+$$
+
+Euclid could write the following:
+
+```{r}
+sqrt((B@x - A@x) ^ 2 + (B@y - A@y) ^ 2)
+```
+
+However, objects created with the `ob_segment` function have a distance slot that performs this calculation automatically:
+
+```{r}
+AB@distance
+```
+
+Thus, circles `D` and `E` can be created like so:
+
+
+```{r}
+D <- ob_circle(center = A, radius = AB@distance)
+E <- ob_circle(center = B, radius = AB@distance)
+
+ggdiagram(font_size = 16) +
+  AB +
+  A@label("A", hjust = 1, color = blue) +
+  B@label("B", hjust = 0, color = blue) + 
+  D + 
+  E + 
+  D@point_at("left")@label("D", hjust = 1.1) +
+  E@point_at("right")@label("E", hjust = -0.1)
+```
+
+# The Intersection of the Circles
+
+Euclid can now draw the line and the circles. The final problem is to compute the intersection of the two circles. This computation is a bit involved if you want to do it "by hand." Fortunately, the `intersection` function allows us to compute the intersection of two circles. In this case, there are two points of intersection, *C* and *C'*. For point *C*, we will take the first of the two intersection points between circles *D* and *E*.
+
+
+```{r}
+intersect_DE <- intersection(D, E)
+C <- intersect_DE[1]
+
+AC <- ob_segment(A, C, color = red)
+BC <- ob_segment(B, C, color = red)
+ABC <- bind(c(AB, BC, AC))
+
+ggdiagram(font_size = 16) +
+  ABC +
+  ABC@hatch() +
+  A@label("A", hjust = 1, color = blue) +
+  B@label("B", hjust = 0, color = blue) + 
+  D + 
+  E + 
+  D@point_at("left")@label("D", hjust = 1.1) +
+  E@point_at("right")@label("E", hjust = -0.1) +
+  C@label("C", vjust = -.2, hjust = .6) 
+```
+
+Although Euclid does not need it for the current picture, it is just a few steps to compute the bisection of the line *AB*:
+
+```{r}
+Cprime <- intersect_DE[2]
+CCprime <- ob_segment(intersect_DE, color = red)
+pF <- intersection(AB, CCprime, color = red)
+ggdiagram(font_size = 16) +
+  ABC +
+  A@label("A", hjust = 1, color = blue) +
+  B@label("B", hjust = 0, color = blue) + 
+  D + 
+  E + 
+  D@point_at("left")@label("D", hjust = 1.1) +
+  E@point_at("right")@label("E", hjust = -0.1) +
+  C@label("C", vjust = -.2, hjust = .6) +
+  Cprime@label("C&prime;", vjust = 1.3) +
+  CCprime + 
+  pF +
+  pF@label("F", vjust = 1.1, hjust = -.3)
+
+```
+
+# The Complete Code
+
+Back to Euclid’s code. He uses the background layer for drawing the triangle behind everything at the end.
+
+
+```{r}
+rvector <- function(scalar = 1) {
+  scalar * ob_point(
+    runif(n = 1, min = -.1, max = .1),
+    runif(n = 1, min = -.1, max = .1)
+  )
+}
+
+ggdiagram(font_size = 16) +
+  {A <- ob_point(0, 0) + rvector(.1)} +
+  {B <- ob_point(1.25, 0.25) + rvector(.1)} +
+  {AB <- ob_segment(A, B, color = blue)} +
+  ob_label(
+    label = "A",
+    center = A,
+    color = blue,
+    polar_just = AB@line@angle + degree(180)) +
+  ob_label(
+    label = "B",
+    center = B,
+    color = blue,
+    polar_just = AB@line@angle) + 
+  {D <- ob_circle(A, radius = AB@distance)} +
+  {E <- ob_circle(B, radius = AB@distance)} + 
+  D@point_at((A - B)@theta)@label(
+    label = "D", 
+    polar_just = A - B) + 
+  E@point_at((B - A)@theta)@label(
+    label = "E", 
+    polar_just = B - A) +
+  {C <- intersection(D, E)[1]} +
+  ob_label("C", C, 
+           color = red, 
+           polar_just = C - AB@midpoint(), 
+           label.margin = margin(2, 2, 2, 2), 
+           label.padding = margin()) + 
+  ob_polygon(bind(c(A, B, C)), 
+             color = NA, 
+             fill = class_color("orange")@lighten(.3)) +
+  {ABC <- ob_segment(bind(c(A,B,C,A)), color = c(red, blue, blue))} + 
+  ABC@hatch() +
+  ABC@p1
+
+  
+```

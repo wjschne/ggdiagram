@@ -19,7 +19,14 @@ inst/doc
 vignettes/*.html
 vignettes/*.pdf
 vignettes/*.R
-**/.quarto/
+vignettes/articles/*.html
+vignettes/articles/*.pdf
+vignettes/articles/*.R
+vignettes/.quarto/
+vignettes/_freeze/
+vignettes/articles/.quarto/
+vignettes/articles/_freeze/
+*/.quarto/
 /*_cache/
 /cache/
 *_cache/
@@ -28,3 +35,5 @@ docs/
 docs
 /doc/
 /Meta/
+
+/.quarto/

@@ -245,7 +245,15 @@ ob_polygon <- S7::new_class(
         label <- ob_label(label, center, fill = d[["fill"]] %||% fill)
       }
 
+    }
+
+    # If there is one object but many labels, make multiple objects
+    if (S7::S7_inherits(label, ob_label)) {
+      if (label@length > 1 & nrow(d) == 1) {
+        d <- dplyr::mutate(d, k = label@length) %>%
+          tidyr::uncount(.data$k)
       }
+    }
 
     S7::new_object(.parent = S7::S7_object(),
                p =  d$p,
@@ -257,6 +265,7 @@ ob_polygon <- S7::new_class(
                linewidth = d[["linewidth"]] %||% linewidth,
                linetype = d[["linetype"]] %||% linetype
     )
+
   })
 
 
@@ -461,6 +470,14 @@ ob_intercept <- S7::new_class(
                                center = center,
                                d = d,
                                shape_name = "ob_intercept")
+
+    # If there is one object but many labels, make multiple objects
+    if (S7::S7_inherits(label, ob_label)) {
+      if (label@length > 1 & nrow(d) == 1) {
+        d <- dplyr::mutate(d, k = label@length) %>%
+          tidyr::uncount(.data$k)
+      }
+    }
 
 
 
@@ -807,6 +824,14 @@ ob_ngon <- S7::new_class(
                                d = d,
                                shape_name = "ob_intercept")
 
+    # If there is one object but many labels, make multiple objects
+    if (S7::S7_inherits(label, ob_label)) {
+      if (label@length > 1 & nrow(d) == 1) {
+        d <- dplyr::mutate(d, k = label@length) %>%
+          tidyr::uncount(.data$k)
+      }
+    }
+
     S7::new_object(.parent = S7::S7_object(),
                center =  center,
                n = d$n %||% n,
@@ -1094,6 +1119,14 @@ ob_reuleaux <- S7::new_class(
                                center = center,
                                d = d,
                                shape_name = "ob_reuleaux")
+
+    # If there is one object but many labels, make multiple objects
+    if (S7::S7_inherits(label, ob_label)) {
+      if (label@length > 1 & nrow(d) == 1) {
+        d <- dplyr::mutate(d, k = label@length) %>%
+          tidyr::uncount(.data$k)
+      }
+    }
 
     S7::new_object(.parent = S7::S7_object(),
                center =  center,

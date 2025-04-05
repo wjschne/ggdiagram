@@ -417,17 +417,17 @@ S7::method(label_object, ob_point) <- function(object, accuracy = .1) {
 
 
 
-S7::method(`[`, ob_point) <- function(x, y) {
-  d <- as.list(x@tibble[y,])
+S7::method(`[`, ob_point) <- function(x, i) {
+  d <- as.list(x@tibble[i,])
   rlang::inject(ob_point(!!!d))
 }
 
 
 
-S7::method(`[<-`, ob_point) <- function(x, y, value) {
-  d <- assign_data(x,y,value)
-  rlang::inject(ob_point(!!!d))
-}
+# S7::method(`[<-`, ob_point) <- function(x, i, value) {
+#   d <- assign_data(x,i,value)
+#   rlang::inject(ob_point(!!!d))
+# }
 
 
 S7::method(connect, list(ob_point, ob_point)) <- function(from,to, arrow_head = arrowheadr::arrow_head_deltoid(d = 2.3, n = 100), length_head = 7, ...) {
