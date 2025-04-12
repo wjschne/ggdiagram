@@ -1,3 +1,7 @@
+library(ggdiagram)
+library(testthat)
+
+
 test_that("add, subtract, multiply, divide, and exponentiate degrees, radians, and turns",
           {
             purrr::map(list(degree, radian, turn), \(.f) {
@@ -72,4 +76,32 @@ test_that("positive x: x@negative becomes negative", {
   expect_equal(degree(90)@negative@degree, degree(-270)@degree)
   expect_equal(degree(90 + 360)@negative@degree, degree(-270)@degree)
   expect_equal(degree(90 + 360 * 2)@negative@degree, degree(-270)@degree)
+})
+
+
+test_that("misc angle", {
+  expect_equal(degree("north")@degree, radian("north")@degree)
+  expect_equal(degree("north")@degree, turn("north")@degree)
+  expect_equal(degree("north")@degree, turn(turn(.25))@degree)
+  expect_identical(unbind(degree(1:2)), list(degree(1), degree(2)))
+  expect_identical(degree(1:2)[1], degree(1))
+  expect_identical(as.character(degree(2)), "2°")
+  expect_identical(as.character(radian(2)), "0.64π")
+  expect_identical(as.character(radian(pi)), "π")
+  expect_identical(as.character(radian(2 * pi)), "0π")
+  expect_identical(as.character(turn(.5)), ".50")
+  a <- degree(0)
+  a@degree <- 20
+  expect_identical(a@degree, 20)
+  a@radian <- pi
+  expect_identical(a@radian, pi)
+  a@turn <- 0.5
+  expect_identical(a@turn, 0.5)
+
+  expect_identical(convert(2,degree), degree(720))
+  expect_identical(convert(2,turn), turn(2))
+  expect_identical(convert(2,radian), radian(2 * 2 * pi))
+  expect_no_error(capture.output(print(a), file = nullfile()))
+ob_angle(.5)
+ob_angle@constructor
 })

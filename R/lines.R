@@ -66,10 +66,11 @@ ln_props <- list(
         rlang::inject(ob_style(!!!get_non_empty_list(pr)))
       },
       setter = function(self, value) {
-        ob_line(a = self@a,
-             b = self@b,
-             c = self@c ,
-             style = self@style + value)
+        s <- self@style + value
+        s_list <- get_non_empty_props(s)
+        s_list <- s_list[names(s_list) %in% ln_styles]
+        self <- rlang::inject(S7::set_props(self, !!!s_list))
+        self
       }),
     tibble = S7::new_property(getter = function(self) {
       d <- list(
@@ -164,6 +165,7 @@ ob_line <- S7::new_class(
                          linewidth = numeric(0),
                          linetype = numeric(0),
                          style = S7::class_missing,
+                         id = character(0),
                          ...) {
 
     l_style <- style + ob_style(
@@ -225,9 +227,7 @@ ob_line <- S7::new_class(
       d$c <- d$xintercept * -1
 
     } else {
-      d$a = 1
-      d$b = 0
-      d$c = 0
+      d <- tibble::tibble(a = 0, b = 1, c = 0)
     }
     non_empty_list <- get_non_empty_props(l_style)
     if (length(non_empty_list) > 0) {
@@ -244,7 +244,8 @@ ob_line <- S7::new_class(
                       lineend = d[["lineend"]]  %||% lineend,
                       linejoin = d[["linejoin"]] %||% linejoin,
                       linewidth = d[["linewidth"]] %||% linewidth,
-                      linetype = d[["linetype"]] %||% linetype)
+                      linetype = d[["linetype"]] %||% linetype,
+                   id = id)
 
   }
 )

@@ -71,7 +71,11 @@ bz_props <- list(
         rlang::inject(ob_style(!!!get_non_empty_list(pr)))
       },
       setter = function(self, value) {
-        ob_path(self@p, label = self@label, style = self@style + value)
+        s <- self@style + value
+        s_list <- get_non_empty_props(s)
+        s_list <- s_list[names(s_list) %in% bz_styles]
+        self <- rlang::inject(S7::set_props(self, !!!s_list))
+        self
       }
     ),
     tibble = S7::new_property(getter = function(self) {
@@ -179,13 +183,8 @@ bz_props <- list(
 #' @slot midpoint A function that selects 1 or more midpoints of the ob_bezier. The `position` argument can be between 0 and 1. Additional arguments are passed to `ob_point`.
 #' @slot aesthetics A list of information about the ob_bezier's aesthetic properties
 #' @examples
-#' library(ggplot2)
 #' control_points <- ob_point(c(0,1,2,4), c(0,4,0,0))
-#' ggplot() +
-#'   coord_equal() +
-#'   ob_bezier(control_points, color = "blue") +
-#'   ob_path(control_points, linetype = "dashed", linewidth = .5) +
-#'   control_points
+#' ob_bezier(control_points, color = "blue")
 ob_bezier <- S7::new_class(
   name = "ob_bezier",
   parent = has_style,
@@ -223,6 +222,7 @@ ob_bezier <- S7::new_class(
                          stroke_color = character(0),
                          stroke_width = numeric(0),
                          style = S7::class_missing,
+                         id = character(0),
                          ...) {
 
     if (S7::S7_inherits(p, ob_point)) p <- list(p)
@@ -300,7 +300,8 @@ bz_style <- p_style + style +
       resect_fins = d[["resect_fins"]] %||% resect_fins,
       resect_head = d[["resect_head"]] %||% resect_head,
       stroke_color = d[["stroke_color"]] %||% stroke_color,
-      stroke_width = d[["stroke_width"]] %||% stroke_width
+      stroke_width = d[["stroke_width"]] %||% stroke_width,
+      id = id
     )
   })
 
@@ -470,7 +471,7 @@ S7::method(as.geom, ob_bezier) <- function(x, ...) {
 S7::method(`[`, ob_bezier) <- function(x, y) {
   d <- x@tibble[y,]
   dl <- d |>
-    dplyr::select(-.data$x, -.data$y, -.data$group) |>
+    dplyr::select(-dplyr::any_of(c("x", "y", "group"))) |>
     unique() |>
     unbind()
   z <- rlang::inject(ob_bezier(p = x@p[y], !!!dl))

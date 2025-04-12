@@ -18,32 +18,6 @@ prop_vjust = S7::new_property(
   # }
 )
 
-prop_polar_just <- S7::new_property(S7::class_numeric, setter = function(self, value) {
-  if (length(value) > 0) {
-  multiplier <- 1.2
-  if (S7::S7_inherits(value, ob_point)) {
-    theta = value@theta
-    multiplier <- value@r
-  } else if (S7::S7_inherits(value, ob_angle)) {
-      theta <- value
-  } else {
-    theta <- degree(value)
-  }
-
-  self@vjust = polar2just(theta, multiplier, axis = "v")
-  self@hjust = polar2just(theta, multiplier, axis = "h")
-
-  }
-  self@polar_just = numeric(0)
-  self
-
-
-  })
-
-
-
-
-
 # ob_style----
 #' ob_style class
 #'
@@ -127,7 +101,28 @@ ob_style <- S7::new_class(
     n = S7::class_numeric,
     nudge_x = S7::class_numeric,
     nudge_y = S7::class_numeric,
-    polar_just = prop_polar_just,
+    polar_just = S7::new_property(
+      S7::class_numeric,
+      setter = function(self, value) {
+        if (length(value) > 0) {
+          multiplier <- 1.2
+          if (S7::S7_inherits(value, ob_point)) {
+            theta = value@theta
+            multiplier <- value@r
+          } else if (S7::S7_inherits(value, ob_angle)) {
+            theta <- value
+          } else {
+            theta <- degree(value)
+          }
+
+          self@vjust = polar2just(theta, multiplier, axis = "v")
+          self@hjust = polar2just(theta, multiplier, axis = "h")
+
+        }
+        self@polar_just = numeric(0)
+        self
+      }
+    ),
     resect = class_numeric_or_unit,
     resect_fins = class_numeric_or_unit,
     resect_head = class_numeric_or_unit,
@@ -282,9 +277,6 @@ ob_style <- S7::new_class(
       d <-  tibble::tibble(!!!non_empty_list)
     }
 
-
-
-
     S7::new_object(
       S7::S7_object(),
       alpha = alpha,
@@ -332,67 +324,67 @@ ob_style <- S7::new_class(
       vjust = vjust
     )
 
-
   })
 
-  S7::method(str, ob_style) <- function(object,
-    nest.lev = 0,
-    additional = FALSE,
-    omit = NULL) {
-
-    omit_names <- names(props(object))
-    omit <- omit %||% Filter(\(o_name) {length(S7::prop(object, name = o_name)) == 0}, omit_names)
+S7::method(str, ob_style) <- function(object,
+                                      nest.lev = 0,
+                                      additional = FALSE,
+                                      omit = NULL) {
+  omit_names <- names(props(object))
+  omit <- omit %||% Filter(\(o_name) {
+    length(S7::prop(object, name = o_name)) == 0
+  }, omit_names)
 
 
   str_properties(object,
-  omit = omit,
-  nest.lev = nest.lev,
-  additional = FALSE)
+                 omit = omit,
+                 nest.lev = nest.lev,
+                 additional = FALSE)
 
-  }
+}
 
-  S7::method(print, ob_style) <- function(x, ...) {
-    str(x, ...)
-    invisible(x)
-  }
+S7::method(print, ob_style) <- function(x, ...) {
+  str(x, ...)
+  invisible(x)
+}
 
-S7::method(`+`, list(ob_style, ob_style)) <- function(e1, e2) {
+S7::method(`+`, list(ob_style, ob_style)) <- function(e1, e2) { # nocov start
   pn <- S7::prop_names(e1)
   pnames <- pn[pn != "tibble"]
   for (p in pnames) {
-    if (length(S7::prop(e2,p)) > 0) {
-      S7::prop(e1,p) <- S7::prop(e2,p)
+    if (length(S7::prop(e2, p)) > 0) {
+      S7::prop(e1, p) <- S7::prop(e2, p)
     }
   }
   e1
-}
+} # nocov end
 
 
 
-S7::method(`+`, list(S7::class_missing, ob_style)) <- function(e1, e2) {
+S7::method(`+`, list(S7::class_missing, ob_style)) <- function(e1, e2) { # nocov start
   e2
-}
+} # nocov end
 
-S7::method(`+`, list(ob_style, S7::class_missing)) <- function(e1, e2) {
+S7::method(`+`, list(ob_style, S7::class_missing)) <- function(e1, e2) { # nocov start
   e1
-}
+} # nocov end
 
-S7::method(`+`, list(S7::class_any, ob_style)) <- function(e1, e2) {
+S7::method(`+`, list(S7::class_any, ob_style)) <- function(e1, e2) { # nocov start
   e2
-}
+} # nocov end
 
-S7::method(`+`, list(ob_style, S7::class_any)) <- function(e1, e2) {
+S7::method(`+`, list(ob_style, S7::class_any)) <- function(e1, e2) { # nocov start
   e1
-}
+} # nocov end
 
 S7::method(get_tibble, ob_style) <- function(x) {
   d <- get_non_empty_props(x)
 
-   tibble::tibble(!!!d)
+  tibble::tibble(!!!d)
 }
 
-S7::method(`[`, ob_style) <- function(x, y) {
-  d <- as.list(x@tibble[y,])
+S7::method(`[`, ob_style) <- function(x, i) {
+  d <- as.list(get_tibble(x)[i, ])
   rlang::inject(ob_style(!!!d))
 }
 
@@ -401,6 +393,7 @@ S7::method(as.geom, has_style) <- function(x, ...) {
   make_geom_helper(
     d = d,
     user_overrides = get_non_empty_props(ob_style(...)),
-    aesthetics = x@aesthetics)
+    aesthetics = x@aesthetics
+  )
 
 }

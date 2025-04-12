@@ -18,6 +18,7 @@ ob_line(
   linewidth = numeric(0),
   linetype = numeric(0),
   style = S7::class_missing,
+  id = character(0),
   ...
 )
 }

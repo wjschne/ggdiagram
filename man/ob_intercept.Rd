@@ -20,6 +20,7 @@ ob_intercept(
   x0 = numeric(0),
   y0 = numeric(0),
   style = S7::class_missing,
+  id = character(0),
   ...
 )
 }

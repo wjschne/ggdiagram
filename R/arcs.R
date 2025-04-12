@@ -206,7 +206,11 @@ arc_props <- list(
         rlang::inject(ob_style(!!!get_non_empty_list(pr)))
       },
       setter = function(self, value) {
-        ob_arc(center = self@center, radius = self@radius, start = self@start, end = self@end, label = self@label, style = self@style + value)
+        s <- self@style + value
+        s_list <- get_non_empty_props(s)
+        s_list <- s_list[names(s_list) %in% arc_styles]
+        self <- rlang::inject(S7::set_props(self, !!!s_list))
+        self
       }
     ),
     theta = S7::new_property(getter = function(self) {
@@ -453,6 +457,7 @@ ob_arc <- S7::new_class(
                          style = S7::class_missing,
                          x0 = numeric(0),
                          y0 = numeric(0),
+                         id = character(0),
                          ...) {
 
     if (!S7::S7_inherits(start, ob_angle)) {
@@ -555,15 +560,6 @@ ob_arc <- S7::new_class(
     center = set_props(center, x = d$x0, y = d$y0)
     center@style <- arc_style
 
-
-
-
-
-
-
-
-
-
     if (S7::S7_inherits(start, degree)) {
       start <- degree(d$start * 360)
     } else if (S7::S7_inherits(start, radian)) {
@@ -580,8 +576,6 @@ ob_arc <- S7::new_class(
       end <- turn(d$end)
     }
 
-
-
     if (S7::S7_inherits(label, ob_label)) {
       if (all(label@center@x == 0) && all(label@center@y == 0)) {
         m <- start + ((end - start) * label@position)
@@ -597,7 +591,7 @@ ob_arc <- S7::new_class(
     }
 
     S7::new_object(
-      centerpoint(center = center, label = label),
+      centerpoint(center = center, label = label, id = id),
       radius = d$radius,
       start = start,
       end = end,
@@ -723,6 +717,9 @@ S7::method(midpoint,list(ob_arc, S7::class_missing)) <- function(x,y, position =
 }
 
 S7::method(`[`, ob_arc) <- function(x, y) {
+  if (is.character(y)) {
+    y <- x@id == y
+  }
   d <- as.list(x@tibble[y,])
   z <- rlang::inject(ob_arc(!!!d))
   z@start <- x@start[y]

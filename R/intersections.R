@@ -98,11 +98,11 @@ S7::method(intersection, list(ob_segment, ob_segment)) <- function(x,y, ...) {
 }
 
 S7::method(intersection, list(ob_line, ob_segment)) <- function(x,y, ...) {
-  intersection(intersection(x, y@line), y, ...)
+  intersection(x, y@line, ...)
 }
 
 S7::method(intersection, list(ob_segment, ob_line)) <- function(x,y, ...) {
-  intersection(y, x, ...)
+  intersection(x@line, y, ...)
 }
 
 S7::method(intersection, list(ob_line, ob_circle)) <- function(x,y, ...) {

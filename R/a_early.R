@@ -1,4 +1,4 @@
-do_nothing <- function(x) {
+do_nothing <- function(x) { # nocov start
   # Helps devtools:check find packages
   if (FALSE) {
     p1 <- ggforce::geom_circle()
@@ -7,7 +7,7 @@ do_nothing <- function(x) {
     p4 <- bezier::bezier(t = .5, p = c(0, 0, 1, 1))
     p5 <- tinter::tinter("red")
   }
-}
+} # nocov end
 
 #' @export
 #' @importFrom S7 prop
@@ -147,7 +147,7 @@ class_arrowhead <- S7::new_class(
 
 
 ## has_style ----
-has_style <- S7::new_class(name = "has_style", abstract = TRUE)
+has_style <- S7::new_class(name = "has_style", properties = list(id = class_character), abstract = TRUE)
 S7::S4_register(has_style)
 S7::method(print, has_style) <- function(x, ...) {
   str(x, ...)
@@ -197,32 +197,6 @@ assign_data <- function(x,i, value) {
 
   as.list(dx)
 }
-
-# S7::method(`[<-`, has_style) <- function(x, i, value) {
-#   .fn <- S7::S7_class(x)
-#   d <- assign_data(x, i, value)
-#   l <- x@label
-#   if (length(l) > 0) {
-#     if (length(value@label) > 0) {
-#       l[i] <- value@label
-#     } else {
-#       l[i] <- ob_label(NA)
-#     }
-#     d$label <- l
-#   } else {
-#       if (length(value@label) > 0 && !is.na(value@label)) {
-#         l <- bind(rep(value@label, x@length))
-#         l@label <- rep(NA_character_, x@length)
-#         l@label[i] <- value@label
-#       }
-#     }
-#   new_x <- rlang::inject(.fn(!!!d))
-#   if (S7::prop_exists(new_x, "vertex_radius")) {
-#     new_x@vertex_radius <- x@vertex_radius
-#   }
-#   new_x
-# }
-
 
 shape <- S7::new_class(name = "shape",
                    parent = has_style,
@@ -373,7 +347,15 @@ S7::method(bind, S7::class_list) <- function(x, ...) {
   if (S7::prop_exists(x[[1]], "label") &&
       !S7::S7_inherits(x[[1]], ob_label)) {
     x_label <- purrr::map(x, \(xx) xx@label)
-    if (any(purrr::map_lgl(x_label, S7::S7_inherits, class = ob_label))) {
+    is_ob_label <- purrr::map_lgl(x_label, S7::S7_inherits, class = ob_label)
+    if (any(is_ob_label)) {
+      ol <- ob_label(NA)
+      x_label <- purrr::map(x_label, \(xx) {
+        if (!S7::S7_inherits(xx, ob_label)) {
+          xx <- ol
+        }
+        xx
+      })
       o@label <- bind(x_label)
 
     }
@@ -624,7 +606,8 @@ get_tibble_defaults_helper <- function(
     default_style,
     required_aes = c("x", "y")) {
 
-  d <- get_tibble(x)
+  d <- get_tibble(x) %>%
+    dplyr::select(-dplyr::any_of("id"))
 
   for (n in setdiff(colnames(d), required_aes)) {
     d_prop <- S7::prop(default_style, n)
@@ -683,7 +666,7 @@ replace_na <- function(x, y) {
 #' @keywords internal
 #' @noRd
 ob_array_helper <- function(x, k = 2, sep = 1, where = "east", anchor = "center", ...) {
-  if (x@length > 1) stop("The shape must start with an object of length 1.")
+  if (x@length > 1) {stop("The shape must start with an object of length 1.")}
 
   dots <- rlang::list2(...)
 
@@ -1002,7 +985,7 @@ make_geom_helper <- function(d = NULL,
 
 
 
-  d_all <- tidyr::nest(d_nested, .by = .data$data, .key = "unmappable")
+  d_all <- tidyr::nest(d_nested, .by = dplyr::all_of("data"), .key = "unmappable")
 
   # make geom for each row in d_nested
   purrr::pmap(d_all, \(data, unmappable) {
@@ -1268,4 +1251,20 @@ ggdiagram <- function(
     ) +
     ggplot2::coord_equal(clip = "off") +
     ggplot2::theme(...)
+}
+
+# data2shape ----
+#' Convert data.frame or tibble to shape
+#'
+#' @param data data.frame or tibble
+#' @param shape shape function
+#'
+#' @returns
+#' @export
+#'
+#' @examples
+#' data2shape(data.frame(x = 1, y = 2), ob_point)
+data2shape <- function(data, shape) {
+  l <- as.list(data)
+  rlang::inject(shape(!!!l))
 }

@@ -137,6 +137,32 @@ sg_props <- list(
       getter = function(self) {
         \(x = 0, y = 0) nudge(self, x, y)
       }
+    ),
+    set_label_x = S7::new_property(
+      S7::class_function,
+      getter = function(self) {
+        \(x = NULL) {
+          if (!S7::S7_inherits(self@label, ob_label)) stop("The ob_segment does not have a label.")
+          if (is.null(x)) {
+            x <- self[1]@label@center@x
+          }
+          self@label@center <- self@line@point_at_x(x)
+          self
+        }
+      }
+    ),
+    set_label_y = S7::new_property(
+      S7::class_function,
+      getter = function(self) {
+        \(y = NULL) {
+          if (!S7::S7_inherits(self@label, ob_label)) stop("The ob_segment does not have a label.")
+          if (is.null(y)) {
+            y <- self[1]@label@center@y
+          }
+          self@label@center <- self@line@point_at_y(y)
+          self
+        }
+      }
     )
   ),
   # info ----
@@ -241,21 +267,22 @@ ob_segment <- S7::new_class(
                          xend = S7::class_missing,
                          y = S7::class_missing,
                          yend = S7::class_missing,
+                         id = character(0),
                          ...) {
 
-    if ((length(x) > 0) || (length(xend) > 0)) {
+    if ((length(x) > 0) || (length(y) > 0)) {
       if (length(x) == 0) {
         x <- 0
       }
-      if (length(xend) == 0) {
-        xend <- 0
+      if (length(y) == 0) {
+        y <- 0
       }
       p1 <- ob_point(tibble::tibble(x = x, y = y))
     }
 
-    if ((length(y) > 0) || (length(yend) > 0)) {
-      if (length(y) == 0) {
-        y <- 0
+    if ((length(xend) > 0) || (length(yend) > 0)) {
+      if (length(xend) == 0) {
+        xend <- 0
       }
       if (length(yend) == 0) {
         yend <- 0
@@ -393,31 +420,42 @@ ob_segment <- S7::new_class(
       resect_fins = d[["resect_fins"]] %||% resect_fins,
       resect_head = d[["resect_head"]] %||% resect_head,
       stroke_color = d[["stroke_color"]] %||% stroke_color,
-      stroke_width = d[["stroke_width"]] %||% stroke_width
+      stroke_width = d[["stroke_width"]] %||% stroke_width,
+      id = id
     )
   }
 
 )
 
-S7::method(`+`, list(ob_segment, ob_point)) <- function(e1, e2) {
+# arithmetic ----
+purrr::walk(list(`+`, `-`, `*`, `/`, `^`), \(.f) {
+  S7::method(.f, list(ob_segment, ob_segment)) <- function(e1, e2) { # nocov start
+    e2@p1 <- .f(e1@p1, e2@p1)
+    e2@p2 <- .f(e1@p2, e2@p2)
+    e2@style <- e1@style + e2@style
+    e2
+  } # nocov end
+})
+
+S7::method(`+`, list(ob_segment, ob_point)) <- function(e1, e2) { # nocov start
   e1p1 <- e1@p1 + e2
   e1p2 <- e1@p2 + e2
   ob_segment(e1p1, e1p2, style = e1@style)
-}
+} # nocov end
 
-S7::method(`-`, list(ob_segment, ob_point)) <- function(e1, e2) {
+S7::method(`-`, list(ob_segment, ob_point)) <- function(e1, e2) { # nocov start
   e1p1 <- e1@p1 - e2
   e1p2 <- e1@p2 - e2
   ob_segment(e1p1, e1p2, style = e1@style)
-}
+} # nocov end
 
-S7::method(`+`, list(ob_point, ob_segment)) <- function(e1, e2) {
+S7::method(`+`, list(ob_point, ob_segment)) <- function(e1, e2) { # nocov start
   e2 + e1
-}
+} # nocov end
 
-S7::method(`-`, list(ob_point, ob_segment)) <- function(e1, e2) {
+S7::method(`-`, list(ob_point, ob_segment)) <- function(e1, e2) { # nocov start
   e2 - e1
-}
+} # nocov end
 
 S7::method(str, ob_segment) <- function(object,
                                  nest.lev = 0,
@@ -520,17 +558,17 @@ S7::method(nudge, list(ob_segment, ob_segment, S7::class_missing)) <- function(o
 }
 
 
-S7::method(`[`, ob_segment) <- function(x, y) {
-  d <- x@tibble[y,]
-  p1 <- x@p1[y]
-  p2 <- x@p2[y]
-  d <- as.list(d |> dplyr::select(-.data$x, -.data$y, -.data$xend, -.data$yend))
+S7::method(`[`, ob_segment) <- function(x, i) {
+  d <- x@tibble[i,]
+  p1 <- x@p1[i]
+  p2 <- x@p2[i]
+  d <- as.list(dplyr::select(d, dplyr::all_of(c("x", "y", "xend", "yend"))))
   z <- rlang::inject(ob_segment(p1 = p1, p2 = p2, !!!d))
-  z@label <- x@label[y]
+  z@label <- x@label[i]
   z
 }
 
 
 S7::method(`==`, list(ob_segment, ob_segment)) <- function(e1, e2) {
-  (e1@p1 == e2@p1) & (e1@p2 == e2@p2)
+  (e1@p1 == e2@p1) & (e1@p2 == e2@p2) # nocov
 }

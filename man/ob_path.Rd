@@ -27,6 +27,7 @@ ob_path(
   stroke_color = character(0),
   stroke_width = numeric(0),
   style = S7::class_missing,
+  id = character(0),
   ...
 )
 }

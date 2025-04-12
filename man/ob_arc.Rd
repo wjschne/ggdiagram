@@ -38,6 +38,7 @@ ob_arc(
   style = S7::class_missing,
   x0 = numeric(0),
   y0 = numeric(0),
+  id = character(0),
   ...
 )
 
@@ -73,6 +74,7 @@ ob_wedge(
   style = S7::class_missing,
   x0 = numeric(0),
   y0 = numeric(0),
+  id = character(0),
   ...
 )
 
@@ -108,6 +110,7 @@ ob_circular_segment(
   style = S7::class_missing,
   x0 = numeric(0),
   y0 = numeric(0),
+  id = character(0),
   ...
 )
 }

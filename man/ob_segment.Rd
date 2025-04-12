@@ -31,6 +31,7 @@ ob_segment(
   xend = S7::class_missing,
   y = S7::class_missing,
   yend = S7::class_missing,
+  id = character(0),
   ...
 )
 }

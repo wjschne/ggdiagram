@@ -9,9 +9,9 @@
 \usage{
 ob_angle(
   .data = numeric(0),
-  degree = integer(0),
-  radian = integer(0),
-  turn = integer(0)
+  degree = numeric(0),
+  radian = numeric(0),
+  turn = numeric(0)
 )
 
 degree(degree = numeric(0))

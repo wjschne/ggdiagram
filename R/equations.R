@@ -82,7 +82,8 @@ ob_latex <- S7::new_class(
     latex_packages = character(0),
     preamble = character(0),
     force_recompile = TRUE,
-    delete_files = TRUE) {
+    delete_files = TRUE,
+    id = character(0)) {
     if (!S7::S7_inherits(angle, ob_angle)) angle <- degree(angle)
 
     latex_color <- ""
@@ -234,7 +235,8 @@ ob_latex <- S7::new_class(
       force_recompile = force_recompile,
       delete_files = delete_files,
       image = image$image,
-      math_mode = math_mode
+      math_mode = math_mode,
+      id = id
     )
 
   })

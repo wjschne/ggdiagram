@@ -111,7 +111,11 @@ el_props <- list(
         rlang::inject(ob_style(!!!get_non_empty_list(pr)))
       },
       setter = function(self, value) {
-        ob_point(self@x, self@y, style = self@style + value)
+        s <- self@style + value
+        s_list <- get_non_empty_props(s)
+        s_list <- s_list[names(s_list) %in% el_styles]
+        self <- rlang::inject(S7::set_props(self, !!!s_list))
+        self
       }
     ),
     tibble = S7::new_property(getter = function(self) {
@@ -282,8 +286,7 @@ el_props <- list(
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object
 #' @examples
 #' # specify center point and semi-major axes
-#' p <- ob_point(0,0)
-#' ob_ellipse(p, a = 2, b = 3)
+#' ob_ellipse(center = ob_point(0,0), a = 2, b = 3)
 #' @export
 #' @return ob_ellipse object
 ob_ellipse <- S7::new_class(
@@ -311,6 +314,7 @@ ob_ellipse <- S7::new_class(
                          style = S7::class_missing,
                          x0 = numeric(0),
                          y0 = numeric(0),
+                         id = character(0),
                          ...) {
     if (!S7::S7_inherits(angle, ob_angle)) angle <- degree(angle)
 
@@ -374,7 +378,7 @@ ob_ellipse <- S7::new_class(
 
 
 
-     S7::new_object(centerpoint(center = center, label = label),
+     S7::new_object(centerpoint(center = center, label = label, id = id),
                  a = d$a,
                  b = d$b,
                  angle = radian(d$angle),
@@ -431,8 +435,11 @@ S7::method(get_tibble_defaults, ob_ellipse) <- function(x) {
 }
 
 S7::method(`[`, ob_ellipse) <- function(x, y) {
+  if (is.character(y)) {
+    y <- x@id == y
+  }
   d <- x@tibble[y,]
-  dl <- as.list(dplyr::select(d, -.data$x0, -.data$y0))
+  dl <- as.list(dplyr::select(d, -x0, -y0))
   z <- rlang::inject(ob_ellipse(center = ob_point(d$x0, d$y0), !!!dl))
   z@label <- x@label[y]
   if (!is.null(dl$angle)) {

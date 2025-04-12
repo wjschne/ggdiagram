@@ -189,13 +189,11 @@ rc_props <- list(
         rlang::inject(ob_style(!!!get_non_empty_list(pr)))
       },
       setter = function(self, value) {
-        ob_rectangle(
-          center = self@center,
-          width = self@width,
-          height = self@height,
-          vertex_radius = self@vertex_radius,
-          angle = self@angle,
-          style = self@style + value)
+        s <- self@style + value
+        s_list <- get_non_empty_props(s)
+        s_list <- s_list[names(s_list) %in% rc_styles]
+        self <- rlang::inject(S7::set_props(self, !!!s_list))
+        self
       }
     ),
     tibble = S7::new_property(getter = function(self) {
@@ -247,7 +245,7 @@ rc_props <- list(
           group = seq(self@length),
           theta = theta@radian
         ) |>
-          mutate(
+          dplyr::mutate(
             rtheta = theta - angle,
             side = find_side(rtheta, width, height),
             x = ifelse(side %in% c(1L, 3L),
@@ -265,7 +263,7 @@ rc_props <- list(
               tibble::as_tibble()
           })) |>
           tidyr::unnest(data) |>
-          mutate(x = x  + x0,
+          dplyr::mutate(x = x  + x0,
                  y = y  + y0) |>
           dplyr::select(group, x,y) |>
           tidyr::nest(.by = group) |>
@@ -363,9 +361,7 @@ rc_props <- list(
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object
 #' @inherit ob_style params
 #' @examples
-#' # specify center point
-#' p <- ob_point(0,0)
-#' ob_rectangle(p, width = 2, height = 2)
+#' ob_rectangle(center = ob_point(0,0), width = 2, height = 2)
 #' @export
 #' @return ob_rectangle object
 ob_rectangle <- S7::new_class(
@@ -400,6 +396,7 @@ ob_rectangle <- S7::new_class(
                          style = S7::class_missing,
                          x0 = numeric(0),
                          y0 = numeric(0),
+                         id = character(0),
                          ...) {
 
 
@@ -624,7 +621,8 @@ ob_rectangle <- S7::new_class(
       color = d[["color"]] %||% color ,
       fill = d[["fill"]]  %||% fill,
       linewidth = d[["linewidth"]]  %||% linewidth,
-      linetype = d[["linetype"]]  %||% linetype
+      linetype = d[["linetype"]]  %||% linetype,
+      id = id
     )
   }
 )
@@ -681,7 +679,7 @@ S7::method(get_tibble, ob_rectangle) <- function(x) {
     dplyr::mutate(
       p = purrr::map(p, \(xxx) {
         xxx@tibble |>
-          dplyr::select(.data$x,.data$y)})) |>
+          dplyr::select(dplyr::all_of(c("x", "y")))})) |>
     tidyr::unnest(p)
 }
 
@@ -701,12 +699,12 @@ S7::method(get_tibble_defaults, ob_rectangle) <- function(x) {
     required_aes = c(rc_aesthetics_list@required_aes, "radius"))
 }
 
-S7::method(`==`, list(ob_rectangle, ob_rectangle)) <- function(e1, e2) {
+S7::method(`==`, list(ob_rectangle, ob_rectangle)) <- function(e1, e2) { # nocov start
   (e1@center == e2@center) &&
     (e1@width == e2@width) &&
     (e1@height == e2@height) &&
     (e1@angle == e2@angle)
-}
+} # nocov end
 
 S7::method(`[`, ob_rectangle) <- function(x, y) {
 
@@ -725,7 +723,7 @@ S7::method(`[`, ob_rectangle) <- function(x, y) {
 
   d <- d[y,]
 
-  dl <- as.list(dplyr::select(d, -.data$x, -.data$y))
+  dl <- as.list(dplyr::select(d, -dplyr::any_of(c("x", "y"))))
   z <- rlang::inject(ob_rectangle(center = ob_point(d$x, d$y), !!!dl))
   z@label <- x@label[y]
   if (!is.null(dl$angle)) {

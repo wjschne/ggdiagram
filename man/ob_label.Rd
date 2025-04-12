@@ -33,6 +33,7 @@ ob_label(
   spacing = numeric(0),
   x = S7::class_missing,
   y = S7::class_missing,
+  id = character(0),
   ...
 )
 }

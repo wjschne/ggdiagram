@@ -71,10 +71,11 @@ path_props <- list(
         rlang::inject(ob_style(!!!get_non_empty_list(pr)))
       },
       setter = function(self, value) {
-        ob_path(p = self@p,
-                label = self@label,
-                style = self@style + value,
-                label_sloped = self@label_sloped)
+        s <- self@style + value
+        s_list <- get_non_empty_props(s)
+        s_list <- s_list[names(s_list) %in% path_styles]
+        self <- rlang::inject(S7::set_props(self, !!!s_list))
+        self
       }
     ),
     tibble = S7::new_property(getter = function(self) {
@@ -239,6 +240,7 @@ ob_path <- S7::new_class(
                          stroke_color = character(0),
                          stroke_width = numeric(0),
                          style = S7::class_missing,
+                         id = character(0),
                          ...) {
 
     if (S7::S7_inherits(p, ob_point)) p <- list(p)
@@ -330,7 +332,8 @@ ob_path <- S7::new_class(
                resect_fins = d[["resect_fins"]] %||% resect_fins,
                resect_head = d[["resect_head"]] %||% resect_head,
                stroke_color = d[["stroke_color"]] %||% stroke_color,
-               stroke_width = d[["stroke_width"]] %||% stroke_width
+               stroke_width = d[["stroke_width"]] %||% stroke_width,
+               id = id
     )
   })
 

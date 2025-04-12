@@ -58,10 +58,11 @@ cr_props <- list(
         rlang::inject(ob_style(!!!get_non_empty_list(pr)))
       },
       setter = function(self, value) {
-        ob_circle(center = self@center,
-                  radius = self@radius,
-                  label = self@label,
-                  style = self@style + value)
+        s <- self@style + value
+        s_list <- get_non_empty_props(s)
+        s_list <- s_list[names(s_list) %in% cr_styles]
+        self <- rlang::inject(S7::set_props(self, !!!s_list))
+        self
       }
     ),
     tibble = S7::new_property(getter = function(self) {
@@ -74,7 +75,8 @@ cr_props <- list(
         fill = self@fill,
         linewidth = self@linewidth,
         linetype = self@linetype,
-        n = self@n)
+        n = self@n,
+        id = self@id)
       get_non_empty_tibble(d)
     })
   ),
@@ -186,8 +188,7 @@ cr_props <- list(
 #' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggforce::geom_cirlce`.
 #' @examples
 #' # specify center point and radius
-#' p <- ob_point(0,0)
-#' ob_circle(p, radius = 6)
+#' ob_circle(center = ob_point(0,0), radius = 6)
 #' @export
 #' @return ob_circle object
 ob_circle <- S7::new_class(
@@ -211,6 +212,7 @@ ob_circle <- S7::new_class(
                          style = S7::class_missing,
                          x0 = numeric(0),
                          y0 = numeric(0),
+                         id = character(0),
                          ...) {
     c_style <- style +
       ob_style(
@@ -263,11 +265,7 @@ ob_circle <- S7::new_class(
       }
     }
 
-
-
-
-
-     S7::new_object(centerpoint(center = center, label = label),
+     S7::new_object(centerpoint(center = center, label = label, id = id),
                  radius = d$radius,
                  alpha = d[["alpha"]] %||% alpha,
                  color = d[["color"]] %||% color ,
@@ -309,16 +307,19 @@ S7::method(get_tibble_defaults, ob_circle) <- function(x) {
 }
 
 S7::method(`[`, ob_circle) <- function(x, y) {
+  if (is.character(y)) {
+    y <- x@id == y
+  }
   d <- x@tibble[y,]
-  dl <- as.list(dplyr::select(d, -.data$x0, -.data$y0))
+  dl <- as.list(dplyr::select(d, -x0, -y0))
   z <- rlang::inject(ob_circle(center = ob_point(d$x0, d$y0), !!!dl))
   z@label <- x@label[y]
   z
 }
 
-S7::method(`==`, list(ob_circle, ob_circle)) <- function(e1, e2) {
+S7::method(`==`, list(ob_circle, ob_circle)) <- function(e1, e2) { # nocov start
   (e1@center == e2@center) & (e1@radius == e1@radius)
-}
+} # nocov end
 
 # Place ----
 
@@ -348,10 +349,9 @@ S7::method(ob_array, ob_circle) <- function(x, k = 2, sep = 1, where = "east", a
 #' @export
 #'
 #' @examples
-#' p1 <- ob_point(1,1)
-#' p2 <- ob_point(2,4)
-#' p3 <- ob_point(5,3)
-#' circle_from_3_points(p1,p2, p3)
+#' circle_from_3_points(ob_point(1,1),
+#'                      ob_point(2,4),
+#'                      ob_point(5,3))
 circle_from_3_points <- function(p1, p2 = NULL, p3 = NULL, ...) {
   # from https://math.stackexchange.com/a/1460096
 
@@ -360,7 +360,7 @@ circle_from_3_points <- function(p1, p2 = NULL, p3 = NULL, ...) {
   } else if (p1@length == 1 && p2@length == 1 && p3@length == 1) {
     p <- bind(c(p1, p2, p3))
   } else {
-    stop("p1 must be of length 3 or p1, p2, and p2 must be of length 1")
+    stop("p1 must be of length 3 or p1, p2, and p2 must be of length 1.")
   }
 
   # Minor M11

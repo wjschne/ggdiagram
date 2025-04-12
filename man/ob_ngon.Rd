@@ -21,6 +21,7 @@ ob_ngon(
   style = S7::class_missing,
   x0 = numeric(0),
   y0 = numeric(0),
+  id = character(0),
   ...
 )
 }

@@ -22,8 +22,7 @@ ob_point object
 Get a circle from 3 points
 }
 \examples{
-p1 <- ob_point(1,1)
-p2 <- ob_point(2,4)
-p3 <- ob_point(5,3)
-circle_from_3_points(p1,p2, p3)
+circle_from_3_points(ob_point(1,1),
+                     ob_point(2,4),
+                     ob_point(5,3))
 }

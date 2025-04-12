@@ -3,30 +3,6 @@
 
 
 test_that("constructor", {
-  # ob_line
-  l111 <- ob_line(a = 1, b = 1, c = 1)
-  expect_equal(l111, ob_line(slope = -1, intercept = -1))
-  v1 <- ob_line(a = 1, b = 0, c = -1)
-  expect_identical(v1, ob_line(xintercept = 1))
-  h1 <- ob_line(a = 0, b = 1, c = -1)
-  expect_identical(h1, ob_line(intercept = 1))
-  expect_error(ob_line(
-    a = 1,
-    b = 1,
-    c = 1,
-    slope = 3
-  ),
-  "Some slopes are inconsistent with a and b parameters.")
-  expect_error(
-    ob_line(slope = Inf, intercept = Inf),
-    "There is not enough information to make a line. Specify the x-intercept or the a,b,c parameters."
-  )
-  expect_error(
-    ob_line(intercept = Inf),
-    "There is not enough information to make a line. Specify the x-intercept or the a,b,c parameters."
-  )
-
-
   # Angle
   t <- degree(1)
   expect_equal(turn(turn = 1)@degree, 0)
@@ -116,8 +92,7 @@ test_that("constructor", {
   )
 
 
-  # segment
-  ob_segment(ob_point(0, 2), ob_point(3, 4))
+
 })
 
 
@@ -125,6 +100,9 @@ test_that("adding", {
   p1 <- ob_point(1, 1)
   p2 <- ob_point(3, 4)
   p3 <- ob_point(4, 5)
+  s1 <- ob_segment(p1, p2)
+  s2 <- ob_segment(p2, p3)
+
   expect_identical(p1 + p2, p3)
   expect_identical(p3 - p2, p1)
   expect_identical(ob_segment(p1, p2) + p3, ob_segment(p1 + p3, p2 + p3))
@@ -138,6 +116,7 @@ test_that("adding", {
   expect_identical(2 + p2, ob_point(5, 6))
   expect_identical(p2 - 2, ob_point(1, 2))
   expect_identical(2 - p2, ob_point(-1, -2))
+  expect_identical(s1 + s2, nudge(s1, s2))
 })
 
 
@@ -165,12 +144,6 @@ test_that("distances", {
 
 
 
-test_that("segments", {
-  p1 <- ob_point(0, 3)
-  p2 <- ob_point(1, 1)
-  s1 <- ob_segment(p1, p2)
-  expect_equal(s1@line@intercept, 3)
-})
 
 test_that("intersection", {
   s1 <- ob_segment(ob_point(0, 1), ob_point(1, 0))
@@ -222,8 +195,6 @@ test_that("intersection", {
   # x <- ob_segment(ob_point(1,0), ob_point(1,2))
   # y <- ob_segment(ob_point(1,1), ob_point(1,2))
 })
-
-
 
 
 

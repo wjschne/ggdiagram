@@ -17,6 +17,7 @@ CBG
 CDB
 CGH
 CJ
+Codecov
 DG
 DL
 EFA
@@ -35,6 +36,7 @@ Roboto
 Sewall
 Superellipses
 TikZ
+TikZ's
 apothem
 arcus
 bezier
@@ -44,6 +46,7 @@ bmatrix
 bolding
 bzpath
 bézier
+callout
 cdot
 chorda
 circ

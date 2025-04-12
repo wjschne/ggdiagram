@@ -220,24 +220,40 @@ ob_label <- S7::new_class(
                          spacing = numeric(0),
                          x = S7::class_missing,
                          y = S7::class_missing,
+                         id = character(0),
                          ...) {
 
     # If center is missing, assign x and y
     if (missing(center)) {
-      if (missing(x)) x <- 0
-      if (missing(y)) y <- 0
-      center <- ob_point(x,y)
+      if (missing(x)) {
+        x <- 0
+      }
+      if (missing(y)) {
+        y <- 0
+      }
+      center <- ob_point(x, y)
     } else {
       if (!missing(x)) {
         center@x <- x
       }
-
       if (!missing(y)) {
         center@y <- y
       }
-
     }
 
+    is_center_segment <- FALSE
+    if (S7::S7_inherits(center, ob_segment)) {
+      alt_center = center
+      center <- midpoint(alt_center)
+      is_center_segment <- TRUE
+    }
+
+    is_center_arc <- FALSE
+    if (S7::S7_inherits(center, ob_arc)) {
+      alt_center <- center
+      center <- midpoint(alt_center)
+      is_center_arc <- TRUE
+    }
 
     if (length(label.padding) > 0) {
       label.padding <- class_margin(label.padding)
@@ -247,27 +263,41 @@ ob_label <- S7::new_class(
       label.margin <- class_margin(label.margin)
     }
 
-
-
     if (length(polar_just) > 0) {
-      if (S7::S7_inherits(polar_just, S7::S7_class(ob_angle)) || is.numeric(polar_just)) {
+      if (S7::S7_inherits(polar_just, ob_angle) ||
+          is.numeric(polar_just)) {
         polar_just <- ob_polar(theta = radian(polar_just), r = 1.2)
       }
       hjust <- polar2just(polar_just@theta, polar_just@r, axis = "h")
       vjust <- polar2just(polar_just@theta, polar_just@r, axis = "v")
       polar_just <- S7::class_missing
     }
+
+    # Default label is point location or arc degree
     if (missing(label)) {
+      if (is_center_arc) {
+        label = as.character(degree(alt_center@theta@degree))
+      } else {
+        label = paste0(
+          "(",
+          ifelse(
+            rlang::is_integerish(center@x),
+            center@x,
+            signs::signs(center@x, accuracy = .1)
+          ),
+          ",",
+          ifelse(
+            rlang::is_integerish(center@y),
+            center@y,
+            signs::signs(center@y, accuracy = .1)
+          ),
+          ")"
+        )
 
-      label = paste0(
-        "(",
-        ifelse(rlang::is_integerish(center@x), center@x, signs::signs(center@x, accuracy = .1)),
-        ",",
-        ifelse(rlang::is_integerish(center@y), center@y, signs::signs(center@y, accuracy = .1)),
-        ")")
-
-
+      }
     }
+
+
 
     d <- tibble::tibble(x = center@x, y = center@y, label = as.character(label))
 
@@ -278,8 +308,6 @@ ob_label <- S7::new_class(
         } else {
           angle <- degree(rep(angle, nrow(d)))
         }
-
-
       }
     }
 
@@ -311,21 +339,19 @@ ob_label <- S7::new_class(
         vjust = vjust
       )
 
-    if (S7::S7_inherits(center, ob_segment)) {
-      l_style@angle <- center@line@angle@degree
-      l_style@vjust = ifelse(length(l_style@vjust) == 0 || is.na(l_style@vjust), 0,l_style@vjust)
-      center <- midpoint(center)
+    if (is_center_segment) {
+      l_style@angle <- alt_center@line@angle@degree
+      l_style@vjust = ifelse(length(l_style@vjust) == 0 ||
+                               is.na(l_style@vjust),
+                             0,
+                             l_style@vjust)
     }
 
-    if (S7::S7_inherits(center, ob_arc)) {
-      if (missing(label)) {
-        label = as.character(degree(center@theta@degree))
-      }
-      a <- center
-      center <- midpoint(center)
-      l_style <- polar_just(l_style,
-                            (center - a@center)@theta + angle(turn = .5),
-                            multiplier = 1.15) + ob_style(...)
+    if (is_center_arc) {
+      l_style <- l_style +
+        ob_style(polar2just = ob_polar(
+          theta = (center - alt_center@center)@theta + turn(.5),
+          r = 1.15))
     }
 
     non_empty_list <- get_non_empty_props(l_style)
@@ -373,7 +399,8 @@ ob_label <- S7::new_class(
       vjust = d[["vjust"]] %||% vjust,
       plot_point = plot_point,
       position = position,
-      spacing = spacing
+      spacing = spacing,
+      id = id
     )
   }
 )
@@ -400,29 +427,29 @@ S7::method(as.geom, centerpoint) <- function(x, ...) {
   gc
 }
 
-S7::method(`+`, list(centerpoint, ob_point)) <- function(e1, e2) {
+S7::method(`+`, list(centerpoint, ob_point)) <- function(e1, e2) { # nocov start
   e1@center <- e1@center + e2
   if (S7::S7_inherits(e1@label, ob_label)) e1@label@center <- e1@label@center + e2
   e1
-}
+} # nocov end
 
-S7::method(`-`, list(centerpoint, ob_point)) <- function(e1, e2) {
+S7::method(`-`, list(centerpoint, ob_point)) <- function(e1, e2) { # nocov start
   e1@center <- e1@center - e2
   if (S7::S7_inherits(e1@label, ob_label)) e1@label@center <- e1@label@center - e2
   e1
-}
+} # nocov end
 
-S7::method(`+`, list(ob_point, centerpoint)) <- function(e1, e2) {
+S7::method(`+`, list(ob_point, centerpoint)) <- function(e1, e2) { # nocov start
   e2@center <- e1 + e2@center
   if (S7::S7_inherits(e2@label, ob_label)) e2@label@center <- e2@label@center + e1
   e2
-}
+} # nocov end
 
-S7::method(`-`, list(ob_point, centerpoint)) <- function(e1, e2) {
+S7::method(`-`, list(ob_point, centerpoint)) <- function(e1, e2) { # nocov start
   e2@center <- e1 - e2@center
   if (S7::S7_inherits(e2@label, ob_label)) e2@label@center <- e2@label@center - e1
   e2
-}
+} # nocov end
 
 S7::method(`%|-%`, list(centerpoint, ob_point)) <- function(e1,e2) {
   `%|-%`(e1@center, e2)
@@ -542,15 +569,6 @@ S7::method(`[`, ob_label) <- function(x, i) {
   rlang::inject(ob_label(!!!d))
 }
 
-# S7::method(`[<-`, ob_label) <- function(x, i, value) {
-#   dx <- x@tibble
-#   dv <- value@tibble
-#   dx[i, ] <- value@tibble
-#   d <- as.list(dx)
-#   rlang::inject(ob_label(!!!d))
-# }
-
-
 S7::method(unbind, ob_label) <- function(x) {
   purrr::map(seq(1, x@length), \(i) x[i])
 }
@@ -572,13 +590,13 @@ centerpoint_label <- function(label, center, d, shape_name = "shape", ...) {
       if (!(label@length == 1 || label@length == nrow(d))) {
         stop(
           paste0(
-            "label length is ",
+            "Label length is ",
             label@length,
             ". It must be either of length 1 or compatible with the length of the ",
             shape_name,
             " (length = ",
             nrow(d),
-            "."
+            ")."
           )
         )
       }
@@ -640,7 +658,7 @@ S7::method(place, list(ob_label, ob_label)) <- function(
     where = "right",
     sep = 1) {
   where <- degree(where)
-  p <- ob_polar(where@center, sep)
+  p <- ob_polar(where, sep)
   x@center@x <- from@center@x + p@x
   x@center@y <- from@center@y + p@y
   x

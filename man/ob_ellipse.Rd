@@ -21,6 +21,7 @@ ob_ellipse(
   style = S7::class_missing,
   x0 = numeric(0),
   y0 = numeric(0),
+  id = id,
   ...
 )
 }
@@ -83,6 +84,5 @@ Makes ellipses and superellipses
 
 \examples{
 # specify center point and semi-major axes
-p <- ob_point(0,0)
-ob_ellipse(p, a = 2, b = 3)
+ob_ellipse(center = ob_point(0,0), a = 2, b = 3)
 }

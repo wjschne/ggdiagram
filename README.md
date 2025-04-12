@@ -7,6 +7,7 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/ggdiagram.png)](https://CRAN.R-project.org/package=ggdiagram)
+[![Codecov test coverage](https://codecov.io/gh/wjschne/ggdiagram/graph/badge.svg)](https://app.codecov.io/gh/wjschne/ggdiagram)
 <!-- badges: end -->
 
 The ggdiagram package takes an object-oriented approach to making

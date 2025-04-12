@@ -54,3 +54,84 @@ osl <- tibble(type = c("x_o", "n_o", "x_l", "n_l"),
 
 ```
 
+
+```{r}
+library(dplyr)
+v_names <- c(visual_perc = "x1",
+             cubes = "x2", 
+             lozenges = "x3",
+             paragraph_comp = "x4",
+             sentence_comp = "x5",
+             word_meaning = "x6",
+             speeded_addition = "x7",
+             speeded_counting = "x8",
+             speeded_disc = "x9")
+HS.model <- '
+visual  =~ visual_perc + cubes + lozenges
+textual =~ paragraph_comp + sentence_comp + word_meaning
+speed   =~ speeded_addition + speeded_counting + speeded_disc
+'
+
+fit <- cfa(HS.model, data = HolzingerSwineford1939 %>% rename(all_of(v_names)))
+summary(fit, fit.measures = TRUE)
+
+d_pt <- standardizedsolution(fit) %>% 
+  tibble::as_tibble()
+
+
+ov_names <- lavNames(fit, "ov")
+lv_names <- lavNames(fit, "lv")
+ob_observed <- redefault(ob_ellipse, m1 = 15)
+ov <- ob_observed() %>% ob_array(
+  length(ov_names),
+  sep = .2,
+  id = ov_names,
+  label = ov_names %>% snakecase::to_title_case() %>% 
+    str_replace(" ", "<br>")
+)
+
+lv <- map(lv_names, \(x) {
+  indicators <- d_pt %>%
+    filter(op == "=~", lhs == x) %>%
+    pull(rhs)
+  
+  ob_circle(label = ob_label(str_to_title(x), id = x), 
+            id = x, 
+            radius = 2) %>%
+    place(ov[indicators]@bounding_box, 
+          where = "above", 4)
+}) %>%
+  bind()
+
+
+
+  
+loadings <- d_pt %>% 
+  filter(op == "=~") %>% 
+  select(from = lhs, to = rhs, label = est.std) %>% 
+  mutate(from = map(from, \(x) lv[x]),
+         to = map(to, \(x) ov[x]),
+         label = map(label, \(x) ob_label(round_probability(x), angle = 0, position = .47))) %>%
+  pmap(connect, resect = 2) %>% 
+  bind()
+
+# loadings@label@center <- loadings@line@point_at_y(loadings[1]@midpoint(.46)@y)
+
+sigma <- d_pt %>% 
+  filter(op == "~~") %>% 
+  filter(lhs %in% lv_names, lhs != rhs) %>%
+  mutate(x = map(lhs, \(x) lv[x]),
+         y = map(rhs, \(x) lv[x]),
+         label = map(est.std, \(x) ob_label(round_probability(x)))) %>% 
+  select(x, y, label) %>% 
+  pmap(ob_covariance) %>%
+  bind()
+ 
+
+ggdiagram() + 
+  lv + 
+  ov + 
+  loadings@set_label_y() +
+  sigma
+```
+

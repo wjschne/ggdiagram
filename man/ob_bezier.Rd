@@ -29,6 +29,7 @@ ob_bezier(
   stroke_color = character(0),
   stroke_width = numeric(0),
   style = S7::class_missing,
+  id = character(0),
   ...
 )
 }
@@ -107,11 +108,6 @@ If you wish to specify multiple bezier curves, you must supply a list of ob_poin
 }}
 
 \examples{
-library(ggplot2)
 control_points <- ob_point(c(0,1,2,4), c(0,4,0,0))
-ggplot() +
-  coord_equal() +
-  ob_bezier(control_points, color = "blue") +
-  ob_path(control_points, linetype = "dashed", linewidth = .5) +
-  control_points
+ob_bezier(control_points, color = "blue")
 }

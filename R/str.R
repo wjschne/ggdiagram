@@ -154,16 +154,11 @@ S7::method(str, class_margin) <- function(
 S7::method(str, class_aesthetics_list) <- function(
     object,
     nest.lev = 0,
-    additional = TRUE,
-    omit = "") {
-  cat(if (nest.lev > 0) " ")
-  cat(obj_desc(object))
-
-  cat("\n")
-
-  for (i in S7::S7_data(object)) {
-    print(i)
-  }
+    additional = FALSE,
+    omit = omit_props(object, include = c("geom","style", "mappable_bare", "mappable_identity", "not_mappable", "required_aes"))) {
+  str_properties(object,
+                 omit = omit,
+                 nest.lev = nest.lev)
 }
 
 S7::method(str, ob_shape_list) <- function(

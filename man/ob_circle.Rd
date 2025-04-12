@@ -17,6 +17,7 @@ ob_circle(
   style = S7::class_missing,
   x0 = numeric(0),
   y0 = numeric(0),
+  id = character(0),
   ...
 )
 }
@@ -83,6 +84,5 @@ ob_circle class
 
 \examples{
 # specify center point and radius
-p <- ob_point(0,0)
-ob_circle(p, radius = 6)
+ob_circle(center = ob_point(0,0), radius = 6)
 }

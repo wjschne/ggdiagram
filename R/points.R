@@ -160,14 +160,20 @@ ob_point <- S7::new_class(
                          size = numeric(0),
                          stroke = numeric(0),
                          style = S7::class_missing,
+                         id = character(0),
                          ...) {
 
     if ("data.frame" %in% class(x)) {
       return(rlang::inject(ob_point(!!!get_non_empty_list(x))))
     }
 
-    if ("matrix" %in% class(x) && ncol(x) == 2) {
-      return(ob_point(x[,1], x[,2]))
+    if ("matrix" %in% class(x)) {
+      if (ncol(x) == 2) {
+        return(ob_point(x[,1], x[,2]))
+      } else {
+        stop(paste0("The input matrix must have 2 columns, not ", ncol(x), "."))
+      }
+
     }
 
     p_style <- style +
@@ -199,7 +205,8 @@ ob_point <- S7::new_class(
                  fill = d[["fill"]]  %||% fill,
                  shape = d[["shape"]] %||% shape,
                  size = d[["size"]] %||% size,
-                 stroke = d[["stroke"]] %||% stroke)
+                 stroke = d[["stroke"]] %||% stroke,
+                 id = id)
   }
 )
 
@@ -221,10 +228,11 @@ ob_polar <- S7::new_class(
                          shape = numeric(0),
                          size = numeric(0),
                          stroke = numeric(0),
-                        style = S7::class_missing) {
+                        style = S7::class_missing,
+                        id = character(0)) {
     if (length(r) == 0) r <- 1
     if (length(theta) == 0) theta <- degree(0)
-    if (is.character(theta)) thata <- degree(theta)
+    if (is.character(theta)) theta <- degree(theta)
 
 
     p <- ob_point(x = cos(theta) * r,
@@ -235,7 +243,8 @@ ob_polar <- S7::new_class(
                shape = shape,
                size = size,
                stroke = stroke,
-               style = style
+               style = style,
+               id = id
               )
 
     S7::new_object(p)
@@ -318,13 +327,13 @@ S7::method(polar2just, ob_angle) <- function(x, multiplier = 1.2, axis = c("h", 
 }
 
 S7::method(`==`, list(ob_point, ob_point)) <- function(e1, e2) {
-  (e1@x == e2@x) & (e1@y == e2@y)
+  (e1@x == e2@x) & (e1@y == e2@y) # nocov
 }
 
 
 
 # arithmetic ----
-purrr::walk(list(`+`, `-`, `*`, `/`, `^`), \(.f) {
+purrr::walk(list(`+`, `-`, `*`, `/`, `^`), \(.f) { # nocov start
   S7::method(.f, list(ob_point, ob_point)) <- function(e1, e2) {
     x <- .f(e1@x, e2@x)
     y <- .f(e1@y, e2@y)
@@ -332,17 +341,18 @@ purrr::walk(list(`+`, `-`, `*`, `/`, `^`), \(.f) {
     e2@y <- y
     e2@style <- e1@style + e2@style
     e2
-  }
-  S7::method(.f, list(ob_point, S7::class_numeric)) <- function(e1, e2) {
+  } # nocov end
+
+  S7::method(.f, list(ob_point, S7::class_numeric)) <- function(e1, e2) { # nocov start
     e1@x <- .f(e1@x, e2)
     e1@y <- .f(e1@y, e2)
     e1
-  }
-  S7::method(.f, list(S7::class_numeric, ob_point)) <- function(e1, e2) {
+  } # nocov end
+  S7::method(.f, list(S7::class_numeric, ob_point)) <- function(e1, e2) { # nocov start
     e2@x <- .f(e1, e2@x)
     e2@y <- .f(e1, e2@y)
     e2
-  }
+  } # nocov end
 })
 
 S7::method(midpoint, list(ob_point, ob_point)) <- function(x,y, position = .5, ...) {
@@ -351,9 +361,9 @@ S7::method(midpoint, list(ob_point, ob_point)) <- function(x,y, position = .5, .
   rlang::inject(set_props(p, !!!s))
 }
 
-S7::method(`%*%`, list(ob_point, ob_point)) <- function(x, y) {
+S7::method(`%*%`, list(ob_point, ob_point)) <- function(x, y) { # nocov start
   x@xy[1, , drop = TRUE] %*% y@xy[1, , drop = TRUE]
-}
+} # nocov end
 
 # Perpendicular ----
 

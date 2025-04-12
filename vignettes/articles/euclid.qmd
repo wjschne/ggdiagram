@@ -45,7 +45,7 @@ baseplot <- ggdiagram(
 
 **NOTE** The text of this tutorial is an adaptation of a [TikZ tutorial of the same name](https://tikz.dev/tutorial-Euclid). I adapted the tutorial to see if ggdiagram could duplicate TikZ's capabilities.
 
-In this tutorial, we have a look at how ggdigram can be used to draw geometric constructions.
+In this tutorial, we have a look at how ggdiagram can be used to draw geometric constructions.
 
 Euclid is currently quite busy writing his new book series, whose working title is *Elements* (Euclid is not quite sure whether this title will convey the message of the series to future generations correctly, but he intends to change the title before it goes to the publisher). Up to now, he wrote down his text and graphics on papyrus, but his publisher suddenly insists that he must submit in electronic form. Euclid tries to argue with the publisher that electronics will only be discovered thousands of years later, but the publisher informs him that the use of papyrus is no longer cutting edge technology, and Euclid will just have to keep up with modern tools.
 
@@ -144,7 +144,7 @@ black <- "#000000"
 
 ## The Line *AB*
 
-The first part of the picture that Euclid wishes to draw is the line *AB*. That is easy enough, something like `ob_segment(x = 0, xend = 0, y = 2, yend = 1)` might do. However, Euclid does not wish to reference the two points *A* and *B* as raw numbers. Rather, he wishes to just write `A` and `B`. Indeed, the whole point of his book is that the points *A* and *B* can be arbirary and all other points (like *C*) are constructed in terms of their positions. It would not do if Euclid were to write down the coordinates of *C* explicitly. 
+The first part of the picture that Euclid wishes to draw is the line *AB*. That is easy enough, something like `ob_segment(x = 0, xend = 0, y = 2, yend = 1)` might do. However, Euclid does not wish to reference the two points *A* and *B* as raw numbers. Rather, he wishes to just write `A` and `B`. Indeed, the whole point of his book is that the points *A* and *B* can be arbitrary and all other points (like *C*) are constructed in terms of their positions. It would not do if Euclid were to write down the coordinates of *C* explicitly. 
  explicitly.
 
 So, Euclid starts with defining two coordinates using the `ob_point` function:
@@ -194,7 +194,7 @@ It turns out that the R allows him to do exactly this kind of computation. We ca
 
 The new code for the coordinates is the following:
 
-```{r}
+```{r vablabel}
 rvector <- function(scalar = 1) {
   scalar * ob_point(
     runif(n = 1, min = -.1, max = .1),
@@ -225,20 +225,20 @@ $$
 
 Euclid could write the following:
 
-```{r}
+```{r dab}
 sqrt((B@x - A@x) ^ 2 + (B@y - A@y) ^ 2)
 ```
 
 However, objects created with the `ob_segment` function have a distance slot that performs this calculation automatically:
 
-```{r}
+```{r abdistance}
 AB@distance
 ```
 
 Thus, circles `D` and `E` can be created like so:
 
 
-```{r}
+```{r circlesDE}
 D <- ob_circle(center = A, radius = AB@distance)
 E <- ob_circle(center = B, radius = AB@distance)
 
@@ -257,7 +257,7 @@ ggdiagram(font_size = 16) +
 Euclid can now draw the line and the circles. The final problem is to compute the intersection of the two circles. This computation is a bit involved if you want to do it "by hand." Fortunately, the `intersection` function allows us to compute the intersection of two circles. In this case, there are two points of intersection, *C* and *C'*. For point *C*, we will take the first of the two intersection points between circles *D* and *E*.
 
 
-```{r}
+```{r intersectDE}
 intersect_DE <- intersection(D, E)
 C <- intersect_DE[1]
 
@@ -279,7 +279,7 @@ ggdiagram(font_size = 16) +
 
 Although Euclid does not need it for the current picture, it is just a few steps to compute the bisection of the line *AB*:
 
-```{r}
+```{r cprime}
 Cprime <- intersect_DE[2]
 CCprime <- ob_segment(intersect_DE, color = red)
 pF <- intersection(AB, CCprime, color = red)
@@ -304,7 +304,7 @@ ggdiagram(font_size = 16) +
 Back to Euclid’s code. He uses the background layer for drawing the triangle behind everything at the end.
 
 
-```{r}
+```{r fig-completeab}
 rvector <- function(scalar = 1) {
   scalar * ob_point(
     runif(n = 1, min = -.1, max = .1),
@@ -330,14 +330,14 @@ ggdiagram(font_size = 16) +
   {E <- ob_circle(B, radius = AB@distance)} + 
   D@point_at((A - B)@theta)@label(
     label = "D", 
-    polar_just = A - B) + 
+    polar_just = (A - B)@theta) +  
   E@point_at((B - A)@theta)@label(
     label = "E", 
-    polar_just = B - A) +
+    polar_just = (B - A)@theta) +
   {C <- intersection(D, E)[1]} +
   ob_label("C", C, 
            color = red, 
-           polar_just = C - AB@midpoint(), 
+           polar_just = (C - AB@midpoint())@theta, 
            label.margin = margin(2, 2, 2, 2), 
            label.padding = margin()) + 
   ob_polygon(bind(c(A, B, C)), 

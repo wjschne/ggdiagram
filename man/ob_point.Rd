@@ -15,6 +15,7 @@ ob_point(
   size = numeric(0),
   stroke = numeric(0),
   style = S7::class_missing,
+  id = character(0),
   ...
 )
 
@@ -27,7 +28,8 @@ ob_polar(
   shape = numeric(0),
   size = numeric(0),
   stroke = numeric(0),
-  style = S7::class_missing
+  style = S7::class_missing,
+  id = character(0)
 )
 }
 \arguments{

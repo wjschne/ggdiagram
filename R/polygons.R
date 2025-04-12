@@ -192,6 +192,7 @@ ob_polygon <- S7::new_class(
                          linewidth = numeric(0),
                          linetype = numeric(0),
                          style = S7::class_missing,
+                         id = character(0),
                          ...) {
 
 
@@ -263,7 +264,8 @@ ob_polygon <- S7::new_class(
                color = d[["color"]] %||% color,
                fill = d[["fill"]] %||% fill,
                linewidth = d[["linewidth"]] %||% linewidth,
-               linetype = d[["linetype"]] %||% linetype
+               linetype = d[["linetype"]] %||% linetype,
+               id = id
     )
 
   })
@@ -426,6 +428,7 @@ ob_intercept <- S7::new_class(
                          x0 = numeric(0),
                          y0 = numeric(0),
                          style = S7::class_missing,
+                         id = character(0),
                          ...) {
 
     if ((length(x0) > 0) || (length(y0) > 0)) {
@@ -490,7 +493,8 @@ ob_intercept <- S7::new_class(
                color = d[["color"]] %||% color,
                fill = d[["fill"]] %||% fill,
                linewidth = d[["linewidth"]] %||% linewidth,
-               linetype = d[["linetype"]] %||% linetype
+               linetype = d[["linetype"]] %||% linetype,
+               id = id
     )
   })
 
@@ -763,6 +767,7 @@ ob_ngon <- S7::new_class(
                          style = S7::class_missing,
                          x0 = numeric(0),
                          y0 = numeric(0),
+                         id = character(0),
                          ...) {
     if (!S7::S7_inherits(angle, ob_angle)) angle <- degree(angle)
 
@@ -843,7 +848,8 @@ ob_ngon <- S7::new_class(
                color = d[["color"]] %||% color,
                fill = d[["fill"]] %||% fill,
                linewidth = d[["linewidth"]] %||% linewidth,
-               linetype = d[["linetype"]] %||% linetype
+               linetype = d[["linetype"]] %||% linetype,
+               id = id
     )
   })
 
@@ -888,7 +894,7 @@ S7::method(str, ob_ngon) <- function(
 
 S7::method(`[`, ob_ngon) <- function(x, y) {
   d <- x@tibble[y,]
-  dl <- as.list(dplyr::select(d, -.data$x0, -.data$y0))
+  dl <- as.list(dplyr::select(d, -x0, -y0))
   z <- rlang::inject(ob_ngon(center = ob_point(d$x0, d$y0), !!!dl))
   z@label <- x@label[y]
   z
@@ -1080,6 +1086,7 @@ ob_reuleaux <- S7::new_class(
                             linewidth = numeric(0),
                             linetype = numeric(0),
                             style = S7::class_missing,
+                            id = character(0),
                             ...) {
     if (!S7::S7_inherits(angle, ob_angle)) angle <- degree(angle)
     n <- as.integer(n)
@@ -1139,7 +1146,8 @@ ob_reuleaux <- S7::new_class(
                color = d[["color"]] %||% color,
                fill = d[["fill"]] %||% fill,
                linewidth = d[["linewidth"]] %||% linewidth,
-               linetype = d[["linetype"]] %||% linetype
+               linetype = d[["linetype"]] %||% linetype,
+               id = id
     )
 
 
@@ -1212,7 +1220,7 @@ S7::method(as.geom, ob_reuleaux) <- function(x, ...) {
 
 S7::method(`[`, ob_reuleaux) <- function(x, y) {
   d <- x@tibble[y,]
-  dl <- as.list(dplyr::select(d, -.data$x0, -.data$y0))
+  dl <- as.list(dplyr::select(d, -x0, -y0))
   z <- rlang::inject(ob_reuleaux(center = ob_point(d$x0, d$y0), !!!dl))
   z@label <- x@label[y]
   z

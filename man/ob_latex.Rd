@@ -23,7 +23,8 @@ ob_latex(
   latex_packages = character(0),
   preamble = character(0),
   force_recompile = TRUE,
-  delete_files = TRUE
+  delete_files = TRUE,
+  id = character(0)
 )
 }
 \arguments{

@@ -27,6 +27,7 @@ ob_rectangle(
   style = S7::class_missing,
   x0 = numeric(0),
   y0 = numeric(0),
+  id = character(0),
   ...
 )
 }
@@ -84,7 +85,5 @@ ob_rectangle object
 ob_rectangle class
 }
 \examples{
-# specify center point
-p <- ob_point(0,0)
-ob_rectangle(p, width = 2, height = 2)
+ob_rectangle(center = ob_point(0,0), width = 2, height = 2)
 }
