@@ -9,6 +9,7 @@ knitr:
     collapse: true
     comment: '#>'
     dev: "ragg_png"
+    cache: true
 ---
 
 ```{r}
@@ -67,7 +68,7 @@ In @fig-theta, we can locate points on a circle's circumference at any angle. Th
 #| label: fig-theta
 #| fig-cap: The center of a circle and a point at an angle.
 theta <- degree(c(0, 53, 90, 138, 180, 241, 270, 338))
-
+x <- ob_circle()
 ggdiagram(font_size = 18) +
   x +
   x@center +
@@ -120,40 +121,91 @@ s2@linewidth <- 3
 bp + s2
 ```
 
-The `as.geom` function passes style arguments to the `ggarrow::geom_arrow_segment` function without modifying the segment's style property:
 
-```{r}
-#| label: fig-asgeom
-#| fig-cap: Make s1 appear red temporarily using `as.geom` function
-bp +
-  as.geom(s1, color = "red4")
-```
-
-As an alternative, the `geom` property is a function that calls `as.geom`. 
-
-```{r}
-#| label: fig-geom
-#| fig-cap: Make s1 appear red temporarily via the `geom` property
-bp + s1@geom(color = "blue3")
-```
-
-To verify that s1 has not changed its color:
-
-```{r}
-#| label: fig-verify
-#| fig-cap: The `s1` object has not changed
-bp + s1
-```
-
-A "pipe-friendly" way to modify any ggdiagram object is to use S7's `set_props` function, which has been re-exported to ggdiagram for the sake of convenience. Like `as.geom`, this function does not modify `s1`, but unlike `as.geom`, `set_props` can be used to save a new object with the specified modifications by assigning it to a new variable. That is, `as.geom` creates a ggplot2 geom, whereas `set_props` will create a modified a ggdiagram object (or any other S7 class).
+A "pipe-friendly" way to modify any ggdiagram object is to use S7's `set_props` function, which has been re-exported to ggdiagram for the sake of convenience. 
 
 ```{r}
 #| label: fig-setprops
 #| fig-cap: Setting styles in a ggplot pipeline.
 bp +
-  s1 |> set_props(color = "red")
+  s1 |> 
+  set_props(color = "red", 
+            linetype = "dashed")
 ```
 
+
+# Making Styles Stick with `redefault`
+
+To style an object the same way repeatedly, use the `redefault` function to create an alternate version of an `ob_*` function with the default arguments set differently. The `redefault` function is like [`purrr::partial`](https://purrr.tidyverse.org/reference/partial.html) except that preset arguments can still be modified. It can be used on any R function.
+
+```{r}
+#| label: fig-squircle
+#| fig-cap: The `redefault` function creates a copy of a function with new defaults
+#| fig-width: 5.5
+#| fig-height: 2.5
+ob_squircle <- redefault(
+  .f = ob_ellipse, 
+  m1 = 4, 
+  color = NA, 
+  fill = "black")
+
+ggdiagram() + 
+  ob_squircle() + 
+  ob_squircle(x = 3, fill = "dodgerblue")
+```
+
+
+# Apply Styles Across Shapes with `ob_style`
+
+Suppose you want to create a list of styles that you want to pass to multiple objects to create a cohesive style. The `ob_style` function can contain styles that can be passed along to other functions.
+
+```{r}
+#| label: fig-applystyles
+#| fig-cap: The `ob_style` function creates a list of styles that can be passed to other ggdiagram functions
+#| fig-width: 7
+#| fig-height: 5
+style_shape <- ob_style(
+  color = NA,
+  fill = "dodgerblue4",
+  family = "Georgia")
+
+my_label <- redefault(
+  ob_label,
+  color = "white",
+  fill = NA,
+  family = "Georgia",
+  size = 18
+)
+
+ggdiagram() +
+  ob_circle(
+    x = -3,
+    style = style_shape, 
+    label = my_label("Circle")) +
+  ob_rectangle(
+    width = 3,
+    style = style_shape,
+    label = my_label("Rectangle")
+  )  +
+  ob_ellipse(
+    x = 3,
+    b = 1.5,
+    style = style_shape,
+    label = my_label("Ellipse")
+  ) + 
+  ob_ngon(
+    y = 2, 
+    n = 6, 
+    angle = degree(90), 
+    style = style_shape,
+    label = my_label("Hexagon")) + 
+  ob_ngon(
+    y = -2, 
+    n = 3, 
+    angle = degree(90), 
+    style = style_shape,
+    label = my_label("Triangle", nudge_y = -.25))
+```
 
 # Placing Objects in Relation to Other Objects
 
@@ -162,7 +214,7 @@ The `place` function will place an object a specified distance and direction fro
 ```{r}
 #| label: fig-place
 x <- ob_circle()
-y <- ob_rectangle() %>% 
+y <- ob_rectangle() |>
   place(from = x, where = "below", sep = .5)
 
 ggdiagram() +
@@ -179,46 +231,18 @@ The `where` parameter can be specified with
 - Radians using the `radian` function (e.g., `radian(pi)`)
 - Turns using the `turn` function (e.g., `turn(1/5)`)
 
-# Object Arrays
+# Object Arrays with `ob_array`
 
-Sometimes it is useful to make arrays of objects. The `ob_array` function makes `k` copies of an object and arranges them along a direct and separates them by a specified amount. By default, the array is arranged horizontally, centered on the original object, separated by 1 unit. Here we make an array of 5 circles.
+Sometimes it is useful to make arrays of objects. The `ob_array` function makes `k` copies of an object,arranges them in a line in a specified direction, and separates the objects by a specified amount. By default, the array is arranged horizontally, centered on the original object, separated by 1 unit. Here we make an array of 5 circles.
 
 ```{r}
 #| label: fig-array1
-#| fig-cap: "A horizontal array of 5 unit circles, separated by 1 unit"
+#| fig-cap: "An array of 5 unit circles, separated by 0.5, pointing southeast"
+
 ggdiagram(font_size = 18) +
-  ob_circle() %>% 
-  ob_array(k = 5, label = 1:5) 
+  ob_circle() |> 
+  ob_array(k = 5, label = 1:5, where = "southeast", sep = .5) 
 ```
-
-Arrays can go in any direction:
-
-```{r}
-#| label: fig-array2
-#| fig-cap: "An array of 6 rectangles, separated by .2 units along an angle of negative 45 degrees"
-ggdiagram(font_size = 18) +
-  ob_rectangle() %>% 
-  ob_array(k = 6, 
-           sep = .2, 
-           where = degree(-45),
-           label = 1:6) 
-```
-
-Arrays can be anchored at any point on the rectangle that contains the array. For example, here we create a vertical array of 3 ellipses anchored at the bottom of the bounding box that contains the array.
-
-```{r}
-#| label: fig-array3
-#| fig-cap: "A vertical array of 3 ellipses anchored at the bottom"
-ggdiagram(font_size = 18, theme_function = ggplot2::theme_minimal) +
-  ob_ellipse(a = 2) %>% 
-  ob_array(k = 3, 
-           sep = .2, 
-           where = "north",
-           label = 1:3,
-           anchor = "south") +
-  ob_point()
-```
-
 
 # Building Plots Sequentially in a ggplot2 Pipeline
 
@@ -239,13 +263,19 @@ Often we want to build a diagram in which newer objects depend on previously spe
 
 # Loadings
 loadings <- c(.86, .79, .90)
+error_variances <- sqrt(1 - loadings ^ 2)
 
 ggdiagram(font_size = 16) +
   # Latent variable
-  {A <- ob_circle(radius = 2, label = ob_label("A", size = 96))} +
+  {A <- ob_circle(radius = 2, 
+                  label = ob_label("A", 
+                                   size = 96, 
+                                   nudge_y = -.15))} +
   # Observed variables (array of 3 superellipses below A)
-  {A_3 <- ob_ellipse(m1 = 20) %>%
-    place(from = A, where = "below", sep = 3) %>%
+  {A_3 <- ob_ellipse(m1 = 20) |>
+    place(from = A, 
+          where = "below", 
+          sep = 3) |>
     ob_array(
       k = 3,
       sep = .5,
@@ -255,20 +285,19 @@ ggdiagram(font_size = 16) +
         vjust = .6
       )
     )} +
-  # Observed variable loadings
+  # Observed variable loadings with labels set to the same y coordinate
   connect(
     from = A,
     to = A_3,
     resect = 2,
-    label = ob_label(round_probability(loadings), 
-                     angle = 0)
-  ) +
+    label = ob_label(label = round_probability(loadings), 
+                     angle = 0)) +
   # Error variances
   ob_variance(
     A_3,
     where = "south",
-    bend = -15,
-    label = ob_label(round_probability(sqrt(1 - loadings ^ 2)))
-  ) 
+    looseness = 1.2,
+    bend = -20,
+    label = ob_label(label = round_probability(error_variances))
+  )
 ```
-

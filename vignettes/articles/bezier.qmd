@@ -51,7 +51,6 @@ To avoid repetitive code, we set defaults and make a base plot:
 my_font <- "Roboto Condensed"
 my_font_size <- 20
 my_point_size <- 2
-my_arrowhead <- arrowheadr::arrow_head_deltoid(2.1)
 
 # my_colors <- viridis::viridis(2, begin = .25, end = .5)
 my_colors <- c("#3B528B", "#21908C")
@@ -151,5 +150,54 @@ bp +
   bind(control_point_list)
 ```
 
+# Curved Connectors
 
+Drawing connectors between shapes is usually with straight line segments. However, a bezier curve with endpoints at the center of the objects can be drawn with a control point from the first object (`from_offset`) and/or a control point from second object (`to_offset`). These control points are relative to the endpoints, so `from_offset = ob_point(1, 0)` would be one unit to the right of the `from` endpoint, and `to_offset = ob_polar("north", 1)` would be one unit above the `to` endpoint.
+
+
+```{r}
+#| label: fig-connect
+#| fig-cap: Connecting shapes with offset control points creates bezier curves instead of straight lines.
+ggdiagram(font_family = "Roboto Condensed", 
+          font_size = 18) + 
+  {A <- ob_rectangle(width = sqrt(pi), 
+                     height = sqrt(pi))} + 
+  {B <- ob_ngon(n = 8, 
+                color = "black", 
+                fill = NA, 
+                radius = 1.1) %>% 
+    place(A, "southeast")} +
+  {C <- ob_circle() %>% 
+    place(B, "southeast")} + 
+  connect(A, B, resect = 2) +
+  connect(B, C, resect = 2) +
+  {AC <- connect(A,
+                 C, 
+                 from_offset = ob_polar("south", 3), 
+                 to_offset = ob_polar("west", 3),
+                 resect = 2)} 
+```
+
+Of course, if you want the endpoints to be placed on some part of the shapes other than their centers, you can specify them directly. Here we specify that the curve start the south anchor point of a rectangle and end at the southwest point of a circle.
+
+```{r}
+#| label: fig-connect2
+#| fig-cap: Connecting points with offset control points
+
+ggdiagram(font_family = "Roboto Condensed", 
+          font_size = 18) + 
+  {A <- ob_ngon(n = 3, 
+                radius = sqrt(pi * 2 / sqrt(3)), 
+                angle = 90, 
+                fill = NA, 
+                color = "black")} + 
+  {B <- ob_circle(x = 5, 
+                  y = -2, 
+                  radius = pi * .5)} + 
+  {AB <- connect(A@south,
+                 B@southwest, 
+                 from_offset = ob_polar("south", 2), 
+                 to_offset = ob_polar("southwest", 2),
+                 resect = 2)}
+```
 

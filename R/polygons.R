@@ -75,7 +75,7 @@ ob_polygon_props <- list(
 
     }),
     center = S7::new_property(ob_point, getter = function(self) {
-      d <- self@tibble
+      d <- get_tibble(self)
       gr <- dplyr::intersect(colnames(d), c("group", pt_styles))
       d <- dplyr::summarise(d, .by = dplyr::any_of(gr),
                        x = mean(x, na.rm = TRUE),
@@ -130,9 +130,7 @@ ob_polygon_props <- list(
         linetype = self@linetype,
         vertex_radius = self@vertex_radius
       )
-      get_non_empty_tibble(d) |>
-        dplyr::mutate(p = purrr::map(p, \(x) {x@tibble |> dplyr::select(x,y)})) |>
-        tidyr::unnest(p)
+      get_non_empty_tibble(d)
 
     })
   ),
@@ -195,7 +193,7 @@ ob_polygon <- S7::new_class(
                          id = character(0),
                          ...) {
 
-
+    id <- as.character(id)
 
     ob_polygon_style <- style +
       ob_style(
@@ -203,7 +201,8 @@ ob_polygon <- S7::new_class(
         color = color,
         fill = fill,
         linewidth = linewidth,
-        linetype = linetype
+        linetype = linetype,
+        id = id
       ) +
       ob_style(...)
 
@@ -265,7 +264,7 @@ ob_polygon <- S7::new_class(
                fill = d[["fill"]] %||% fill,
                linewidth = d[["linewidth"]] %||% linewidth,
                linetype = d[["linetype"]] %||% linetype,
-               id = id
+               id = d[["id"]] %||% id
     )
 
   })
@@ -295,13 +294,10 @@ S7::method(str, ob_polygon) <- function(
 
 }
 
-S7::method(print, ob_polygon) <- function(x, ...) {
-  str(x, ...)
-  invisible(x)
-}
-
 S7::method(get_tibble, ob_polygon) <- function(x) {
-  d <- x@tibble
+  d <- x@tibble |>
+    dplyr::mutate(p = purrr::map(p, \(x) {x@tibble |> dplyr::select(x,y)})) |>
+    tidyr::unnest(p)
   if ("vertex_radius" %in% colnames(d)) {
     d <- dplyr::rename(x@tibble, radius = vertex_radius)
   }
@@ -318,45 +314,305 @@ S7::method(as.geom, ob_polygon) <- function(x, ...) {
   gp
 }
 
-
-S7::method(`[`, ob_polygon) <- function(x, y) {
-  d <- x@tibble[y,]
-  dl <- d |>
-    dplyr::select(-.data$x, -.data$y, -.data$group) |>
-    unique() |>
-    unbind()
-  z <- rlang::inject(ob_polygon(p = x@p[y], !!!dl))
-  z@label <- x@label[y]
-  z
-}
-
-S7::method(connect, list(ob_polygon, ob_polygon)) <- function(from,to, ...) {
+S7::method(connect, list(ob_polygon, ob_polygon)) <- function(
+    from,
+    to,
+    label = character(0),
+    arc_bend = NULL,
+    from_offset = NULL,
+    to_offset = NULL,
+    alpha = numeric(0),
+    arrow_head = the$arrow_head,
+    arrow_fins = list(),
+    arrowhead_length = 7,
+    length_head = numeric(0),
+    length_fins = numeric(0),
+    color = character(0),
+    lineend = numeric(0),
+    linejoin = numeric(0),
+    linewidth = numeric(0),
+    linewidth_fins = numeric(0),
+    linewidth_head = numeric(0),
+    linetype = numeric(0),
+    resect = numeric(0),
+    resect_fins = numeric(0),
+    resect_head = numeric(0),
+    stroke_color = character(0),
+    stroke_width = numeric(0),
+    style = S7::class_missing,
+    label_sloped = TRUE,
+    id = character(0),
+    ...) {
   centroid_segment <- ob_segment(from@center, to@center)
-  connect(intersection(from, centroid_segment), intersection(to, centroid_segment), ...)
+  connect(intersection(from, centroid_segment), intersection(to, centroid_segment),
+          label = label,
+          from_offset = from_offset,
+          arc_bend = arc_bend,
+          to_offset = to_offset,
+          alpha = alpha,
+          arrow_head = arrow_head,
+          arrow_fins = arrow_fins,
+          arrowhead_length = arrowhead_length,
+          length_head = length_head,
+          length_fins = length_fins,
+          color = color,
+          lineend = lineend,
+          linejoin = linejoin,
+          linewidth = linewidth,
+          linewidth_fins = linewidth_fins,
+          linewidth_head = linewidth_head,
+          linetype = linetype,
+          resect = resect,
+          resect_fins = resect_fins,
+          resect_head = resect_head,
+          stroke_color = stroke_color,
+          stroke_width = stroke_width,
+          style = style,
+          label_sloped = label_sloped,
+          id = id,
+          ...)
 }
 
-S7::method(connect, list(ob_polygon, ob_point)) <- function(from,to, ...) {
+S7::method(connect, list(ob_polygon, ob_point)) <- function(
+    from,
+    to,
+    label = character(0),
+    arc_bend = NULL,
+    from_offset = NULL,
+    to_offset = NULL,
+    alpha = numeric(0),
+    arrow_head = the$arrow_head,
+    arrow_fins = list(),
+    arrowhead_length = 7,
+    length_head = numeric(0),
+    length_fins = numeric(0),
+    color = character(0),
+    lineend = numeric(0),
+    linejoin = numeric(0),
+    linewidth = numeric(0),
+    linewidth_fins = numeric(0),
+    linewidth_head = numeric(0),
+    linetype = numeric(0),
+    resect = numeric(0),
+    resect_fins = numeric(0),
+    resect_head = numeric(0),
+    stroke_color = character(0),
+    stroke_width = numeric(0),
+    style = S7::class_missing,
+    label_sloped = TRUE,
+    id = character(0),
+    ...) {
   centroid_segment <- ob_segment(from@center, to)
-  connect(intersection(from, centroid_segment), to, ...)
+  connect(intersection(from, centroid_segment), to,
+          label = label,
+          arc_bend = arc_bend,
+          from_offset = from_offset,
+          to_offset = to_offset,
+          alpha = alpha,
+          arrow_head = arrow_head,
+          arrow_fins = arrow_fins,
+          arrowhead_length = arrowhead_length,
+          length_head = length_head,
+          length_fins = length_fins,
+          color = color,
+          lineend = lineend,
+          linejoin = linejoin,
+          linewidth = linewidth,
+          linewidth_fins = linewidth_fins,
+          linewidth_head = linewidth_head,
+          linetype = linetype,
+          resect = resect,
+          resect_fins = resect_fins,
+          resect_head = resect_head,
+          stroke_color = stroke_color,
+          stroke_width = stroke_width,
+          style = style,
+          label_sloped = label_sloped,
+          id = id,
+          ...)
 }
 
-S7::method(connect, list(ob_point, ob_polygon)) <- function(from,to, ...) {
+S7::method(connect, list(ob_point, ob_polygon)) <- function(
+    from,
+    to,
+    label = character(0),
+    arc_bend = NULL,
+    from_offset = NULL,
+    to_offset = NULL,
+    alpha = numeric(0),
+    arrow_head = the$arrow_head,
+    arrow_fins = list(),
+    arrowhead_length = 7,
+    length_head = numeric(0),
+    length_fins = numeric(0),
+    color = character(0),
+    lineend = numeric(0),
+    linejoin = numeric(0),
+    linewidth = numeric(0),
+    linewidth_fins = numeric(0),
+    linewidth_head = numeric(0),
+    linetype = numeric(0),
+    resect = numeric(0),
+    resect_fins = numeric(0),
+    resect_head = numeric(0),
+    stroke_color = character(0),
+    stroke_width = numeric(0),
+    style = S7::class_missing,
+    label_sloped = TRUE,
+    id = character(0),
+    ...) {
   centroid_segment <- ob_segment(from, to@center)
-  connect(from, intersection(to, centroid_segment), ...)
+  connect(from, intersection(to, centroid_segment),
+          label = label,
+          arc_bend = arc_bend,
+          from_offset = from_offset,
+          to_offset = to_offset,
+          alpha = alpha,
+          arrow_head = arrow_head,
+          arrow_fins = arrow_fins,
+          arrowhead_length = arrowhead_length,
+          length_head = length_head,
+          length_fins = length_fins,
+          color = color,
+          lineend = lineend,
+          linejoin = linejoin,
+          linewidth = linewidth,
+          linewidth_fins = linewidth_fins,
+          linewidth_head = linewidth_head,
+          linetype = linetype,
+          resect = resect,
+          resect_fins = resect_fins,
+          resect_head = resect_head,
+          stroke_color = stroke_color,
+          stroke_width = stroke_width,
+          style = style,
+          label_sloped = label_sloped,
+          id = id,
+          ...)
 }
 
 
-S7::method(connect, list(centerpoint, ob_polygon)) <- function(from,to, ...) {
+S7::method(connect, list(centerpoint, ob_polygon)) <- function(
+    from,
+    to,
+    label = character(0),
+    arc_bend = NULL,
+    from_offset = NULL,
+    to_offset = NULL,
+    alpha = numeric(0),
+    arrow_head = the$arrow_head,
+    arrow_fins = list(),
+    arrowhead_length = 7,
+    length_head = numeric(0),
+    length_fins = numeric(0),
+    color = character(0),
+    lineend = numeric(0),
+    linejoin = numeric(0),
+    linewidth = numeric(0),
+    linewidth_fins = numeric(0),
+    linewidth_head = numeric(0),
+    linetype = numeric(0),
+    resect = numeric(0),
+    resect_fins = numeric(0),
+    resect_head = numeric(0),
+    stroke_color = character(0),
+    stroke_width = numeric(0),
+    style = S7::class_missing,
+    label_sloped = TRUE,
+    id = character(0),
+    ...) {
   centroid_segment <- ob_segment(from@center, to@center)
   p <- intersection(to, centroid_segment)
-  connect(from, p, ...)
+  connect(from,
+          p,
+          label = label,
+          arc_bend = arc_bend,
+          from_offset = from_offset,
+          to_offset = to_offset,
+          alpha = alpha,
+          arrow_head = arrow_head,
+          arrow_fins = arrow_fins,
+          arrowhead_length = arrowhead_length,
+          length_head = length_head,
+          length_fins = length_fins,
+          color = color,
+          lineend = lineend,
+          linejoin = linejoin,
+          linewidth = linewidth,
+          linewidth_fins = linewidth_fins,
+          linewidth_head = linewidth_head,
+          linetype = linetype,
+          resect = resect,
+          resect_fins = resect_fins,
+          resect_head = resect_head,
+          stroke_color = stroke_color,
+          stroke_width = stroke_width,
+          style = style,
+          label_sloped = label_sloped,
+          id = id,
+          ...)
 }
 
 
-S7::method(connect, list(ob_polygon, centerpoint)) <- function(from,to, ...) {
+S7::method(connect, list(ob_polygon, centerpoint)) <- function(
+    from,
+    to,
+    label = character(0),
+    arc_bend = NULL,
+    from_offset = NULL,
+    to_offset = NULL,
+    alpha = numeric(0),
+    arrow_head = the$arrow_head,
+    arrow_fins = list(),
+    arrowhead_length = 7,
+    length_head = numeric(0),
+    length_fins = numeric(0),
+    color = character(0),
+    lineend = numeric(0),
+    linejoin = numeric(0),
+    linewidth = numeric(0),
+    linewidth_fins = numeric(0),
+    linewidth_head = numeric(0),
+    linetype = numeric(0),
+    resect = numeric(0),
+    resect_fins = numeric(0),
+    resect_head = numeric(0),
+    stroke_color = character(0),
+    stroke_width = numeric(0),
+    style = S7::class_missing,
+    label_sloped = TRUE,
+    id = character(0),
+    ...) {
   centroid_segment <- ob_segment(from@center, to@center)
   p <- intersection(from, centroid_segment)
-  connect(p, to, ...)
+  connect(p,
+          to,
+          label = label,
+          arc_bend = arc_bend,
+          from_offset = from_offset,
+          to_offset = to_offset,
+          alpha = alpha,
+          arrow_head = arrow_head,
+          arrow_fins = arrow_fins,
+          arrowhead_length = arrowhead_length,
+          length_head = length_head,
+          length_fins = length_fins,
+          color = color,
+          lineend = lineend,
+          linejoin = linejoin,
+          linewidth = linewidth,
+          linewidth_fins = linewidth_fins,
+          linewidth_head = linewidth_head,
+          linetype = linetype,
+          resect = resect,
+          resect_fins = resect_fins,
+          resect_head = resect_head,
+          stroke_color = stroke_color,
+          stroke_width = stroke_width,
+          style = style,
+          label_sloped = label_sloped,
+          id = id,
+          ...)
 }
 
 # ob_intercept ----
@@ -370,8 +626,8 @@ S7::method(connect, list(ob_polygon, centerpoint)) <- function(from,to, ...) {
 #' @param top Top vertex of triangle
 #' @param left Left vertex of triangle
 #' @param right Right vertex of triangle
-#' @param x0 overrides x-coordinate in `center@x`
-#' @param y0 overrides x-coordinate in `center@y`
+#' @param x overrides x-coordinate in `center@x`
+#' @param y overrides x-coordinate in `center@y`
 #' @slot length The number of polygons in the ob_polygon object
 #' @param style Gets and sets the styles associated with polygons
 #' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggplot2::geom_polygon`.
@@ -425,20 +681,22 @@ ob_intercept <- S7::new_class(
                          fill = character(0),
                          linewidth = numeric(0),
                          linetype = numeric(0),
-                         x0 = numeric(0),
-                         y0 = numeric(0),
+                         x = numeric(0),
+                         y = numeric(0),
                          style = S7::class_missing,
                          id = character(0),
                          ...) {
 
-    if ((length(x0) > 0) || (length(y0) > 0)) {
-      if (length(x0) == 0) {
-        x0 <- 0
+    id <- as.character(id)
+
+    if ((length(x) > 0) || (length(y) > 0)) {
+      if (length(x) == 0) {
+        x <- 0
       }
-      if (length(y0) == 0) {
-        y0 <- 0
+      if (length(y) == 0) {
+        y <- 0
       }
-      center <- ob_point(x = x0, y = y0)
+      center <- ob_point(x = x, y = y)
     }
 
     ob_polygon_style <- ob_style() + center@style + style +
@@ -447,13 +705,14 @@ ob_intercept <- S7::new_class(
         color = color,
         fill = fill,
         linewidth = linewidth,
-        linetype = linetype
+        linetype = linetype,
+        id = id
       ) +
       ob_style(...)
 
 
     non_empty_list <- get_non_empty_props(ob_polygon_style)
-    d <- tibble::tibble(x0 = center@x, y0 = center@y, width = width)
+    d <- tibble::tibble(x = center@x, y = center@y, width = width)
     if (length(non_empty_list) > 0) {
       d <- dplyr::bind_cols(
         d,
@@ -461,7 +720,7 @@ ob_intercept <- S7::new_class(
     }
 
 
-    center = set_props(center, x = d$x0, y = d$y0)
+    center = set_props(center, x = d$x, y = d$y)
 
     if (S7::S7_inherits(label, ob_label)) {
       if (all(label@center == ob_point(0,0))) {
@@ -482,8 +741,6 @@ ob_intercept <- S7::new_class(
       }
     }
 
-
-
     S7::new_object(.parent = S7::S7_object(),
                center =  center,
                width = d$width %||% width,
@@ -494,7 +751,7 @@ ob_intercept <- S7::new_class(
                fill = d[["fill"]] %||% fill,
                linewidth = d[["linewidth"]] %||% linewidth,
                linetype = d[["linetype"]] %||% linetype,
-               id = id
+               id = d[["id"]] %||% id
     )
   })
 
@@ -507,27 +764,301 @@ S7::method(get_tibble, ob_intercept) <- function(x) {
   d
 }
 
-S7::method(connect, list(ob_intercept, ob_intercept)) <- function(from, to, ...) {
-  connect(from@polygon, to@polygon, ...)
+S7::method(connect, list(ob_intercept, ob_intercept)) <- function(
+    from,
+    to,
+    label = character(0),
+    arc_bend = NULL,
+    from_offset = NULL,
+    to_offset = NULL,
+    alpha = numeric(0),
+    arrow_head = the$arrow_head,
+    arrow_fins = list(),
+    arrowhead_length = 7,
+    length_head = numeric(0),
+    length_fins = numeric(0),
+    color = character(0),
+    lineend = numeric(0),
+    linejoin = numeric(0),
+    linewidth = numeric(0),
+    linewidth_fins = numeric(0),
+    linewidth_head = numeric(0),
+    linetype = numeric(0),
+    resect = numeric(0),
+    resect_fins = numeric(0),
+    resect_head = numeric(0),
+    stroke_color = character(0),
+    stroke_width = numeric(0),
+    style = S7::class_missing,
+    label_sloped = TRUE,
+    id = character(0),
+    ...) {
+  connect(from@polygon,
+          to@polygon,
+          label = label,
+          arc_bend = arc_bend,
+          from_offset = from_offset,
+          to_offset = to_offset,
+          alpha = alpha,
+          arrow_head = arrow_head,
+          arrow_fins = arrow_fins,
+          arrowhead_length = arrowhead_length,
+          length_head = length_head,
+          length_fins = length_fins,
+          color = color,
+          lineend = lineend,
+          linejoin = linejoin,
+          linewidth = linewidth,
+          linewidth_fins = linewidth_fins,
+          linewidth_head = linewidth_head,
+          linetype = linetype,
+          resect = resect,
+          resect_fins = resect_fins,
+          resect_head = resect_head,
+          stroke_color = stroke_color,
+          stroke_width = stroke_width,
+          style = style,
+          label_sloped = label_sloped,
+          id = id,
+          ...)
 }
 
-S7::method(connect, list(ob_intercept, ob_point)) <- function(from, to, ...) {
+S7::method(connect, list(ob_intercept, ob_point)) <- function(
+    from,
+    to,
+    label = character(0),
+    arc_bend = NULL,
+    from_offset = NULL,
+    to_offset = NULL,
+    alpha = numeric(0),
+    arrow_head = the$arrow_head,
+    arrow_fins = list(),
+    arrowhead_length = 7,
+    length_head = numeric(0),
+    length_fins = numeric(0),
+    color = character(0),
+    lineend = numeric(0),
+    linejoin = numeric(0),
+    linewidth = numeric(0),
+    linewidth_fins = numeric(0),
+    linewidth_head = numeric(0),
+    linetype = numeric(0),
+    resect = numeric(0),
+    resect_fins = numeric(0),
+    resect_head = numeric(0),
+    stroke_color = character(0),
+    stroke_width = numeric(0),
+    style = S7::class_missing,
+    label_sloped = TRUE,
+    id = character(0),
+    ...) {
   centroid_segment <- ob_segment(from@center, to)
-  connect(from@polygon, to, ...)
+  connect(from@polygon,
+          to,
+          label = label,
+          arc_bend = arc_bend,
+          from_offset = from_offset,
+          to_offset = to_offset,
+          alpha = alpha,
+          arrow_head = arrow_head,
+          arrow_fins = arrow_fins,
+          arrowhead_length = arrowhead_length,
+          length_head = length_head,
+          length_fins = length_fins,
+          color = color,
+          lineend = lineend,
+          linejoin = linejoin,
+          linewidth = linewidth,
+          linewidth_fins = linewidth_fins,
+          linewidth_head = linewidth_head,
+          linetype = linetype,
+          resect = resect,
+          resect_fins = resect_fins,
+          resect_head = resect_head,
+          stroke_color = stroke_color,
+          stroke_width = stroke_width,
+          style = style,
+          label_sloped = label_sloped,
+          id = id,
+          ...)
 }
 
-S7::method(connect, list(ob_point, ob_intercept)) <- function(from, to, ...) {
-  connect(from, to@polygon, ...)
+S7::method(connect, list(ob_point, ob_intercept)) <- function(
+    from,
+    to,
+    label = character(0),
+    arc_bend = NULL,
+    from_offset = NULL,
+    to_offset = NULL,
+    alpha = numeric(0),
+    arrow_head = the$arrow_head,
+    arrow_fins = list(),
+    arrowhead_length = 7,
+    length_head = numeric(0),
+    length_fins = numeric(0),
+    color = character(0),
+    lineend = numeric(0),
+    linejoin = numeric(0),
+    linewidth = numeric(0),
+    linewidth_fins = numeric(0),
+    linewidth_head = numeric(0),
+    linetype = numeric(0),
+    resect = numeric(0),
+    resect_fins = numeric(0),
+    resect_head = numeric(0),
+    stroke_color = character(0),
+    stroke_width = numeric(0),
+    style = S7::class_missing,
+    label_sloped = TRUE,
+    id = character(0),
+    ...) {
+  connect(from,
+          to@polygon,
+          label = label,
+          arc_bend = arc_bend,
+          from_offset = from_offset,
+          to_offset = to_offset,
+          alpha = alpha,
+          arrow_head = arrow_head,
+          arrow_fins = arrow_fins,
+          arrowhead_length = arrowhead_length,
+          length_head = length_head,
+          length_fins = length_fins,
+          color = color,
+          lineend = lineend,
+          linejoin = linejoin,
+          linewidth = linewidth,
+          linewidth_fins = linewidth_fins,
+          linewidth_head = linewidth_head,
+          linetype = linetype,
+          resect = resect,
+          resect_fins = resect_fins,
+          resect_head = resect_head,
+          stroke_color = stroke_color,
+          stroke_width = stroke_width,
+          style = style,
+          label_sloped = label_sloped,
+          id = id,
+          ...)
 }
 
 
-S7::method(connect, list(centerpoint, ob_intercept)) <- function(from, to, ...) {
-  connect(from, to@polygon, ...)
+S7::method(connect, list(centerpoint, ob_intercept)) <- function(
+    from,
+    to,
+    label = character(0),
+    arc_bend = NULL,
+    from_offset = NULL,
+    to_offset = NULL,
+    alpha = numeric(0),
+    arrow_head = the$arrow_head,
+    arrow_fins = list(),
+    arrowhead_length = 7,
+    length_head = numeric(0),
+    length_fins = numeric(0),
+    color = character(0),
+    lineend = numeric(0),
+    linejoin = numeric(0),
+    linewidth = numeric(0),
+    linewidth_fins = numeric(0),
+    linewidth_head = numeric(0),
+    linetype = numeric(0),
+    resect = numeric(0),
+    resect_fins = numeric(0),
+    resect_head = numeric(0),
+    stroke_color = character(0),
+    stroke_width = numeric(0),
+    style = S7::class_missing,
+    label_sloped = TRUE,
+    id = character(0),
+    ...) {
+  connect(from,
+          to@polygon,
+          label = label,
+          arc_bend = arc_bend,
+          from_offset = from_offset,
+          to_offset = to_offset,
+          alpha = alpha,
+          arrow_head = arrow_head,
+          arrow_fins = arrow_fins,
+          arrowhead_length = arrowhead_length,
+          length_head = length_head,
+          length_fins = length_fins,
+          color = color,
+          lineend = lineend,
+          linejoin = linejoin,
+          linewidth = linewidth,
+          linewidth_fins = linewidth_fins,
+          linewidth_head = linewidth_head,
+          linetype = linetype,
+          resect = resect,
+          resect_fins = resect_fins,
+          resect_head = resect_head,
+          stroke_color = stroke_color,
+          stroke_width = stroke_width,
+          style = style,
+          label_sloped = label_sloped,
+          id = id,
+          ...)
 }
 
 
-S7::method(connect, list(ob_intercept, centerpoint)) <- function(from, to, ...) {
-  connect(from@polygon, to, ...)
+S7::method(connect, list(ob_intercept, centerpoint)) <- function(
+    from,
+    to,
+    label = character(0),
+    arc_bend = NULL,
+    from_offset = NULL,
+    to_offset = NULL,
+    alpha = numeric(0),
+    arrow_head = the$arrow_head,
+    arrow_fins = list(),
+    arrowhead_length = 7,
+    length_head = numeric(0),
+    length_fins = numeric(0),
+    color = character(0),
+    lineend = numeric(0),
+    linejoin = numeric(0),
+    linewidth = numeric(0),
+    linewidth_fins = numeric(0),
+    linewidth_head = numeric(0),
+    linetype = numeric(0),
+    resect = numeric(0),
+    resect_fins = numeric(0),
+    resect_head = numeric(0),
+    stroke_color = character(0),
+    stroke_width = numeric(0),
+    style = S7::class_missing,
+    label_sloped = TRUE,
+    id = character(0),
+    ...) {
+  connect(from@polygon,
+          to,
+          label = label,
+          arc_bend = arc_bend,
+          from_offset = from_offset,
+          to_offset = to_offset,
+          alpha = alpha,
+          arrow_head = arrow_head,
+          arrow_fins = arrow_fins,
+          arrowhead_length = arrowhead_length,
+          length_head = length_head,
+          length_fins = length_fins,
+          color = color,
+          lineend = lineend,
+          linejoin = linejoin,
+          linewidth = linewidth,
+          linewidth_fins = linewidth_fins,
+          linewidth_head = linewidth_head,
+          linetype = linetype,
+          resect = resect,
+          resect_fins = resect_fins,
+          resect_head = resect_head,
+          stroke_color = stroke_color,
+          stroke_width = stroke_width,
+          style = style,
+          label_sloped = label_sloped,
+          id = id,...)
 }
 
 S7::method(as.geom, ob_intercept) <- function(x, ...) {
@@ -605,8 +1136,8 @@ ob_ngon_props <- list(
     tibble = S7::new_property(
       getter = function(self) {
         d <- list(
-          x0 = self@center@x,
-          y0 = self@center@y,
+          x = self@center@x,
+          y = self@center@y,
           radius = self@radius,
           n = self@n,
           angle = c(self@angle) * 360,
@@ -673,10 +1204,12 @@ ob_ngon_props <- list(
         \(theta = degree(0), ...) {
           st <- rlang::list2(...)
 
-          if (!S7::S7_inherits(theta, ob_angle))
+          if (!S7::S7_inherits(theta, ob_angle)) {
             theta <- degree(theta)
+          }
+
           p <- purrr::map(unbind(self), \(s) {
-            s_radius <- ob_segment(s@center, s@center + ob_polar(theta = theta, r = s@radius))
+            s_radius <- ob_segment(s@center, s@center + ob_polar(theta = theta, r = s@radius + 1))
             intersection(s_radius, s@segments)[1]
           }) %>%
             bind()
@@ -734,8 +1267,8 @@ ob_ngon_props <- list(
 #' @slot tangent_at A function that finds the tangent line at the specified angle.
 #' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggforce::geom_shape`.
 #' @slot vertices points on the regular polygon
-#' @param x0 overrides x-coordinate in `center@x`
-#' @param y0 overrides y-coordinate in `center@y`
+#' @param x overrides x-coordinate in `center@x`
+#' @param y overrides y-coordinate in `center@y`
 #' @inherit ob_style params
 ob_ngon <- S7::new_class(
   name = "ob_ngon",
@@ -746,6 +1279,7 @@ ob_ngon <- S7::new_class(
       !!!ob_polygon_props$extra,
       !!!ob_polygon_props$styles,
       !!!ob_ngon_props$derived,
+      !!!compass_props,
       !!!ob_polygon_props$funs,
       !!!ob_ngon_props$funs,
       !!!ob_polygon_props$info
@@ -765,10 +1299,12 @@ ob_ngon <- S7::new_class(
                          linewidth = numeric(0),
                          linetype = numeric(0),
                          style = S7::class_missing,
-                         x0 = numeric(0),
-                         y0 = numeric(0),
+                         x = numeric(0),
+                         y = numeric(0),
                          id = character(0),
                          ...) {
+
+    id <- as.character(id)
     if (!S7::S7_inherits(angle, ob_angle)) angle <- degree(angle)
 
     if (length(side_length) > 0) {
@@ -776,21 +1312,21 @@ ob_ngon <- S7::new_class(
     }
 
     if (length(apothem) > 0) {
-      radius <- apothem / (2 * cos(turn(1 / (2 * n))))
+      radius <- apothem / (cos(turn(1 / (2 * n))))
     }
 
     if (length(radius) == 0) {
       radius <- 1
     }
 
-    if ((length(x0) > 0) || (length(y0) > 0)) {
-      if (length(x0) == 0) {
-        x0 <- 0
+    if ((length(x) > 0) || (length(y) > 0)) {
+      if (length(x) == 0) {
+        x <- 0
       }
-      if (length(y0) == 0) {
-        y0 <- 0
+      if (length(y) == 0) {
+        y <- 0
       }
-      center <- ob_point(x = x0, y = y0)
+      center <- ob_point(x = x, y = y)
     }
 
     ob_polygon_style <- ob_style() + center@style + style +
@@ -799,13 +1335,14 @@ ob_ngon <- S7::new_class(
         color = color,
         fill = fill,
         linewidth = linewidth,
-        linetype = linetype
+        linetype = linetype,
+        id = id
       ) +
       ob_style(...)
 
     non_empty_list <- get_non_empty_props(ob_polygon_style)
-    d <- tibble::tibble(x0 = center@x,
-                        y0 = center@y,
+    d <- tibble::tibble(x = center@x,
+                        y = center@y,
                         n = n,
                         radius = radius,
                         angle = c(angle))
@@ -816,7 +1353,7 @@ ob_ngon <- S7::new_class(
     }
 
 
-    center = set_props(center, x = d$x0, y = d$y0)
+    center = set_props(center, x = d$x, y = d$y)
 
     if (S7::S7_inherits(label, ob_label)) {
       if (all(label@center == ob_point(0,0))) {
@@ -849,12 +1386,14 @@ ob_ngon <- S7::new_class(
                fill = d[["fill"]] %||% fill,
                linewidth = d[["linewidth"]] %||% linewidth,
                linetype = d[["linetype"]] %||% linetype,
-               id = id
+               id = d[["id"]] %||% id
     )
   })
 
 S7::method(get_tibble, ob_ngon) <- function(x) {
-  d <- x@tibble
+  d <- x@tibble %>%
+    dplyr::rename(x0 = x,
+                  y0 = y)
   if ("radius" %in% colnames(d)) {
     d <- dplyr::rename(d, r = radius)
   }
@@ -892,35 +1431,253 @@ S7::method(str, ob_ngon) <- function(
                  nest.lev = nest.lev)
 }
 
-S7::method(`[`, ob_ngon) <- function(x, y) {
-  d <- x@tibble[y,]
-  dl <- as.list(dplyr::select(d, -x0, -y0))
-  z <- rlang::inject(ob_ngon(center = ob_point(d$x0, d$y0), !!!dl))
-  z@label <- x@label[y]
+S7::method(`[`, ob_ngon) <- function(x, i) {
+  i <- character_index(i, x@id)
+  z <- x@tibble[i,] %>%
+    data2shape(ob_ngon)
+  z@label <- na2zero(x@label[i])
   z
 }
 
 
-S7::method(connect, list(ob_ngon, ob_ngon)) <- function(from, to, ...) {
+S7::method(connect, list(ob_ngon, ob_ngon)) <- function(
+    from,
+    to,
+    label = character(0),
+    arc_bend = NULL,
+    from_offset = NULL,
+    to_offset = NULL,
+    alpha = numeric(0),
+    arrow_head = the$arrow_head,
+    arrow_fins = list(),
+    arrowhead_length = 7,
+    length_head = numeric(0),
+    length_fins = numeric(0),
+    color = character(0),
+    lineend = numeric(0),
+    linejoin = numeric(0),
+    linewidth = numeric(0),
+    linewidth_fins = numeric(0),
+    linewidth_head = numeric(0),
+    linetype = numeric(0),
+    resect = numeric(0),
+    resect_fins = numeric(0),
+    resect_head = numeric(0),
+    stroke_color = character(0),
+    stroke_width = numeric(0),
+    style = S7::class_missing,
+    label_sloped = TRUE,
+    id = character(0),
+    ...) {
   s <- ob_segment(from@center, y@center)
-  connect(intersection(from, s), intersection(to, s), ...)
+  connect(intersection(from, s), intersection(to, s),
+          label = label,
+          arc_bend = arc_bend,
+          from_offset = from_offset,
+          to_offset = to_offset,
+          alpha = alpha,
+          arrow_head = arrow_head,
+          arrow_fins = arrow_fins,
+          arrowhead_length = arrowhead_length,
+          length_head = length_head,
+          length_fins = length_fins,
+          color = color,
+          lineend = lineend,
+          linejoin = linejoin,
+          linewidth = linewidth,
+          linewidth_fins = linewidth_fins,
+          linewidth_head = linewidth_head,
+          linetype = linetype,
+          resect = resect,
+          resect_fins = resect_fins,
+          resect_head = resect_head,
+          stroke_color = stroke_color,
+          stroke_width = stroke_width,
+          style = style,
+          label_sloped = label_sloped,
+          id = id,
+          ...)
 }
 
-S7::method(connect, list(ob_ngon, ob_point)) <- function(from, to, ...) {
+S7::method(connect, list(ob_ngon, ob_point)) <- function(
+    from,
+    to,
+    label = character(0),
+    arc_bend = NULL,
+    from_offset = NULL,
+    to_offset = NULL,
+    alpha = numeric(0),
+    arrow_head = the$arrow_head,
+    arrow_fins = list(),
+    arrowhead_length = 7,
+    length_head = numeric(0),
+    length_fins = numeric(0),
+    color = character(0),
+    lineend = numeric(0),
+    linejoin = numeric(0),
+    linewidth = numeric(0),
+    linewidth_fins = numeric(0),
+    linewidth_head = numeric(0),
+    linetype = numeric(0),
+    resect = numeric(0),
+    resect_fins = numeric(0),
+    resect_head = numeric(0),
+    stroke_color = character(0),
+    stroke_width = numeric(0),
+    style = S7::class_missing,
+    label_sloped = TRUE,
+    id = character(0),
+    ...) {
   s <- ob_segment(from@center, to)
-  connect(intersection(from, s), to, ...)
+  connect(intersection(from, s), to,
+          label = label,
+          arc_bend = arc_bend,
+          from_offset = from_offset,
+          to_offset = to_offset,
+          alpha = alpha,
+          arrow_head = arrow_head,
+          arrow_fins = arrow_fins,
+          arrowhead_length = arrowhead_length,
+          length_head = length_head,
+          length_fins = length_fins,
+          color = color,
+          lineend = lineend,
+          linejoin = linejoin,
+          linewidth = linewidth,
+          linewidth_fins = linewidth_fins,
+          linewidth_head = linewidth_head,
+          linetype = linetype,
+          resect = resect,
+          resect_fins = resect_fins,
+          resect_head = resect_head,
+          stroke_color = stroke_color,
+          stroke_width = stroke_width,
+          style = style,
+          label_sloped = label_sloped,
+          id = id,
+          ...)
 }
 
-S7::method(connect, list(ob_point, ob_ngon)) <- function(from, to, ...) {
+S7::method(connect, list(ob_point, ob_ngon)) <- function(
+    from,
+    to,
+    label = character(0),
+    arc_bend = NULL,
+    from_offset = NULL,
+    to_offset = NULL,
+    alpha = numeric(0),
+    arrow_head = the$arrow_head,
+    arrow_fins = list(),
+    arrowhead_length = 7,
+    length_head = numeric(0),
+    length_fins = numeric(0),
+    color = character(0),
+    lineend = numeric(0),
+    linejoin = numeric(0),
+    linewidth = numeric(0),
+    linewidth_fins = numeric(0),
+    linewidth_head = numeric(0),
+    linetype = numeric(0),
+    resect = numeric(0),
+    resect_fins = numeric(0),
+    resect_head = numeric(0),
+    stroke_color = character(0),
+    stroke_width = numeric(0),
+    style = S7::class_missing,
+    label_sloped = TRUE,
+    id = character(0),
+    ...) {
   s <- ob_segment(from, to@center)
-  connect(from, intersection(to, s), ...)
+  connect(from, intersection(to, s),
+          label = label,
+          arc_bend = arc_bend,
+          from_offset = from_offset,
+          to_offset = to_offset,
+          alpha = alpha,
+          arrow_head = arrow_head,
+          arrow_fins = arrow_fins,
+          arrowhead_length = arrowhead_length,
+          length_head = length_head,
+          length_fins = length_fins,
+          color = color,
+          lineend = lineend,
+          linejoin = linejoin,
+          linewidth = linewidth,
+          linewidth_fins = linewidth_fins,
+          linewidth_head = linewidth_head,
+          linetype = linetype,
+          resect = resect,
+          resect_fins = resect_fins,
+          resect_head = resect_head,
+          stroke_color = stroke_color,
+          stroke_width = stroke_width,
+          style = style,
+          label_sloped = label_sloped,
+          id = id,
+          ...)
 }
 
 
-S7::method(connect, list(centerpoint, ob_ngon)) <- function(from, to, ...) {
+S7::method(connect, list(centerpoint, ob_ngon)) <- function(
+    from,
+    to,
+    label = character(0),
+    arc_bend = NULL,
+    from_offset = NULL,
+    to_offset = NULL,
+    alpha = numeric(0),
+    arrow_head = the$arrow_head,
+    arrow_fins = list(),
+    arrowhead_length = 7,
+    length_head = numeric(0),
+    length_fins = numeric(0),
+    color = character(0),
+    lineend = numeric(0),
+    linejoin = numeric(0),
+    linewidth = numeric(0),
+    linewidth_fins = numeric(0),
+    linewidth_head = numeric(0),
+    linetype = numeric(0),
+    resect = numeric(0),
+    resect_fins = numeric(0),
+    resect_head = numeric(0),
+    stroke_color = character(0),
+    stroke_width = numeric(0),
+    style = S7::class_missing,
+    label_sloped = TRUE,
+    id = character(0),
+    ...) {
   s <- ob_segment(from@center, to@center)
   p <- intersection(to, s)
-  connect(from, p, ...)
+  connect(
+    from,
+    p,
+    label = label,
+    arc_bend = arc_bend,
+    from_offset = from_offset,
+    to_offset = to_offset,
+    alpha = alpha,
+    arrow_head = arrow_head,
+    arrow_fins = arrow_fins,
+    arrowhead_length = arrowhead_length,
+    length_head = length_head,
+    length_fins = length_fins,
+    color = color,
+    lineend = lineend,
+    linejoin = linejoin,
+    linewidth = linewidth,
+    linewidth_fins = linewidth_fins,
+    linewidth_head = linewidth_head,
+    linetype = linetype,
+    resect = resect,
+    resect_fins = resect_fins,
+    resect_head = resect_head,
+    stroke_color = stroke_color,
+    stroke_width = stroke_width,
+    style = style,
+    label_sloped = label_sloped,
+    id = id,
+    ...)
 }
 
 # ob_reuleaux ----
@@ -957,7 +1714,8 @@ ob_reuleaux <- S7::new_class(
     arcs = S7::new_property(getter = \(self) {
       map_ob(self, \(s) {
         ntheta <- 360 / s@n
-        theta <- seq(0, 360, length.out = s@n + 1)[1:s@n] + s@angle@degree
+        even <- 1 - s@n %% 2
+        theta <- seq(0, 360, length.out = s@n + 1)[1:s@n] + s@angle@degree + even * 180 / s@n
 
         purrr::map(theta, \(th) {
           start <- degree(180 + th - ntheta / 2)
@@ -996,8 +1754,8 @@ ob_reuleaux <- S7::new_class(
     tibble = S7::new_property(
       getter = function(self) {
         d <- list(
-          x0 = self@center@x,
-          y0 = self@center@y,
+          x = self@center@x,
+          y = self@center@y,
           radius = self@radius,
           n = self@n,
           angle = c(self@angle) * 360,
@@ -1088,6 +1846,9 @@ ob_reuleaux <- S7::new_class(
                             style = S7::class_missing,
                             id = character(0),
                             ...) {
+
+    id <- as.character(id)
+
     if (!S7::S7_inherits(angle, ob_angle)) angle <- degree(angle)
     n <- as.integer(n)
 
@@ -1097,13 +1858,14 @@ ob_reuleaux <- S7::new_class(
         color = color,
         fill = fill,
         linewidth = linewidth,
-        linetype = linetype
+        linetype = linetype,
+        id = id
       ) +
       ob_style(...)
 
     non_empty_list <- get_non_empty_props(ob_polygon_style)
-    d <- tibble::tibble(x0 = center@x,
-                        y0 = center@y,
+    d <- tibble::tibble(x = center@x,
+                        y = center@y,
                         n = n,
                         radius = radius,
                         angle = c(angle))
@@ -1114,7 +1876,7 @@ ob_reuleaux <- S7::new_class(
     }
 
 
-    center = set_props(center, x = d$x0, y = d$y0)
+    center = set_props(center, x = d$x, y = d$y)
 
     if (S7::S7_inherits(label, ob_label)) {
       if (all(label@center == ob_point(0,0))) {
@@ -1147,7 +1909,7 @@ ob_reuleaux <- S7::new_class(
                fill = d[["fill"]] %||% fill,
                linewidth = d[["linewidth"]] %||% linewidth,
                linetype = d[["linetype"]] %||% linetype,
-               id = id
+               id = d[["id"]] %||% id
     )
 
 
@@ -1168,8 +1930,8 @@ S7::method(get_tibble, ob_reuleaux) <- function(x) {
   d %>%
     dplyr::mutate(group = dplyr::row_number()) %>%
     dplyr::mutate(p = purrr::pmap(
-      list(x0, y0, n, r, angle),
-      \(x0,y0,n,r,angle) {
+      list(x, y, n, r, angle),
+      \(x,y,n,r,angle) {
         ntheta <- 360 / n
         theta <- seq(0, 360, length.out = n + 1)[1:n] + angle
         s <- purrr::map_df(theta, \(th) {
@@ -1183,7 +1945,7 @@ S7::method(get_tibble, ob_reuleaux) <- function(x) {
           end1 <- (p_end - p_opposite)@theta
           if (start1 > end1) {end1 <- end1 + turn(1)}
           ob_arc(
-            center = p_opposite + ob_point(x0,y0),
+            center = p_opposite + ob_point(x,y),
             start = degree(start1),
             end = degree(end1),
             radius = (p_start - p_opposite)@r,
@@ -1191,7 +1953,7 @@ S7::method(get_tibble, ob_reuleaux) <- function(x) {
             dplyr::select(-group)
         })
       })) %>%
-    dplyr::select(-x0,-y0,-n, -r, -angle) %>%
+    dplyr::select(-x,-y,-n, -r, -angle) %>%
     tidyr::unnest(p)
 }
 
@@ -1218,10 +1980,9 @@ S7::method(as.geom, ob_reuleaux) <- function(x, ...) {
   gp
 }
 
-S7::method(`[`, ob_reuleaux) <- function(x, y) {
-  d <- x@tibble[y,]
-  dl <- as.list(dplyr::select(d, -x0, -y0))
-  z <- rlang::inject(ob_reuleaux(center = ob_point(d$x0, d$y0), !!!dl))
-  z@label <- x@label[y]
-  z
-}
+# S7::method(`[`, ob_reuleaux) <- function(x, i) {
+#   i <- character_index(i, x@id)
+#   z <- data2shape(x@tibble[i,], ob_releaux)
+#   z@label <- na2zero(x@label[i])
+#   z
+# }

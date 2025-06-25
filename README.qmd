@@ -27,10 +27,10 @@ The ggdiagram package is not a replacement for the standard ggplot2 functions. T
 
 ## Installation
 
-You can install ggdiagram from CRAN like so:
+You can install ggdiagram from R-universe like so:
 
 ``` r
-install.packages("ggdiagram")
+install.packages("ggdiagram", repos = "https://wjschne.r-universe.dev")
 ```
 
 Assuming the [remotes package](https://remotes.r-lib.org/) is already installed, you can install the development version of ggdiagram like so:
@@ -47,7 +47,7 @@ The `ggdiagram` function is a a wrapper for `ggplot`, that sets some defaults (e
 
 The `ob_*` functions have methods such that they can be added to any ggplot. Under the hood, they are first converted to an appropriate geom and then added to the ggplot object. In this case, an `ob_circle` is converted to a `ggforce:geom_circle`, and an `ob_rectangle` is converted to a `ggforce::geom_shape`.
 
-The `connect` function connects the circle and rectangle at their edges with an arrow (via `ggarrow::geom_arrow_segment`).
+The `connect` function connects the circle and rectangle at their edges with an arrow (drawn with `ggarrow::geom_arrow_segment`).
 
 ```{r fig-example, fig.alt="An arrow points from a circle to a square."}
 #| fig-width: 6

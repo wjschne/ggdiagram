@@ -63,6 +63,7 @@ arc_props <- list(
   ),
   styles = ob_style@properties[arc_styles],
   extra = list(
+    label_sloped = S7::class_logical,
     type = S7::new_property(class = S7::class_character, validator = function(value) {
       if (length(value) != 1) return("The type property must be of length 1.")
       if (!(value %in% c("arc", "wedge", "segment"))) 'The type property must be "arc", "wedge", or "segment".'
@@ -87,19 +88,19 @@ arc_props <- list(
 
       d_rect <- self@tibble |>
         dplyr::mutate(d = purrr::pmap(
-          list(x0 = x0,
-               y0 = y0,
+          list(x = x,
+               y = y,
                r = r,
                start = start,
                end = end,
-               n = n), \(x0,y0,r,start,end, n) {
+               n = n), \(x,y,r,start,end, n) {
                  theta <- seq(start, end, length.out = n)
                  d <- tibble::tibble(
-                   x = x0 + cos(theta) * r,
-                   y = y0 + sin(theta) * r
+                   x = x + cos(theta) * r,
+                   y = y + sin(theta) * r
                  )
 
-                 if (self@type == "wedge") d <- dplyr::add_row(d, x = x0, y = y0)
+                 if (self@type == "wedge") d <- dplyr::add_row(d, x = x, y = y)
 
                    dplyr::summarise(d, xmin = min(x),
                                     xmax = max(x),
@@ -159,21 +160,22 @@ arc_props <- list(
       d |>
         dplyr::mutate(group = factor(dplyr::row_number())) |>
         dplyr::mutate(xy = purrr::pmap(
-          list(x0, y0, radius, start, end, n, type),
-          \(X0, Y0, R, START, END, N, TYPE) {
+          list(x, y, radius, start, end, n, type),
+          \(X, Y, R, START, END, N, TYPE) {
             THETA <- seq(c(START), c(END), length.out = N)
             dd <- tibble::tibble(
-              x = X0 + cospi(THETA / 180) * R,
-              y = Y0 + sinpi(THETA / 180) * R)
+              x = X + cospi(THETA / 180) * R,
+              y = Y + sinpi(THETA / 180) * R)
             if (TYPE == "wedge") {
               dd <- dplyr::bind_rows(
                 dd,
-                tibble(x = X0,
-                       y = Y0))}
+                tibble(x = X,
+                       y = Y))}
             dd
             })) |>
+        dplyr::select(-x,-y) |>
         tidyr::unnest(xy) |>
-        dplyr::select(-c(x0, y0, radius, start, end, n, type))
+        dplyr::select(-c(radius, start, end, n, type))
     }),
     start_point = S7::new_property(
       getter = function(self) {
@@ -219,8 +221,8 @@ arc_props <- list(
     tibble = S7::new_property(getter = function(self) {
       if (self@type != "arc") {
         d <- list(
-          x0 = self@center@x,
-          y0 = self@center@y,
+          x = self@center@x,
+          y = self@center@y,
           radius = self@radius,
           start = c(self@start) * 360,
           end = c(self@end) * 360,
@@ -235,8 +237,8 @@ arc_props <- list(
 
       } else {
       d <- list(
-        x0 = self@center@x,
-        y0 = self@center@y,
+        x = self@center@x,
+        y = self@center@y,
         radius = self@radius,
         start = c(self@start) * 360,
         end = c(self@end) * 360,
@@ -361,7 +363,8 @@ arc_props <- list(
           "r",
           "start",
           "end",
-          "label"),
+          "label",
+          "label_sloped"),
         inherit.aes = FALSE,
         style = arc_styles
       )
@@ -380,13 +383,14 @@ arc_props <- list(
 #' @param start start angle (default = 0 degrees)
 #' @param end end angle (default = 0 degrees)
 #' @param label A character, angle, or label object
+#' @param label_sloped If TRUE, label runs along arc.
 #' @param start_point Specify where arc starts. Overrides `@center`
 #' @param end_point Specify where arc ends Overrides `@center`
 #' @param n number of points in arc (default = 360)
 #' @param type Type of object to drawn. Can be "arc", "wedge", or "segment"
 #' @param style a style object
-#' @param x0 x-coordinate of center point. If specified, overrides x-coordinate of `@center`.
-#' @param y0 x-coordinate of center point. If specified, overrides y-coordinate of `@center`.
+#' @param x x-coordinate of center point. If specified, overrides x-coordinate of `@center`.
+#' @param y x-coordinate of center point. If specified, overrides y-coordinate of `@center`.
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object
 #' @inherit ob_style params
 #' @slot aesthetics A list of information about the arc's aesthetic properties
@@ -406,10 +410,11 @@ arc_props <- list(
 #' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggarrow::geom_arrow`.
 #' @examples
 #' # 90-degree arc
-#' ob_arc(
-#'  radius = 6,
-#'  start = degree(0),
-#'  end = degree(90)
+#' ggdiagram() +
+#'   ob_arc(
+#'     radius = 6,
+#'     start = degree(0),
+#'     end = degree(90)
 #'  )
 #' @export
 #' @return ob_arc object
@@ -431,6 +436,7 @@ ob_arc <- S7::new_class(
                          start = 0,
                          end = 0,
                          label = character(0),
+                         label_sloped = FALSE,
                          start_point = S7::class_missing,
                          end_point = S7::class_missing,
                          n = 360,
@@ -455,10 +461,11 @@ ob_arc <- S7::new_class(
                          stroke_color = character(0),
                          stroke_width = numeric(0),
                          style = S7::class_missing,
-                         x0 = numeric(0),
-                         y0 = numeric(0),
+                         x = numeric(0),
+                         y = numeric(0),
                          id = character(0),
                          ...) {
+    id <- as.character(id)
 
     if (!S7::S7_inherits(start, ob_angle)) {
       start <- degree(start)
@@ -468,14 +475,14 @@ ob_arc <- S7::new_class(
       end <- degree(end)
     }
 
-    if (length(x0) > 0 | length(y0) > 0) {
-      if (length(x0) == 0) {
-        x0 <- 0
+    if (length(x) > 0 | length(y) > 0) {
+      if (length(x) == 0) {
+        x <- 0
       }
-      if (length(y0) == 0) {
-        y0 <- 0
+      if (length(y) == 0) {
+        y <- 0
       }
-      center <- ob_point(tibble::tibble(x = x0, y = y0))
+      center <- ob_point(tibble::tibble(x = x, y = y))
     }
 
 
@@ -515,7 +522,8 @@ ob_arc <- S7::new_class(
         resect_fins = resect_fins,
         resect_head = resect_head,
         stroke_color = stroke_color,
-        stroke_width = stroke_width
+        stroke_width = stroke_width,
+        id = id
       ) +
       ob_style(...)
 
@@ -531,8 +539,8 @@ ob_arc <- S7::new_class(
 
     non_empty_list <- get_non_empty_props(arc_style)
     d <- tibble::tibble(
-      x0 = center@x,
-      y0 = center@y,
+      x = center@x,
+      y = center@y,
       radius = radius,
       start = c(start),
       end = c(end)
@@ -557,7 +565,7 @@ ob_arc <- S7::new_class(
       }
 
 
-    center = set_props(center, x = d$x0, y = d$y0)
+    center = set_props(center, x = d$x, y = d$y)
     center@style <- arc_style
 
     if (S7::S7_inherits(start, degree)) {
@@ -580,18 +588,39 @@ ob_arc <- S7::new_class(
       if (all(label@center@x == 0) && all(label@center@y == 0)) {
         m <- start + ((end - start) * label@position)
         label@center <- center + ob_polar(theta = m, r = radius)
-        if (all(length(label@hjust) == 0)) {
-          label@hjust <- polar2just(m, 1.4, axis = "h")
+
+        if (all(label_sloped)) {
+          if (all(length(label@hjust) == 0)) {
+            label@hjust <- 0.5
+          }
+
+          if (all(length(label@vjust) == 0)) {
+            label@vjust <- 0.5
+          }
+
+        } else {
+          if (all(length(label@hjust) == 0) & all(length(label@vjust) == 0)) {
+            label@hjust <- polar2just(m, 1.4, axis = "h")
+            label@vjust <- polar2just(m, 1.4, axis = "v")
+          } else {
+            if (all(length(label@hjust) == 0)) {
+              label@hjust <- 0.5
+            }
+
+            if (all(length(label@vjust) == 0)) {
+              label@vjust <- 0.5
+            }
+
+          }
         }
 
-        if (all(length(label@vjust) == 0)) {
-          label@vjust <- polar2just(m, 1.4, axis = "v")
-        }
+
       }
     }
 
     S7::new_object(
-      centerpoint(center = center, label = label, id = id),
+      centerpoint(center = center, label = label),
+      label_sloped = label_sloped,
       radius = d$radius,
       start = start,
       end = end,
@@ -615,7 +644,8 @@ ob_arc <- S7::new_class(
       resect_fins = d[["resect_fins"]] %||% resect_fins,
       resect_head = d[["resect_head"]] %||% resect_head,
       stroke_color = d[["stroke_color"]] %||% stroke_color,
-      stroke_width = d[["stroke_width"]] %||% stroke_width
+      stroke_width = d[["stroke_width"]] %||% stroke_width,
+      id = d[["id"]] %||% id
     )
   }
 )
@@ -678,7 +708,45 @@ overrides <- get_non_empty_props(ob_style(...))
     aesthetics = arc_aesthetics)
 
   if (S7::S7_inherits(x@label, ob_label)) {
-    gl <- as.geom(x@label)
+
+    if (all(x@label_sloped)) {
+
+      d <- x@polygon %>%
+        select(group, x, y) %>%
+        tidyr::nest(.by = group) %>%
+        dplyr::bind_cols(x@label@tibble |> select(-c(x,y)))
+
+
+
+      if (!("hjust" %in% colnames(d))) {
+        d <- dplyr::mutate(d, hjust = x@label@position)
+      }
+
+      d <- tidyr::unnest(d, data)
+
+      if ("size" %in% colnames(d)) {
+        d <- dplyr::mutate(d, size = size / ggplot2::.pt)
+      }
+
+      if (!("boxcolour" %in% colnames(d))) {
+        d <- dplyr::mutate(d, boxcolour = NA)
+      }
+
+      if (!("label.padding" %in% colnames(d))) {
+        d <- dplyr::mutate(d, label.padding = unit(2, "pt"))
+      }
+
+      d <- dplyr::mutate(d, label.padding = purrr::map_dbl(label.padding, \(lp) c(lp[1] / 96)))
+
+
+
+      gl <- make_geom_helper(d, aesthetics = gtextcurve_aes, user_overrides = NULL)
+    } else {
+      gl <- as.geom(x@label)
+      }
+
+
+
     gc <- list(gc, gl)
   }
   gc
@@ -716,15 +784,12 @@ S7::method(midpoint,list(ob_arc, S7::class_missing)) <- function(x,y, position =
     x@midpoint(position = position, ...)
 }
 
-S7::method(`[`, ob_arc) <- function(x, y) {
-  if (is.character(y)) {
-    y <- x@id == y
-  }
-  d <- as.list(x@tibble[y,])
-  z <- rlang::inject(ob_arc(!!!d))
-  z@start <- x@start[y]
-  z@end <- x@end[y]
-  z@label <- x@label[y]
+S7::method(`[`, ob_arc) <- function(x, i) {
+  i <- character_index(i, x@id)
+  z <- data2shape(x@tibble[i,], ob_arc)
+  z@start <- x@start[i]
+  z@end <- x@end[i]
+  z@label <- na2zero(x@label[i])
   z@type <- x@type
   z
 }

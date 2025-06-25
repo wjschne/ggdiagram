@@ -60,20 +60,22 @@ pt_props <- list(
       }
     ),
     tibble = S7::new_property(getter = function(self) {
-      d <- list(x = self@x,
-                     y = self@y,
-                     alpha = self@alpha,
-                     color = self@color,
-                     fill = self@fill,
-                     shape = self@shape,
-                     size = self@size,
-                     stroke = self@stroke
-                     )
+      d <- list(
+        x = self@x,
+        y = self@y,
+        alpha = self@alpha,
+        color = self@color,
+        fill = self@fill,
+        shape = self@shape,
+        size = self@size,
+        stroke = self@stroke,
+        id = self@id
+      )
       get_non_empty_tibble(d)
     }),
     xy = S7::new_property(
       getter = function(self) {
-        `colnames<-`(cbind(self@x, self@y), c("x", "y"))
+        cbind(x = self@x, y = self@y)
       }
     )
   ),
@@ -134,11 +136,11 @@ pt_props <- list(
 #' @param theta Angle of the vector from the origin to the ob_point
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @slot auto_label Gets x and y coordinates and makes a label `"(x,y)"`
+#' @slot geom A function that converts the object to a geom. Any additional parameters are passed to `ggplot2::geom_point`.
 #' @slot length The number of points in the ob_point object
 #' @param style Gets and sets the styles associated with points
 #' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggplot2::geom_point`.
 #' @slot xy Gets a 2-column matrix of the x and y coordinates of the ob_point object.
-#' @slot geom A function that converts the object to a geom. Any additional parameters are passed to `ggplot2::geom_point`.
 #' @inherit ob_style params
 #' @export
 #' @return ob_point object
@@ -163,13 +165,17 @@ ob_point <- S7::new_class(
                          id = character(0),
                          ...) {
 
+    id <- as.character(id)
+
     if ("data.frame" %in% class(x)) {
       return(rlang::inject(ob_point(!!!get_non_empty_list(x))))
     }
 
     if ("matrix" %in% class(x)) {
       if (ncol(x) == 2) {
-        return(ob_point(x[,1], x[,2]))
+        y <- x[,2]
+        x <- x[,1]
+        # return(ob_point(x[,1], x[,2]))
       } else {
         stop(paste0("The input matrix must have 2 columns, not ", ncol(x), "."))
       }
@@ -183,7 +189,8 @@ ob_point <- S7::new_class(
         fill = fill,
         shape = shape,
         size = size,
-        stroke = stroke
+        stroke = stroke,
+        id = id
       ) +
       ob_style(...)
 
@@ -206,7 +213,7 @@ ob_point <- S7::new_class(
                  shape = d[["shape"]] %||% shape,
                  size = d[["size"]] %||% size,
                  stroke = d[["stroke"]] %||% stroke,
-                 id = id)
+                 id = d[["id"]] %||% id)
   }
 )
 
@@ -230,6 +237,9 @@ ob_polar <- S7::new_class(
                          stroke = numeric(0),
                         style = S7::class_missing,
                         id = character(0)) {
+
+    id <- as.character(id)
+
     if (length(r) == 0) r <- 1
     if (length(theta) == 0) theta <- degree(0)
     if (is.character(theta)) theta <- degree(theta)
@@ -273,16 +283,9 @@ str_properties(object,
               additional = additional)
 }
 
-S7::method(print, ob_point) <- function(x, ...) {
-  str(x, ...)
-    invisible(x)
-  }
-
-
 S7::method(get_tibble, ob_point) <- function(x) {
   x@tibble
 }
-
 
 S7::method(get_tibble_defaults, ob_point) <- function(x) {
   sp <- ob_style(
@@ -428,20 +431,197 @@ S7::method(label_object, ob_point) <- function(object, accuracy = .1) {
 
 
 S7::method(`[`, ob_point) <- function(x, i) {
-  d <- as.list(x@tibble[i,])
-  rlang::inject(ob_point(!!!d))
+  i <- character_index(i, x@id)
+  data2shape(x@tibble[i,], ob_point)
 }
 
+S7::method(`[<-`, ob_point) <- function(x, i, value) {
+  i <- character_index(i, x@id)
+  d <- assign_data(x, i, value)
+  data2shape(d, ob_point)
+}
+
+# Connect ----
+
+S7::method(connect, list(ob_point, ob_point)) <- function(
+    from,
+    to,
+    label = character(0),
+    arc_bend = NULL,
+    from_offset = NULL,
+    to_offset = NULL,
+    alpha = numeric(0),
+    arrow_head = the$arrow_head,
+    arrow_fins = list(),
+    arrowhead_length = 7,
+    length_head = numeric(0),
+    length_fins = numeric(0),
+    color = character(0),
+    lineend = numeric(0),
+    linejoin = numeric(0),
+    linewidth = numeric(0),
+    linewidth_fins = numeric(0),
+    linewidth_head = numeric(0),
+    linetype = numeric(0),
+    resect = numeric(0),
+    resect_fins = numeric(0),
+    resect_head = numeric(0),
+    stroke_color = character(0),
+    stroke_width = numeric(0),
+    style = S7::class_missing,
+    label_sloped = TRUE,
+    id = character(0),
+    ...) {
+  if (is.null(from_offset) && is.null(to_offset) && (is.null(arc_bend) || all(arc_bend == 0))) {
+    s <- ob_segment(from,
+                    to,
+                    label = label,
+                    from_offset = from_offset,
+                    to_offset = to_offset,
+                    alpha = alpha,
+                    arrow_head = arrow_head,
+                    arrow_fins = arrow_fins,
+                    arrowhead_length = arrowhead_length,
+                    length_head = length_head,
+                    length_fins = length_fins,
+                    color = color,
+                    lineend = lineend,
+                    linejoin = linejoin,
+                    linewidth = linewidth,
+                    linewidth_fins = linewidth_fins,
+                    linewidth_head = linewidth_head,
+                    linetype = linetype,
+                    resect = resect,
+                    resect_fins = resect_fins,
+                    resect_head = resect_head,
+                    stroke_color = stroke_color,
+                    stroke_width = stroke_width,
+                    style = style,
+                    label_sloped = label_sloped,
+                    id = id, ...)
+  } else if (!is.null(arc_bend)) {
+    if(any(arc_bend == 0)) stop("An arc cannot have an arc_bend of 0.")
+    m <- midpoint(from, to)
+    chord_distance <- distance(from, to)
+    theta_arc <- (m - from)@theta + sign(arc_bend) * degree(-90)
+    m_arc <- ob_polar(theta_arc, r = 0.5 * chord_distance * abs(arc_bend)) + m
+    sagitta_distance <- distance(m, m_arc)
+    r_arc <- sagitta_distance / 2 + (chord_distance ^ 2) / (8 * sagitta_distance)
+    center <- m_arc + ob_polar(theta_arc - turn(.5), r_arc)
+    cc <- ob_circle(center = center,
+                radius = distance(from, center))
+    theta_start <- cc@angle_at(from)@positive
+    theta_end <- cc@angle_at(to)@positive
+    theta_end[arc_bend < 0 & theta_end > theta_start] <- theta_end[arc_bend < 0 & theta_end > theta_start] + turn(-1)
 
 
-# S7::method(`[<-`, ob_point) <- function(x, i, value) {
-#   d <- assign_data(x,i,value)
-#   rlang::inject(ob_point(!!!d))
-# }
+    theta_end[arc_bend > 0 & theta_end < theta_start] <- theta_end[arc_bend > 0 & theta_end < theta_start] + turn(1)
+    s <- ob_arc(center = center,
+                radius = cc@radius,
+                label = label,
+                start = theta_start,
+                end = theta_end,
+                alpha = alpha,
+                arrow_head = arrow_head,
+                arrow_fins = arrow_fins,
+                arrowhead_length = arrowhead_length,
+                length_head = length_head,
+                length_fins = length_fins,
+                color = color,
+                lineend = lineend,
+                linejoin = linejoin,
+                linewidth = linewidth,
+                linewidth_fins = linewidth_fins,
+                linewidth_head = linewidth_head,
+                linetype = linetype,
+                resect = resect,
+                resect_fins = resect_fins,
+                resect_head = resect_head,
+                stroke_color = stroke_color,
+                stroke_width = stroke_width,
+                style = style,
+                label_sloped = label_sloped,
+                id = id,
+                ...)
+
+  } else {
+    from1 <- NULL
+    to1 <- NULL
+    if (is.character(from_offset)) {
+      from_offset <- ob_polar(theta = degree(from_offset), r = distance(from,to))
+    }
+
+    if (is.character(to_offset)) {
+      to_offset <- ob_polar(theta = degree(to_offset), r = distance(from,to))
+    }
+
+    d <- tibble::tibble(from_x = from@x,
+                        from_y = from@y,
+                        to_x = to@x,
+                        to_y = to@y)
 
 
-S7::method(connect, list(ob_point, ob_point)) <- function(from,to, arrow_head = arrowheadr::arrow_head_deltoid(d = 2.3, n = 100), length_head = 7, ...) {
-  s <- ob_segment(from,to, arrow_head = arrow_head, length_head = length_head, ...)
+
+    if (!is.null(from_offset)) {
+      from1 <- from + from_offset
+      d <- d |>
+        dplyr::mutate(fromoffset_x = from1@x,
+                      fromoffset_y = from1@y)
+    }
+
+    if (!is.null(to_offset)) {
+      to1 <- to + to_offset
+      d <- d |>
+        dplyr::mutate(tooffset_x = to1@x,
+                      tooffset_y = to1@y)
+    }
+
+
+
+    p_control <- d %>%
+      dplyr::mutate(rowid = dplyr::row_number()) |>
+      tidyr::pivot_longer(-rowid) |>
+      tidyr::separate(name, c("control", "name")) |>
+      tidyr::pivot_wider() |>
+      dplyr::mutate(control = factor(
+        control,
+        levels = c("from", "fromoffset", "tooffset", "to"))) |>
+      dplyr::arrange(rowid, control) |>
+      dplyr::select(-control) |>
+      tidyr::nest(.by = rowid) |>
+      dplyr::pull(data) %>%
+      purrr::map(ob_point)
+
+    s <- ob_bezier(p = p_control,
+                   label = label,
+                   from_offset = from_offset,
+                   to_offset = to_offset,
+                   alpha = alpha,
+                   arrow_head = arrow_head,
+                   arrow_fins = arrow_fins,
+                   arrowhead_length = arrowhead_length,
+                   length_head = length_head,
+                   length_fins = length_fins,
+                   color = color,
+                   lineend = lineend,
+                   linejoin = linejoin,
+                   linewidth = linewidth,
+                   linewidth_fins = linewidth_fins,
+                   linewidth_head = linewidth_head,
+                   linetype = linetype,
+                   resect = resect,
+                   resect_fins = resect_fins,
+                   resect_head = resect_head,
+                   stroke_color = stroke_color,
+                   stroke_width = stroke_width,
+                   style = style,
+                   label_sloped = label_sloped,
+                   id = id,
+                   ...
+                   )
+
+  }
+
   s
 
 }
@@ -456,6 +636,7 @@ S7::method(place, list(ob_point, ob_point)) <- function(x, from, where = "right"
 
 point_or_list <- S7::new_union(ob_point, S7::class_list)
 
+# Nudge ----
 
 S7::method(nudge, list(ob_point, S7::class_numeric, S7::class_numeric)) <- function(object, x, y) {
   object + ob_point(x, y)
@@ -490,7 +671,7 @@ S7::method(ob_covariance, list(ob_point, ob_point)) <- function(
     where = NULL,
     bend = 0,
     looseness = 1,
-    arrow_head = arrowheadr::arrow_head_deltoid(d = 2.3, n = 100),
+    arrow_head = the$arrow_head,
     length_head = 7,
     length_fins = 7,
     resect = 2,
@@ -548,3 +729,5 @@ S7::method(ob_covariance, list(ob_point, ob_point)) <- function(
                         resect = resect,
                         !!!dots))
 }
+
+

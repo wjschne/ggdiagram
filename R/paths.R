@@ -32,7 +32,8 @@ path_props <- list(
     })
   ),
   extra = list(
-    label = label_or_character_or_angle
+    label = label_or_character_or_angle,
+    label_sloped = S7::class_logical
   ),
   styles = ob_style@properties[path_styles],
   # derived ----
@@ -57,10 +58,6 @@ path_props <- list(
         l
       }
     ),
-    segments = S7::new_property(getter = function(self) {
-      purrr::map(self@p, ob_segment, style = self@style) %>%
-        bind()
-    }),
     style = S7::new_property(
       getter = function(self) {
         pr <- purrr::map(path_styles,
@@ -104,9 +101,7 @@ path_props <- list(
         stroke_color = self@stroke_color,
         stroke_width = self@stroke_width
       )
-      get_non_empty_tibble(d) |>
-        dplyr::mutate(p = purrr::map(p, \(x) {x@tibble |> dplyr::select(x,y)})) |>
-        tidyr::unnest(p)
+      get_non_empty_tibble(d)
 
     }),
     vertex_angle = S7::new_property(getter = function(self) {
@@ -147,6 +142,13 @@ path_props <- list(
     }),
     midpoint = S7::new_property(S7::class_function, getter = function(self) {
       \(position = .5, ...) midpoint(self, position = position, ...)
+    }),
+    segments = S7::new_property(getter = function(self) {
+      \(...) {
+        purrr::map(self@p, \(s) ob_segment(s, style = self@style, ...)) %>%
+                     bind()
+      }
+
     })
   ),
   # info ----
@@ -220,6 +222,7 @@ ob_path <- S7::new_class(
   ),
   constructor = function(p = S7::class_missing,
                          label = character(0),
+                         label_sloped = TRUE,
                          alpha = numeric(0),
                          arrow_head = S7::class_missing,
                          arrow_fins = S7::class_missing,
@@ -243,8 +246,31 @@ ob_path <- S7::new_class(
                          id = character(0),
                          ...) {
 
+    id <- as.character(id)
+
+    if (length(p) == 0) {
+      stop("A path cannot have 0 points.")
+
+    }
+
     if (S7::S7_inherits(p, ob_point)) p <- list(p)
-    p_style <- purrr::map(p, \(x) {
+
+    p_style <- purrr::imap(p, \(x, idx) {
+
+      if (x@length < 2) {
+        stop(
+          paste0(
+            "A path object must have at least 2 points. Path group ",
+            idx,
+            " has ",
+            length(x@length),
+            " point",
+            ifelse(x@length == 1, "", "s"),
+            "."
+          )
+        )
+      }
+
       purrr::map(unbind(x), \(xx) xx@style) |>
         purrr::reduce(`+`)
     })
@@ -271,11 +297,15 @@ ob_path <- S7::new_class(
         resect_fins = resect_fins,
         resect_head = resect_head,
         stroke_color = stroke_color,
-        stroke_width = stroke_width
+        stroke_width = stroke_width,
+        id = id
       ) +
       ob_style(...)
 
+
     non_empty_list <- get_non_empty_props(path_style)
+
+
 
 
 
@@ -287,22 +317,14 @@ ob_path <- S7::new_class(
       d <- dplyr::bind_cols(d, tibble::tibble(!!!non_empty_list))
     }
 
-
-
-    if (length(label) == 0) {
-      label = character(0)
-      } else {
-        d_l <- get_tibble(path_style)
-        cnames <- dplyr::intersect(colnames(d_l), lb_styles)
-        if (S7::S7_inherits(label, ob_label)) {
-          if ("color" %in% cnames && all(length(label@color) == 0)) {
-            label@color <- d_l$color
-          }
-        } else {
-          label <- rlang::inject(ob_label(label = label, !!!d_l[, cnames]))
-        }
+    if (is.character(label) || is.numeric(label) || S7::S7_inherits(label, ob_angle)) {
+      if (length(label)  > 0) {
+        label = ob_label(label)
+        label@style <- path_style + label@style
       }
+    }
 
+    if (length(label) == 0) label = character(0)
     # If there is one object but many labels, make multiple objects
     if (S7::S7_inherits(label, ob_label)) {
       if (label@length > 1 & nrow(d) == 1) {
@@ -311,9 +333,34 @@ ob_path <- S7::new_class(
       }
     }
 
+
+
+    # if (length(label) == 0) {
+    #   label = character(0)
+    #   } else {
+    #     d_l <- get_tibble(path_style)
+    #     cnames <- dplyr::intersect(colnames(d_l), lb_styles)
+    #     if (S7::S7_inherits(label, ob_label)) {
+    #       if ("color" %in% cnames && all(length(label@color) == 0)) {
+    #         label@color <- d_l$color
+    #       }
+    #     } else {
+    #       label <- rlang::inject(ob_label(label = label, !!!d_l[, cnames]))
+    #     }
+    #   }
+    #
+    # # If there is one object but many labels, make multiple objects
+    # if (S7::S7_inherits(label, ob_label)) {
+    #   if (label@length > 1 & nrow(d) == 1) {
+    #     d <- dplyr::mutate(d, k = label@length) %>%
+    #       tidyr::uncount(.data$k)
+    #   }
+    # }
+
     S7::new_object(.parent = S7::S7_object(),
                p =  d$p,
                label = label,
+               label_sloped = label_sloped,
                alpha = d[["alpha"]] %||% alpha,
                arrow_head = d[["arrow_head"]] %||% arrow_head,
                arrow_fins = d[["arrow_fins"]] %||% arrow_fins,
@@ -333,7 +380,7 @@ ob_path <- S7::new_class(
                resect_head = d[["resect_head"]] %||% resect_head,
                stroke_color = d[["stroke_color"]] %||% stroke_color,
                stroke_width = d[["stroke_width"]] %||% stroke_width,
-               id = id
+               id = d[["id"]] %||% id
     )
   })
 
@@ -362,9 +409,12 @@ S7::method(str, ob_path) <- function(
 }
 
 
-
 S7::method(get_tibble, ob_path) <- function(x) {
-  x@tibble
+  x@tibble %>%
+    dplyr::mutate(p = purrr::map(p, \(x) {
+      x@tibble |> dplyr::select(x,y)
+    })) |>
+    tidyr::unnest(p)
 }
 
 S7::method(as.geom, ob_path) <- function(x, ...) {
@@ -418,13 +468,10 @@ S7::method(as.geom, ob_path) <- function(x, ...) {
 }
 
 
-S7::method(`[`, ob_path) <- function(x, y) {
-  d <- x@tibble[y,]
-  dl <- d |>
-    dplyr::select(-.data$x, -.data$y, -.data$group) |>
-    unique() |>
-    unbind()
-  z <- rlang::inject(ob_path(p = x@p[y], !!!dl))
-  z@label <- x@label[y]
+S7::method(`[`, ob_path) <- function(x, i) {
+  i <- character_index(i, x@id)
+  z <- data2shape(x@tibble[i,], ob_path)
+  z@label <- na2zero(x@label[i])
   z
 }
+

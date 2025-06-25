@@ -8,10 +8,11 @@ ob_segment(
   p1 = S7::class_missing,
   p2 = S7::class_missing,
   label = character(0),
+  label_sloped = TRUE,
   alpha = numeric(0),
   arrow_head = ggarrow::arrow_head_minimal(90),
   arrow_fins = list(),
-  arrowhead_length = 4,
+  arrowhead_length = 7,
   length_head = numeric(0),
   length_fins = numeric(0),
   color = character(0),
@@ -41,6 +42,8 @@ ob_segment(
 \item{p2}{end point}
 
 \item{label}{A character, angle, or label object}
+
+\item{label_sloped}{A logical value indicating whether the label should be sloped with the segment}
 
 \item{alpha}{numeric value for alpha transparency}
 
@@ -87,6 +90,8 @@ ob_segment(
 \item{y}{overrides the x-coordinate of p2}
 
 \item{yend}{overrides the y-coordinate of p2}
+
+\item{id}{character string to identify object}
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
 }

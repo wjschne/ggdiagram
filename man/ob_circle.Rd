@@ -15,8 +15,8 @@ ob_circle(
   linetype = numeric(0),
   n = numeric(0),
   style = S7::class_missing,
-  x0 = numeric(0),
-  y0 = numeric(0),
+  x = numeric(0),
+  y = numeric(0),
   id = character(0),
   ...
 )
@@ -42,9 +42,11 @@ ob_circle(
 
 \item{style}{an ob_style object}
 
-\item{x0}{x-coordinate of center point. If specified, overrides x-coordinate of \verb{@center}.}
+\item{x}{x-coordinate of center point. If specified, overrides x-coordinate of \verb{@center}.}
 
-\item{y0}{x-coordinate of center point. If specified, overrides y-coordinate of \verb{@center}.}
+\item{y}{x-coordinate of center point. If specified, overrides y-coordinate of \verb{@center}.}
+
+\item{id}{character string to identify object}
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> arguments passed to style object}
 }

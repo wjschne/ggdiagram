@@ -5,14 +5,16 @@
 \alias{superscript}
 \title{Create subscripts}
 \usage{
-subscript(x, subscript = seq(length(x)))
+subscript(x, subscript = seq(length(x)), output = c("markdown", "latex"))
 
-superscript(x, superscript = seq(length(x)))
+superscript(x, superscript = seq(length(x)), output = c("markdown", "latex"))
 }
 \arguments{
 \item{x}{string}
 
 \item{subscript}{subscript}
+
+\item{output}{Can be \code{markdown} (default) or \code{latex}}
 
 \item{superscript}{superscript}
 }

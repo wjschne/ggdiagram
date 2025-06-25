@@ -7,7 +7,6 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/ggdiagram.png)](https://CRAN.R-project.org/package=ggdiagram)
-[![Codecov test coverage](https://codecov.io/gh/wjschne/ggdiagram/graph/badge.svg)](https://app.codecov.io/gh/wjschne/ggdiagram)
 <!-- badges: end -->
 
 The ggdiagram package takes an object-oriented approach to making
@@ -31,10 +30,10 @@ be thought of as extensions of `ggplot2::annotate`.
 
 ## Installation
 
-You can install ggdiagram from CRAN like so:
+You can install ggdiagram from R-universe like so:
 
 ``` r
-install.packages("ggdiagram")
+install.packages("ggdiagram", repos = "https://wjschne.r-universe.dev")
 ```
 
 Assuming the [remotes package](https://remotes.r-lib.org/) is already

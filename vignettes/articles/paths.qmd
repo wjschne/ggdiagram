@@ -52,7 +52,7 @@ To avoid repetitive code, we make a base plot:
 my_font <- "Roboto Condensed"
 my_font_size <- 20
 my_point_size <- 2
-my_arrowhead <- arrowheadr::arrow_head_deltoid(d = 2.3, n = 100)
+
 
 # my_colors <- viridis::viridis(2, begin = .25, end = .5)
 my_colors <- c("#3B528B", "#21908C")
@@ -120,7 +120,7 @@ bp +
       color = "dodgerblue4"
     ),
     arrowhead_length = 8,
-    arrow_head = my_arrowhead
+    arrow_head = arrowhead()
   )
 
 
@@ -142,7 +142,7 @@ bp +
       position = .1
     ),
     arrowhead_length = 8,
-    arrow_head = my_arrowhead
+    arrow_head = arrowhead()
   )
 ```
 
@@ -168,12 +168,9 @@ bp +
 
 It is possible to create color gradients along a path using the paths' segments.
 
-```{r}
+```{r segmentgradient}
 ggdiagram() +
-  ob_path(p_curve)@segments %>% 
-  set_props(color = viridis::viridis(p_curve@length - 1))
-
-
-
+  ob_path(p_curve)@segments(
+    color = viridis::viridis(p_curve@length - 1))
 ```
 

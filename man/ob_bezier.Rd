@@ -8,7 +8,7 @@ ob_bezier(
   p = S7::class_missing,
   label = character(0),
   label_sloped = TRUE,
-  n = 360,
+  n = 100,
   alpha = numeric(0),
   arrow_head = S7::class_missing,
   arrow_fins = S7::class_missing,
@@ -81,6 +81,8 @@ ob_bezier(
 \item{stroke_width}{Stroke width in arrows}
 
 \item{style}{Gets and sets the styles associated with ob_beziers}
+
+\item{id}{character string to identify object}
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}>  properties passed to style}
 }

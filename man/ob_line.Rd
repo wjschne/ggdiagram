@@ -49,6 +49,8 @@ ob_line(
 
 \item{style}{a style list}
 
+\item{id}{character string to identify object}
+
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
 }
 \value{

@@ -25,8 +25,8 @@ el_props <- list(
     bounding_box = S7::new_property(getter = function(self) {
       d_rect <- self@tibble |>
         dplyr::mutate(group = dplyr::row_number(),
-                      d = purrr::pmap(list(x0 = x0,
-                                           y0 = y0,
+                      d = purrr::pmap(list(x0 = x,
+                                           y0 = y,
                                            a = a,
                                            b = b,
                                            angle = angle,
@@ -88,10 +88,12 @@ el_props <- list(
       pi * ab * (1 + (3 * lamba ^ 2) / (10 + sqrt(4 - 3 * lamba ^ 2)))
     }),
     polygon = S7::new_property(getter = function(self) {
-      d <- self@tibble
+      d <- self@tibble %>%
+        dplyr::mutate(group = factor(dplyr::row_number()))
       if (!("n" %in% colnames(d))) {
         d$n <- 360
       }
+
 
       d$xy <- unbind(self) |>
         purrr::map(\(x) {
@@ -120,8 +122,8 @@ el_props <- list(
     ),
     tibble = S7::new_property(getter = function(self) {
       d <- list(
-        x0 = self@center@x,
-        y0 = self@center@y,
+        x = self@center@x,
+        y = self@center@y,
         a = self@a,
         b = self@b,
         angle = c(self@angle) * 360,
@@ -279,8 +281,8 @@ el_props <- list(
 #' @slot normal_at A function that finds a point perpendicular to the ellipse at angle `theta` at the specified `distance`. The `definitional` parameter is passed to the `point_at` function. If a point is supplied instead of an angle, the point is projected onto the ellipse and then the normal is calculated found from the projected point.
 #' @slot point_at A function that finds a point on the ellipse at an angle `theta`. If `definitional` is `FALSE` (default), then `theta` is interpreted as an angle. If `TRUE`, then `theta` is the parameter in the definition of the ellipse in polar coordinates.
 #' @slot tangent_at A function that finds a tangent line on the ellipse. Uses `point_at` to find the tangent point at angle `theta` and then returns the tangent line at that point. If a point is supplied instead of an angle, the point is projected onto the ellipse and then the tangent line is found from there.
-#' @param x0 x-coordinate of center point. If specified, overrides x-coordinate of `@center`.
-#' @param y0 x-coordinate of center point. If specified, overrides y-coordinate of `@center`.
+#' @param x x-coordinate of center point. If specified, overrides x-coordinate of `@center`.
+#' @param y x-coordinate of center point. If specified, overrides y-coordinate of `@center`.
 #' @inherit ob_style params
 #' @param style gets and sets style parameters
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object
@@ -296,6 +298,7 @@ ob_ellipse <- S7::new_class(
     !!!el_props$primary,
     !!!el_props$styles,
     !!!el_props$derived,
+    !!!compass_props,
     !!!el_props$funs,
     !!!el_props$info)),
   constructor = function(center = ob_point(0,0),
@@ -312,10 +315,11 @@ ob_ellipse <- S7::new_class(
                          linetype = numeric(0),
                          n = numeric(0),
                          style = S7::class_missing,
-                         x0 = numeric(0),
-                         y0 = numeric(0),
+                         x = numeric(0),
+                         y = numeric(0),
                          id = character(0),
                          ...) {
+    id <- as.character(id)
     if (!S7::S7_inherits(angle, ob_angle)) angle <- degree(angle)
 
 
@@ -334,20 +338,21 @@ ob_ellipse <- S7::new_class(
       ) +
       ob_style(...)
 
-    if (length(x0) > 0 | length(y0) > 0) {
-      if (length(x0) == 0) {
-        x0 <- 0
+
+    if (length(x) > 0 | length(y) > 0) {
+      if (length(x) == 0) {
+        x <- 0
       }
-      if (length(y0) == 0) {
-        y0 <- 0
+      if (length(y) == 0) {
+        y <- 0
       }
-      center <- ob_point(tibble::tibble(x = x0, y = y0))
+      center <- ob_point(tibble::tibble(x = x, y = y))
     }
 
     non_empty_list <- get_non_empty_props(el_style)
     d <- tibble::tibble(
-      x0 = center@x,
-      y0 = center@y,
+      x = center@x,
+      y = center@y,
       a = a,
       b = b,
       angle = angle@radian,
@@ -359,7 +364,7 @@ ob_ellipse <- S7::new_class(
         tibble::tibble(!!!non_empty_list))
     }
 
-    center = set_props(center, x = d$x0, y = d$y0)
+    center = set_props(center, x = d$x, y = d$y)
 
 
     label <- centerpoint_label(label = label,
@@ -378,7 +383,7 @@ ob_ellipse <- S7::new_class(
 
 
 
-     S7::new_object(centerpoint(center = center, label = label, id = id),
+     S7::new_object(centerpoint(center = center, label = label),
                  a = d$a,
                  b = d$b,
                  angle = radian(d$angle),
@@ -389,7 +394,8 @@ ob_ellipse <- S7::new_class(
                  fill = d[["fill"]]  %||% fill,
                  linewidth = d[["linewidth"]]  %||% linewidth,
                  linetype = d[["linetype"]]  %||% linetype,
-                 n = d[["n"]]  %||% n)
+                 n = d[["n"]]  %||% n,
+                 id = d[["id"]] %||% id)
   }
 )
 
@@ -434,50 +440,476 @@ S7::method(get_tibble_defaults, ob_ellipse) <- function(x) {
   get_tibble_defaults_helper(x, sp,required_aes = c("x0", "y0", "a", "b", "m1", "m2", "angle"))
 }
 
-S7::method(`[`, ob_ellipse) <- function(x, y) {
-  if (is.character(y)) {
-    y <- x@id == y
-  }
-  d <- x@tibble[y,]
-  dl <- as.list(dplyr::select(d, -x0, -y0))
-  z <- rlang::inject(ob_ellipse(center = ob_point(d$x0, d$y0), !!!dl))
-  z@label <- x@label[y]
-  if (!is.null(dl$angle)) {
-    z@angle <- x@angle[y]
+S7::method(`[`, ob_ellipse) <- function(x, i) {
+  i <- character_index(i, x@id)
+  d <- x@tibble[i,]
+
+  z <- data2shape(d, ob_ellipse)
+  z@label <- na2zero(x@label[i])
+  if (!is.null(d$angle)) {
+    z@angle <- x@angle[i]
   }
   z
 }
 
-S7::method(connect, list(centerpoint, centerpoint)) <- function(from, to, ...) {
+
+
+S7::method(connect, list(centerpoint, centerpoint)) <- function(
+    from,
+    to,
+    label = character(0),
+    arc_bend = NULL,
+    from_offset = NULL,
+    to_offset = NULL,
+    alpha = numeric(0),
+    arrow_head = the$arrow_head,
+    arrow_fins = list(),
+    arrowhead_length = 7,
+    length_head = numeric(0),
+    length_fins = numeric(0),
+    color = character(0),
+    lineend = numeric(0),
+    linejoin = numeric(0),
+    linewidth = numeric(0),
+    linewidth_fins = numeric(0),
+    linewidth_head = numeric(0),
+    linetype = numeric(0),
+    resect = numeric(0),
+    resect_fins = numeric(0),
+    resect_head = numeric(0),
+    stroke_color = character(0),
+    stroke_width = numeric(0),
+    style = S7::class_missing,
+    label_sloped = TRUE,
+    id = character(0),
+    ...) {
   theta <- radian(atan2(to@center@y - from@center@y, to@center@x - from@center@x))
-  connect(from@point_at(theta), to@point_at(theta + degree(180)), ...)
+
+  if (is.null(arc_bend) && is.null(from_offset) && is.null(to_offset)) {
+    p_from <- from@point_at(theta)
+    p_to <- to@point_at(theta + degree(180))
+  } else {
+    p_from <- from@center
+    p_to <- to@center
+  }
+
+  s <- connect(p_from,
+          p_to,
+          label = label,
+          arc_bend = arc_bend,
+          from_offset = from_offset,
+          to_offset = to_offset,
+          alpha = alpha,
+          arrow_head = arrow_head,
+          arrow_fins = arrow_fins,
+          arrowhead_length = arrowhead_length,
+          length_head = length_head,
+          length_fins = length_fins,
+          color = color,
+          lineend = lineend,
+          linejoin = linejoin,
+          linewidth = linewidth,
+          linewidth_fins = linewidth_fins,
+          linewidth_head = linewidth_head,
+          linetype = linetype,
+          resect = resect,
+          resect_fins = resect_fins,
+          resect_head = resect_head,
+          stroke_color = stroke_color,
+          stroke_width = stroke_width,
+          style = style,
+          label_sloped = label_sloped,
+          id = id,
+          ...)
+
+  if (S7::S7_inherits(s, ob_arc)) {
+    i_from <- map_ob(s, \(sss) intersection(sss, from))
+    i_to <- map_ob(s, \(sss) intersection(sss, to))
+
+    ss <- s@circle@angle_at(i_from)
+    ee <- s@circle@angle_at(i_to)
+    ee[ee > ss & arc_bend < 0] <- ee[ee > ss & arc_bend < 0] + turn(-1)
+    ee[ee < ss & arc_bend >= 0] <- ee[ee < ss & arc_bend >= 0] + turn(1)
+
+#
+    s@start <- ss
+    s@end <- ee
+
+  } else if (S7::S7_inherits(s, ob_bezier)) {
+    pp <- s@path
+    pp@p <- purrr::map2(pp@p, unbind(from), \(p, ff) p[inside(p, ff) != 1])
+    pp@p <- purrr::map2(pp@p, unbind(to), \(p, tt) p[inside(p, tt) != 1])
+
+    pp@label <- s@label
+    s <- pp
+
+
+  }
+
+  s
 }
 
-S7::method(connect, list(centerpoint, ob_point)) <- function(from, to, ...) {
+S7::method(connect, list(centerpoint, ob_point)) <- function(
+    from,
+    to,
+    label = character(0),
+    arc_bend = NULL,
+    from_offset = NULL,
+    to_offset = NULL,
+    alpha = numeric(0),
+    arrow_head = the$arrow_head,
+    arrow_fins = list(),
+    arrowhead_length = 7,
+    length_head = numeric(0),
+    length_fins = numeric(0),
+    color = character(0),
+    lineend = numeric(0),
+    linejoin = numeric(0),
+    linewidth = numeric(0),
+    linewidth_fins = numeric(0),
+    linewidth_head = numeric(0),
+    linetype = numeric(0),
+    resect = numeric(0),
+    resect_fins = numeric(0),
+    resect_head = numeric(0),
+    stroke_color = character(0),
+    stroke_width = numeric(0),
+    style = S7::class_missing,
+    label_sloped = TRUE,
+    id = character(0),
+    ...) {
+
   theta <- radian(atan2(to@y - from@center@y,
                         to@x - from@center@x))
-  connect(from@point_at(theta), to, ...)
+
+  if (is.null(arc_bend) && is.null(from_offset) && is.null(to_offset)) {
+    p_from <- from@point_at(theta)
+  } else {
+    p_from <- from@center
+  }
+
+
+  s <- connect(p_from,
+          to,
+          label = label,
+          arc_bend = arc_bend,
+          from_offset = from_offset,
+          to_offset = to_offset,
+          alpha = alpha,
+          arrow_head = arrow_head,
+          arrow_fins = arrow_fins,
+          arrowhead_length = arrowhead_length,
+          length_head = length_head,
+          length_fins = length_fins,
+          color = color,
+          lineend = lineend,
+          linejoin = linejoin,
+          linewidth = linewidth,
+          linewidth_fins = linewidth_fins,
+          linewidth_head = linewidth_head,
+          linetype = linetype,
+          resect = resect,
+          resect_fins = resect_fins,
+          resect_head = resect_head,
+          stroke_color = stroke_color,
+          stroke_width = stroke_width,
+          style = style,
+          label_sloped = label_sloped,
+          id = id,
+          ...)
+
+  if (S7::S7_inherits(s, ob_arc)) {
+    i_from <- map_ob(s, \(sss) intersection(sss, from))
+    ss <- s@circle@angle_at(i_from)
+    ee <- s@circle@angle_at(to)
+    ee[ee > ss & arc_bend < 0] <- ee[ee > ss & arc_bend < 0] + turn(-1)
+    ee[ee < ss & arc_bend >= 0] <- ee[ee < ss & arc_bend >= 0] + turn(1)
+
+    #
+    s@start <- ss
+    s@end <- ee
+
+  } else if (S7::S7_inherits(s, ob_bezier)) {
+    pp <- s@path
+    pp@p <- purrr::map(pp@p, \(p) p[inside(p, from) != 1])
+    pp@label <- s@label
+    s <- pp
+
+
+  }
+
+  s
+
 }
 
-S7::method(connect, list(ob_point, centerpoint)) <- function(from, to, ...) {
+S7::method(connect, list(ob_point, centerpoint)) <- function(
+    from,
+    to,
+    label = character(0),
+    arc_bend = NULL,
+    from_offset = NULL,
+    to_offset = NULL,
+    alpha = numeric(0),
+    arrow_head = the$arrow_head,
+    arrow_fins = list(),
+    arrowhead_length = 7,
+    length_head = numeric(0),
+    length_fins = numeric(0),
+    color = character(0),
+    lineend = numeric(0),
+    linejoin = numeric(0),
+    linewidth = numeric(0),
+    linewidth_fins = numeric(0),
+    linewidth_head = numeric(0),
+    linetype = numeric(0),
+    resect = numeric(0),
+    resect_fins = numeric(0),
+    resect_head = numeric(0),
+    stroke_color = character(0),
+    stroke_width = numeric(0),
+    style = S7::class_missing,
+    label_sloped = TRUE,
+    id = character(0),
+    ...) {
   theta <- radian(atan2(to@center@y - from@y,
                         to@center@x - from@x))
-  connect(from, to@point_at(theta + degree(180)), ...)
+
+  if (is.null(arc_bend) && is.null(from_offset) && is.null(to_offset)) {
+    p_to <- to@point_at(theta + degree(180))
+  } else {
+    p_to <- to@center
+  }
+
+  s <- connect(from,
+          p_to,
+          label = label,
+          arc_bend = arc_bend,
+          from_offset = from_offset,
+          to_offset = to_offset,
+          alpha = alpha,
+          arrow_head = arrow_head,
+          arrow_fins = arrow_fins,
+          arrowhead_length = arrowhead_length,
+          length_head = length_head,
+          length_fins = length_fins,
+          color = color,
+          lineend = lineend,
+          linejoin = linejoin,
+          linewidth = linewidth,
+          linewidth_fins = linewidth_fins,
+          linewidth_head = linewidth_head,
+          linetype = linetype,
+          resect = resect,
+          resect_fins = resect_fins,
+          resect_head = resect_head,
+          stroke_color = stroke_color,
+          stroke_width = stroke_width,
+          style = style,
+          label_sloped = label_sloped,
+          id = id,
+          ...)
+
+  if (S7::S7_inherits(s, ob_arc)) {
+    i_to <- map_ob(s, \(sss) intersection(sss, to))
+
+    ss <- s@circle@angle_at(from)
+    ee <- s@circle@angle_at(i_to)
+    ee[ee > ss & arc_bend < 0] <- ee[ee > ss & arc_bend < 0] + turn(-1)
+    ee[ee < ss & arc_bend >= 0] <- ee[ee < ss & arc_bend >= 0] + turn(1)
+
+    #
+    s@start <- ss
+    s@end <- ee
+
+  } else if (S7::S7_inherits(s, ob_bezier)) {
+    pp <- s@path
+    pp@p <- purrr::map(pp@p, \(p) p[inside(p, to) != 1])
+    pp@label <- s@label
+    s <- pp
+
+
+  }
+  s
 }
 
-S7::method(connect, list(centerpoint, ob_line)) <- function(from, to, ...) {
+S7::method(connect, list(centerpoint, ob_line)) <- function(
+    from,
+    to,
+    label = character(0),
+    arc_bend = NULL,
+    from_offset = NULL,
+    to_offset = NULL,
+    alpha = numeric(0),
+    arrow_head = the$arrow_head,
+    arrow_fins = list(),
+    arrowhead_length = 7,
+    length_head = numeric(0),
+    length_fins = numeric(0),
+    color = character(0),
+    lineend = numeric(0),
+    linejoin = numeric(0),
+    linewidth = numeric(0),
+    linewidth_fins = numeric(0),
+    linewidth_head = numeric(0),
+    linetype = numeric(0),
+    resect = numeric(0),
+    resect_fins = numeric(0),
+    resect_head = numeric(0),
+    stroke_color = character(0),
+    stroke_width = numeric(0),
+    style = S7::class_missing,
+    label_sloped = TRUE,
+    id = character(0),
+    ...) {
   p2 <- projection(from@center, to)
-  connect(from, p2, ...)
+  connect(from = from,
+          to = p2,
+          label = label,
+          arc_bend = arc_bend,
+          from_offset = from_offset,
+          to_offset = to_offset,
+          alpha = alpha,
+          arrow_head = arrow_head,
+          arrow_fins = arrow_fins,
+          arrowhead_length = arrowhead_length,
+          length_head = length_head,
+          length_fins = length_fins,
+          color = color,
+          lineend = lineend,
+          linejoin = linejoin,
+          linewidth = linewidth,
+          linewidth_fins = linewidth_fins,
+          linewidth_head = linewidth_head,
+          linetype = linetype,
+          resect = resect,
+          resect_fins = resect_fins,
+          resect_head = resect_head,
+          stroke_color = stroke_color,
+          stroke_width = stroke_width,
+          style = style,
+          label_sloped = label_sloped,
+          id = id,
+          ...)
 }
 
-S7::method(connect, list(ob_line, centerpoint)) <- function(from, to, ...) {
+S7::method(connect, list(ob_line, centerpoint)) <- function(
+    from,
+    to,
+    label = character(0),
+    arc_bend = NULL,
+    from_offset = NULL,
+    to_offset = NULL,
+    alpha = numeric(0),
+    arrow_head = the$arrow_head,
+    arrow_fins = list(),
+    arrowhead_length = 7,
+    length_head = numeric(0),
+    length_fins = numeric(0),
+    color = character(0),
+    lineend = numeric(0),
+    linejoin = numeric(0),
+    linewidth = numeric(0),
+    linewidth_fins = numeric(0),
+    linewidth_head = numeric(0),
+    linetype = numeric(0),
+    resect = numeric(0),
+    resect_fins = numeric(0),
+    resect_head = numeric(0),
+    stroke_color = character(0),
+    stroke_width = numeric(0),
+    style = S7::class_missing,
+    label_sloped = TRUE,
+    id = character(0),
+    ...) {
   p1 <- projection(to@center, from)
-  connect(p1, to, ...)
+  connect(p1,
+          to,
+          label = label,
+          arc_bend = arc_bend,
+          from_offset = from_offset,
+          to_offset = to_offset,
+          alpha = alpha,
+          arrow_head = arrow_head,
+          arrow_fins = arrow_fins,
+          arrowhead_length = arrowhead_length,
+          length_head = length_head,
+          length_fins = length_fins,
+          color = color,
+          lineend = lineend,
+          linejoin = linejoin,
+          linewidth = linewidth,
+          linewidth_fins = linewidth_fins,
+          linewidth_head = linewidth_head,
+          linetype = linetype,
+          resect = resect,
+          resect_fins = resect_fins,
+          resect_head = resect_head,
+          stroke_color = stroke_color,
+          stroke_width = stroke_width,
+          style = style,
+          label_sloped = label_sloped,
+          id = id,
+          ...)
 }
 
-S7::method(connect, list(S7::class_list, centerpoint)) <- function(from, to, ...) {
+S7::method(connect, list(S7::class_list, centerpoint)) <- function(
+    from,
+    to,
+    label = character(0),
+    arc_bend = NULL,
+    from_offset = NULL,
+    to_offset = NULL,
+    alpha = numeric(0),
+    arrow_head = the$arrow_head,
+    arrow_fins = list(),
+    arrowhead_length = 7,
+    length_head = numeric(0),
+    length_fins = numeric(0),
+    color = character(0),
+    lineend = numeric(0),
+    linejoin = numeric(0),
+    linewidth = numeric(0),
+    linewidth_fins = numeric(0),
+    linewidth_head = numeric(0),
+    linetype = numeric(0),
+    resect = numeric(0),
+    resect_fins = numeric(0),
+    resect_head = numeric(0),
+    stroke_color = character(0),
+    stroke_width = numeric(0),
+    style = S7::class_missing,
+    label_sloped = TRUE,
+    id = character(0),
+    ...) {
   purrr::map(unbind(from), \(xx) {
-    connect(xx,to,...)
+    connect(xx,
+            to,
+            label = label,
+            arc_bend = arc_bend,
+            from_offset = from_offset,
+            to_offset = to_offset,
+            alpha = alpha,
+            arrow_head = arrow_head,
+            arrow_fins = arrow_fins,
+            arrowhead_length = arrowhead_length,
+            length_head = length_head,
+            length_fins = length_fins,
+            color = color,
+            lineend = lineend,
+            linejoin = linejoin,
+            linewidth = linewidth,
+            linewidth_fins = linewidth_fins,
+            linewidth_head = linewidth_head,
+            linetype = linetype,
+            resect = resect,
+            resect_fins = resect_fins,
+            resect_head = resect_head,
+            stroke_color = stroke_color,
+            stroke_width = stroke_width,
+            style = style,
+            label_sloped = label_sloped,
+            id = id,
+            ...)
   }) |>
     bind()
 
@@ -487,14 +919,25 @@ S7::method(midpoint, list(centerpoint, centerpoint)) <- function(x,y, position =
   midpoint(connect(x,y), position = position, ...)
 }
 
+#' @name ob_variance
+#' @export
+#' @rdname ob_variance
+#' @examples
+#' theta <- degree(seq(0, 360 - 45, 45))
+#' ggdiagram() +
+#' {x <- ob_circle(ob_polar(theta, r = 3))} +
+#' ob_variance(x,
+#'             label = ob_label(LETTERS[seq_along(c(theta))]),
+#'             where = theta,
+#'             looseness = 1.25)
 S7::method(ob_variance, centerpoint) <- function(
     x,
     where = "north",
     theta = 50,
     bend = 0,
     looseness = 1,
-    arrow_head = arrowheadr::arrow_head_deltoid(d = 2.3, n = 100),
-    arrow_fins = arrowheadr::arrow_head_deltoid(d = 2.3, n = 100),
+    arrow_head = the$arrow_head,
+    arrow_fins = the$arrow_head,
     resect = 2,
     ...) {
   if (!S7::S7_inherits(where, ob_angle)) where <- degree(where)
@@ -580,14 +1023,29 @@ S7::method(ob_variance, centerpoint) <- function(
           !!!dots))
 }
 
-
+#' @name ob_covariance
+#' @export
+#' @rdname ob_covariance
+#' @examples
+#' ggdiagram() +
+#' {x <- ob_circle(ob_point(c(-2, 2), 0))} +
+#' ob_covariance(x = x[1],
+#'               y = x[2],
+#'               label = ob_label("A"))
+#'
+#' ggdiagram() +
+#' x +
+#' ob_covariance(x = x[1],
+#'               y = x[2],
+#'               label = ob_label("A"),
+#'               where = -45, looseness = .75)
 S7::method(ob_covariance, list(centerpoint, centerpoint)) <- function(
     x,
     y,
     where = NULL,
     bend = 0,
     looseness = 1,
-    arrow_head = arrowheadr::arrow_head_deltoid(d = 2.3, n = 100),
+    arrow_head = the$arrow_head,
     length_head = 7,
     length_fins = 7,
     resect = 2,
@@ -712,3 +1170,46 @@ S7::method(ob_array, ob_ellipse) <- function(x, k = 2, sep = 1, where = "east", 
 }
 
 
+S7::method(`[<-`, shape) <- function(x, i, value) {
+  .fn <- S7::S7_class(x)
+  if (!S7::S7_inherits(value, .fn)) stop("Relplacement value must be of the same type")
+
+  i <- character_index(i, x@id)
+
+
+  d <- x@tibble %>%
+    dplyr::bind_rows(value@tibble %>% dplyr::filter(FALSE))
+  d[i,] <- value@tibble
+
+
+  z <- data2shape(d, S7::S7_class(x))
+  z@label <- x@label
+
+  # If original object x has no label and value does,
+  # then z needs blank labels
+  if (length(z@label) == 0) {
+    if (length(value@label) > 0) {
+      z@label <- ob_label("", center = z@center)
+    }
+  } else {
+    # if object x has a label, but value does not,
+    # then value needs blank labels
+    if (length(value@label) == 0) {
+      value@label <- ob_label("", center = value@center)
+    }
+  }
+
+  z@label[i] <- value@label
+  z@label@center <- z@center
+
+  if (length(x@id) > 0) {
+    if (length(value@id) > 0) {
+      x@id[i] <- value@id
+    }
+    z@id <- x@id
+  }
+  if (!is.null(d$angle)) {
+    z@angle[i] <- value@angle
+  }
+  z
+}

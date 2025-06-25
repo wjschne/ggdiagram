@@ -23,8 +23,10 @@ sg_props <- list(
   # primary ----
   primary = list(p1 = S7::new_property(class = ob_point),
                  p2 = S7::new_property(class = ob_point)),
+  # extra ----
   extra = list(
-    label = S7::new_property(label_or_character_or_angle)
+    label = S7::new_property(label_or_character_or_angle),
+    label_sloped = S7::new_property(S7::class_logical)
   ),
   styles = ob_style@properties[sg_styles],
   # derived ----
@@ -99,7 +101,8 @@ sg_props <- list(
           resect_fins = self@resect_fins,
           resect_head = self@resect_head,
           stroke_color = self@stroke_color,
-          stroke_width = self@stroke_width
+          stroke_width = self@stroke_width,
+          id = self@id
         )
         get_non_empty_tibble(d)
       }
@@ -200,7 +203,7 @@ sg_props <- list(
           "linemitre"
         ),
         required_aes = c("x", "y", "xend", "yend"),
-        omit_names = c("linejoin", "rule", "group", "label"),
+        omit_names = c("linejoin", "rule", "group", "label", "label_sloped"),
         inherit.aes = FALSE,
         style = sg_styles
       )
@@ -215,6 +218,7 @@ sg_props <- list(
 #' @param p1 starting point
 #' @param p2 end point
 #' @param label A character, angle, or label object
+#' @param label_sloped A logical value indicating whether the label should be sloped with the segment
 #' @param x overrides the x-coordinate of p1
 #' @param xend overrides the y-coordinate of p1
 #' @param y overrides the x-coordinate of p2
@@ -244,10 +248,11 @@ ob_segment <- S7::new_class(
   constructor = function(p1 = S7::class_missing,
                          p2 = S7::class_missing,
                          label = character(0),
+                         label_sloped = TRUE,
                          alpha = numeric(0),
                          arrow_head = ggarrow::arrow_head_minimal(90),
                          arrow_fins = list(),
-                         arrowhead_length = 4,
+                         arrowhead_length = 7,
                          length_head = numeric(0),
                          length_fins = numeric(0),
                          color = character(0),
@@ -269,6 +274,7 @@ ob_segment <- S7::new_class(
                          yend = S7::class_missing,
                          id = character(0),
                          ...) {
+    id <- as.character(id)
 
     if ((length(x) > 0) || (length(y) > 0)) {
       if (length(x) == 0) {
@@ -327,6 +333,7 @@ ob_segment <- S7::new_class(
     user_overrides <- rlang::list2(...)
 
     s_style <- p1@style + p2@style + ob_style(
+      id = id,
       alpha = alpha,
       arrow_head = arrow_head,
       arrow_fins = arrow_fins,
@@ -369,20 +376,41 @@ ob_segment <- S7::new_class(
       if (all(label@center == ob_point(0,0))) {
         label@center <- midpoint(p1,p2, position = pos)
       }
-      if (all(length(label@angle) == 0)) {
+      if (all(length(label@angle) == 0) && label_sloped) {
         label@angle = (p2 - p1)@theta
       }
       label@style <- s_style + label@style
+
+    } else {
+      if (length(label) > 0) {
+        th <- degree(0)
+        if (label_sloped) {
+          th <- degree((p2 - p1)@theta)
+        }
+        label <- ob_label(
+          label = label,
+          center = midpoint(p1,p2, position = pos),
+          vjust = ifelse(label_sloped, 0, 0.5),
+          angle = th,
+          fill = ifelse(label_sloped, NA, "white"))
+
+        label@style <- s_style + label@style
+      } else {
+        label = character(0)
+      }
+
     }
 
-    label <- centerpoint_label(
-      label,
-      midpoint(p1,p2, position = pos),
-      d,
-      "ob_segment",
-      style = s_style,
-      vjust = 0,
-      angle = (p2 - p1)@theta)
+
+
+
+
+
+    # label <- centerpoint_label(
+    #   label = label,
+    #   center = midpoint(p1,p2, position = pos),
+    #   d = d,
+    #   shape_name = "ob_segment")
 
     # If there is one object but many labels, make multiple objects
     if (S7::S7_inherits(label, ob_label)) {
@@ -403,6 +431,7 @@ ob_segment <- S7::new_class(
       p1 = p1,
       p2 = p2,
       label = label,
+      label_sloped = label_sloped,
       alpha = d[["alpha"]] %||% alpha,
       arrow_head = d[["arrow_head"]] %||% arrow_head,
       arrow_fins = d[["arrow_fins"]] %||% arrow_fins,
@@ -421,7 +450,7 @@ ob_segment <- S7::new_class(
       resect_head = d[["resect_head"]] %||% resect_head,
       stroke_color = d[["stroke_color"]] %||% stroke_color,
       stroke_width = d[["stroke_width"]] %||% stroke_width,
-      id = id
+      id = d[["id"]] %||% id
     )
   }
 
@@ -559,16 +588,26 @@ S7::method(nudge, list(ob_segment, ob_segment, S7::class_missing)) <- function(o
 
 
 S7::method(`[`, ob_segment) <- function(x, i) {
-  d <- x@tibble[i,]
-  p1 <- x@p1[i]
-  p2 <- x@p2[i]
-  d <- as.list(dplyr::select(d, dplyr::all_of(c("x", "y", "xend", "yend"))))
-  z <- rlang::inject(ob_segment(p1 = p1, p2 = p2, !!!d))
-  z@label <- x@label[i]
-  z
+  i <- character_index(i, x@id)
+  d <- as.list(x@tibble[i,])
+  l <- na2zero(x@label[i])
+
+  rlang::inject(ob_segment(label = l, !!!d))
 }
 
 
 S7::method(`==`, list(ob_segment, ob_segment)) <- function(e1, e2) {
   (e1@p1 == e2@p1) & (e1@p2 == e2@p2) # nocov
+}
+
+
+S7::method(equation, ob_segment) <- function(
+    x,
+    type = c("y", "general", "parametric"),
+    output = c("markdown", "latex"),
+    digits = 2) {
+  equation(x@line,
+           type = match.arg(type),
+           output = match.arg(output),
+           digits = digits)
 }

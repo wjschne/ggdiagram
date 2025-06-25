@@ -7,6 +7,7 @@
 ob_path(
   p = S7::class_missing,
   label = character(0),
+  label_sloped = TRUE,
   alpha = numeric(0),
   arrow_head = S7::class_missing,
   arrow_fins = S7::class_missing,
@@ -75,6 +76,8 @@ ob_path(
 \item{stroke_width}{Stroke width in arrows}
 
 \item{style}{Gets and sets the styles associated with paths}
+
+\item{id}{character string to identify object}
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
 }

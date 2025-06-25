@@ -81,5 +81,8 @@ test_that("point misc", {
   expect_no_error(ob_covariance(p1,p2, where = "west", bend = 10, label = "A"))
   expect_no_error(ob_covariance(p1,p2))
 
+  p <- ob_point(1:3, 4:6, id = letters[1:3])
+  expect_identical(p["b"],  p[2])
+
 
 })

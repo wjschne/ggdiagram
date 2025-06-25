@@ -23,7 +23,22 @@ S7::props
 
 # internal states ----
 the <- new.env(parent = emptyenv())
-the$arrow_head <- arrowheadr::arrow_head_deltoid(d = 2.3, n = 100)
+
+
+
+
+#' @export
+#' @noRd
+character_index <- function(i, id) {
+  if (is.character(i) || is.factor(i)) {
+    i <- vctrs::vec_locate_matches(i, id)$haystack |>
+      na.omit() |>
+      unclass()
+    if (length(i) == 0) stop("There are no objects with an id equal to the value specified.")
+  }
+  i
+
+}
 
 # classes ----
 ## class_aesthetics_list ----
@@ -123,6 +138,7 @@ class_margin <- S7::new_class(
   }
 )
 
+
 ## class_arrowhead ----
 class_arrowhead <- S7::new_class(
   "class_arrowhead",
@@ -144,15 +160,41 @@ class_arrowhead <- S7::new_class(
 )
 
 
+the$arrow_head <- class_arrowhead(arrowheadr::arrow_head_deltoid(d = 2.3, n = 100))
 
+
+#' Return default arrowhead
+#'
+#' The arrowhead function returns the default arrowhead. The set_default_arrowhead function will change the default arrowhead in the current R session. For details about making arrowheads, see the [ggarrow](https://teunbrand.github.io/ggarrow/articles/customisation.html) and [arrowheadr](https://wjschne.github.io/arrowheadr/) packages.
+#' @param m A matrix used to make a ggarrow arrowhead
+#' @export
+arrowhead <- function() {
+  the$arrow_head
+
+}
+
+#' @rdname arrowhead
+#' @export
+set_default_arrowhead <- function(m) {
+  old <- the$arrow_head
+  the$arrow_head <- class_arrowhead(m)
+  invisible(old)
+}
 
 ## has_style ----
 has_style <- S7::new_class(name = "has_style", properties = list(id = class_character), abstract = TRUE)
 S7::S4_register(has_style)
 S7::method(print, has_style) <- function(x, ...) {
-  str(x, ...)
+  cli::cli_text("{.cls {S7::S7_class(x)@name}}")
+  print(x@tibble)
   invisible(x)
 }
+
+
+
+
+
+## ob_shape_list ----
 
 #' ob_shape_list
 #'
@@ -160,10 +202,19 @@ S7::method(print, has_style) <- function(x, ...) {
 #' @param .data a list of objects
 #' @export
 #' @return An object of `ob_shape_list` class. List of objects that can be converted to geoms
-ob_shape_list <- S7::new_class("ob_shape_list", S7::class_list, validator = function(self) {
-  if(!all(purrr::map_lgl(self, S7::S7_inherits, class = has_style))) "All objects must be ggdiagram objects that can be converted to geoms"
-})
+ob_shape_list <- S7::new_class(
+  "ob_shape_list",
+  S7::class_list,
+  validator = function(self) {
+    if (!all(purrr::map_lgl(self, S7::S7_inherits, class = has_style)))
+      "All objects must be ggdiagram objects that can be converted to geoms"
+  }
+)
 
+## assign data ----
+
+#' @keywords internal
+#' @noRd
 assign_data <- function(x,i, value) {
   dx <- x@tibble
   dx_unit <- sapply(dx, grid::is.unit)
@@ -193,14 +244,21 @@ assign_data <- function(x,i, value) {
     dplyr::add_row(dv)
 
   dx[i, ] <- dv
-
-
-  as.list(dx)
+  dx
 }
 
+# shape ----
 shape <- S7::new_class(name = "shape",
                    parent = has_style,
                    abstract = TRUE)
+
+S7::method(`[`, shape) <- function(x, i) {
+  i <- character_index(i, x@id)
+  z <- data2shape(x@tibble[i,], S7::S7_class(x))
+  z@label <- na2zero(x@label[i])
+  z
+}
+
 xy <- S7::new_class(name = "xy",
                 parent = shape,
                 abstract = TRUE)
@@ -229,7 +287,7 @@ ob_variance <- S7::new_generic("ob_variance", dispatch_args = "x", fun = functio
     theta = 50,
     bend = 0,
     looseness = 1,
-    arrow_head = arrowheadr::arrow_head_deltoid(d = 2.3, n = 100),
+    arrow_head = the$arrow_head,
     resect = 2,
     ...) {
   S7::S7_dispatch()
@@ -256,7 +314,7 @@ ob_covariance <- S7::new_generic(
                  where = NULL,
                  bend = 0,
                  looseness = 1,
-                 arrow_head = arrowheadr::arrow_head_deltoid(d = 2.3, n = 100),
+                 arrow_head = the$arrow_head,
                  length_head = 7,
                  length_fins = 7,
                  resect = 2,
@@ -298,6 +356,9 @@ S7::method(bind, S7::class_list) <- function(x, ...) {
   all_angles <- all(sapply(lapply(x, class), function(xx)
     "ob_angle" %in% xx))
   if (all_angles) {
+    if (length(x) == 0) {
+      return(degree())
+      }
     trns <- unlist(x)
     if (S7::S7_inherits(x[[1]], turn)) {
       return(turn(trns))
@@ -335,6 +396,7 @@ S7::method(bind, S7::class_list) <- function(x, ...) {
                 ob_label = ob_label,
                 ob_line = ob_line,
                 ob_ngon = ob_ngon,
+                ob_path = ob_path,
                 ob_point = ob_point,
                 ob_rectangle = ob_rectangle,
                 ob_reuleaux = ob_reuleaux,
@@ -609,6 +671,13 @@ get_tibble_defaults_helper <- function(
   d <- get_tibble(x) %>%
     dplyr::select(-dplyr::any_of("id"))
 
+  if ("x0" %in% required_aes && "x" %in% colnames(d)) {
+    d <- dplyr::rename(d, x0 = x)
+  }
+  if ("y0" %in% required_aes && "y" %in% colnames(d)) {
+    d <- dplyr::rename(d, y0 = y)
+  }
+
   for (n in setdiff(colnames(d), required_aes)) {
     d_prop <- S7::prop(default_style, n)
     if (!(is.null(d_prop) || identical(d_prop, list()))) {
@@ -652,7 +721,7 @@ get_non_empty_list <- function(l) {
 get_non_empty_tibble <- function(d) {
   d <- Filter(\(x) length(x) > 0, d)
   d <- Filter(\(x) !is.null(x), d)
-  d <- Filter(\(x) !is.null(x), d)
+  # d <- Filter(\(x) !is.na(x), d)
   tibble::as_tibble(d)
 }
 
@@ -662,6 +731,16 @@ replace_na <- function(x, y) {
   ifelse(is.na(x), y, x)
 }
 
+#' @keywords internal
+#' @noRd
+na2zero <- function(x) {
+  if (is.character(x)) {
+    if (all(is.na(x))) {
+      x <- character(0)
+    }
+  }
+  x
+}
 
 #' @keywords internal
 #' @noRd
@@ -732,6 +811,7 @@ ob_array_helper <- function(x, k = 2, sep = 1, where = "east", anchor = "center"
 #'
 #' @param x text
 #' @param subscript subscript
+#' @param output Can be `markdown` (default) or `latex`
 #'
 #' @return text
 #' @export
@@ -739,20 +819,37 @@ ob_array_helper <- function(x, k = 2, sep = 1, where = "east", anchor = "center"
 #' @examples
 #' subscript("X", 1:3)
 #' superscript(c("A", "B"), 2)
-subscript <- function(x, subscript = seq(length(x))) {
-  paste0(x, "<sub>", subscript, "</sub>")
+subscript <- function(x,
+                      subscript = seq(length(x)),
+                      output = c("markdown", "latex")) {
+  output <- match.arg(output)
+  if (output == "markdown") {
+    paste0(x, "<sub>", subscript, "</sub>")
+  } else {
+    paste0(x, "_{", subscript, "}")
+  }
+
 }
 
 #' Create superscript
 #'
 #' @param x string
 #' @param superscript superscript
+#' @param output Can be `markdown` (default) or `latex`
 #'
 #' @return string
 #' @rdname subscript
 #' @export
-superscript <- function(x, superscript = seq(length(x))) {
-  paste0(x, "<sup>", superscript, "</sup>")
+superscript <- function(x,
+                        superscript = seq(length(x)),
+                      output = c("markdown", "latex")) {
+  output <- match.arg(output)
+  if (output == "markdown") {
+    paste0(x, "<sup>", superscript, "</sup>")
+  } else {
+    paste0(x, "^{", superscript, "}")
+  }
+
 }
 
 
@@ -1064,18 +1161,28 @@ trimmer <- function(x) {
 
 #' @keywords internal
 #' @noRd
-rounder <- function(x, digits = 2, add = FALSE) {
+rounder <- function(x, digits = 2, add = FALSE, output = c("markdown", "latex")) {
+  output <- match.arg(output)
+  minus <- ifelse(output == "markdown", "\u2212", "-")
   if (add) {
-    r <- paste0(ifelse(x > 0, " + ", "
-      \u2212 "), trimws(formatC(
+    r <- paste0(ifelse(x > 0, " + ", paste0(" ", minus, " ")), trimws(formatC(
         abs(x), digits = digits, format = "fg"
       )))
   } else {
-    r <- paste0(ifelse(x > 0, "", "\u2212"), trimws(formatC(
+    r <- paste0(ifelse(x > 0, "", minus), trimws(formatC(
       abs(x), digits = digits, format = "fg"
     )))
   }
   r
+}
+
+#' @keywords internal
+#' @noRd
+emphasis <- function(x, output = "markdown") {
+  if (output == "markdown") {
+    x <- paste0("*", x, "*")
+  }
+  x
 }
 
 # Equation ----
@@ -1084,7 +1191,8 @@ rounder <- function(x, digits = 2, add = FALSE) {
 #' Get equation for object
 #'
 #' @param x object
-#' @param type equation type. Can be `y`, `general`, or `parametric`
+#' @param type equation type. Can be `y` (default), `general`, or `parametric`
+#' @param output Can be `markdown` (default) or `latex`
 #' @param digits rounding digits
 #' @export
 #' @return string
@@ -1093,6 +1201,7 @@ equation <- S7::new_generic(
   dispatch_args = "x",
   fun = function(x,
                  type = c("y", "general", "parametric"),
+                 output = c("markdown", "latex"),
                  digits = 2) {
     S7::S7_dispatch()
     })
@@ -1152,14 +1261,55 @@ rotate2columnmatrix <- function(x, theta) {
 #' @export
 label_object <- S7::new_generic("label_object", "object")
 
+# connect ----
+
 #' Arrow connect one shape to another
 #'
+#' By default, will create an `ob_segment` with an arrowhead on the end. If `arc_bend` is specified, an `ob_arc` with an arrowhead will be created instead. If `from_offset` or `to_offset` are specified, an `ob_bezier` with an arrowhead will be created.
 #' @param from first shape object
 #' @param to second shape object
+#' @param arc_bend If specified, the arrow will be an arc with a sagitta sized in proportion to the distance between points. The sagitta is is the largest distance from the arc's chord to the arc itself. Negative values bend left. Positive values bend right. 1 and -1 create semi-circles. 0 is a straight segment. If specified, will override `from_offset` and `to_offset`.
+#' @param from_offset If specified, arrow will be a bezier curve. The `from_offset` is a point (ob_point or ob_polar) that is added to `from` to act as a control point in the bezier curve.
+#' @param to_offset If specified, arrow will be a bezier curve. The `to_offset` is a point (ob_point or ob_polar) that is added to `to` to act as a control point in the bezier curve.
+#' @inheritParams ob_bezier
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> Arguments passed to style
 #' @export
 #' @return ob_segment
-connect <- S7::new_generic("connect", c("from", "to"))
+connect <- S7::new_generic(
+  "connect",
+  c("from", "to"),
+  function(from,
+           to,
+           ...,
+           label = character(0),
+           arc_bend = NULL,
+           from_offset = NULL,
+           to_offset = NULL,
+           alpha = numeric(0),
+           arrow_head = the$arrow_head,
+           arrow_fins = list(),
+           arrowhead_length = 7,
+           length_head = numeric(0),
+           length_fins = numeric(0),
+           color = character(0),
+           lineend = numeric(0),
+           linejoin = numeric(0),
+           linewidth = numeric(0),
+           linewidth_fins = numeric(0),
+           linewidth_head = numeric(0),
+           linetype = numeric(0),
+           resect = numeric(0),
+           resect_fins = numeric(0),
+           resect_head = numeric(0),
+           stroke_color = character(0),
+           stroke_width = numeric(0),
+           style = S7::class_missing,
+           label_sloped = TRUE,
+           id = character(0)) {
+    S7::S7_dispatch()
+  })
+
+
 
 #' Place an object a specified distance from another object
 #'
@@ -1254,17 +1404,26 @@ ggdiagram <- function(
 }
 
 # data2shape ----
+
+#' data2shape
+#'
 #' Convert data.frame or tibble to shape
 #'
 #' @param data data.frame or tibble
 #' @param shape shape function
-#'
-#' @returns
+#' @returns shape object
 #' @export
-#'
 #' @examples
-#' data2shape(data.frame(x = 1, y = 2), ob_point)
+#' d <- data.frame(
+#'   x = 1:2,
+#'   y = 1:2,
+#'   fill = c("blue", "forestgreen"),
+#'   radius = c(.25,0.5))
+#'
+#' ggdiagram() +
+#'   data2shape(d, ob_circle)
 data2shape <- function(data, shape) {
   l <- as.list(data)
   rlang::inject(shape(!!!l))
 }
+

@@ -24,9 +24,9 @@ test_that(desc = "circle", {
   # perimeter
   expect_equal(c1@circumference, 6 * pi)
   expect_equal(c1@diameter, 6)
-  expect_no_error(ob_circle(x0 = 0, y0 = 0))
-  expect_no_error(ob_circle(x0 = 0))
-  expect_no_error(ob_circle(y0 = 0))
+  expect_no_error(ob_circle(x = 0, y = 0))
+  expect_no_error(ob_circle(x = 0))
+  expect_no_error(ob_circle(y = 0))
   expect_no_error(ob_circle(color = 1, label = ob_label(c("A", "B"))))
   p1 <- ob_point(0, 3)
   p2 <- ob_point(1, 1)
@@ -67,14 +67,14 @@ test_that(desc = "circle", {
   expect_identical(nudge(ob_circle(), y = 1),
                    ob_circle(x = 0, y = 1))
 
-  expect_identical(data2shape(data.frame(x0  = 1, y0 = 2), ob_circle),
-                   ob_circle(x0 = 1, y0 = 2))
+  expect_identical(data2shape(data.frame(x  = 1, y = 2), ob_circle),
+                   ob_circle(x = 1, y = 2))
 })
 
 test_that(desc = "arc", {
-  expect_no_error(ob_arc(x0 = 0, y0 = 0))
-  expect_no_error(ob_arc(x0 = 0))
-  expect_no_error(ob_arc(y0 = 0))
+  expect_no_error(ob_arc(x = 0, y = 0))
+  expect_no_error(ob_arc(x = 0))
+  expect_no_error(ob_arc(y = 0))
   expect_no_error(ob_arc(label = ob_label(c("A", "B"))))
   expect_identical(ob_arc(label = ob_label("A")), ob_arc(label = "A"))
   expect_identical(ob_arc(label = ob_label(degree(34))), ob_arc(label = degree(34)))
@@ -95,9 +95,9 @@ test_that(desc = "arc", {
 
 # ellipse ----
 test_that(desc = "ellipse", {
-  expect_no_error(ob_ellipse(x0 = 0, y0 = 0))
-  expect_no_error(ob_ellipse(x0 = 0))
-  expect_no_error(ob_ellipse(y0 = 0))
+  expect_no_error(ob_ellipse(x = 0, y = 0))
+  expect_no_error(ob_ellipse(x = 0))
+  expect_no_error(ob_ellipse(y = 0))
   expect_no_error(ob_ellipse(a = 1, label = ob_label(c("A", "B"))))
   expect_no_error(ob_ellipse(color = "red"))
   expect_no_error(ob_ellipse(label = c("a", "b")))
@@ -170,12 +170,11 @@ test_that(desc = "label", {
   expect_identical(place(x = l, from = ob_point(1,2), where = "left", sep = 1), ob_label("A", x = 0, y = 2))
   expect_identical(place(x = l, from = l, where = "left", sep = 1), ob_label("A", x = -1, y = 0))
 
-
-
+ l2 <- ob_label(c("A", "B"), id = c("A", "B"))
+ expect_identical(l2["A"], ob_label("A", id = "A"))
 })
 
 
-ob_label("A", angle = degree(45))@angle
 # segment ----
 test_that(desc = "segment", {
   # segment
@@ -224,6 +223,10 @@ test_that(desc = "segment", {
   expect_no_error(ob_segment(p1, p2, label = ob_label(c("3", "A"))))
   expect_no_error(rotate(ob_segment(p1, p2), theta = 45))
 
+  s2 <- ob_segment(ob_point(1:2, 1), ob_point(1:2, 2), id = c("A", "B"))
+  sB <- ob_segment(ob_point(2, 1), ob_point(2, 2), id = "B")
+  expect_equal(s2["B"], sB)
+
 
 })
 
@@ -239,8 +242,8 @@ test_that(desc = "rectangle", {
   expect_no_error(ob_rectangle())
   expect_no_error(r2@normal_at(degree(45)))
   expect_no_error(ob_rectangle(angle = 45))
-  expect_no_error(ob_rectangle(x0 = 3))
-  expect_no_error(ob_rectangle(y0 = 3))
+  expect_no_error(ob_rectangle(x = 3))
+  expect_no_error(ob_rectangle(y = 3))
   expect_no_error(ob_rectangle(north = a))
   expect_no_error(ob_rectangle(north = a, width = 3))
   expect_no_error(ob_rectangle(north = a, height = 3))

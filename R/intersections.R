@@ -98,11 +98,17 @@ S7::method(intersection, list(ob_segment, ob_segment)) <- function(x,y, ...) {
 }
 
 S7::method(intersection, list(ob_line, ob_segment)) <- function(x,y, ...) {
-  intersection(x, y@line, ...)
+  ll <- intersection(x, y@line, ...)
+  if (length(ll) > 0) {
+    intersection(ll, y, ...)
+  } else {
+    ll
+    }
+
 }
 
 S7::method(intersection, list(ob_segment, ob_line)) <- function(x,y, ...) {
-  intersection(x@line, y, ...)
+  intersection(y,x, ...)
 }
 
 S7::method(intersection, list(ob_line, ob_circle)) <- function(x,y, ...) {
@@ -149,11 +155,25 @@ S7::method(intersection, list(ob_circle, ob_segment)) <- function(x,y, ...) {
 
 
 S7::method(intersection, list(ob_point, ob_line)) <- function(x, y, ...) {
-  if (identical(TRUE, all.equal(0, y@a * x@x + y@b * x@y + y@c))) {
-    s <- rlang::list2(...)
-    rlang::inject(set_props(x, !!!s))
-  } else {
+
+  is_on_line <- tibble::tibble(
+    ya = y@a,
+    xx = x@x,
+    yb = y@b,
+    xy = x@y,
+    yc = y@c,
+    is_on = abs(ya * xx + yb * xy + yc) < .Machine$double.eps) %>%
+    dplyr::pull(is_on)
+
+  if (all(!is_on_line)) {
     list()
+  } else {
+    s <- rlang::list2(...)
+    if (x@length == 1) {
+      rlang::inject(set_props(x, !!!s))
+    } else {
+      rlang::inject(set_props(x[is_on_line], !!!s))
+    }
   }
 }
 
@@ -164,14 +184,21 @@ S7::method(intersection, list(ob_line, ob_point)) <- function(x, y, ...) {
 
 S7::method(intersection, list(ob_point, ob_segment)) <- function(x, y, ...) {
   if (identical(x, intersection(x, y@line))) {
-    xp1 <- distance(x, y@p1)
-    xp2 <- distance(x, y@p2)
-    p1p2 <- distance(y)
-    if (identical(TRUE, all.equal(p1p2, xp1 + xp2))) {
-      s <- rlang::list2(...)
+    is_same <- tibble::tibble(
+      xp1 = distance(x, y@p1),
+      xp2 = distance(x, y@p2),
+      p1p2 = distance(y),
+      equalish = abs(p1p2 - xp1 - xp2) < .Machine$double.eps * 2) %>%
+      dplyr::pull(equalish)
+
+    s <- rlang::list2(...)
+
+    if (all(!is_same)) {
+      list()
+    } else if (x@length == 1) {
       rlang::inject(set_props(x, !!!s))
     } else {
-      list()
+      rlang::inject(set_props(x[is_same], !!!s))
     }
   } else {
     list()
@@ -216,14 +243,10 @@ S7::method(intersection, list(ob_rectangle, ob_segment)) <- function(x, y, ...) 
 }
 
 S7::method(intersection, list(ob_point, ob_rectangle)) <- function(x, y, ...) {
-  unique(c(intersection(x, ob_segment(p1 = y@northeast,
-                                   p2 = y@northwest), ...),
-           intersection(x, ob_segment(p1 = y@northwest,
-                                   p2 = y@southwest), ...),
-           intersection(x, ob_segment(p1 = y@southwest,
-                                   p2 = y@southeast), ...),
-           intersection(x, ob_segment(p1 = y@southeast,
-                                   p2 = y@northeast), ...)
+  unique(c(intersection(x, y@side@east, ...),
+           intersection(x, y@side@west, ...),
+           intersection(x, y@side@north, ...),
+           intersection(x, y@side@south, ...)
   ))
 }
 
@@ -260,7 +283,7 @@ S7::method(intersection, list(ob_segment, ob_ellipse)) <- function(x, y, ...) {
 
          if (length(tt) == 0) {
            message("There are no points of intersections with this ellipse.")
-           return(NULL)
+           return(list())
          }
 
 
@@ -438,17 +461,18 @@ S7::method(intersection, list(ob_line, ob_ellipse)) <- function(x, y, ...) {
 
 
 S7::method(intersection, list(ob_circle, ob_circle)) <- function(x,y, ...) {
+  dd <- distance(x@center, y@center)
   # https://paulbourke.net/geometry/circlesphere/
-  if (any(distance(x@center, y@center) > x@radius + y@radius)) {
-    stop("At least one pair of circles is too far apart to intersect.")
+  if (any(dd > x@radius + y@radius)) {
+    message("At least one pair of circles is too far apart to intersect.")
   }
 
-  if (any(distance(x@center, y@center) < abs(x@radius - y@radius))) {
-    stop("At least one pair of circles does not intersect because one circle contains the other.")
+  if (any(dd < abs(x@radius - y@radius))) {
+    message("At least one pair of circles does not intersect because one circle contains the other.")
   }
 
-  if (any(x == y)) {
-    stop("At least one pair of cirlces has the same center and radius, and thus they intersect at an infinite number of points.")
+  if (any(dd == 0) && x@radius == y@radius) {
+    message("At least one pair of cirlces has the same center and radius, and thus they intersect at an infinite number of points.")
 
   }
 
@@ -507,3 +531,127 @@ S7::method(intersection, list(ob_ngon, ob_segment)) <- function(x,y, ...) {
 S7::method(intersection, list(ob_segment, ob_ngon)) <- function(x,y, ...) {
   intersection(y,x@segments, ...)
 }
+
+
+S7::method(intersection, list(ob_circle, ob_point)) <- function(x,y, ...) {
+  is_on <- abs(distance(x@center, y) - x@radius) < 10 * .Machine$double.eps
+  if (any(is_on)) {
+    y[is_on]
+  } else {
+    list()
+  }
+}
+
+S7::method(intersection, list(ob_point, ob_circle)) <- function(x,y, ...) {
+  intersection(y,x)
+}
+
+S7::method(intersection, list(ob_arc, ob_point)) <- function(x, y, ...) {
+
+  xy <- intersection(x@circle, y)
+  # print(xy)
+  if (length(xy) > 0) {
+    th <- c(x@angle_at(xy)) %% 1
+    st <- c(x@start)
+    en <- c(x@end)
+    # en[en < st] <- en[en < st] + turn(1)
+    # print(st)
+    # print(th)
+    # print(en)
+    is_between <- ((st <= th & th <= en) | (en <= th & th <= st)) | ((st <= th + 1 & th + 1 <= en) | (en <= th + 1 & th + 1 <= st)) | ((st <= th - 1 & th - 1 <= en) | (en <= th - 1 & th - 1 <= st))
+
+    if (any(is_between)) {
+      xy[is_between]
+    } else {
+      list()
+    }
+  } else {
+    list()
+  }
+
+}
+
+S7::method(intersection, list(ob_point, ob_arc)) <- function(x, y, ...) {
+  intersection(y, x)
+}
+
+
+S7::method(intersection, list(ob_arc, ob_circle)) <- function(x, y, ...) {
+  intersection(x, intersection(x@circle, y))
+}
+
+S7::method(intersection, list(ob_circle, ob_arc)) <- function(x, y, ...) {
+  intersection(y, x)
+}
+
+ob_arc_or_bezier <- S7::new_union(ob_arc, ob_bezier)
+
+S7::method(intersection, list(ob_arc_or_bezier, centerpoint)) <- function(x, y, ...) {
+  if (x@n == 360)
+    x@n <- 3600
+  d_x <- x@polygon %>%
+    tidyr::nest(.by = group)
+
+
+  d_y <- tibble(group = factor(seq(y@length)), e = unbind(y))
+
+
+
+  if (x@length == 1 & y@length > 1) {
+    d_x <- d_x %>% mutate(k = y@length) %>%
+      uncount(k)
+  }
+
+  if (y@length == 1 & x@length > 1) {
+    d_y <- d_y %>% mutate(k = x@length) %>%
+      uncount(k)
+  }
+
+  if (nrow(d_x) != nrow(d_y))
+    stop(
+      paste0(
+        "Objects have incompatible lengths. x has ",
+        x@length,
+        " arcs, and y has ",
+        y@length,
+        " ellipses."
+      )
+    )
+
+  d_x$e <- d_y$e
+
+
+  d_x %>%
+    dplyr::mutate(p = purrr::map2(data, e, \(d, ee) {
+      inside(ob_point(d), ee)
+    })) %>%
+    dplyr::select(-e) %>%
+    tidyr::unnest(c(data, p)) %>%
+    dplyr::filter(abs(p - dplyr::lag(p)) == 2 | p == 0) %>%
+    dplyr::select(-p, -group) %>%
+    data2shape(ob_point)
+
+}
+
+S7::method(intersection, list(centerpoint, ob_arc)) <- function(x,y, ...) {
+  intersection(y, x, ...)
+}
+
+S7::method(intersection, list(ob_path, ob_line)) <- function(
+    x,
+    y,
+    ...) {
+  purrr::map(unbind(x), \(p) {
+    intersection(p@segments(), y)
+  }) %>%
+    bind()
+}
+
+S7::method(intersection, list(ob_line, ob_path)) <- function(
+    x,
+    y,
+    ...) {
+  intersection(y, x, ...)
+}
+
+

@@ -71,23 +71,23 @@ rc_props <- list(
     bounding_box = S7::new_property(getter = function(self) {
 
       d_rect <- tibble::tibble(
-        x0 = c(
+        x = c(
           self@northwest@x,
           self@northeast@x,
           self@southwest@x,
           self@southeast@x
         ),
-        y0 = c(
+        y = c(
           self@northwest@y,
           self@northeast@y,
           self@southwest@y,
           self@southeast@y
         )
       ) |>
-        dplyr::summarise(xmin = min(x0),
-                         xmax = max(x0),
-                         ymin = min(y0),
-                         ymax = max(y0))
+        dplyr::summarise(xmin = min(x),
+                         xmax = max(x),
+                         ymin = min(y),
+                         ymax = max(y))
 
       ob_rectangle(southwest = ob_point(d_rect$xmin, d_rect$ymin),
                 northeast = ob_point(d_rect$xmax, d_rect$ymax))
@@ -201,8 +201,8 @@ rc_props <- list(
 
 
       d <- list(
-        x0 = self@center@x,
-        y0 = self@center@y,
+        x = self@center@x,
+        y = self@center@y,
         width = self@width,
         height = self@height,
         vertex_radius = self@vertex_radius,
@@ -270,8 +270,7 @@ rc_props <- list(
           dplyr::bind_cols(dl) |>
           tidyr::unnest(data)
 
-        rlang::inject(ob_point(!!!d))
-
+        data2shape(d, ob_point)
       }
     }),
     place = pr_place,
@@ -327,8 +326,7 @@ rc_props <- list(
             dplyr::bind_cols(dl) |>
             tidyr::unnest(data)
 
-            rlang::inject(ob_point(!!!d))
-
+          data2shape(d, ob_point)
 
         }
       }
@@ -354,8 +352,8 @@ rc_props <- list(
 #' @param southwest lower left point
 #' @param southeast lower right point
 #' @param label A character, angle, or label object
-#' @param x0 overrides x-coordinate in `center@x`
-#' @param y0 overrides y-coordinate in `center@x`
+#' @param x overrides x-coordinate in `center@x`
+#' @param y overrides y-coordinate in `center@x`
 #' @param vertex_radius A numeric or unit vector of length one, specifying the corner radius for rounded corners
 #' @param style a style object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object
@@ -394,12 +392,12 @@ ob_rectangle <- S7::new_class(
                          linewidth = numeric(0),
                          linetype = numeric(0),
                          style = S7::class_missing,
-                         x0 = numeric(0),
-                         y0 = numeric(0),
+                         x = numeric(0),
+                         y = numeric(0),
                          id = character(0),
                          ...) {
 
-
+    id <- as.character(id)
 
     if (length(angle) == 0) angle <- degree(0)
 
@@ -408,14 +406,14 @@ ob_rectangle <- S7::new_class(
       angle <- degree(angle)
       }
 
-    if (length(x0) > 0 | length(y0) > 0) {
-      if (length(x0) == 0) {
-        x0 <- 0
+    if (length(x) > 0 | length(y) > 0) {
+      if (length(x) == 0) {
+        x <- 0
       }
-      if (length(y0) == 0) {
-        y0 <- 0
+      if (length(y) == 0) {
+        y <- 0
       }
-      center <- ob_point(tibble::tibble(x = x0, y = y0))
+      center <- ob_point(tibble::tibble(x = x, y = y))
     }
 
     hasnorth <- FALSE
@@ -576,14 +574,15 @@ ob_rectangle <- S7::new_class(
       color = color,
       fill = fill,
       linewidth = linewidth,
-      linetype = linetype
+      linetype = linetype,
+      id = id
     ) +
       ob_style(...)
 
     non_empty_list <- get_non_empty_props(rc_style)
     d <- tibble::tibble(
-      x0 = center@x,
-      y0 = center@y,
+      x = center@x,
+      y = center@y,
       width = width,
       height = height,
       angle = angle@radian
@@ -592,7 +591,7 @@ ob_rectangle <- S7::new_class(
       d <- dplyr::bind_cols(d, tibble::tibble(!!!non_empty_list))
     }
 
-    center = set_props(center, x = d$x0, y = d$y0)
+    center = set_props(center, x = d$x, y = d$y)
     center@style <- rc_style
     label <- centerpoint_label(
       label,
@@ -622,7 +621,7 @@ ob_rectangle <- S7::new_class(
       fill = d[["fill"]]  %||% fill,
       linewidth = d[["linewidth"]]  %||% linewidth,
       linetype = d[["linetype"]]  %||% linetype,
-      id = id
+      id = d[["id"]] %||% id
     )
   }
 )
@@ -638,17 +637,6 @@ S7::method(str, ob_rectangle) <- function(
     nest.lev = nest.lev
   )
 }
-
-
-S7::method(print, ob_rectangle) <- function(x, ...) {
-  str(x, ...)
-  invisible(x)
-}
-
-
-
-
-
 
 S7::method(get_tibble, ob_rectangle) <- function(x) {
   xx <- x
@@ -706,7 +694,8 @@ S7::method(`==`, list(ob_rectangle, ob_rectangle)) <- function(e1, e2) { # nocov
     (e1@angle == e2@angle)
 } # nocov end
 
-S7::method(`[`, ob_rectangle) <- function(x, y) {
+S7::method(`[`, ob_rectangle) <- function(x, i) {
+  i <- character_index(i, x@id)
 
   d <- list(
     x = x@center@x,
@@ -718,16 +707,17 @@ S7::method(`[`, ob_rectangle) <- function(x, y) {
     fill = x@fill,
     linewidth = x@linewidth,
     linetype = x@linetype,
-    angle = x@angle@radian) |>
+    angle = x@angle@radian,
+    id = x@id) |>
     get_non_empty_tibble()
 
-  d <- d[y,]
+  d <- d[i,]
+  z <- d %>%
+    data2shape(ob_rectangle)
 
-  dl <- as.list(dplyr::select(d, -dplyr::any_of(c("x", "y"))))
-  z <- rlang::inject(ob_rectangle(center = ob_point(d$x, d$y), !!!dl))
-  z@label <- x@label[y]
-  if (!is.null(dl$angle)) {
-    z@angle <- x@angle[y]
+  z@label <- na2zero(x@label[i])
+  if (!is.null(d$angle)) {
+    z@angle <- x@angle[i]
   }
   z
 }

@@ -28,7 +28,6 @@ knitr::opts_chunk$set(
 
 
 my_font <- "Roboto Condensed"
-my_arrow_head <- arrowheadr::arrow_head_deltoid(d = 2.3, n = 100)
 
 update_geom_defaults("richtext",
                      list(family = my_font, 
@@ -298,7 +297,7 @@ Subsetting can be used for assignment in ggdiagram objects. For example, in @fig
 p <- ob_point(x = 1:4, 
               y = 2:5)
 p[1] <- ob_point(0,0, color = "firebrick", size = 5)
-class(p)
+
 ggplot() + 
   coord_equal() +
   p 
@@ -339,5 +338,278 @@ ggdiagram() +
           x[c(seq(2,k),     seq(3, k))],
           resect = 2)
 ```
+
+
+## Subset by id
+
+Functions with an `ob_*` prefix have an `id` property that can be used to subset objects. The `id` property does not have to  be unique.
+
+```{r}
+p <- ob_point(1:3, 4:6, id = c("A", "B", "C"))
+p[c("B", "A")]
+
+
+```
+
+## Creating objects from data.frames/tibbles
+
+If you start with a data.frame (or tibble), and all you need to do is display objects, just use the ggplot2 functions. In general, the direct use of a ggplot2 function will render more quickly than its analogous ggdiagram functions. The reason to convert data into ggdiagram objects is to do something with them that would be hard to do with ggplot2 functions.
+
+For example, one of the problems that prompted me to make the ggdiagram package was that I wanted to make path diagrams for structural equation models with full control of every aspect of the diagram. There are excellent functions from other packages that automate the process of making a path diagram (e.g., [`semPlot`](https://cran.r-project.org/package=semPlot), [semptools](https://sfcheung.github.io/semptools/index.html), and [`lavaanPlot`](https://lavaanplot.alexlishinski.com/)), with options for greater flexibility. Even so, I could not figure out how to make the plots fully customizable.
+
+My goal is for ggdiagram to automate the tedious parts of making path diagrams and make it easy for customization. The code for @fig-lavaan shows the whole process, including the tedious bits that eventually will be tucked way in functions.
+
+```{r}
+#| label: fig-lavaan
+#| fig-cap: A latent variable model
+#| fig-width: 8
+#| fig-height: 5
+
+library(dplyr)
+library(tidyr)
+library(lavaan)
+
+# Structural Model
+m <- '
+Gv =~ VisualPerception + Cubes + Lozenges + CapitalsSpeed
+Gs =~ CapitalsSpeed + CountingSpeed + AdditionSpeed 
+Gc =~ ParagraphComp + SentenceComp + WordMeaning
+g =~ Gv + Gc + Gs
+'
+
+# Observed variable name conversion
+onames <- c(VisualPerception = "x1",
+               Cubes = "x2",
+               Lozenges = "x3",
+               CapitalsSpeed = "x9",
+               AdditionSpeed = "x7",
+               CountingSpeed = "x8",
+               ParagraphComp = "x4",
+               SentenceComp = "x5",
+               WordMeaning = "x6")
+
+# Fit model with converted names
+fit <- sem(m, 
+           data = HolzingerSwineford1939 %>% 
+             dplyr::rename(all_of(onames)))
+
+
+
+# Parameter table, find primary indicators
+pt <- standardizedsolution(fit) %>% 
+  mutate(primary_indicator = dplyr::dense_rank(
+    desc(abs(est.std))) == 1 & op == "=~", 
+    .by = c(rhs, op))
+
+# Function to calculate hierarchy depth
+get_depth <- function(x, model, depth = 0L, max_depth = 20) {
+  
+  if (class(model) == "character") {
+    model <- lavaanify(model)
+  }
+  
+  if (class(model) == "lavaan") {
+    model <- parametertable(model)
+  }
+  
+  # Does it have children?
+  children <- model %>% 
+    filter(op == "=~", lhs %in% x) %>% 
+    pull(rhs) %>% 
+    unique()
+  
+  # Detect infinite loops
+  if (depth >= max_depth) stop("Maximum depth reached. May be nonrecursive. ")
+  
+  # Do children have children?
+  if (length(children) > 0) {
+    get_depth(children, model, depth = depth + 1)
+  } else {
+    # No children, return depth
+    return(depth + 1)
+  }
+}
+
+# Oberved and latent names
+o_names <- lavaan::lavNames(fit, "ov")
+l_names <- lavaan::lavNames(fit, "lv")
+
+# Make colors
+latent_colors <- l_names %>% 
+  length() %>% 
+  viridis::viridis(alpha = .5, begin = .2, end = .75) %>% 
+  `names<-`(rev(l_names))
+
+# Make data for creating objects
+d <- tibble(id = c(o_names, l_names))  %>% 
+  mutate(depth = map_int(id, \(i) get_depth(i, model = m)),
+         type = ifelse(id %in% l_names, "latent", "observed"),
+         m1 = ifelse(type == "latent", 2, 15),
+         a = ifelse(type == "latent", 2, 1.5),
+         color = NA,
+         indicators = map(id, \(v) {
+           pt %>% 
+             filter(op == "=~" & lhs == v) %>% 
+             select(indicator = rhs,
+                    loading = est.std,
+                    primary_indicator)
+         }),
+         dvs = map(id, \(v) {
+           pt %>% 
+             filter(op == "~" & rhs == v) %>% 
+             select(dv = rhs,
+                    b = est.std)
+         }),
+         parents = map(id, \(v) { 
+           pt %>% 
+             filter(op == "=~" & rhs == v) %>% 
+             arrange(desc(abs(est.std))) %>% 
+             pull(lhs)
+         }),
+         fill = pmap_chr(
+           list(i = id, 
+                tp = type, 
+                prnts = parents), 
+           function(i, tp, prnts) {
+             if (tp == "latent") {
+               fll <- latent_colors[i ]
+             } else {
+               fll <- latent_colors[prnts[1]]
+               
+             }
+             fll
+           })) %>% 
+  mutate(
+    label = snakecase::to_title_case(id) %>% 
+      stringr::str_wrap(width = 10, 
+                        whitespace_only = FALSE) %>% 
+      stringr::str_replace_all(pattern = "\\n", "<br>")) %>% 
+  arrange(depth) 
+
+# Make shapes
+s <- data2shape(d, ob_ellipse) 
+
+# Format shape labels
+s@label@size[d$type == "latent"] <- 20
+s@label@nudge_y[d$type == "latent"] <- -0.08
+s@label@color <- class_color(s@fill)@darken(.6)@color
+
+# Position shapes
+walk(d$id, \(v) {
+  dr <- d %>% filter(id == v) 
+  
+  children <- dr %>% 
+    unnest(indicators) %>% 
+    filter(primary_indicator) %>% 
+    pull(indicator)
+  
+  if (pull(dr, depth) == 1) {
+    s[v] <<- place(s[v], 
+                   s@bounding_box, 
+                   "right", 
+                   sep = .2)
+  } else {
+    s[v] <<- place(s[v], 
+                   s[children]@bounding_box@north, 
+                   "above", 
+                   sep = 3)
+  }
+  
+})
+
+# Make edges
+e <- d %>% 
+  unnest(indicators) %>% 
+  select(id, indicator, loading, fill) %>% 
+  nest(.by = id) %>% 
+  pmap(\(id, data) {
+
+    children <- pull(data, indicator)
+    ll <- pull(data, loading) %>% 
+      round_probability()
+
+    connect(from = s[id], 
+            to = s[children], 
+            # to_offset = ob_point(0,4),
+            label = ob_label(ll, angle = 0, position = .48), 
+            label_sloped = F,
+            resect = 1, 
+            color = class_color(data$fill)@lighten(.8)
+            )@set_label_y()
+
+  }) %>% 
+  bind()
+
+ggdiagram(font_family = my_font, 
+          font_size = 12) + 
+  s + 
+  e
+```
+
+
+```{r}
+#| eval: false
+#| echo: false
+my_efa <- efa(HolzingerSwineford1939 %>% select(starts_with("x")), 3, rotation = "promax")
+
+l2o <- my_efa$loadings %>% 
+  as_tibble(rownames = "observed") %>% 
+  pivot_longer(-observed, 
+               names_to = "latent", 
+               values_to = "loading") %>% 
+  mutate(latent = factor(latent, 
+                         levels = c("f1", "f3", "f2"),
+                         labels = c("Gv", "Gs", "Gc")),
+         observed = factor(observed, 
+                           levels = paste0("x", c(1:3,9, 7, 8, 4:6)),
+                           labels = c("Visual<br>Perception", "Cubes", "Lozenges", "Capitals<br>Speed", "Addition<br>Speed", "Counting<br>Speed", "Paragraph<br>Comp.", "Sentence<br>Comp.", "Word<br>Meaning"))) %>% 
+  arrange(latent, observed)
+
+l_names <- unique(l2o$latent)
+o_names <- unique(l2o$observed)
+
+
+
+
+
+
+ggdiagram(font_family = "Roboto Condensed") +
+  {o <- ob_ellipse(m1 = 15, a = 1.5) %>%
+      ob_array(
+        k = length(o_names),
+        label = ob_label(o_names, size = 10),
+        id = o_names,
+        sep = .3
+      )
+  } +
+  {l <- ob_circle(
+      label = ob_label(l_names, size = 20),
+      radius = 2,
+      id = l_names) %>%
+      place(o[c("Cubes", "Addition<br>Speed", "Sentence<br>Comp.")],
+            where = "above",
+            sep = 5)} +
+  {
+    e <- pmap(l2o, \(observed, latent, loading) {
+      if (abs(loading) < 0.2) return(NULL)
+  connect(from = l[latent],
+                  to = o[observed]@north,
+                  alpha = abs(loading),
+                  resect = 2,
+                  label = ob_label(
+    label = round_probability(loading),
+    fill = "white",
+    alpha = 1,
+    angle = 0,
+    position = abs(loading),
+    color = paste0("gray", round(100 - abs(loading) * 100)))
+                  )
+}) %>%
+  bind() %>%
+      {.@set_label_y()}
+  }
+
+```
+
 
 

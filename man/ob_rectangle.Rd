@@ -25,8 +25,8 @@ ob_rectangle(
   linewidth = numeric(0),
   linetype = numeric(0),
   style = S7::class_missing,
-  x0 = numeric(0),
-  y0 = numeric(0),
+  x = numeric(0),
+  y = numeric(0),
   id = character(0),
   ...
 )
@@ -72,9 +72,11 @@ ob_rectangle(
 
 \item{style}{a style object}
 
-\item{x0}{overrides x-coordinate in \code{center@x}}
+\item{x}{overrides x-coordinate in \code{center@x}}
 
-\item{y0}{overrides y-coordinate in \code{center@x}}
+\item{y}{overrides y-coordinate in \code{center@x}}
+
+\item{id}{character string to identify object}
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> arguments passed to style object}
 }

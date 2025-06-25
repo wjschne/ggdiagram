@@ -181,7 +181,12 @@ class_color <- S7::new_class(
     tex = S7::new_property(getter = function(self) {
       paste0("\\color[HTML]{", substring(self@color, 2, 7), "}")
     })
-  ), constructor = function(color = character(0), hue = NULL, saturation = NULL, brightness = NULL, alpha = NULL) {
+  ),
+  constructor = function(color = character(0),
+                         hue = NULL,
+                         saturation = NULL,
+                         brightness = NULL,
+                         alpha = NULL) {
 
     if (length(color) == 0) {
       decoded <- farver::decode_colour("red", alpha = TRUE, to = "hsv")
@@ -267,8 +272,8 @@ S7::method(print, class_color) <- function(x, ...) {
   invisible(x)
 }
 
-S7::method(`[`, class_color) <- function(x, y) {
-  S7::S7_data(x) <-  c(x)[y]
+S7::method(`[`, class_color) <- function(x, i) {
+  S7::S7_data(x) <-  c(x)[i]
   x
 }
 

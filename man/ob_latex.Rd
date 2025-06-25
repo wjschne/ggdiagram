@@ -65,6 +65,8 @@ ob_latex(
 \item{force_recompile}{Will re-run xelatex even if .pdf file exists already}
 
 \item{delete_files}{Delete .tex and .pdf files after image is generated.}
+
+\item{id}{character string to identify object}
 }
 \value{
 ob_latex object

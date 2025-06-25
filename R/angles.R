@@ -233,13 +233,6 @@ S7::method(convert, list(S7::class_numeric, radian)) <- function(from, to) {
   radian(from * 2 * pi)
 }
 
-# str print ----
-
-S7::method(print, ob_angle) <- function(x, ...) {
- cat(as.character(x), "\n")
-  invisible(x)
-}
-
 S7::method(str, ob_angle) <- function(object,
                                      nest.lev = 0,
                                      additional = FALSE,
@@ -317,17 +310,17 @@ S7::method(`[`, ob_angle) <- function(x, i) {
   x
 }
 
-# S7::method(`[<-`, ob_angle) <- function(x, i, value) {
-#   d <- c(x)
-#   d[i] <- c(value)
-#   S7::S7_data(x) <-  d
-#   x
-# }
-
 # unbind ----
 S7::method(unbind, ob_angle) <- function(x) {
   purrr::map(seq(length(c(x))), \(i) x[i])
 }
 
 
+#' @export
+`[<-.ggdiagram::ob_angle` <- function(x, i, value) {
+  d <- c(x)
+  d[i] <- c(value)
+  S7::S7_data(x) <-  d
+  x
+}
 

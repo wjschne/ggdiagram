@@ -4,12 +4,19 @@
 \alias{equation}
 \title{equation}
 \usage{
-equation(x, type = c("y", "general", "parametric"), digits = 2)
+equation(
+  x,
+  type = c("y", "general", "parametric"),
+  output = c("markdown", "latex"),
+  digits = 2
+)
 }
 \arguments{
 \item{x}{object}
 
-\item{type}{equation type. Can be \code{y}, \code{general}, or \code{parametric}}
+\item{type}{equation type. Can be \code{y} (default), \code{general}, or \code{parametric}}
+
+\item{output}{Can be \code{markdown} (default) or \code{latex}}
 
 \item{digits}{rounding digits}
 }

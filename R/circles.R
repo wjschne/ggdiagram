@@ -4,13 +4,24 @@ cr_styles <- c(
   "fill",
   "linewidth",
   "linetype",
-  "n"
+  "n",
+  "id"
+)
+
+compass_props <- list(
+  east = S7::new_property(getter = function(self) self@point_at("east")),
+  northeast = S7::new_property(getter = function(self) self@point_at("northeast")),
+  north = S7::new_property(getter = function(self) self@point_at("north")),
+  northwest = S7::new_property(getter = function(self) self@point_at("northwest")),
+  west = S7::new_property(getter = function(self) self@point_at("west")),
+  southwest = S7::new_property(getter = function(self) self@point_at("southwest")),
+  south = S7::new_property(getter = function(self) self@point_at("south")),
+  southeast = S7::new_property(getter = function(self) self@point_at("southeast"))
 )
 
 cr_props <- list(
   # primary ----
   primary = list(
-    # center = S7::new_property(class = ob_point, default = ob_point(0,0)),
     radius = S7::new_property(class = S7::class_numeric, default = 1)
   ),
   styles = ob_style@properties[cr_styles],
@@ -46,8 +57,8 @@ cr_props <- list(
         dplyr::mutate(group = factor(dplyr::row_number())) |>
         tidyr::uncount(.data$n, .remove = FALSE) |>
         dplyr::mutate(theta = 2 * pi * (dplyr::row_number() - 1) / n,
-                      x = x0 + r * cos(theta),
-                      y = y0 + r * sin(theta),
+                      x = x + r * cos(theta),
+                      y = y + r * sin(theta),
                       .by = group)
     }),
     style = S7::new_property(
@@ -67,8 +78,8 @@ cr_props <- list(
     ),
     tibble = S7::new_property(getter = function(self) {
       d <- list(
-        x0 = self@center@x,
-        y0 = self@center@y,
+        x = self@center@x,
+        y = self@center@y,
         r = self@radius,
         alpha = self@alpha,
         color = self@color,
@@ -99,8 +110,12 @@ cr_props <- list(
     }),
     angle_at = S7::new_property(S7::class_function, getter = function(self) {
       \(point) {
-        dp <- point - self@center
-        dp@theta
+        if (S7::S7_inherits(point, ob_point)) {
+          dp <- point - self@center
+          dp@theta
+        } else {
+          return(NULL)
+        }
       }
     }),
     normal_at = S7::new_property(S7::class_function, getter = function(self) {
@@ -115,14 +130,14 @@ cr_props <- list(
       getter = function(self) {
         \(theta = degree(0), ...) {
           if (!S7::S7_inherits(theta, ob_angle)) theta <- degree(theta)
-          x0 <- self@center@x
-          y0 <- self@center@y
+          x <- self@center@x
+          y <- self@center@y
           x1 <- cos(theta) * self@radius + self@center@x
           y1 <- sin(theta) * self@radius + self@center@y
           ob_line(
-            a = x1 - x0,
-            b = y1 - y0,
-            c = x0 ^ 2 - (x1 * x0) + y0 ^ 2 - (y1 * y0) - self@radius ^ 2,
+            a = x1 - x,
+            b = y1 - y,
+            c = x ^ 2 - (x1 * x) + y ^ 2 - (y1 * y) - self@radius ^ 2,
             style = self@style,
             ...
           )
@@ -156,7 +171,7 @@ cr_props <- list(
       ),
       not_mappable = c("n"),
       required_aes = c("x0", "y0", "r", "group"),
-      omit_names = c("linejoin", "rule"),
+      omit_names = c("linejoin", "rule", "id"),
       inherit.aes = FALSE,
       style = cr_styles
     )}
@@ -168,8 +183,8 @@ cr_props <- list(
 #' @param center point at center of the circle
 #' @param radius distance between center and edge circle
 #' @param label A character, angle, or label object
-#' @param x0 x-coordinate of center point. If specified, overrides x-coordinate of `@center`.
-#' @param y0 x-coordinate of center point. If specified, overrides y-coordinate of `@center`.
+#' @param x x-coordinate of center point. If specified, overrides x-coordinate of `@center`.
+#' @param y x-coordinate of center point. If specified, overrides y-coordinate of `@center`.
 #' @param n number of points in circle (default = 360)
 #' @param style an ob_style object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object
@@ -198,6 +213,7 @@ ob_circle <- S7::new_class(
     !!!cr_props$primary,
     !!!cr_props$styles,
     !!!cr_props$derived,
+    !!!compass_props,
     !!!cr_props$funs,
     !!!cr_props$info)),
   constructor = function(center = ob_point(0,0),
@@ -210,10 +226,11 @@ ob_circle <- S7::new_class(
                          linetype = numeric(0),
                          n = numeric(0),
                          style = S7::class_missing,
-                         x0 = numeric(0),
-                         y0 = numeric(0),
+                         x = numeric(0),
+                         y = numeric(0),
                          id = character(0),
                          ...) {
+    id <- as.character(id)
     c_style <- style +
       ob_style(
         alpha = alpha,
@@ -225,18 +242,18 @@ ob_circle <- S7::new_class(
       ) +
       ob_style(...)
 
-    if ((length(x0) > 0) || (length(y0) > 0)) {
-      if (length(x0) == 0) {
-        x0 <- 0
+    if ((length(x) > 0) || (length(y) > 0)) {
+      if (length(x) == 0) {
+        x <- 0
       }
-      if (length(y0) == 0) {
-        y0 <- 0
+      if (length(y) == 0) {
+        y <- 0
       }
-      center <- ob_point(tibble::tibble(x = x0, y = y0))
+      center <- ob_point(tibble::tibble(x = x, y = y))
     }
 
     non_empty_list <- get_non_empty_props(c_style)
-    d <- tibble::tibble(x0 = center@x, y0 = center@y, radius = radius)
+    d <- tibble::tibble(x = center@x, y = center@y, radius = radius)
     if (length(non_empty_list) > 0) {
       d <- dplyr::bind_cols(
         d,
@@ -244,7 +261,7 @@ ob_circle <- S7::new_class(
     }
 
 
-    center = set_props(center, x = d$x0, y = d$y0)
+    center = set_props(center, x = d$x, y = d$y)
 
     if (S7::S7_inherits(label, ob_label)) {
       if (all(label@center == ob_point(0,0))) {
@@ -265,14 +282,16 @@ ob_circle <- S7::new_class(
       }
     }
 
-     S7::new_object(centerpoint(center = center, label = label, id = id),
+     S7::new_object(centerpoint(center = center,
+                                label = label),
                  radius = d$radius,
                  alpha = d[["alpha"]] %||% alpha,
                  color = d[["color"]] %||% color ,
                  fill = d[["fill"]]  %||% fill,
                  linewidth = d[["linewidth"]]  %||% linewidth,
                  linetype = d[["linetype"]]  %||% linetype,
-                 n = d[["n"]]  %||% n)
+                 n = d[["n"]]  %||% n,
+                 id = d[["id"]] %||% id)
   }
 )
 
@@ -306,14 +325,10 @@ S7::method(get_tibble_defaults, ob_circle) <- function(x) {
   get_tibble_defaults_helper(x, sp,required_aes = c("x0", "y0", "r", "n"))
 }
 
-S7::method(`[`, ob_circle) <- function(x, y) {
-  if (is.character(y)) {
-    y <- x@id == y
-  }
-  d <- x@tibble[y,]
-  dl <- as.list(dplyr::select(d, -x0, -y0))
-  z <- rlang::inject(ob_circle(center = ob_point(d$x0, d$y0), !!!dl))
-  z@label <- x@label[y]
+S7::method(`[`, ob_circle) <- function(x, i) {
+  i <- character_index(i, x@id)
+  z <- data2shape(x@tibble[i,], ob_circle)
+  z@label <- na2zero(x@label[i])
   z
 }
 
@@ -337,6 +352,55 @@ S7::method(ob_array, ob_circle) <- function(x, k = 2, sep = 1, where = "east", a
                         radius = x@radius,
                         style = x@style,
                         !!!sa$dots))
+}
+
+S7::method(equation, ob_circle) <- function(
+    x,
+    type = c("y", "general", "parametric"),
+    output = c("markdown", "latex"),
+    digits = 2) {
+  if (length(type) == 3) type <- "general"
+  type <- match.arg(type)
+  output <- match.arg(output)
+  myrounder <- redefault(rounder, digits = digits, output = output)
+  myemphasis <- redefault(emphasis, output = output)
+  mysuperscript <- redefault(superscript, output = output)
+  minus <- ifelse(output == "markdown", "\u2212", "-")
+
+
+  eq <- rep("", x@length)
+
+  if (type == "general") {
+    eq <- trimmer(paste0(
+      ifelse(x@center@x == 0,
+      paste0(mysuperscript(myemphasis("x"), "2")),
+      mysuperscript(paste0(
+        "(",
+        myemphasis("x"),
+        " ",
+        minus,
+        " ",
+        myrounder(x@center@x),
+        ")"
+    ), "2")),
+    " + ",
+    ifelse(x@center@y == 0,
+           paste0(mysuperscript(myemphasis("y"), "2")),
+           mysuperscript(paste0(
+             "(",
+             myemphasis("y"),
+             " ",
+             minus,
+             " ",
+             myrounder(x@center@y),
+             ")"
+           ), "2")),
+    " = ",
+    mysuperscript(myrounder(x@radius), "2")
+    ))
+  }
+  eq
+
 }
 
 #' Get a circle from 3 points
@@ -372,9 +436,9 @@ circle_from_3_points <- function(p1, p2 = NULL, p3 = NULL, ...) {
   # Minor m13
   m13 <- det(cbind(p@x ^ 2 + p@y ^ 2, p@x, rep(1,3)))
 
-  x0 <- 0.5 * m12 / m11
-  y0 <- -0.5 * m13 / m11
-  center <- ob_point(x0,y0)
+  x <- 0.5 * m12 / m11
+  y <- -0.5 * m13 / m11
+  center <- ob_point(x,y)
   ob_circle(center, radius = distance(center, p1), ...)
 }
 

@@ -294,8 +294,8 @@ ggdiagram(font_family = my_font, font_size = 16) +
    x2 <- observed() |> 
     place(x1, "below", sep = 2.25) 
    x3 <- observed() |> 
-    place(midpoint(x1@point_at("east"),
-                   x2@point_at("east")), 
+    place(midpoint(x1@east,
+                   x2@east), 
           "right") 
    x4 <- observed() |> 
     place(x3, "right", sep = 1.5)
@@ -316,8 +316,8 @@ ggdiagram(font_family = my_font, font_size = 16) +
           where = c("left", "right"),
           sep = .5)} + 
   direct(e, endogenous) +
-  covariance(x2@point_at("west"), 
-             x1@point_at("west"),
+  covariance(x2@west, 
+             x1@west,
              label = lb_direct("*r*~12~", position = .5))
 ```
 
@@ -421,11 +421,11 @@ ggdiagram(font_family = my_font, font_size = 16) +
           where = "above", 
           sep = x[1:4]@bounding_box@width)} +
   {f1x <- connect(f1, 
-                  x@point_at("top"), 
+                  x@north, 
                   resect = 2, 
                   color = my_fills[1])} + 
   {f2x <- connect(f2, 
-                  x@point_at("top"), 
+                  x@north, 
                   resect = 2, 
                   color = my_fills[3])} +
   {a <- intersection(f1@tangent_at(45), f2@tangent_at(135))
@@ -437,8 +437,8 @@ ggdiagram(font_family = my_font, font_size = 16) +
           resect = 2, 
           linewidth = .5,
           arrowhead_length = 7,
-          arrow_head = arrowheadr::arrow_head_deltoid(),
-          arrow_fins = arrowheadr::arrow_head_deltoid(),
+          arrow_head = arrowhead(),
+          arrow_fins = arrowhead(),
           label = ob_label("&phi;~12~",
                            color = my_fills[2],
                            vjust = .5,
@@ -512,7 +512,7 @@ ggdiagram(font_family = my_font) +
   # direct effects from o to pc
   map(
     unbind(pc), \(pci) {
-      connect(from = o@point_at("north"), 
+      connect(from = o@north, 
               to = pci, 
               color = pci@fill,
               resect = 2)@geom()
@@ -522,9 +522,9 @@ ggdiagram(font_family = my_font) +
   map(1:4, \(i) {
     offset <- c(-1.5, -.5, .5, 1.5) * .11
     ob_covariance(
-      x = o[seq(i + 1, 5)]@point_at("south") + 
+      x = o[seq(i + 1, 5)]@south + 
         ob_point(offset[seq(1, 5 - i)], 0),
-      y = o[i]@point_at("south") + 
+      y = o[i]@south + 
         ob_point(-offset[seq(1, 5 - i)], 0),
       bend = 45,
       looseness = 1.4,
@@ -568,7 +568,7 @@ ggdiagram(font_family = my_font, font_size = 16) +
       sep = .4)} +
   # Connect the latent to the observed variables at the north anchor point
   {l1_o3 <- connect(l1, 
-                    o3@point_at("north"), 
+                    o3@north, 
                     resect = 2)} + 
   # Place error terms below each observed variable
   {e3 <- ob_circle(radius = .75) |>
@@ -586,11 +586,11 @@ ggdiagram(font_family = my_font, font_size = 16) +
     looseness = 1.4,
     resect = unit(3, "pt"),
     arrowhead_length = unit(7, "pt"), 
-    arrow_head = arrowheadr::arrow_head_deltoid(2.4),
-    arrow_fins = arrowheadr::arrow_head_deltoid(2.4))} +
+    arrow_head = arrowhead(),
+    arrow_fins = arrowhead())} +
   {lb_indicator <- ob_label("Indicator<br>Variables", 
                             color = "black") |>
-    place(o3[1]@point_at("west"), "west", sep = 1.2)} + 
+    place(o3[1]@west, "west", sep = 1.2)} + 
   ob_point(-5, 0, color = "white") +
   ob_label("Loadings", 
            lb_indicator@center %|-% midpoint(l1, o3@bounding_box)) + 
@@ -623,8 +623,6 @@ my_fills <- viridis::viridis(n = 3, begin = .3, end = .6) |>
 my_path_color <- "gray40"
 my_resect <- 1
 broad <- c("Gv", "Gf", "Gc")
-my_arrowhead <- arrowheadr::arrow_head_deltoid(2.5)
-
 g2broad <- c(Gv = .84, Gf = .95, Gc = .80)
 
 broad2indicator <- list(Gv = c(.78, .84, .91),
@@ -659,7 +657,7 @@ direct <- redefault(
   connect,
   resect = my_resect,
   color = my_path_color,
-  arrow_head = my_arrowhead,
+  arrow_head = arrowhead(),
   linewidth = .5,
   length_head = 6
 )
@@ -681,8 +679,8 @@ var_latent <- redefault(
   color = my_path_color, 
   looseness = .9, 
   linewidth = .5,
-  arrow_head = my_arrowhead,
-  arrow_fins = my_arrowhead,
+  arrow_head = arrowhead(),
+  arrow_fins = arrowhead(),
   arrowhead_length = 6)
 
 lb_variance <- redefault(
@@ -732,7 +730,7 @@ ggdiagram(font_family = my_font, font_size = 16) +
           "~", 
           1:3, 
           "~")))
-    p <- direct(b, o@point_at("north"), color = b@fill)
+    p <- direct(b, o@north, color = b@fill)
     
     l <- lb_direct(
       round_probability(
@@ -753,8 +751,8 @@ ggdiagram(font_family = my_font, font_size = 16) +
       label = lb_variance(
         round_probability(sqrt(1 - broad2indicator[[b@label@label]] ^ 2)),
         color = b@fill),
-      arrow_head = my_arrowhead,
-      arrow_fins = my_arrowhead,
+      arrow_head = arrowhead(),
+      arrow_fins = arrowhead(),
       arrowhead_length = 6
     )
     c(o, p, v, l)

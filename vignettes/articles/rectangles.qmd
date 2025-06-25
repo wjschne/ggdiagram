@@ -62,7 +62,7 @@ To avoid repetitive code, we make a base plot:
 my_font <- "Roboto Condensed"
 my_font_size <- 20
 my_point_size <- 2
-my_arrowhead <- arrowheadr::arrow_head_deltoid(d = 2.3, n = 100)
+
 
 # my_colors <- viridis::viridis(2, begin = .25, end = .5)
 my_colors <- c("#3B528B", "#21908C")
@@ -151,8 +151,8 @@ r1
 #| fig-width: 8
 #| fig-height: 4.75
 double_arrowstyle <- ob_style(
-  arrow_head = arrow_head_deltoid(),
-  arrow_fins = arrow_head_deltoid(),
+  arrow_head = arrowhead(),
+  arrow_fins = arrowhead(),
   color = my_colors$secondar
 )
 

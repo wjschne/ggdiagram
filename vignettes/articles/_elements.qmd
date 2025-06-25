@@ -81,10 +81,23 @@ When one straight line standing on another straight line makes the adjacent angl
 #| fig-width: 5
 #| fig-cap: "Illustration of right angles"
 baseplot +
-  ob_segment(o, ob_polar(degree(c(0,90, 180)))) + 
-  {a <- ob_arc(o, radius = .85, start = c(0,90), end = c(90, 180), linewidth = 3)} +
+  ob_segment(o, ob_polar(degree(c(0, 90, 180)))) +
+  {
+    a <- ob_arc(
+      o,
+      radius = .85,
+      start = c(0, 90),
+      end = c(90, 180),
+      linewidth = 3
+    )
+  } +
   a@hatch(linewidth = 1) +
-  ob_rectangle(o + ob_point(0,.05), height = .1, width = .2, linewidth = 1)
+  ob_rectangle(
+    o + ob_point(0, .05),
+    height = .1,
+    width = .2,
+    linewidth = 1
+  )
 ```
 
 ## Definition XV
@@ -97,8 +110,13 @@ A *circle* is a plane figure, bounded by one continued line, called its *circumf
 #| fig-height: 4
 #| fig-cap: "A circle has a circumference line equally distant from a point."
 baseplot +
-  {s <- ob_segment(o, ob_polar(degree(c(135/2, 135, 290, 0, 180))),
-             color = c(black, red, yellow, blue, blue))} + 
+  {
+    s <- ob_segment( 
+      o,
+      ob_polar(degree(c(135 / 2, 135, 290, 0, 180))),
+      color = c(black, red, yellow, blue, blue)
+    )
+  } +
   s@hatch(linewidth = 1) +
   ob_circle(color = red)
 ```
@@ -150,7 +168,7 @@ sBC <- ob_segment(pB, pC, color = red)
 sABC <- bind(c(sAB, sAC, sBC))
 
 # Hatch marks to note congruence
-hABC <- sABC@hatch(linewidth = .75) 
+hABC <- sABC@hatch(linewidth = .75)
 
 # Make point labels
 lABCDE <- ob_label(
@@ -161,7 +179,7 @@ lABCDE <- ob_label(
   size = 18,
   family = my_font,
   vjust = .5,
-  label.padding = margin(4,3,0,3),
+  label.padding = margin(4, 3, 0, 3),
   label.r = unit(9, units = "pt")
 )
 
@@ -236,14 +254,15 @@ sAK <- ob_segment(pA, pK, color = black)
 
 p <- bind(c(pA, pB, pC, pD, pE, pF, pG, pH, pI, pK))
 
-pABD <- ob_path(bind(c(pA,pD,pB, pA)), color = red, linewidth = 2)
+pABD <- ob_path(bind(c(pA, pD, pB, pA)), color = red, linewidth = 2)
 
 baseplot +
   sBC +
   pABD +
   bind(c(sAB, sBD, sAD))@hatch(
-    linewidth = 1, 
-    height = .12) +
+    linewidth = 1,
+    height = .12
+  ) +
   bind(c(sBC, sAK, sBG))@hatch(
     k = 2,
     height = .12,
@@ -256,11 +275,13 @@ baseplot +
   sAE +
   sAK +
   cGIK +
-  p@label(c(LETTERS[1:9], "K"), 
-          fill = bg, 
-          # vjust = c(rep(.55, 9), .5),
-          label.r = unit(9, units = "pt"),
-          label.padding = margin(4,3,1,3))
+  p@label(
+    c(LETTERS[1:9], "K"),
+    fill = bg,
+    # vjust = c(rep(.55, 9), .5),
+    label.r = unit(9, units = "pt"),
+    label.padding = margin(4, 3, 1, 3)
+  )
 
 ```
 
@@ -292,13 +313,12 @@ The sum of the area of rectangle ADJK and the area of rectangle KJEB equals the 
 #| fig-cap: Proof of the Pythagorean Theorem
 #| fig-width: 7
 #| fig-height: 7
-pA <- ob_point(0,0)
-pB <- ob_point(2,0)
+pA <- ob_point(0, 0)
+pB <- ob_point(2, 0)
 
-sAB <- ob_segment(pA,pB, color = red)
+sAB <- ob_segment(pA, pB, color = red)
 
-pC <- ob_circle(sAB@midpoint(), 
-                radius = distance(pA, pB) / 2)@point_at(120)
+pC <- ob_circle(sAB@midpoint(), radius = distance(pA, pB) / 2)@point_at(120)
 
 sAC <- ob_segment(pA, pC, color = yellow)
 sBC <- ob_segment(pB, pC, color = blue)
@@ -313,12 +333,8 @@ pH <- rotate(pA, degree(-90), origin = pC)
 pI <- rotate(pC, degree(90), origin = pA)
 
 
-
 # make copy so underlying dash is background color
-sBE <- ob_segment(pB,
-                  pE,
-                  color = red,
-                  linetype = "11")
+sBE <- ob_segment(pB, pE, color = red, linetype = "11")
 
 sBE2 <- sBE %>% set_props(color = bg, linetype = "solid")
 
@@ -328,28 +344,20 @@ sCD <- ob_segment(pC, pD, color = blue, linewidth = 1)
 sBI <- ob_segment(pB, pI, color = blue, linewidth = 1)
 
 
-sBG <- ob_segment(pB,
-                  pG,
-                  color = blue,
-                  linetype = "11")
+sBG <- ob_segment(pB, pG, color = blue, linetype = "11")
 
-sBG2 <- sBG %>% 
-  set_props(color = bg, 
-            linetype = "solid")
+sBG2 <- sBG %>%
+  set_props(color = bg, linetype = "solid")
 
 lC <- ob_line(xintercept = pC@x)
 sDE <- ob_segment(pD, pE)
 pJ <- intersection(lC, sDE)
 pK <- intersection(lC, sAB)
 
-sCJ <- ob_segment(pC,
-                  pJ,
-                  color = black,
-                  linetype = "11")
+sCJ <- ob_segment(pC, pJ, color = black, linetype = "11")
 
-sCJ2 <- sCJ %>% 
-  set_props(color = bg, 
-            linetype = "solid")
+sCJ2 <- sCJ %>%
+  set_props(color = bg, linetype = "solid")
 
 # Bind points
 p <- bind(c(pA, pB, pC, pD, pE, pF, pG, pH, pI, pJ, pK))
@@ -358,7 +366,7 @@ p_orient <- bind(
   c(pG, pA, pE, pB, pA, pB, pC, pA, pC, pC, nudge(pK, -.01, -.01))
 )
 # polar adjustments for labels
-p_just <- ob_polar((p - p_orient)@theta , r = 1.4)
+p_just <- ob_polar((p - p_orient)@theta, r = 1.4)
 
 
 baseplot +
@@ -396,9 +404,12 @@ baseplot +
   sCE +
   sAG +
   sAC +
-  sCJ2 + sCJ +
-  sBE2 + sBE +
-  sBG2 + sBG +
+  sCJ2 +
+  sCJ +
+  sBE2 +
+  sBE +
+  sBG2 +
+  sBG +
   ob_label(
     c(LETTERS[seq(1, p@length)]),
     center = p,
@@ -420,13 +431,19 @@ A rectilinear figure is said to be inscribed in a circle, when the vertex of eac
 
 
 ```{r fig-inscribed}
-p0 <- ob_point(0,0)
+p0 <- ob_point(0, 0)
 c0 <- ob_circle(p0)
 pABCD <- c0@point_at(degree(seq(0, 270, 90)))
 
-baseplot + 
+baseplot +
   ob_polygon(pABCD, color = red, fill = NA) +
-  ob_wedge(pABCD, start = pABCD@theta + degree(135), end = pABCD@theta + degree(225), radius = .2, fill = red) +
+  ob_wedge(
+    pABCD,
+    start = pABCD@theta + degree(135),
+    end = pABCD@theta + degree(225),
+    radius = .2,
+    fill = red
+  ) +
   c0 
 ```
 
@@ -436,8 +453,10 @@ baseplot +
 A rectilinear figure is said to be circumscribed about a circle, when each of its sides is a tangent to the circle.
 
 ```{r fig-circumscribed}
-baseplot + 
-  {ng <- ob_ngon(n = 4, fill = red, angle = 45)} +
+baseplot +
+  {
+    ng <- ob_ngon(n = 4, fill = red, angle = 45)
+  } +
   ob_circle(fill = bg, color = NA, radius = ng@apothem)
 ```
 
@@ -448,7 +467,9 @@ A circle is said to be inscribed in a rectilinear figure, when each side of the 
 
 ```{r fig-circleinscribed}
 baseplot +
-  {ng <- ob_ngon(n = 6, fill = blue)} +
+  {
+    ng <- ob_ngon(n = 6, fill = blue)
+  } +
   ob_circle(fill = bg, color = NA, radius = ng@apothem)
 
 ```
@@ -463,16 +484,17 @@ A circle is said to be circumscribed about a rectilinear figure, when the circum
 p <- ob_polar(degree(c(270, 15, 135)))
 # Circle from 3 points
 c1 <- circle_from_3_points(p)
-tangents <- c1@angle_at(p) %>% 
+tangents <- c1@angle_at(p) %>%
   c1@tangent_at()
 
 circumscribed <- intersection(
-  tangents[c(1,1,2)], 
-  tangents[c(2,3,3)]) %>% 
+  tangents[c(1, 1, 2)],
+  tangents[c(2, 3, 3)]
+) %>%
   ob_polygon(color = black, fill = NA)
 
-baseplot + 
-  ob_polygon(p, fill = blue, color = NA) + 
+baseplot +
+  ob_polygon(p, fill = blue, color = NA) +
   c1 +
   circumscribed 
   
@@ -481,7 +503,6 @@ baseplot +
 
 
 ```{r}
-
 d <- 1.4
 node <- redefault(
   ob_circle,
@@ -510,21 +531,43 @@ transition <- redefault(
   linewidth = .75
 )
 ggdiagram(font_family = "Roboto Condensed", font_size = 20) +
-  {waiting <- node()} +
-  {critical <- node() %>% place(waiting, "below", d)} +
-  {s <- node() %>% place(critical, "below", d)
-   s1 <- node(fill = red, color = red) %>% place(s, "left", 0)
-   }  +
-  {s2 <- node(fill = red, color = red) %>% place(s, "right", 0)} +
-  {leave <- transition() %>% place(critical, "right", d)} + 
-  {enter <- transition() %>% place(critical, "left", d)} + 
-  {s3 <- node() %>% place(s, "below", d)} + 
-  {e2 <- transition() %>% place(s3, "left", d)} +
-  {l2 <- transition() %>% place(s3, "right", d)} +
-  {s4 <- node() %>% place(s3, "below", d)} +
-  bind(c(waiting@center, 
-         s4@center, 
-         s2@center + ob_polar(degree(c(90, 210, 330)), .2))) %>% set_props(color = black, fill = NA_character_, size = 4, alpha = 1) +
+  {
+    waiting <- node()
+  } +
+  {
+    critical <- node() %>% place(waiting, "below", d)
+  } +
+  {
+    s <- node() %>% place(critical, "below", d)
+    s1 <- node(fill = red, color = red) %>% place(s, "left", 0)
+  } +
+  {
+    s2 <- node(fill = red, color = red) %>% place(s, "right", 0)
+  } +
+  {
+    leave <- transition() %>% place(critical, "right", d)
+  } +
+  {
+    enter <- transition() %>% place(critical, "left", d)
+  } +
+  {
+    s3 <- node() %>% place(s, "below", d)
+  } +
+  {
+    e2 <- transition() %>% place(s3, "left", d)
+  } +
+  {
+    l2 <- transition() %>% place(s3, "right", d)
+  } +
+  {
+    s4 <- node() %>% place(s3, "below", d)
+  } +
+  bind(c(
+    waiting@center,
+    s4@center,
+    s2@center + ob_polar(degree(c(90, 210, 330)), .2)
+  )) %>%
+    set_props(color = black, fill = NA_character_, size = 4, alpha = 1) +
   bind(c(
     ct(enter, bind(c(critical, s1))),
     ct(critical, leave),
@@ -535,23 +578,36 @@ ggdiagram(font_family = "Roboto Condensed", font_size = 20) +
     ct(l2, s2),
     ct(s3, l2)
   )) +
-  ob_bezier(c(bind(c(waiting@point_at("west"),
-                   waiting@center %-|% enter@center,
-                   enter@point_at("north"))),
-              bind(c(s4@point_at("west"),
-                   s4@center %-|% e2@center,
-                   e2@point_at("south"))),
-              bind(c(l2@point_at("south"),
-                   l2@center %|-% s4@center,
-                   s4@point_at("east"))),
-              bind(c(leave@point_at("north"),
-                   leave@center %|-% waiting@center,
-                   waiting@point_at("east")))), 
-            resect = 2, 
-            arrow_head = arrowheadr::arrow_head_deltoid(2.3), 
-            linewidth = .75, 
-            color = black,
-            alpha = .5,length_head = 5) +
+  ob_bezier(
+    c(
+      bind(c(
+        waiting@west,
+        waiting@center %-|% enter@center,
+        enter@north
+      )),
+      bind(c(
+        s4@west,
+        s4@center %-|% e2@center,
+        e2@south
+      )),
+      bind(c(
+        l2@south,
+        l2@center %|-% s4@center,
+        s4@east
+      )),
+      bind(c(
+        leave@north,
+        leave@center %|-% waiting@center,
+        waiting@east
+      ))
+    ),
+    resect = 2,
+    arrow_head = arrowhead(),
+    linewidth = .75,
+    color = black,
+    alpha = .5,
+    length_head = 5
+  ) +
   ob_latex(
     "s",
     ob_point() %>% place(s1, "left", .15),
@@ -570,5 +626,114 @@ ggdiagram(font_family = "Roboto Condensed", font_size = 20) +
     width = .4,
     density = 600
   )
+```
+
+
+```{r}
+p_quadrilateral <- ob_point(c(0,2, 1.9,.3), c(0, 1.2, -.1, 1))
+p_complex <- p_quadrilateral + ob_polar(degree(340), 5)
+p_simple <- ob_point(c(0,2, 1.5,1.8), c(0, -.1, .6, 1.4)) 
+p_simple <- p_simple - p_simple@centroid + rotate(p_complex@centroid,theta = degree(-140), origin = p_quadrilateral@centroid )
+
+my_polygon <- redefault(ob_polygon, fill = class_color("blue")@lighten(.1), color = "blue4")
+my_connect <- redefault(connect, arrow_head = ggarrow::arrow_fins_minimal())
+
+
+quadrilateral <- my_polygon(p_quadrilateral)
+complex <- my_polygon(p_complex)
+
+ggdiagram(font_family = "serif", font_size = 14) + 
+  ob_label(label = "quadrilateral", 
+           center = quadrilateral@bounding_box@south, 
+           vjust = 1) + 
+  ob_label(label = "complex", 
+           center = complex@bounding_box@south, 
+           vjust = 1) +
+  my_connect(quadrilateral, complex) +
+  complex +
+  {simple <- my_polygon(p_simple)} + 
+  my_connect(quadrilateral, simple) +
+  quadrilateral + 
+  ob_label(label = "simple", 
+           center = simple@bounding_box@south, 
+           vjust = 1)
+
+```
+
+```{r}
+
+my_ticks <- (-2:2)[-3]
+ggdiagram(font_family = "Roboto Condensed", font_size = 16) +
+  ob_circle(radius = c(1:3), linetype = "dotted") +
+  ob_wedge(end = 60, fill = class_color("blue")@lighten(.2)) +
+  ob_arc(end = 60) +
+  ob_segment(ob_point(c(-3, 0), c(0, -3)), {
+    xy <- ob_point(c(3, 0), c(0, 3))
+  }, arrow_head = arrowhead()) +
+  ob_label(c("x", "y"),
+           xy,
+           vjust = c(0.5, 0),
+           hjust = c(0, 0.5)) +
+  {
+    p1 <- ob_polar(theta = degree(180), 3, size = 4)
+  } +
+  ob_label(
+    "(180:3)",
+    p1,
+    hjust = 0,
+    vjust = 0,
+    label.margin = margin(b = 5, l = 5)
+  ) +
+  {
+    p2 <- ob_point(size = 4)
+  } +
+  ob_label(
+    "(0:0)",
+    p2,
+    hjust = 1,
+    vjust = 0,
+    label.margin = margin(b = 5, r = 5)
+  ) +
+  {
+    p3 <- ob_polar(theta = degree(60), 2, size = 4)
+  } +
+  ob_label(
+    "(60:0)",
+    p3,
+    hjust = 0,
+    vjust = 0,
+    label.margin = margin(b = 5, l = 5)
+  ) +
+  {
+    p4 <- ob_polar(theta = degree(20), 2, size = 4)
+  } +
+  ob_label(
+    "(20:0)",
+    p4,
+    hjust = 0,
+    vjust = 0,
+    label.margin = margin(b = 5, l = 5)
+  ) +
+  ob_label(
+    signs_centered(my_ticks),
+    ob_point(my_ticks, 0),
+    vjust = 1,
+    label.margin = margin(t = 10)
+  ) +
+  ob_label(
+    signs_centered(my_ticks),
+    ob_point(0, my_ticks),
+    hjust = 1,
+    label.margin = margin(r = 10)
+  )  +
+  ob_label(
+    degree(60),
+    polar_just = ob_polar(degree(30), 3),
+    label.margin = margin(b = 0, l = 0),
+    fill = NA
+  ) +
+  ob_segment(bind(c(p2, p3)), bind(c(p3, ob_point(1, 0))), linetype = "dashed") +
+  ob_segment(ob_point(my_ticks, -.05), ob_point(my_ticks, 0.05)) +
+  ob_segment(ob_point(-0.05, my_ticks), ob_point(.05, my_ticks))
 ```
 

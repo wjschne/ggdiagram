@@ -21,6 +21,7 @@ prop_vjust = S7::new_property(
 # ob_style----
 #' ob_style class
 #'
+#' @param id character string to identify object
 #' @param alpha numeric value for alpha transparency
 #' @param angle angle of text
 #' @param arrow_fins A 2-column matrix of polygon points
@@ -71,6 +72,7 @@ prop_vjust = S7::new_property(
 ob_style <- S7::new_class(
   name = "ob_style",
   properties = list(
+    id = S7::class_character,
     alpha = S7::new_property(S7::class_numeric, default = NULL),
     angle = ob_angle_or_numeric,
     arrow_fins = S7::class_list,
@@ -136,7 +138,8 @@ ob_style <- S7::new_class(
     text.color = S7::class_character,
     vjust = prop_vjust
   ),
-  constructor = function(alpha = numeric(0),
+  constructor = function(id = character(0),
+                         alpha = numeric(0),
                          angle = numeric(0),
                          arrow_head = list(),
                          arrow_fins = list(),
@@ -180,6 +183,7 @@ ob_style <- S7::new_class(
                          text.color = character(0),
                          vjust = numeric(0),
                          ...) {
+    id <- as.character(id)
     the_style <- rlang::list2(...)
     color <- as.character(the_style$colour %||% color)
     label.color <- as.character(the_style$label.colour %||% label.color)
@@ -220,13 +224,14 @@ ob_style <- S7::new_class(
       arrow_mid <- class_arrowhead(arrow_mid)
     }
 
+    if (is.character(angle)) angle <- degree(angle)
+
     if (S7::S7_inherits(angle, ob_angle)) {
       angle <- c(angle) * 360
     }
 
-
-
     initial_list <- list(
+      id = id,
       alpha = alpha,
       color = as.character(color),
       angle = angle,
@@ -279,6 +284,7 @@ ob_style <- S7::new_class(
 
     S7::new_object(
       S7::S7_object(),
+      id = id,
       alpha = alpha,
       color = as.character(color),
       angle = angle,
@@ -384,8 +390,9 @@ S7::method(get_tibble, ob_style) <- function(x) {
 }
 
 S7::method(`[`, ob_style) <- function(x, i) {
-  d <- as.list(get_tibble(x)[i, ])
-  rlang::inject(ob_style(!!!d))
+  i <- character_index(i, x@id)
+  get_tibble(x)[i, ] %>%
+    data2shape(ob_style)
 }
 
 S7::method(as.geom, has_style) <- function(x, ...) {

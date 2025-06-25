@@ -248,8 +248,8 @@ ggdiagram(font_size = 16) +
   B@label("B", hjust = 0, color = blue) + 
   D + 
   E + 
-  D@point_at("left")@label("D", hjust = 1.1) +
-  E@point_at("right")@label("E", hjust = -0.1)
+  D@west@label("D", hjust = 1.1) +
+  E@east@label("E", hjust = -0.1)
 ```
 
 # The Intersection of the Circles
@@ -272,8 +272,8 @@ ggdiagram(font_size = 16) +
   B@label("B", hjust = 0, color = blue) + 
   D + 
   E + 
-  D@point_at("left")@label("D", hjust = 1.1) +
-  E@point_at("right")@label("E", hjust = -0.1) +
+  D@west@label("D", hjust = 1.1) +
+  E@east@label("E", hjust = -0.1) +
   C@label("C", vjust = -.2, hjust = .6) 
 ```
 
@@ -289,8 +289,8 @@ ggdiagram(font_size = 16) +
   B@label("B", hjust = 0, color = blue) + 
   D + 
   E + 
-  D@point_at("left")@label("D", hjust = 1.1) +
-  E@point_at("right")@label("E", hjust = -0.1) +
+  D@west@label("D", hjust = 1.1) +
+  E@east@label("E", hjust = -0.1) +
   C@label("C", vjust = -.2, hjust = .6) +
   Cprime@label("C&prime;", vjust = 1.3) +
   CCprime + 

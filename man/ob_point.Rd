@@ -51,6 +51,8 @@ ob_polar(
 
 \item{style}{Gets and sets the styles associated with points}
 
+\item{id}{character string to identify object}
+
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
 
 \item{theta}{Angle of the vector from the origin to the ob_point}

@@ -1,7 +1,7 @@
 lb_styles <- c("alpha", "angle", "color", "family","fill","fontface",
                "hjust","label.color","label.margin","label.padding",
                "label.r","label.size","lineheight","nudge_x","nudge_y",
-               "polar_just","size","straight","text.color","vjust")
+               "polar_just","size","straight","text.color","vjust", "id")
 
 gtextcurve_aes <- class_aesthetics_list(
   geom = purrr::partial(geomtextpath::geom_labelpath,rich = TRUE, arrow = NULL, text_only = TRUE),
@@ -29,7 +29,7 @@ gtextcurve_aes <- class_aesthetics_list(
     "straight"
   ),
   required_aes = c("x", "y", "label"),
-  omit_names = c("position", "label.margin"),
+  omit_names = c("position", "id", "label.margin"),
   inherit.aes = FALSE,
   style = lb_styles
 )
@@ -93,7 +93,8 @@ lb_props <- list(
                 straight = self@straight,
                 size = self@size,
                 text.color = self@text.color,
-                vjust = self@vjust)
+                vjust = self@vjust,
+                id = self@id)
       d <- get_non_empty_tibble(d)
       if (!is.null(d$label.margin)) {
         d$label.margin <- purrr::map(d$label.margin, \(m) {
@@ -157,7 +158,7 @@ lb_props <- list(
           "nudge_y"
         ),
         required_aes = c("x", "y", "label"),
-        omit_names = c("group", "position", "straight"),
+        omit_names = c("group", "position", "straight", "id"),
         inherit.aes = FALSE,
         style = lb_styles
       )
@@ -175,7 +176,7 @@ lb_props <- list(
 #' @param style a style list
 #' @param plot_point plot ob_point (default = FALSE)
 #' @param spacing letter spacing for labels used with ob_path and ob_bezier
-#' @param position position (used in conjunction with the `place` function)
+#' @param position position (0 to 1)
 #' @param x x-coordinate of center point. If specified, overrides x-coordinate of `@center`.
 #' @param y x-coordinate of center point. If specified, overrides y-coordinate of `@center`.
 #' @inherit ob_style params
@@ -222,6 +223,8 @@ ob_label <- S7::new_class(
                          y = S7::class_missing,
                          id = character(0),
                          ...) {
+
+    id <- as.character(id)
 
     # If center is missing, assign x and y
     if (missing(center)) {
@@ -297,8 +300,6 @@ ob_label <- S7::new_class(
       }
     }
 
-
-
     d <- tibble::tibble(x = center@x, y = center@y, label = as.character(label))
 
     if (length(angle) > 0) {
@@ -336,7 +337,8 @@ ob_label <- S7::new_class(
         size = size,
         straight = straight,
         text.color = as.character(text.color),
-        vjust = vjust
+        vjust = vjust,
+        id = id
       )
 
     if (is_center_segment) {
@@ -372,7 +374,7 @@ ob_label <- S7::new_class(
 
     center@x <- d$x
     center@y <- d$y
-    alpha = d[["alpha"]] %||% alpha
+
     S7::new_object(
       S7::S7_object(),
       label = d[["label"]],
@@ -400,7 +402,7 @@ ob_label <- S7::new_class(
       plot_point = plot_point,
       position = position,
       spacing = spacing,
-      id = id
+      id = d[["id"]] %||% id
     )
   }
 )
@@ -415,7 +417,10 @@ centerpoint <- S7::new_class(
     class = ob_point,
     default = ob_point(0, 0)
   ),
-  label = S7::new_property(label_or_character_or_angle))
+  label = S7::new_property(label_or_character_or_angle),
+  xy = S7::new_property(getter = function(self) {
+    self@center@xy
+  }))
 )
 
 S7::method(as.geom, centerpoint) <- function(x, ...) {
@@ -565,9 +570,35 @@ S7::method(label_object, ob_label) <- function(object, accuracy = .1) {
 
 
 S7::method(`[`, ob_label) <- function(x, i) {
-  d <- as.list(x@tibble[i,])
-  rlang::inject(ob_label(!!!d))
+  i <- character_index(i, x@id)
+  d <- x@tibble[i, ]
+
+  if (all(is.na(d$label))) {
+    return(character(0))
+  }
+
+  as.list(d) %>%
+    get_non_empty_tibble() %>%
+    data2shape(ob_label)
 }
+
+
+S7::method(`[<-`, ob_label) <- function(x, i, value) {
+    if (!S7::S7_inherits(value, ob_label)) stop("value must be of class ob_label.")
+   i <- character_index(i, x@id)
+   d <- x@tibble %>%
+     dplyr::bind_rows(value@tibble %>% dplyr::filter(FALSE))
+   d[i,] <- value@tibble
+
+  if (all(is.na(d$label))) {
+    return(character(0))
+  }
+
+   as.list(d) %>%
+     get_non_empty_tibble() %>%
+     data2shape(ob_label)
+}
+
 
 S7::method(unbind, ob_label) <- function(x) {
   purrr::map(seq(1, x@length), \(i) x[i])

@@ -4,7 +4,36 @@
 \alias{connect}
 \title{Arrow connect one shape to another}
 \usage{
-connect(from, to, ...)
+connect(
+  from,
+  to,
+  ...,
+  label = character(0),
+  arc_bend = NULL,
+  from_offset = NULL,
+  to_offset = NULL,
+  alpha = numeric(0),
+  arrow_head = the$arrow_head,
+  arrow_fins = list(),
+  arrowhead_length = 7,
+  length_head = numeric(0),
+  length_fins = numeric(0),
+  color = character(0),
+  lineend = numeric(0),
+  linejoin = numeric(0),
+  linewidth = numeric(0),
+  linewidth_fins = numeric(0),
+  linewidth_head = numeric(0),
+  linetype = numeric(0),
+  resect = numeric(0),
+  resect_fins = numeric(0),
+  resect_head = numeric(0),
+  stroke_color = character(0),
+  stroke_width = numeric(0),
+  style = S7::class_missing,
+  label_sloped = TRUE,
+  id = character(0)
+)
 }
 \arguments{
 \item{from}{first shape object}
@@ -12,10 +41,60 @@ connect(from, to, ...)
 \item{to}{second shape object}
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> Arguments passed to style}
+
+\item{label}{A character, angle, or label object}
+
+\item{arc_bend}{If specified, the arrow will be an arc with a sagitta sized in proportion to the distance between points. The sagitta is is the largest distance from the arc's chord to the arc itself. Negative values bend left. Positive values bend right. 1 and -1 create semi-circles. 0 is a straight segment. If specified, will override \code{from_offset} and \code{to_offset}.}
+
+\item{from_offset}{If specified, arrow will be a bezier curve. The \code{from_offset} is a point (ob_point or ob_polar) that is added to \code{from} to act as a control point in the bezier curve.}
+
+\item{to_offset}{If specified, arrow will be a bezier curve. The \code{to_offset} is a point (ob_point or ob_polar) that is added to \code{to} to act as a control point in the bezier curve.}
+
+\item{alpha}{numeric value for alpha transparency}
+
+\item{arrow_head}{A 2-column matrix of polygon points}
+
+\item{arrow_fins}{A 2-column matrix of polygon points}
+
+\item{arrowhead_length}{Determines the size of the arrow ornaments. This parameter becomes the \code{length} parameter in ggarrow functions. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner.}
+
+\item{length_head}{Determines the size of the arrow head. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner. From ggarrow.}
+
+\item{length_fins}{Determines the size of the arrow fins. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner. From ggarrow.}
+
+\item{color}{character string for color}
+
+\item{lineend}{Line end style (round, butt, square).}
+
+\item{linejoin}{Line join style (round, mitre, bevel).}
+
+\item{linewidth}{Width of lines}
+
+\item{linewidth_fins}{Line width for arrow fins}
+
+\item{linewidth_head}{Line width for arrow fins}
+
+\item{linetype}{type of lines}
+
+\item{resect}{A numeric(1) denoting millimeters or \if{html}{\out{<unit>}} to shorten the arrow head and fins.}
+
+\item{resect_fins}{A numeric(1) denoting millimeters or \if{html}{\out{<unit>}} to shorten the arrow fins}
+
+\item{resect_head}{A numeric(1) denoting millimeters or \if{html}{\out{<unit>}} to shorten the arrow head.}
+
+\item{stroke_color}{Color of point border line}
+
+\item{stroke_width}{Stroke width in arrows}
+
+\item{style}{Gets and sets the styles associated with ob_beziers}
+
+\item{label_sloped}{A logical value indicating whether the label should be sloped with the curve}
+
+\item{id}{character string to identify object}
 }
 \value{
 ob_segment
 }
 \description{
-Arrow connect one shape to another
+By default, will create an \code{ob_segment} with an arrowhead on the end. If \code{arc_bend} is specified, an \code{ob_arc} with an arrowhead will be created instead. If \code{from_offset} or \code{to_offset} are specified, an \code{ob_bezier} with an arrowhead will be created.
 }

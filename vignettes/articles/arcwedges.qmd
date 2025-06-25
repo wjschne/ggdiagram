@@ -58,7 +58,6 @@ To avoid repetitive code, we make a base plot:
 my_font <- "Roboto Condensed"
 my_font_size <- 20
 my_point_size <- 2
-my_arrowhead <- arrowheadr::arrow_head_deltoid(2.3, n = 101)
 
 # my_colors <- viridis::viridis(2, begin = .25, end = .5)
 my_colors <- c("#3B528B", "#21908C")
@@ -289,16 +288,46 @@ The arc object is plotted using `ggarrow::arrow`. This means that arrows can be 
 #| label: fig-arcarrow
 #| fig-cap: "Arcs with arrowheads"
 
-my_arrow_head <- arrowheadr::arrow_head_deltoid(d = 2.3, n = 100)
-
 bp + 
   ob_arc(radius = 3, 
       start = 0, 
       end = 180, 
-      arrow_head = my_arrow_head,
-      arrow_fins = my_arrow_head, 
+      arrow_head = arrowhead(),
+      arrow_fins = arrowhead(), 
       arrowhead_length = 8)
 ```
+
+
+# Connecting Points and Shapes with Arcs
+
+The `connect` function makes it easy to draw connecters between points and/or shapes. Normally the connector is a line segment but it is possible to connect with arcs and bezier curves. To connect two shapes with an arc, set the `arc_bend` parameter. 
+
+Negative values bend left, and postive values bend right. By default, a value of 1 or -1 makes a full semi-circular path between the centers of the shapes. Values close to 0 make the arc appear more straight. Large values make the circle the arc follows larger. The `arc_bend` specifically refers to ratio of arc's sagitta to the arc's radius. Thus, `arc_bend` cannot actually be set to 0, because this would cause an infinite ratio.
+
+By default, the connector is drawn such that the arc would pass through the shape's center if allowed to continue. If you want the arc to begin or end somewhere else, specify the point. For example, the arc from A to C ends at the bottom of C.
+
+
+
+
+```{r}
+#| label: fig-arcconnectors
+#| fig-cap: "Arcs with arrowheads"
+#| fig-width: 6
+bp +
+  {A <- ob_circle(x = -2, 
+                  label = "A")} +
+  {B <- ob_ellipse(x = 1, 
+                   a = 1, 
+                   b = .5, 
+                   angle = degree(60), 
+                   label = ob_label("B", angle = 0))} + 
+  {C <- ob_rectangle(center = ob_point(3,0), 
+                     label = "C")} +
+  connect(A, B, arc_bend = -.75) +
+  connect(B, C, arc_bend = -1) +
+  connect(A, C@south, arc_bend = .6)
+```
+
 
 # Wedges
 
@@ -350,52 +379,51 @@ Objects made with `ob_arc`, `ob_wedge`, or `ob_circular_segment` can return impo
 ```{r}
 #| label: fig-circularsegment
 #| fig-cap: A circular segment and arc and its chord.
+#| fig-width: 7
+#| fig-height: 7
 bp +
   {cs <- ob_circular_segment(
       radius = 3,
-      start = radian(-acos(1 / 3)),
-      end = radian(acos(1 / 3)),
-      fill = "dodgerblue3"
-    )} +
+      end = radian(-acos(1 / 3)) + degree(45),
+      start = radian(acos(1 / 3)) + degree(45),
+      fill = "dodgerblue3",
+      label_sloped = TRUE
+    ) 
+  cs <- cs %>% set_props(
+    label = ob_label(
+      paste0("Arc Length = ", round(cs@arc_length, 2)), 
+      vjust = -0.1,
+      size = 18,
+      color = "black"))
+    } +
   ob_arc(
     radius = 3,
-    start = cs@end,
-    end = cs@start + degree(360),
+    start = cs@start,
+    end = cs@end + degree(360),
     linetype = "dashed"
   ) +
   cs@chord@midpoint()@label(
     paste0("Chord Length = ", round(cs@chord@distance, 2)),
-    angle = cs@chord@line@angle,
-    vjust = -.1,
+    angle = cs@chord@line@angle ,
+    vjust = 1.1,
     color = "black",
     size = 18
   ) +
-  cs@sagitta %>% set_props(color = "white") +
+  cs@sagitta %>% set_props(color = "white", arrow_head = arrowhead()) +
   cs@sagitta@midpoint()@label(
     paste0("Sagitta = ", round(cs@sagitta@distance, 2)),
     vjust = 0,
+    angle = cs@sagitta@line@angle,
     size = 18,
     fill = NA, 
     color = "white"
   ) +
-  ob_path(
-    ob_point(
-      cs@polygon %>% 
-        mutate(id = dplyr::row_number()) %>% 
-        arrange(-id) %>% 
-        select(x, y)
-    ),
-    label = ob_label(
-      paste0("Arc Length = ", round(cs@arc_length, 2)),
-      vjust = -0.1,
-      size = 18,
-      color = "black"
-    ),
-    color = "dodgerblue3"
-  )
+  connect(cs@center, cs@point_at(degree(225)), color = "black", label = ob_label("Radius = 3", angle = degree(45), size = 18, vjust = 0))
   
 
 ```
 
 
 Fun fact: Our geometric concepts *arc*, *chord*, and *sagitta* are all archery terms, deriving from the Latin words *arcus* (bow), *chorda* (string), and *sagitta* (arrow). 
+
+

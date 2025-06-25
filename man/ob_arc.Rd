@@ -12,6 +12,7 @@ ob_arc(
   start = 0,
   end = 0,
   label = character(0),
+  label_sloped = FALSE,
   start_point = S7::class_missing,
   end_point = S7::class_missing,
   n = 360,
@@ -36,8 +37,8 @@ ob_arc(
   stroke_color = character(0),
   stroke_width = numeric(0),
   style = S7::class_missing,
-  x0 = numeric(0),
-  y0 = numeric(0),
+  x = numeric(0),
+  y = numeric(0),
   id = character(0),
   ...
 )
@@ -48,6 +49,7 @@ ob_wedge(
   start = 0,
   end = 0,
   label = character(0),
+  label_sloped = FALSE,
   start_point = S7::class_missing,
   end_point = S7::class_missing,
   n = 360,
@@ -72,8 +74,8 @@ ob_wedge(
   stroke_color = character(0),
   stroke_width = numeric(0),
   style = S7::class_missing,
-  x0 = numeric(0),
-  y0 = numeric(0),
+  x = numeric(0),
+  y = numeric(0),
   id = character(0),
   ...
 )
@@ -84,6 +86,7 @@ ob_circular_segment(
   start = 0,
   end = 0,
   label = character(0),
+  label_sloped = FALSE,
   start_point = S7::class_missing,
   end_point = S7::class_missing,
   n = 360,
@@ -108,8 +111,8 @@ ob_circular_segment(
   stroke_color = character(0),
   stroke_width = numeric(0),
   style = S7::class_missing,
-  x0 = numeric(0),
-  y0 = numeric(0),
+  x = numeric(0),
+  y = numeric(0),
   id = character(0),
   ...
 )
@@ -124,6 +127,8 @@ ob_circular_segment(
 \item{end}{end angle (default = 0 degrees)}
 
 \item{label}{A character, angle, or label object}
+
+\item{label_sloped}{If TRUE, label runs along arc.}
 
 \item{start_point}{Specify where arc starts. Overrides \verb{@center}}
 
@@ -173,9 +178,11 @@ ob_circular_segment(
 
 \item{style}{a style object}
 
-\item{x0}{x-coordinate of center point. If specified, overrides x-coordinate of \verb{@center}.}
+\item{x}{x-coordinate of center point. If specified, overrides x-coordinate of \verb{@center}.}
 
-\item{y0}{x-coordinate of center point. If specified, overrides y-coordinate of \verb{@center}.}
+\item{y}{x-coordinate of center point. If specified, overrides y-coordinate of \verb{@center}.}
+
+\item{id}{character string to identify object}
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> arguments passed to style object}
 }

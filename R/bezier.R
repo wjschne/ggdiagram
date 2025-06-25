@@ -61,6 +61,13 @@ bz_props <- list(
         l
       }
     ),
+    path = S7::new_property(getter = function(self) {
+      get_tibble_defaults(self) %>%
+        dplyr::rename(p = p_unnest) %>%
+        dplyr::mutate(p = purrr::map(p, ob_point)) %>%
+        data2shape(ob_path)
+
+    }),
     style = S7::new_property(
       getter = function(self) {
         pr <- purrr::map(bz_styles,
@@ -117,7 +124,9 @@ bz_props <- list(
       }
     }),
     midpoint = S7::new_property(S7::class_function, getter = function(self) {
-      \(position = .5, ...) midpoint(self, position = position, ...)
+      \(position = .5, ...) {
+        midpoint(self, position = position, ...)
+        }
     })
   ),
   # info ----
@@ -184,7 +193,8 @@ bz_props <- list(
 #' @slot aesthetics A list of information about the ob_bezier's aesthetic properties
 #' @examples
 #' control_points <- ob_point(c(0,1,2,4), c(0,4,0,0))
-#' ob_bezier(control_points, color = "blue")
+#' ggdiagram() +
+#'   ob_bezier(control_points, color = "blue")
 ob_bezier <- S7::new_class(
   name = "ob_bezier",
   parent = has_style,
@@ -201,7 +211,7 @@ ob_bezier <- S7::new_class(
   constructor = function(p = S7::class_missing,
                          label = character(0),
                          label_sloped = TRUE,
-                         n = 360,
+                         n = 100,
                          alpha = numeric(0),
                          arrow_head = S7::class_missing,
                          arrow_fins = S7::class_missing,
@@ -224,6 +234,7 @@ ob_bezier <- S7::new_class(
                          style = S7::class_missing,
                          id = character(0),
                          ...) {
+    id <- as.character(id)
 
     if (S7::S7_inherits(p, ob_point)) p <- list(p)
     p_style <- purrr::map(p, \(x) {
@@ -267,6 +278,13 @@ bz_style <- p_style + style +
       d <- dplyr::bind_cols(d, tibble::tibble(!!!non_empty_list))
     }
 
+    if (is.character(label) || is.numeric(label) || S7::S7_inherits(label, ob_angle)) {
+      if (length(label)  > 0) {
+        label = ob_label(label)
+        label@style <- bz_style + label@style
+      }
+    }
+
     if (length(label) == 0) label = character(0)
     # If there is one object but many labels, make multiple objects
     if (S7::S7_inherits(label, ob_label)) {
@@ -301,7 +319,7 @@ bz_style <- p_style + style +
       resect_head = d[["resect_head"]] %||% resect_head,
       stroke_color = d[["stroke_color"]] %||% stroke_color,
       stroke_width = d[["stroke_width"]] %||% stroke_width,
-      id = id
+      id = d[["id"]] %||% id
     )
   })
 
@@ -468,22 +486,17 @@ S7::method(as.geom, ob_bezier) <- function(x, ...) {
   gc
 }
 
-S7::method(`[`, ob_bezier) <- function(x, y) {
-  d <- x@tibble[y,]
-  dl <- d |>
-    dplyr::select(-dplyr::any_of(c("x", "y", "group"))) |>
-    unique() |>
-    unbind()
-  z <- rlang::inject(ob_bezier(p = x@p[y], !!!dl))
-  z@label <- x@label[y]
+S7::method(`[`, ob_bezier) <- function(x, i) {
+  i <- character_index(i, x@id)
+  z <- data2shape(x@tibble[i,], ob_bezier)
+  z@label <- na2zero(x@label[i])
   z
 }
 
 S7::method(midpoint, list(ob_bezier, S7::class_missing)) <- function(x,y, position = .5, ...) {
-
-
   purrr::map(x@p, \(xx) {
     ob_point(bezier::bezier(t = position, p = xx@xy), ...)
     }) |>
     bind()
 }
+

@@ -38,7 +38,10 @@ ob_latex <- S7::new_class(
         cc <- rotate(ob_point((self@hjust - .5) * -1 * self@width,
                               (self@vjust - .5) * -1 * self@height),
                      self@angle) + self@center
-        ob_rectangle(cc, width = self@width, height = self@height, angle = self@angle)
+        ob_rectangle(cc,
+                     width = self@width,
+                     height = self@height,
+                     angle = self@angle)
     }, setter = function(self, value) {
       if (!S7::S7_inherits(value, ob_rectangle)) {
         stop("The `rectangle` must be the output of the function `ob_rectangle`.")
@@ -84,20 +87,16 @@ ob_latex <- S7::new_class(
     force_recompile = TRUE,
     delete_files = TRUE,
     id = character(0)) {
+
     if (!S7::S7_inherits(angle, ob_angle)) angle <- degree(angle)
 
+    # Make color in latex
     latex_color <- ""
     if (length(color) > 0) {
-      if (S7::S7_inherits(color, class_color)) {
-        latex_color <- c(color)
-      } else {
-        latex_color <- c(class_color(color))
-      }
-
-      latex_color <- substr(latex_color, start = 2, stop = 7)
-      latex_color <- paste0("\\color[HTML]{", latex_color, "} ")
+      latex_color <- class_color(color)@tex
     }
 
+    # Add latex packages
     lp <- ""
     if (length(latex_packages)) {
       lp <- paste0("\\usepackage{",

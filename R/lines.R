@@ -51,9 +51,6 @@ ln_props <- list(
         degree(radian(atan(self@slope)))
       }
     ),
-    equation = S7::new_property(getter = function(self) {
-      equation(self)
-    }),
     length = S7::new_property(
       getter = function(self) {
         length(self@a)
@@ -92,6 +89,13 @@ ln_props <- list(
   ),
   # functions ----
   funs = list(
+    equation = S7::new_property(S7::class_function, getter = function(self) {
+      \(type = c("y", "general", "parametric"), output = c("markdown", "latex"), digits = 2) {
+        type <- match.arg(type)
+        output <- match.arg(output)
+        equation(self, type = type, output = output, digits = digits)
+      }
+    }),
     geom = S7::new_property(S7::class_function, getter = function(self) {
       \(...) {
         as.geom(self, ...)
@@ -168,13 +172,16 @@ ob_line <- S7::new_class(
                          id = character(0),
                          ...) {
 
+    id <- as.character(id)
+
     l_style <- style + ob_style(
       alpha = alpha,
       color = c(color),
       lineend = lineend,
       linejoin = linejoin,
       linewidth = linewidth,
-      linetype = linetype
+      linetype = linetype,
+      id = id
     ) + ob_style(...)
 
     d <- get_non_empty_tibble(list(
@@ -245,7 +252,7 @@ ob_line <- S7::new_class(
                       linejoin = d[["linejoin"]] %||% linejoin,
                       linewidth = d[["linewidth"]] %||% linewidth,
                       linetype = d[["linetype"]] %||% linetype,
-                   id = id)
+                   id = d[["id"]] %||% id)
 
   }
 )
@@ -314,46 +321,75 @@ get_tibble_defaults(x) |>
 S7::method(equation, ob_line) <- function(
     x,
     type = c("y", "general", "parametric"),
+    output = c("markdown", "latex"),
     digits = 2) {
 
   type <- match.arg(type)
+  output <- match.arg(output)
+  myrounder <- redefault(rounder, digits = digits, output = output)
+  myemphasis <- redefault(emphasis, output = output)
 
   eq <- rep("", x@length)
 
   if (type == "y") {
-    eq[x@b == 0] <- trimmer(
-      paste0("*x* = ",
-             rounder(x@xintercept, digits = digits)))
+    eq[x@b == 0] <- trimmer(paste0(
+      myemphasis("x"),
+      " = ",
+      myrounder(x@xintercept[x@b == 0])
+    ))
 
-    eq[x@a == 0 & x@b != 0] <- trimmer(
-      paste0("*y* = ",
-             rounder(x@intercept, digits = digits)))
+    eq[x@a == 0 & x@b != 0] <- trimmer(paste0(
+      myemphasis("y"),
+      " = ",
+      myrounder(x@intercept[x@a == 0 & x@b != 0])
+    ))
 
-    eq[x@a != 0 & x@b != 0] <- trimmer(
-      paste0("*y* = ",
-             rounder(x@slope, digits = digits, add = FALSE),
-             "*x*",
-             rounder(x@intercept, digits = digits, add = TRUE)
+    eq[x@a != 0 & x@b != 0] <- trimmer(paste0(
+      myemphasis("y"),
+      " = ",
+      myrounder(
+        x@slope[x@a != 0 & x@b != 0],
+        add = FALSE
+      ),
+      myemphasis("x"),
+      myrounder(
+        x@intercept[x@a != 0 & x@b != 0],
+        add = TRUE)
     ))
 
   } else if (type == "general") {
     eq <- trimmer(paste0(
-      rounder(x@a, digits = digits),
-      "*x*",
-      rounder(x@b, digits = digits, add = TRUE),
-      "*y*",
-      rounder(x@c, digits = digits, add = TRUE),
+      myrounder(x@a),
+      myemphasis("x"),
+      myrounder(x@b, add = TRUE),
+      myemphasis("y"),
+      myrounder(x@c, add = TRUE),
       " = 0"
     ))
 
   } else if (type == "parametric") {
     eq <- trimmer(paste0(
-      "*y* = ",
-      rounder(x@slope, digits = digits),
-      "*t*",
-      rounder(x@intercept, digits = digits, add = TRUE),
-      "<br>*x* = *t*"
+      emphasis("y", output),
+      " = ",
+      rounder(x@slope, digits = digits, output = output),
+      myemphasis("t"),
+      rounder(x@intercept, digits = digits, add = TRUE, output = output),
+      ifelse(output == "markdown", "<br>", "\\\\ "),
+      myemphasis("x"),
+      " = ",
+      myemphasis("t")
     ))
+    eq[x@b == 0] <- trimmer(
+      paste0(
+        myemphasis("y"),
+        " = ",
+        myemphasis("t"),
+        ifelse(output == "markdown", "<br>", "\\\\ "),
+        myemphasis("x"),
+        " = ",
+        rounder(x@xintercept, digits = digits, output = output)
+      )
+    )
   }
   eq
 }
@@ -367,11 +403,11 @@ yp <- (object@a * object@a * p@y - object@a * object@b * p@x - object@b * object
 ob_point(xp, yp, style = p@style, ...)
 }
 
-S7::method(`[`, ob_line) <- function(x, y) {
-  d <- x@tibble[y, ] %>%
+S7::method(`[`, ob_line) <- function(x, i) {
+  i <- character_index(i, x@id)
+  x@tibble[i, ] %>%
     dplyr::select(-c(slope, intercept, xintercept)) %>%
-    as.list()
-  rlang::inject(ob_line(!!!d))
+    data2shape(ob_line)
 }
 
 S7::method(`==`, list(ob_line, ob_line)) <- function(e1, e2) {

@@ -86,13 +86,15 @@ ob_label(
 
 \item{plot_point}{plot ob_point (default = FALSE)}
 
-\item{position}{position (used in conjunction with the \code{place} function)}
+\item{position}{position (0 to 1)}
 
 \item{spacing}{letter spacing for labels used with ob_path and ob_bezier}
 
 \item{x}{x-coordinate of center point. If specified, overrides x-coordinate of \verb{@center}.}
 
 \item{y}{x-coordinate of center point. If specified, overrides y-coordinate of \verb{@center}.}
+
+\item{id}{character string to identify object}
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
 }

@@ -46,6 +46,8 @@ ob_reuleaux(
 
 \item{style}{Gets and sets the styles associated with polygons}
 
+\item{id}{character string to identify object}
+
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> unused}
 }
 \value{

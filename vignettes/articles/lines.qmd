@@ -49,7 +49,7 @@ To avoid repetitive code, we set defaults and make a base plot:
 my_font <- "Roboto Condensed"
 my_font_size <- 20
 my_point_size <- 2
-my_arrowhead <- arrowheadr::arrow_head_deltoid(d = 2.3, n = 100)
+
 
 # my_colors <- viridis::viridis(2, begin = .25, end = .5)
 my_colors <- c("#3B528B", "#21908C")
@@ -93,10 +93,9 @@ l
 #| label: fig-slopeintercept
 #| fig-cap: !expr 'paste0("A line with slope of ", l@slope, " and intercept of ", l@intercept)'
 #| code-fold: true
-
 bp +
   l +
-  l@point_at_y(0)@label(l@equation, angle = l@angle)
+  l@point_at_y(0)@label(l@equation(), angle = l@angle)
 ```
 
 
@@ -114,7 +113,7 @@ h
 #| code-fold: true
 bp + 
   h + 
-  h@point_at_x(0)@label(h@equation)
+  h@point_at_x(0)@label(equation(h))
 ```
 
 
@@ -201,7 +200,7 @@ ob_segment(p, l@projection(p))@distance
 bp +
   l +
   l@point_at_x(.5)@label(
-    label = l@equation, 
+    label = equation(l), 
     angle = l@angle) +
   {s_projected <- ob_segment(
       p1 = l@projection(p),

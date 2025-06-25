@@ -5,6 +5,7 @@
 \title{ob_style class}
 \usage{
 ob_style(
+  id = character(0),
   alpha = numeric(0),
   angle = numeric(0),
   arrow_head = list(),
@@ -52,6 +53,8 @@ ob_style(
 )
 }
 \arguments{
+\item{id}{character string to identify object}
+
 \item{alpha}{numeric value for alpha transparency}
 
 \item{angle}{angle of text}

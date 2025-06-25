@@ -19,3 +19,4 @@ vignettes/.quarto/
 ^Meta$
 ^cran-comments\.md$
 ^codecov\.yml$
+^data-raw$

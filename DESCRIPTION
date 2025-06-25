@@ -40,6 +40,7 @@ Imports:
 Suggests: 
     knitr,
     lavaan,
+    marquee,
     methods,
     quarto,
     rmarkdown,
@@ -47,7 +48,8 @@ Suggests:
     spelling,
     testthat (>= 3.0.0),
     tidyverse,
-    viridis
+    viridis,
+    xdvir
 VignetteBuilder: 
     knitr,
     quarto
@@ -81,3 +83,6 @@ Collate:
     'inside.R'
     'rotate.R'
     'zzz.R'
+Depends: 
+    R (>= 3.5)
+LazyData: true

@@ -63,7 +63,7 @@ To avoid repetitive code, we set defaults and make a base plot:
 my_font <- "Roboto Condensed"
 my_font_size <- 20
 my_point_size <- 2
-my_arrowhead <- arrowheadr::arrow_head_deltoid(d = 2.3, n = 100)
+
 
 # my_colors <- viridis::viridis(2, begin = .25, end = .5)
 my_colors <- c("#3B528B", "#21908C")
@@ -170,7 +170,7 @@ bp +
 
 # Rotated Ellipses
 
-As seen in @fig-ellipseroated, rotate an ellipse by setting the `angle` property with a `degree`, `radian`, or `turn` object or a numeric value (degrees).
+As seen in fig-ellipserotated, rotate an ellipse by setting the `angle` property with a `degree`, `radian`, or `turn` object or a numeric value (degrees).
 
 ```{r}
 #| label: fig-ellipserotated
@@ -179,7 +179,7 @@ bp +
   ob_ellipse(a  = 2, b = 1, angle = 45)
 ```
 
-Setting the angle of an ellipse will rotate it about its center. If you want to rotate it around a different point, use the `rotate` function.
+Setting the angle of an ellipse will rotate it about its center. If you want to rotate it around a different point, use the `rotate` function, setting the `origin` parameter to any point you wish to rotate the ellipse around.
 
 ```{r}
 #| label: fig-ellipserotated1
@@ -468,13 +468,13 @@ bp +
     e1,
     l1,
     label = paste0("Distance = ", d),
-    arrow_fins = arrowheadr::arrow_head_deltoid(),
+    arrow_fins = arrowhead(),
     length_fins = 8,
     length_head = 8,
     resect = 1
   ) + 
   ob_label(
-    label = l1@equation,
+    label = equation(l1),
     center = ob_polar(theta = deg1, 
                       r = e1@point_at(deg1)@r + d),
     angle = l1@angle,
