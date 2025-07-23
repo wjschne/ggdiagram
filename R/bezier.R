@@ -62,9 +62,9 @@ bz_props <- list(
       }
     ),
     path = S7::new_property(getter = function(self) {
-      get_tibble_defaults(self) %>%
-        dplyr::rename(p = p_unnest) %>%
-        dplyr::mutate(p = purrr::map(p, ob_point)) %>%
+      get_tibble_defaults(self) |>
+        dplyr::rename(p = p_unnest) |>
+        dplyr::mutate(p = purrr::map(p, ob_point)) |>
         data2shape(ob_path)
 
     }),
@@ -110,7 +110,8 @@ bz_props <- list(
         resect_fins = self@resect_fins,
         resect_head = self@resect_head,
         stroke_color = self@stroke_color,
-        stroke_width = self@stroke_width
+        stroke_width = self@stroke_width,
+        id = self@id
       )
       get_non_empty_tibble(d)
 
@@ -163,7 +164,8 @@ bz_props <- list(
           "linejoin",
           "rule",
           "label",
-          "label_sloped"),
+          "label_sloped",
+          "id"),
         inherit.aes = FALSE,
         style = bz_styles
       )
@@ -289,7 +291,7 @@ bz_style <- p_style + style +
     # If there is one object but many labels, make multiple objects
     if (S7::S7_inherits(label, ob_label)) {
       if (label@length > 1 & nrow(d) == 1) {
-        d <- dplyr::mutate(d, k = label@length) %>%
+        d <- dplyr::mutate(d, k = label@length) |>
           tidyr::uncount(.data$k)
       }
     }
@@ -447,7 +449,7 @@ S7::method(as.geom, ob_bezier) <- function(x, ...) {
       d_l <- dplyr::select(x@label@tibble, -c(x, y))
 
 
-      d_label <- tidyr::unnest(d, p_unnest) %>%
+      d_label <- tidyr::unnest(d, p_unnest) |>
         dplyr::select(x,y,group) |>
         dplyr::left_join(dpos, by = "group") |>
         dplyr::mutate(x0 = dplyr::lag(x),

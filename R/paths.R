@@ -99,7 +99,8 @@ path_props <- list(
         resect_fins = self@resect_fins,
         resect_head = self@resect_head,
         stroke_color = self@stroke_color,
-        stroke_width = self@stroke_width
+        stroke_width = self@stroke_width,
+        id = self@id
       )
       get_non_empty_tibble(d)
 
@@ -113,7 +114,7 @@ path_props <- list(
             a21 <- a1 - a2
             if (a21 < 0) a21 <- a21 + degree(360)
             a21
-          }) %>%
+          }) |>
             bind()
 
           if (pp[1] == pp[pp@length]) {
@@ -145,7 +146,7 @@ path_props <- list(
     }),
     segments = S7::new_property(getter = function(self) {
       \(...) {
-        purrr::map(self@p, \(s) ob_segment(s, style = self@style, ...)) %>%
+        purrr::map(self@p, \(s) ob_segment(s, style = self@style, ...)) |>
                      bind()
       }
 
@@ -207,6 +208,7 @@ path_props <- list(
 #' @slot length The number of paths in the ob_path object
 #' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggarrow::geom_arrow`.
 #' @inherit ob_style params
+#' @inherit ob_bezier params
 ob_path <- S7::new_class(
   name = "ob_path",
   parent = has_style,
@@ -328,34 +330,10 @@ ob_path <- S7::new_class(
     # If there is one object but many labels, make multiple objects
     if (S7::S7_inherits(label, ob_label)) {
       if (label@length > 1 & nrow(d) == 1) {
-        d <- dplyr::mutate(d, k = label@length) %>%
+        d <- dplyr::mutate(d, k = label@length) |>
           tidyr::uncount(.data$k)
       }
     }
-
-
-
-    # if (length(label) == 0) {
-    #   label = character(0)
-    #   } else {
-    #     d_l <- get_tibble(path_style)
-    #     cnames <- dplyr::intersect(colnames(d_l), lb_styles)
-    #     if (S7::S7_inherits(label, ob_label)) {
-    #       if ("color" %in% cnames && all(length(label@color) == 0)) {
-    #         label@color <- d_l$color
-    #       }
-    #     } else {
-    #       label <- rlang::inject(ob_label(label = label, !!!d_l[, cnames]))
-    #     }
-    #   }
-    #
-    # # If there is one object but many labels, make multiple objects
-    # if (S7::S7_inherits(label, ob_label)) {
-    #   if (label@length > 1 & nrow(d) == 1) {
-    #     d <- dplyr::mutate(d, k = label@length) %>%
-    #       tidyr::uncount(.data$k)
-    #   }
-    # }
 
     S7::new_object(.parent = S7::S7_object(),
                p =  d$p,
@@ -384,33 +362,8 @@ ob_path <- S7::new_class(
     )
   })
 
-S7::method(str, ob_path) <- function(
-    object,
-    nest.lev = 0,
-    additional = TRUE,
-    omit = omit_props(object, include = c(""))) {
-
-  str_properties(object,
-                 omit = omit,
-                 nest.lev = nest.lev,
-                 additional = additional)
-  cat(" <points>\n")
-  purrr::walk(object@p,
-              \(o) {
-                str_properties(
-                  o,
-                  omit = omit_props(
-                    o,
-                    include = c("x", "y")),
-                  nest.lev = 2,
-                  additional = TRUE)
-              })
-
-}
-
-
 S7::method(get_tibble, ob_path) <- function(x) {
-  x@tibble %>%
+  x@tibble |>
     dplyr::mutate(p = purrr::map(p, \(x) {
       x@tibble |> dplyr::select(x,y)
     })) |>
@@ -435,7 +388,7 @@ S7::method(as.geom, ob_path) <- function(x, ...) {
 
   if (S7::S7_inherits(x@label, ob_label)) {
     d <- tidyr::nest(d |> dplyr::select(x,y,group), .by = group) |>
-      dplyr::bind_cols(x@label@tibble |> select(-c(x,y)))
+      dplyr::bind_cols(x@label@tibble |> dplyr::select(-c(x,y)))
 
 
 

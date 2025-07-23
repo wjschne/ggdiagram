@@ -162,7 +162,7 @@ S7::method(intersection, list(ob_point, ob_line)) <- function(x, y, ...) {
     yb = y@b,
     xy = x@y,
     yc = y@c,
-    is_on = abs(ya * xx + yb * xy + yc) < .Machine$double.eps) %>%
+    is_on = abs(ya * xx + yb * xy + yc) < .Machine$double.eps) |>
     dplyr::pull(is_on)
 
   if (all(!is_on_line)) {
@@ -188,7 +188,7 @@ S7::method(intersection, list(ob_point, ob_segment)) <- function(x, y, ...) {
       xp1 = distance(x, y@p1),
       xp2 = distance(x, y@p2),
       p1p2 = distance(y),
-      equalish = abs(p1p2 - xp1 - xp2) < .Machine$double.eps * 2) %>%
+      equalish = abs(p1p2 - xp1 - xp2) < .Machine$double.eps * 2) |>
       dplyr::pull(equalish)
 
     s <- rlang::list2(...)
@@ -236,7 +236,8 @@ S7::method(intersection, list(ob_segment, ob_rectangle)) <- function(x, y, ...) 
                                    p2 = y@southeast), ...),
            intersection(x, ob_segment(p1 = y@southeast,
                                    p2 = y@northeast), ...)
-  ))
+  )) |>
+    bind()
 }
 S7::method(intersection, list(ob_rectangle, ob_segment)) <- function(x, y, ...) {
   intersection(y, x, ...)
@@ -589,22 +590,24 @@ ob_arc_or_bezier <- S7::new_union(ob_arc, ob_bezier)
 S7::method(intersection, list(ob_arc_or_bezier, centerpoint)) <- function(x, y, ...) {
   if (x@n == 360)
     x@n <- 3600
-  d_x <- x@polygon %>%
+  d_x <- x@polygon |>
     tidyr::nest(.by = group)
 
 
-  d_y <- tibble(group = factor(seq(y@length)), e = unbind(y))
+  d_y <- tibble::tibble(group = factor(seq(y@length)), e = unbind(y))
 
 
 
   if (x@length == 1 & y@length > 1) {
-    d_x <- d_x %>% mutate(k = y@length) %>%
-      uncount(k)
+    d_x <- d_x |>
+      dplyr::mutate(k = y@length) |>
+      dplyr::uncount(k)
   }
 
   if (y@length == 1 & x@length > 1) {
-    d_y <- d_y %>% mutate(k = x@length) %>%
-      uncount(k)
+    d_y <- d_y |>
+      dplyr::mutate(k = x@length) |>
+      dplyr::uncount(k)
   }
 
   if (nrow(d_x) != nrow(d_y))
@@ -621,14 +624,14 @@ S7::method(intersection, list(ob_arc_or_bezier, centerpoint)) <- function(x, y, 
   d_x$e <- d_y$e
 
 
-  d_x %>%
+  d_x |>
     dplyr::mutate(p = purrr::map2(data, e, \(d, ee) {
       inside(ob_point(d), ee)
-    })) %>%
-    dplyr::select(-e) %>%
-    tidyr::unnest(c(data, p)) %>%
-    dplyr::filter(abs(p - dplyr::lag(p)) == 2 | p == 0) %>%
-    dplyr::select(-p, -group) %>%
+    })) |>
+    dplyr::select(-e) |>
+    tidyr::unnest(c(data, p)) |>
+    dplyr::filter(abs(p - dplyr::lag(p)) == 2 | p == 0) |>
+    dplyr::select(-p, -group) |>
     data2shape(ob_point)
 
 }
@@ -643,7 +646,7 @@ S7::method(intersection, list(ob_path, ob_line)) <- function(
     ...) {
   purrr::map(unbind(x), \(p) {
     intersection(p@segments(), y)
-  }) %>%
+  }) |>
     bind()
 }
 

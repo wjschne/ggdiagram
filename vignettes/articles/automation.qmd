@@ -344,7 +344,7 @@ ggdiagram() +
 
 Functions with an `ob_*` prefix have an `id` property that can be used to subset objects. The `id` property does not have to  be unique.
 
-```{r}
+```{r subsetid}
 p <- ob_point(1:3, 4:6, id = c("A", "B", "C"))
 p[c("B", "A")]
 
@@ -353,11 +353,31 @@ p[c("B", "A")]
 
 ## Creating objects from data.frames/tibbles
 
-If you start with a data.frame (or tibble), and all you need to do is display objects, just use the ggplot2 functions. In general, the direct use of a ggplot2 function will render more quickly than its analogous ggdiagram functions. The reason to convert data into ggdiagram objects is to do something with them that would be hard to do with ggplot2 functions.
+The `data2shape` function will convert a data.frame (or tibble) to a ggdiagram `ob_...` function. For example, @fig-data2shape, a sequence of regular polygons was quickly and efficiently.
+
+```{r}
+#| label: fig-data2shape
+#| fig-cap: A sequence of regular polygons
+
+d <- tibble(
+  x = 3:10,
+  y = x,
+  alpha = x * .1,
+  radius = .6,
+  angle = 90,
+  fill = "dodgerblue4",
+  n = x
+)
+
+ggdiagram() +
+  data2shape(data = d, shape = ob_ngon)
+```
+
+Although `data2shape` is sometimes less verbose than standard ggplot2 syntax, using it is not always the best choice. If you start with a data.frame (or tibble), and all you need to do is display data, the standard ggplot2 functions are optimized for this purpose, particularly when the data set is large. In general, the direct use of a ggplot2 function will render more quickly than its analogous ggdiagram function. The reason to convert data to shapes via `data2shape` is to do something  that would be otherwise difficult with the standard ggplot2 functions.
 
 For example, one of the problems that prompted me to make the ggdiagram package was that I wanted to make path diagrams for structural equation models with full control of every aspect of the diagram. There are excellent functions from other packages that automate the process of making a path diagram (e.g., [`semPlot`](https://cran.r-project.org/package=semPlot), [semptools](https://sfcheung.github.io/semptools/index.html), and [`lavaanPlot`](https://lavaanplot.alexlishinski.com/)), with options for greater flexibility. Even so, I could not figure out how to make the plots fully customizable.
 
-My goal is for ggdiagram to automate the tedious parts of making path diagrams and make it easy for customization. The code for @fig-lavaan shows the whole process, including the tedious bits that eventually will be tucked way in functions.
+My eventual goal is for ggdiagram to automate the tedious parts of making path diagrams and allow for efficient customization. The code for @fig-lavaan shows the whole process, including the tedious bits that eventually will be tucked way in functions.
 
 ```{r}
 #| label: fig-lavaan
@@ -368,14 +388,6 @@ My goal is for ggdiagram to automate the tedious parts of making path diagrams a
 library(dplyr)
 library(tidyr)
 library(lavaan)
-
-# Structural Model
-m <- '
-Gv =~ VisualPerception + Cubes + Lozenges + CapitalsSpeed
-Gs =~ CapitalsSpeed + CountingSpeed + AdditionSpeed 
-Gc =~ ParagraphComp + SentenceComp + WordMeaning
-g =~ Gv + Gc + Gs
-'
 
 # Observed variable name conversion
 onames <- c(VisualPerception = "x1",
@@ -388,47 +400,27 @@ onames <- c(VisualPerception = "x1",
                SentenceComp = "x5",
                WordMeaning = "x6")
 
+# Data
+d <- lavaan::HolzingerSwineford1939 |> 
+  dplyr::select(x1:x9) |> 
+  dplyr::rename(all_of(onames))
+
+# Structural Model
+m <- '
+Gv =~ VisualPerception + Cubes + Lozenges + CapitalsSpeed
+Gs =~ CapitalsSpeed + CountingSpeed + AdditionSpeed 
+Gc =~ ParagraphComp + SentenceComp + WordMeaning
+g =~ Gv + Gc + Gs
+'
+
 # Fit model with converted names
-fit <- sem(m, 
-           data = HolzingerSwineford1939 %>% 
-             dplyr::rename(all_of(onames)))
-
-
+fit <- sem(m, data = d)
 
 # Parameter table, find primary indicators
 pt <- standardizedsolution(fit) %>% 
   mutate(primary_indicator = dplyr::dense_rank(
     desc(abs(est.std))) == 1 & op == "=~", 
     .by = c(rhs, op))
-
-# Function to calculate hierarchy depth
-get_depth <- function(x, model, depth = 0L, max_depth = 20) {
-  
-  if (class(model) == "character") {
-    model <- lavaanify(model)
-  }
-  
-  if (class(model) == "lavaan") {
-    model <- parametertable(model)
-  }
-  
-  # Does it have children?
-  children <- model %>% 
-    filter(op == "=~", lhs %in% x) %>% 
-    pull(rhs) %>% 
-    unique()
-  
-  # Detect infinite loops
-  if (depth >= max_depth) stop("Maximum depth reached. May be nonrecursive. ")
-  
-  # Do children have children?
-  if (length(children) > 0) {
-    get_depth(children, model, depth = depth + 1)
-  } else {
-    # No children, return depth
-    return(depth + 1)
-  }
-}
 
 # Oberved and latent names
 o_names <- lavaan::lavNames(fit, "ov")
@@ -442,7 +434,7 @@ latent_colors <- l_names %>%
 
 # Make data for creating objects
 d <- tibble(id = c(o_names, l_names))  %>% 
-  mutate(depth = map_int(id, \(i) get_depth(i, model = m)),
+  mutate(depth = get_depth(id, model = m),
          type = ifelse(id %in% l_names, "latent", "observed"),
          m1 = ifelse(type == "latent", 2, 15),
          a = ifelse(type == "latent", 2, 1.5),
@@ -494,7 +486,9 @@ s@label@size[d$type == "latent"] <- 20
 s@label@nudge_y[d$type == "latent"] <- -0.08
 s@label@color <- class_color(s@fill)@darken(.6)@color
 
-# Position shapes
+# Position shapes:
+#   Move indicators to the right of other indicators
+#   Center latent variables above their primary indicators
 walk(d$id, \(v) {
   dr <- d %>% filter(id == v) 
   
@@ -540,6 +534,7 @@ e <- d %>%
   }) %>% 
   bind()
 
+# Make plot
 ggdiagram(font_family = my_font, 
           font_size = 12) + 
   s + 
@@ -548,6 +543,7 @@ ggdiagram(font_family = my_font,
 
 
 ```{r}
+#| label: fig-efa
 #| eval: false
 #| echo: false
 my_efa <- efa(HolzingerSwineford1939 %>% select(starts_with("x")), 3, rotation = "promax")

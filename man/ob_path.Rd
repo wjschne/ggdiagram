@@ -37,6 +37,8 @@ ob_path(
 
 \item{label}{A character, angle, or label object}
 
+\item{label_sloped}{A logical value indicating whether the label should be sloped with the curve}
+
 \item{alpha}{numeric value for alpha transparency}
 
 \item{arrow_head}{A 2-column matrix of polygon points}

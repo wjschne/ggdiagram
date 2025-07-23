@@ -228,9 +228,10 @@ Create arcs and wedges
 
 \examples{
 # 90-degree arc
-ob_arc(
- radius = 6,
- start = degree(0),
- end = degree(90)
+ggdiagram() +
+  ob_arc(
+    radius = 6,
+    start = degree(0),
+    end = degree(90)
  )
 }

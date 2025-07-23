@@ -23,6 +23,7 @@ Imports:
     grDevices,
     grid,
     janitor,
+    lavaan,
     magick,
     magrittr,
     pdftools,
@@ -36,10 +37,10 @@ Imports:
     tidyr,
     tinter,
     tinytex,
-    utils
+    utils,
+    vctrs
 Suggests: 
     knitr,
-    lavaan,
     marquee,
     methods,
     quarto,
@@ -84,5 +85,5 @@ Collate:
     'rotate.R'
     'zzz.R'
 Depends: 
-    R (>= 3.5)
+    R (>= 4.1.0)
 LazyData: true

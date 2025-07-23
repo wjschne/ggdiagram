@@ -17,7 +17,6 @@ CBG
 CDB
 CGH
 CJ
-Codecov
 DG
 DL
 EFA
@@ -39,6 +38,7 @@ TikZ
 TikZ's
 apothem
 arcus
+arrowheadr
 bezier
 bezier's
 beziers
@@ -52,6 +52,7 @@ chorda
 circ
 cov
 definitional
+ellipserotated
 farver
 foci
 frac
@@ -69,7 +70,6 @@ ish
 lavaan
 linetype
 linewidth
-loadings
 magrittr
 mathbf
 mathcal
@@ -79,18 +79,19 @@ ngons
 pc
 picas
 pixelated
-programmatically
 purrr
 resect
 resected
 reuleaux
 roundedness
 sagitta
+semptools
 squircle
 superellipse
 superellipses
 tex
 tibble
+tibbles
 tinter
 tinytex
 underbrace

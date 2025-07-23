@@ -74,9 +74,9 @@ S7::method(inside, list(ob_point, ob_polygon)) <- function(x,y) {
   tibble::tibble(
     xx = x@x,
     xy = x@y,
-    pg = y@p) %>%
-    dplyr::mutate(vertices = purrr::map(pg, \(x) x@tibble)) %>%
-    dplyr::select(x = xx, y = xy, vertices) %>%
+    pg = y@p) |>
+    dplyr::mutate(vertices = purrr::map(pg, \(x) x@tibble)) |>
+    dplyr::select(x = xx, y = xy, vertices) |>
     purrr::pmap_dbl(point_in_polygon)
 
 }
@@ -87,26 +87,11 @@ S7::method(inside, list(ob_point, ob_ngon)) <- function(x,y) {
 
   tibble::tibble(
     p = unbind(x),
-    pg = unbind(y)) %>%
+    pg = unbind(y)) |>
     dplyr::mutate(x = purrr::map_dbl(p, \(x) x@x),
                   y = purrr::map_dbl(p, \(x) x@y),
-                  vertices = purrr::map(pg, \(x) x@vertices@tibble)) %>%
-    dplyr::select(x,y, vertices) %>%
-    purrr::pmap_dbl(point_in_polygon)
-
-}
-
-
-S7::method(inside, list(ob_point, ob_ngon)) <- function(x,y) {
-  if (!(x@length == 1 || y@length == 1 || x@length == y@length)) stop(paste0("ob_point and ob_ngon with length > 1 need to be of the same size."))
-
-  tibble::tibble(
-    p = unbind(x),
-    pg = unbind(y)) %>%
-    dplyr::mutate(x = purrr::map_dbl(p, \(x) x@x),
-                  y = purrr::map_dbl(p, \(x) x@y),
-                  vertices = purrr::map(pg, \(x) x@vertices@tibble)) %>%
-    dplyr::select(x,y, vertices) %>%
+                  vertices = purrr::map(pg, \(x) x@vertices@tibble)) |>
+    dplyr::select(x,y, vertices) |>
     purrr::pmap_dbl(point_in_polygon)
 
 }

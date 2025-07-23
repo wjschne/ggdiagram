@@ -391,7 +391,7 @@ S7::method(get_tibble, ob_style) <- function(x) {
 
 S7::method(`[`, ob_style) <- function(x, i) {
   i <- character_index(i, x@id)
-  get_tibble(x)[i, ] %>%
+  get_tibble(x)[i, ] |>
     data2shape(ob_style)
 }
 

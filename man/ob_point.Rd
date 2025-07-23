@@ -72,12 +72,12 @@ Polar points are ordinary points but are specified with an angle (theta) and a r
 \describe{
 \item{\code{auto_label}}{Gets x and y coordinates and makes a label \code{"(x,y)"}}
 
+\item{\code{geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggplot2::geom_point}.}
+
 \item{\code{length}}{The number of points in the ob_point object}
 
 \item{\code{tibble}}{Gets a tibble (data.frame) containing parameters and styles used by \code{ggplot2::geom_point}.}
 
 \item{\code{xy}}{Gets a 2-column matrix of the x and y coordinates of the ob_point object.}
-
-\item{\code{geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggplot2::geom_point}.}
 }}
 

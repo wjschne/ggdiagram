@@ -28,6 +28,8 @@ From [Common_straightedge-and-compass_constructions](https://en.wikipedia.org/wi
 ```{r setup}
 library(ggdiagram)
 library(ggplot2)
+library(tibble)
+library(dplyr)
 red <- "#d42a20"
 yellow <- "#FAC22B"
 blue <- "#0C7AA5"
@@ -735,5 +737,32 @@ ggdiagram(font_family = "Roboto Condensed", font_size = 16) +
   ob_segment(bind(c(p2, p3)), bind(c(p3, ob_point(1, 0))), linetype = "dashed") +
   ob_segment(ob_point(my_ticks, -.05), ob_point(my_ticks, 0.05)) +
   ob_segment(ob_point(-0.05, my_ticks), ob_point(.05, my_ticks))
+```
+
+```{r}
+ggdiagram() + 
+  geom_vline(xintercept = -3:3, color = "gray60", linetype = "dotted") +
+  geom_hline(yintercept = -3:3, color = "gray60", linetype = "dotted") +
+  ob_segment(ob_point(c(-3, 0), c(0, -3)), 
+             {xy <- ob_point(c(3, 0), c(0, 3))}, 
+             arrow_head = arrowhead(), arrow_fins = arrowhead()) +
+  ob_label(c("x", "y"),
+           xy,
+           vjust = c(0.5, 0),
+           hjust = c(0, 0.5)) +
+  tibble(dx = c(-3,1,1,2, 1, 1),
+         dy = c(-1, 0, 2, 0, -2, 0),
+         x = cumsum(dx),
+         y = cumsum(dy)) %>% 
+  ob_point() %>% 
+  ob_path(color = "blue", linewidth = 1)
+
+```
+
+```{r}
+my_fill <- grid::radialGradient(c("gold", "white")) 
+
+
+
 ```
 

@@ -12,7 +12,7 @@ inside(x, y)
 \item{y}{object}
 }
 \value{
-logical
+numeric vector where 1 = inside, 0 = on, -1 = outside
 }
 \description{
 is an ob_point inside a shape ?

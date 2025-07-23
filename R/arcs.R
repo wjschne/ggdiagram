@@ -49,7 +49,8 @@ wedge_aesthetics <- class_aesthetics_list(
     "rule",
     "label",
     "arrow_head",
-    "arrow_fins"),
+    "arrow_fins",
+    "id"),
   inherit.aes = FALSE,
   style = wedge_styles
 )
@@ -232,7 +233,8 @@ arc_props <- list(
           linewidth = self@linewidth,
           linetype = self@linetype,
           n = self@n,
-          type = self@type
+          type = self@type,
+          id = self@id
         )
 
       } else {
@@ -559,7 +561,7 @@ ob_arc <- S7::new_class(
       # If there is one object but many labels, make multiple objects
       if (S7::S7_inherits(label, ob_label)) {
         if (label@length > 1 & nrow(d) == 1) {
-          d <- dplyr::mutate(d, k = label@length) %>%
+          d <- dplyr::mutate(d, k = label@length) |>
             tidyr::uncount(.data$k)
         }
       }
@@ -711,10 +713,11 @@ overrides <- get_non_empty_props(ob_style(...))
 
     if (all(x@label_sloped)) {
 
-      d <- x@polygon %>%
-        select(group, x, y) %>%
-        tidyr::nest(.by = group) %>%
-        dplyr::bind_cols(x@label@tibble |> select(-c(x,y)))
+      d <- x@polygon |>
+        dplyr::select(group, x, y) |>
+        tidyr::nest(.by = group) |>
+        dplyr::bind_cols(x@label@tibble |>
+                           dplyr::select(-c(x,y)))
 
 
 
@@ -753,10 +756,10 @@ overrides <- get_non_empty_props(ob_style(...))
 }
 
 S7::method(get_tibble, ob_arc) <- function(x) {
-  x@tibble %>%
-    dplyr::rename(r = radius) %>%
+  x@tibble |>
+    dplyr::rename(r = radius) |>
     dplyr::mutate(start = pi * start / 180,
-                  end = pi * end / 180) %>%
+                  end = pi * end / 180) |>
     dplyr::select(-type)
 }
 

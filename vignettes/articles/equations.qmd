@@ -9,6 +9,8 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 bibliography: references.json
 csl: apa.csl
+execute: 
+  cache: true
 ---
 
 ```{r}
@@ -128,7 +130,7 @@ ggplot() +
   ) +
   scale_x_continuous(NULL,
                      breaks = mu + seq(-4 * sigma, 4 * sigma, sigma), 
-                     limits = mu + c(-4 * sigma, 4 * sigma, sigma)) +
+                     limits = mu + c(-4 * sigma, 4 * sigma)) +
   scale_y_continuous(
     NULL,
     breaks = NULL,
@@ -297,7 +299,7 @@ When rendered in ggplot2, the bitmap is displayed via `ggplot2::annotation_raste
 
 # The xdvir Package: A Cool Alternative to `ob_latex`
 
-If you want the best image quality possible for a LaTeX snippet in a ggplot2 plot, then give the [xdvir](https://cran.r-project.org/package=xdvir) package a try. It can put LaTeX in plot titles, subtitles, and captains, as well as anywhere on the plot. It gets the typography right as well. Be warned! At least for now, xdvir renders slowly.
+If you want the best image quality possible for a LaTeX snippet in a ggplot2 plot, then give the [xdvir](https://cran.r-project.org/package=xdvir) package a try. It can put LaTeX in plot titles, subtitles, and captains, as well as anywhere on the plot. It gets the typography right as well. Be warned! At least for now, xdvir renders S L O W L Y.
 
 Of course, you can use ggdiagram functions to place LaTeX snippets but use xdvir functions to render them. In @fig-xdvir, we use `ob_array`, `ob_circle`, and `ob_variance` to create latent variables and their variance paths. Then we add math text with `xdvir::geom_latex`.
 
@@ -307,28 +309,28 @@ Of course, you can use ggdiagram functions to place LaTeX snippets but use xdvir
 #| fig-width: 8
 #| fig-height: 2.5
 ggdiagram() +
-  {x <- ob_array(ob_circle(radius = 1), k = 5)} +
-  {v <- ob_variance(x, looseness = 1.1)} +
+  {x <- ob_array(ob_circle(radius = 1), k = 5, id = 1:5)} +
+  {v <- ob_variance(x, looseness = 1.1, id = 1:5)} +
   ob_rectangle(center = v@midpoint(), 
                width = .7, 
                height = .7, 
                fill = "white", 
                color = NA) +
     xdvir::geom_latex(
-    data = x@tibble %>% mutate(id = 1:5), 
+    data = x@tibble, 
     mapping = aes(x = x, 
                   y = y, 
                   label = paste0("$X_", id, "$")), 
     size = 12, 
     vjust = .5) +
   xdvir::geom_latex(
-    data = v@midpoint()@tibble %>% mutate(id = 1:5), 
+    data = v@midpoint()@tibble, 
     mapping = aes(x = x, 
                   y = y, 
                   label = paste0("$\\sigma_", id, "^2$")), 
     size = 7, 
     vjust = .5)
-  
+
 ```
 
 

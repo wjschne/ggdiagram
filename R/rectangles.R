@@ -44,7 +44,8 @@ rc_aesthetics_list <- class_aesthetics_list(
   omit_names = c(
     "rule",
     "angle",
-    "label"),
+    "label",
+    "id"),
   inherit.aes = FALSE,
   style = rc_styles
 )
@@ -211,7 +212,9 @@ rc_props <- list(
         color = self@color,
         fill = self@fill,
         linewidth = self@linewidth,
-        linetype = self@linetype)
+        linetype = self@linetype,
+        id = self@id
+        )
       get_non_empty_tibble(d)
     })
   ),
@@ -604,7 +607,7 @@ ob_rectangle <- S7::new_class(
     # If there is one object but many labels, make multiple objects
     if (S7::S7_inherits(label, ob_label)) {
       if (label@length > 1 & nrow(d) == 1) {
-        d <- dplyr::mutate(d, k = label@length) %>%
+        d <- dplyr::mutate(d, k = label@length) |>
           tidyr::uncount(.data$k)
       }
     }
@@ -679,7 +682,7 @@ S7::method(get_tibble_defaults, ob_rectangle) <- function(x) {
     fill = replace_na(ggforce::GeomShape$default_aes$fill, "black"),
     lineend = "butt",
     linewidth = replace_na(ggforce::GeomShape$default_aes$linewidth, 0.5),
-    linetype = replace_na(ggforce::GeomShape$default_aes$default_aes$linetype, 1)
+    linetype = replace_na(ggforce::GeomShape$default_aes$linetype, 1)
   )
   get_tibble_defaults_helper(
     x = x,
@@ -712,8 +715,7 @@ S7::method(`[`, ob_rectangle) <- function(x, i) {
     get_non_empty_tibble()
 
   d <- d[i,]
-  z <- d %>%
-    data2shape(ob_rectangle)
+  z <- data2shape(d, ob_rectangle)
 
   z@label <- na2zero(x@label[i])
   if (!is.null(d$angle)) {

@@ -9,7 +9,8 @@ class_color(
   hue = NULL,
   saturation = NULL,
   brightness = NULL,
-  alpha = NULL
+  alpha = NULL,
+  id = character(0)
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ class_color(
 \item{brightness}{get or set the brightness of a color (i.e., the v in the hsv model)}
 
 \item{alpha}{get or set the transparency of a color}
+
+\item{id}{character identifier}
 }
 \value{
 class_color object

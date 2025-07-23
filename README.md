@@ -45,9 +45,10 @@ remotes::install_github("wjschne/ggdiagram")
 
 ## Example
 
-In @fig_example, we create a circle object with `ob_circle` and a
-rectangle object with `ob_rectangle`, placing the rectangle such that
-there is .5 units of separation between the two objects.
+In <a href="#fig-example" class="quarto-xref">Figure 1</a>, we create a
+circle object with `ob_circle` and a rectangle object with
+`ob_rectangle`, placing the rectangle such that there is .5 units of
+separation between the two objects.
 
 The `ggdiagram` function is a a wrapper for `ggplot`, that sets some
 defaults (e.g., `theme_void`, `coord_equal`, fonts, line size, etc.).
@@ -59,7 +60,7 @@ converted to a `ggforce:geom_circle`, and an `ob_rectangle` is converted
 to a `ggforce::geom_shape`.
 
 The `connect` function connects the circle and rectangle at their edges
-with an arrow (via `ggarrow::geom_arrow_segment`).
+with an arrow (drawn with `ggarrow::geom_arrow_segment`).
 
 ``` r
 library(ggdiagram)

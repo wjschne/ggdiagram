@@ -14,6 +14,12 @@ test_that("add, subtract, multiply, divide, and exponentiate degrees, radians, a
             })
           })
 
+test_that("ob_angle equality", {
+  expect_equal(c(degree(90)), c(ob_angle(degree = 90)))
+  expect_equal(c(radian(1)), c(ob_angle(radian = 1)))
+  expect_equal(c(turn(.1)), c(ob_angle(turn = .1)))
+})
+
 
 
 test_that("trig functions work with ob_angle", {
@@ -24,8 +30,8 @@ test_that("trig functions work with ob_angle", {
 
 test_that("equality with ob_angle", {
   tidyr::crossing(tibble::tibble(
-    .f = list(degree, radian, turn),
-    ratio = c(360, 2 * pi, 1)
+    .f = list(degree, radian, turn, ob_angle),
+    ratio = c(360, 2 * pi, 1, 1)
   ),
   .g = list(`>`, `<`, `<=`, `>=`, `==`, `!=`)) |>
     dplyr::mutate(
@@ -46,7 +52,7 @@ test_that("equality with ob_angle", {
 
 test_that("trig angles", {
   my_turn <- 1 / 8
-  purrr::map2(list(degree, radian, turn), c(360, 2 * pi, 1), \(.f, ratio) {
+  purrr::map2(list(degree, radian, turn, ob_angle), c(360, 2 * pi, 1, 1), \(.f, ratio) {
     expect_equal(sin(.f(ratio * my_turn)), sinpi(2 * my_turn))
     expect_equal(cos(.f(ratio * my_turn)), cospi(2 * my_turn))
     expect_equal(tan(.f(ratio * my_turn)), tanpi(2 * my_turn))
@@ -98,10 +104,6 @@ test_that("misc angle", {
   a@turn <- 0.5
   expect_identical(a@turn, 0.5)
 
-  expect_identical(convert(2,degree), degree(720))
-  expect_identical(convert(2,turn), turn(2))
-  expect_identical(convert(2,radian), radian(2 * 2 * pi))
   expect_no_error(capture.output(print(a), file = nullfile()))
-ob_angle(.5)
-ob_angle@constructor
+
 })

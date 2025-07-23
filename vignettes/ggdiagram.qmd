@@ -49,7 +49,6 @@ As seen in @fig-ob, objects with the `ob_` prefix can be added to any ggplot obj
 ```{r}
 #| label: fig-ob
 #| fig-cap: Adding objects using the `ggplot` function
-
 # Plot
 ggplot() +
   ob_circle(radius = 1) +
@@ -167,13 +166,13 @@ Suppose you want to create a list of styles that you want to pass to multiple ob
 style_shape <- ob_style(
   color = NA,
   fill = "dodgerblue4",
-  family = "Georgia")
+  family = "serif")
 
 my_label <- redefault(
   ob_label,
   color = "white",
   fill = NA,
-  family = "Georgia",
+  family = "serif",
   size = 18
 )
 
@@ -209,13 +208,13 @@ ggdiagram() +
 
 # Placing Objects in Relation to Other Objects
 
-The `place` function will place an object a specified distance and direction from another object. Here we place a 1 &times; 1 rectangle below unit circle `x` such that the separation between them is .5 units. The `connect` function draws an arrow between them, with 2mm of space resected.
+The `place` function will place an object a specified distance and direction from another object. Here we place a 1 &times; 1 rectangle above unit circle `x` such that the separation between them is .5 units. The `connect` function draws an arrow between them, with 2mm of space resected.
 
 ```{r}
 #| label: fig-place
 x <- ob_circle()
 y <- ob_rectangle() |>
-  place(from = x, where = "below", sep = .5)
+  place(from = x, where = "above", sep = .5)
 
 ggdiagram() +
   x +
@@ -230,6 +229,10 @@ The `where` parameter can be specified with
 - Degrees using the `degree` function (e.g., `degree(21)`)
 - Radians using the `radian` function (e.g., `radian(pi)`)
 - Turns using the `turn` function (e.g., `turn(1/5)`)
+
+
+
+
 
 # Object Arrays with `ob_array`
 
@@ -300,4 +303,36 @@ ggdiagram(font_size = 16) +
     bend = -20,
     label = ob_label(label = round_probability(error_variances))
   )
+```
+
+# Changing the default arrowhead
+
+Functions that can make arrows (e.g., `connect`, `ob_segment`, `ob_arc`, `ob_path`, `ob_bezier`) use functions from the `ggarrow` package. The arrowheads are [fully customizable](https://teunbrand.github.io/ggarrow/articles/customisation.html). The [arrowheadr](https://wjschne.github.io/arrowheadr/) package has functions for many custom arrowheads and for creating new arrowheads.
+
+
+
+
+The `arrowhead` function returns a matrix that draws the default arrowhead.
+
+```{r}
+arrowhead()
+```
+
+The default arrowhead is an elongated deltoid shape (i.e., `arrowheadr::arrow_head_deltoid(d = 2.3)`). Specifying a different arrowhead repeatedly is tedious. 
+
+Within the current R session, the default arrowhead can be changed to anything desired. For example,
+
+```{r}
+set_default_arrowhead(ggarrow::arrow_head_wings(offset = 30))
+arrowhead()
+```
+
+Now any function that uses the default arrow will use the new default.
+
+```{r}
+ggdiagram() +
+  x + 
+  y +
+  connect(x,y, resect = 2)
+
 ```

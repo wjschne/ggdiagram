@@ -43,17 +43,20 @@ S7::method(distance, list(ob_segment, S7::class_missing)) <- function(x,y) {
   distance(x@p1, x@p2)
 }
 S7::method(distance, list(ob_circle, ob_circle)) <- function(x,y) {
-  d <- (y@center - x@center)
-
-    if (x@radius + y@radius > distance(d)) {
-      d <- ob_point(0,0)
-    } else {
-      px <- x@point_at(d@theta)
-      py <- x@point_at(d@theta + pi)
-      d <- py - px
-    }
-
-  abs(d@r)
+  d <- distance(x@center, y@center) - x@radius - y@radius
+  d[d < 0] <- 0
+  d
+  # d <- (y@center - x@center)
+  #
+  #   if (x@radius + y@radius > distance(d)) {
+  #     d <- ob_point(0,0)
+  #   } else {
+  #     px <- x@point_at(d@theta)
+  #     py <- x@point_at(d@theta + pi)
+  #     d <- py - px
+  #   }
+  #
+  # abs(d@r)
 }
 S7::method(distance, list(ob_point, ob_circle)) <- function(x,y) {
   d <- y@center - x
@@ -65,4 +68,12 @@ S7::method(distance, list(ob_point, ob_circle)) <- function(x,y) {
 }
 S7::method(distance, list(ob_circle, ob_point)) <- function(x,y) {
   distance(y, x)
+}
+
+S7::method(distance, list(centerpoint, centerpoint)) <- function(x,y) {
+  s <- ob_segment(x@center, y@center)
+  p1 <- intersection(x, s)
+  p2 <- intersection(y, s)
+  distance(p1,p2)
+
 }

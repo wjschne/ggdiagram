@@ -88,7 +88,7 @@ el_props <- list(
       pi * ab * (1 + (3 * lamba ^ 2) / (10 + sqrt(4 - 3 * lamba ^ 2)))
     }),
     polygon = S7::new_property(getter = function(self) {
-      d <- self@tibble %>%
+      d <- self@tibble |>
         dplyr::mutate(group = factor(dplyr::row_number()))
       if (!("n" %in% colnames(d))) {
         d$n <- 360
@@ -134,7 +134,9 @@ el_props <- list(
         fill = self@fill,
         linewidth = self@linewidth,
         linetype = self@linetype,
-        n = self@n)
+        n = self@n,
+        id = self@id
+        )
       get_non_empty_tibble(d)
     })
   ),
@@ -376,7 +378,7 @@ ob_ellipse <- S7::new_class(
     # If there is one ellipse but many labels, make multiple ellipses
     if (S7::S7_inherits(label, ob_label)) {
       if (label@length > 1 & nrow(d) == 1) {
-        d <- dplyr::mutate(d, k = label@length) %>%
+        d <- dplyr::mutate(d, k = label@length) |>
           tidyr::uncount(.data$k)
       }
     }
@@ -1177,8 +1179,8 @@ S7::method(`[<-`, shape) <- function(x, i, value) {
   i <- character_index(i, x@id)
 
 
-  d <- x@tibble %>%
-    dplyr::bind_rows(value@tibble %>% dplyr::filter(FALSE))
+  d <- x@tibble |>
+    dplyr::bind_rows(dplyr::filter(value@tibble, FALSE))
   d[i,] <- value@tibble
 
 

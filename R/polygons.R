@@ -24,7 +24,8 @@ ob_polygon_aesthetics <- class_aesthetics_list(
     "group"),
   omit_names = c(
     "rule",
-    "label"),
+    "label",
+    "id"),
   inherit.aes = FALSE,
   style = ob_polygon_styles
 )
@@ -128,7 +129,8 @@ ob_polygon_props <- list(
         fill = self@fill,
         linewidth = self@linewidth,
         linetype = self@linetype,
-        vertex_radius = self@vertex_radius
+        vertex_radius = self@vertex_radius,
+        id = self@id
       )
       get_non_empty_tibble(d)
 
@@ -139,6 +141,12 @@ ob_polygon_props <- list(
     geom = S7::new_property(S7::class_function, getter = function(self) {
       \(...) {
         as.geom(self, ...)
+      }
+    }),
+    point_at = S7::new_property(S7::class_function, getter = function(self) {
+      \(theta = degree(0), ...) {
+        if (!S7::S7_inherits(theta, ob_angle)) theta <- degree(theta)
+
       }
     })
   ),
@@ -190,6 +198,7 @@ ob_polygon <- S7::new_class(
                          linewidth = numeric(0),
                          linetype = numeric(0),
                          style = S7::class_missing,
+
                          id = character(0),
                          ...) {
 
@@ -250,10 +259,11 @@ ob_polygon <- S7::new_class(
     # If there is one object but many labels, make multiple objects
     if (S7::S7_inherits(label, ob_label)) {
       if (label@length > 1 & nrow(d) == 1) {
-        d <- dplyr::mutate(d, k = label@length) %>%
+        d <- dplyr::mutate(d, k = label@length) |>
           tidyr::uncount(.data$k)
       }
     }
+
 
     S7::new_object(.parent = S7::S7_object(),
                p =  d$p,
@@ -280,7 +290,7 @@ S7::method(str, ob_polygon) <- function(
                  omit = omit,
                  nest.lev = nest.lev,
                  additional = additional)
-  cat(" <points>\n")
+  cli::cli_h1("<points>")
   purrr::walk(object@p,
               \(o) {
                 str_properties(
@@ -736,7 +746,7 @@ ob_intercept <- S7::new_class(
     # If there is one object but many labels, make multiple objects
     if (S7::S7_inherits(label, ob_label)) {
       if (label@length > 1 & nrow(d) == 1) {
-        d <- dplyr::mutate(d, k = label@length) %>%
+        d <- dplyr::mutate(d, k = label@length) |>
           tidyr::uncount(.data$k)
       }
     }
@@ -1146,7 +1156,8 @@ ob_ngon_props <- list(
           color = self@color,
           fill = self@fill,
           linewidth = self@linewidth,
-          linetype = self@linetype
+          linetype = self@linetype,
+          id = self@id
         )
         get_non_empty_tibble(d)
       }
@@ -1191,7 +1202,7 @@ ob_ngon_props <- list(
             th_normal <- turn(th_floor * th_n + ifelse(th_floor == th_r, 0, th_n / 2)) + s@angle
             s@point_at(th) + ob_polar(th_normal, distance)
 
-          }) %>%
+          }) |>
             bind()
           st <- rlang::list2(...)
           rlang::inject(set_props(p, !!!st))
@@ -1211,7 +1222,7 @@ ob_ngon_props <- list(
           p <- purrr::map(unbind(self), \(s) {
             s_radius <- ob_segment(s@center, s@center + ob_polar(theta = theta, r = s@radius + 1))
             intersection(s_radius, s@segments)[1]
-          }) %>%
+          }) |>
             bind()
           rlang::inject(set_props(p, !!!st))
         }
@@ -1280,7 +1291,7 @@ ob_ngon <- S7::new_class(
       !!!ob_polygon_props$styles,
       !!!ob_ngon_props$derived,
       !!!compass_props,
-      !!!ob_polygon_props$funs,
+      !!!ob_polygon_props$funs["geom"],
       !!!ob_ngon_props$funs,
       !!!ob_polygon_props$info
     )
@@ -1369,7 +1380,7 @@ ob_ngon <- S7::new_class(
     # If there is one object but many labels, make multiple objects
     if (S7::S7_inherits(label, ob_label)) {
       if (label@length > 1 & nrow(d) == 1) {
-        d <- dplyr::mutate(d, k = label@length) %>%
+        d <- dplyr::mutate(d, k = label@length) |>
           tidyr::uncount(.data$k)
       }
     }
@@ -1391,7 +1402,7 @@ ob_ngon <- S7::new_class(
   })
 
 S7::method(get_tibble, ob_ngon) <- function(x) {
-  d <- x@tibble %>%
+  d <- x@tibble |>
     dplyr::rename(x0 = x,
                   y0 = y)
   if ("radius" %in% colnames(d)) {
@@ -1402,12 +1413,12 @@ S7::method(get_tibble, ob_ngon) <- function(x) {
     d <- dplyr::rename(d, radius = vertex_radius)
   }
 
-  d %>%
+  d |>
     dplyr::mutate(group = dplyr::row_number(),
-                  theta = purrr::map2(n, angle, \(nn, aa) {seq(0, 360, length.out = nn + 1) + aa })) %>%
-    tidyr::unnest(theta) %>%
+                  theta = purrr::map2(n, angle, \(nn, aa) {seq(0, 360, length.out = nn + 1) + aa })) |>
+    tidyr::unnest(theta) |>
     dplyr::mutate(x = cospi(theta / 180) * r + x0,
-                  y = sinpi(theta / 180) * r + y0) %>%
+                  y = sinpi(theta / 180) * r + y0) |>
     dplyr::select(-x0, -y0, -r, -theta)
 }
 
@@ -1433,7 +1444,7 @@ S7::method(str, ob_ngon) <- function(
 
 S7::method(`[`, ob_ngon) <- function(x, i) {
   i <- character_index(i, x@id)
-  z <- x@tibble[i,] %>%
+  z <- x@tibble[i,] |>
     data2shape(ob_ngon)
   z@label <- na2zero(x@label[i])
   z
@@ -1733,7 +1744,7 @@ ob_reuleaux <- S7::new_class(
             end = end1,
             radius = (p_start - p_opposite)@r,
           )
-        }) %>%
+        }) |>
           bind()
 
       })
@@ -1764,7 +1775,8 @@ ob_reuleaux <- S7::new_class(
           color = self@color,
           fill = self@fill,
           linewidth = self@linewidth,
-          linetype = self@linetype
+          linetype = self@linetype,
+          id = self@id
         )
         get_non_empty_tibble(d)
       }
@@ -1892,7 +1904,7 @@ ob_reuleaux <- S7::new_class(
     # If there is one object but many labels, make multiple objects
     if (S7::S7_inherits(label, ob_label)) {
       if (label@length > 1 & nrow(d) == 1) {
-        d <- dplyr::mutate(d, k = label@length) %>%
+        d <- dplyr::mutate(d, k = label@length) |>
           tidyr::uncount(.data$k)
       }
     }
@@ -1927,8 +1939,8 @@ S7::method(get_tibble, ob_reuleaux) <- function(x) {
     d <- dplyr::rename(d, radius = vertex_radius)
   }
 
-  d %>%
-    dplyr::mutate(group = dplyr::row_number()) %>%
+  d |>
+    dplyr::mutate(group = dplyr::row_number()) |>
     dplyr::mutate(p = purrr::pmap(
       list(x, y, n, r, angle),
       \(x,y,n,r,angle) {
@@ -1949,11 +1961,11 @@ S7::method(get_tibble, ob_reuleaux) <- function(x) {
             start = degree(start1),
             end = degree(end1),
             radius = (p_start - p_opposite)@r,
-          )@polygon %>%
+          )@polygon |>
             dplyr::select(-group)
         })
-      })) %>%
-    dplyr::select(-x,-y,-n, -r, -angle) %>%
+      })) |>
+    dplyr::select(-x,-y,-n, -r, -angle) |>
     tidyr::unnest(p)
 }
 

@@ -2,7 +2,7 @@ ln_styles <- c("alpha", "color", "lineend", "linejoin", "linewidth", "linetype")
 vline_aesthetics_list <- class_aesthetics_list(
   geom = ggplot2::geom_vline,
   required_aes = "xintercept",
-  omit_names = c("slope", "intercept", "a", "b", "c", "group"),
+  omit_names = c("slope", "intercept", "a", "b", "c", "group", "id"),
   mappable_bare = character(0),
   mappable_identity = c("color", "linewidth", "linetype", "alpha"),
   not_mappable = character(0),
@@ -82,7 +82,8 @@ ln_props <- list(
         lineend = self@lineend,
         linejoin = self@linejoin,
         linewidth = self@linewidth,
-        linetype = self@linetype
+        linetype = self@linetype,
+        id = self@id
       )
       get_non_empty_tibble(d)
     })
@@ -405,8 +406,8 @@ ob_point(xp, yp, style = p@style, ...)
 
 S7::method(`[`, ob_line) <- function(x, i) {
   i <- character_index(i, x@id)
-  x@tibble[i, ] %>%
-    dplyr::select(-c(slope, intercept, xintercept)) %>%
+  x@tibble[i, ] |>
+    dplyr::select(-c(slope, intercept, xintercept)) |>
     data2shape(ob_line)
 }
 

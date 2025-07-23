@@ -91,9 +91,7 @@ str_properties <- function(
     omit) {
   p_names <- S7::prop_names(object)
   cat(if (nest.lev > 0) " ")
-  cat(obj_desc(object))
-
-  cat("\n")
+  cli::cli_h1(obj_desc(object))
 
   p_display <- p_names[!(p_names %in% omit)]
   props_display <- lapply(p_display, prop, object = object) |>
@@ -126,13 +124,20 @@ S7::method(str, class_arrowhead) <- function(
   omit = omit_props(object, include = c("x","y"))) {
 
   cat(if (nest.lev > 0) " ")
-  cat(obj_desc(object))
-
-  cat("\n")
+  cli::cli_h3("<class_arrowhead>")
 
   for (i in S7::S7_data(object)) {
-    print(head(i))
+    cli::cli_text(
+      paste0("A matrix with 2 columns and ",
+             nrow(i),
+             " rows.",
+             ifelse(nrow(i) > 6,
+                    " First 6 rows:",
+                    ""))
+      )
+    print(round(head(i), 2))
   }
+  invisible(object)
 }
 
 S7::method(str, class_margin) <- function(
@@ -141,13 +146,12 @@ S7::method(str, class_margin) <- function(
   additional = FALSE,
   omit = "") {
   cat(if (nest.lev > 0) " ")
-  cat(obj_desc(object))
-
-  cat("\n")
+  cli::cli_h3("<class_margin>")
 
   for (i in S7::S7_data(object)) {
     print(i)
   }
+  invisible(object)
 }
 
 
@@ -166,6 +170,7 @@ S7::method(str, ob_shape_list) <- function(
     nest.lev = 0,
     additional = TRUE,
     omit = "") {
-  cat("<ob_shape_list>\n")
-  lapply(S7::S7_data(object), str, nest.lev = nest.lev, additional = additional)
+  cli::cli_h1("<ob_shape_list>")
+  lapply(S7::S7_data(object), print)
+  invisible(object)
 }

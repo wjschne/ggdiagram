@@ -167,9 +167,14 @@ ggdiagram(font_family = my_font,
   {p1 <- ob_point(0,0)} +
   {p2 <- ob_point(1,0)} +
   ob_segment(p1, p2) +
-  {a1 <- ob_arc(start = 0, end = radian(1), radius = 1 + little_r, start_point = p2)} +
+  {a1 <- ob_arc(
+    start = 0, 
+    end = radian(1), 
+    radius = 1 + little_r, 
+    start_point = p2)} +
   {p3 <- a1@midpoint(1)} +
-  {p4 <- a1@normal_at(radian(1), distance = -1)} +
+  {p4 <- a1@normal_at(radian(1), 
+                      distance = -1)} +
   ob_segment(p3, p4) + 
   ob_arc(start_point = p4, 
          radius = little_r, 
@@ -280,6 +285,8 @@ bp +
   a1@autolabel(label = "Start", 
                position = 0)
 ```
+
+
 # Arcs with arrows
 
 The arc object is plotted using `ggarrow::arrow`. This means that arrows can be placed on either end of an arc.
@@ -300,14 +307,11 @@ bp +
 
 # Connecting Points and Shapes with Arcs
 
-The `connect` function makes it easy to draw connecters between points and/or shapes. Normally the connector is a line segment but it is possible to connect with arcs and bezier curves. To connect two shapes with an arc, set the `arc_bend` parameter. 
+The `connect` function makes it easy to draw connectors between points and/or shapes. Normally the connector is a line segment but it is possible to connect with arcs and bezier curves. To connect two shapes with an arc, set the `arc_bend` parameter. 
 
-Negative values bend left, and postive values bend right. By default, a value of 1 or -1 makes a full semi-circular path between the centers of the shapes. Values close to 0 make the arc appear more straight. Large values make the circle the arc follows larger. The `arc_bend` specifically refers to ratio of arc's sagitta to the arc's radius. Thus, `arc_bend` cannot actually be set to 0, because this would cause an infinite ratio.
+Negative values bend left, and positive values bend right. By default, a value of 1 or -1 makes a full semi-circular path between the centers of the shapes. Values close to 0 make the arc appear more straight. Large values make the circle the arc follows larger. The `arc_bend` specifically refers to ratio of arc's sagitta to the arc's radius. Thus, `arc_bend` cannot actually be set to 0, because this would cause an infinite ratio.
 
 By default, the connector is drawn such that the arc would pass through the shape's center if allowed to continue. If you want the arc to begin or end somewhere else, specify the point. For example, the arc from A to C ends at the bottom of C.
-
-
-
 
 ```{r}
 #| label: fig-arcconnectors

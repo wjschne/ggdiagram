@@ -8,6 +8,7 @@
 #' @param saturation get or set the saturation of a color (i.e., the s in the hsv model)
 #' @param brightness get or set the brightness of a color (i.e., the v in the hsv model)
 #' @param alpha get or set the transparency of a color
+#' @param id character identifier
 #' @export
 #' @return class_color object
 #' @examples
@@ -49,7 +50,7 @@ class_color <- S7::new_class(
                 tinter::lighten(x = x, amount = amount)
               }
             } ) |>
-            unlist() %>%
+            unlist() |>
             class_color()
         }
       }
@@ -66,7 +67,7 @@ class_color <- S7::new_class(
                 tinter::darken(x = x, amount = amount)
               }
             } ) |>
-            unlist() %>%
+            unlist() |>
             class_color()
         }
       }
@@ -180,13 +181,15 @@ class_color <- S7::new_class(
     }),
     tex = S7::new_property(getter = function(self) {
       paste0("\\color[HTML]{", substring(self@color, 2, 7), "}")
-    })
+    }),
+    id = S7::class_character
   ),
   constructor = function(color = character(0),
                          hue = NULL,
                          saturation = NULL,
                          brightness = NULL,
-                         alpha = NULL) {
+                         alpha = NULL,
+                         id = character(0)) {
 
     if (length(color) == 0) {
       decoded <- farver::decode_colour("red", alpha = TRUE, to = "hsv")
@@ -194,14 +197,14 @@ class_color <- S7::new_class(
         decoded <- farver::decode_colour(color, alpha = TRUE, to = "hsv")
       }
 
-    d <- tibble::as_tibble(decoded) %>% as.list()
+    d <- tibble::as_tibble(decoded) |> as.list()
 
 
     if (!is.null(hue)) {
       # Make sure hue is between 0 and 360
       hue <- degree(hue)@positive@degree
       # Make sure hue is of same length as color
-      max_length <- purrr::map_int(d, length) %>% max()
+      max_length <- purrr::map_int(d, length) |> max()
       if (max_length == 1 | max_length == length(hue) | length(hue) == 1) {
         d$h <- hue
       }  else {
@@ -214,7 +217,7 @@ class_color <- S7::new_class(
       # Make sure saturation is between 0 and 1
       saturation <- ifelse(abs(saturation) > 1, 1, abs(saturation))
       # Make sure saturation is of same length as color
-      max_length <- purrr::map_int(d, length) %>% max()
+      max_length <- purrr::map_int(d, length) |> max()
       if (max_length == 1 | max_length == length(saturation) | length(saturation) == 1) {
         d$s <- saturation
       }  else {
@@ -227,7 +230,7 @@ class_color <- S7::new_class(
       # Make sure brightness is between 0 and 1
       brightness <- ifelse(abs(brightness) > 1, 1, abs(brightness))
       # Make sure brightness is of same length as color
-      max_length <- purrr::map_int(d, length) %>% max()
+      max_length <- purrr::map_int(d, length) |> max()
       if (max_length == 1 | max_length == length(brightness) | length(brightness) == 1) {
         d$v <- brightness
       }  else {
@@ -239,7 +242,7 @@ class_color <- S7::new_class(
       # Make sure alpha is between 0 and 1
       alpha <- ifelse(abs(alpha) > 1, 1, abs(alpha))
       # Make sure alpha is of same length as color
-      max_length <- purrr::map_int(d, length) %>% max()
+      max_length <- purrr::map_int(d, length) |> max()
       if (max_length == 1 | max_length == length(alpha) | length(alpha) == 1) {
         d$alpha <- alpha
       }  else {
@@ -247,10 +250,16 @@ class_color <- S7::new_class(
       }
     }
 
-    decoded <- d %>% tibble::as_tibble() %>% as.matrix
+    decoded <- tibble::as_tibble(d) |> as.matrix()
 
 
-    S7::new_object(farver::encode_colour(decoded[,c("h", "s", "v"), drop = FALSE], alpha = decoded[,"alpha"], from = "hsv"))
+    S7::new_object(
+      farver::encode_colour(
+        decoded[,c("h", "s", "v"),
+                drop = FALSE],
+        alpha = decoded[,"alpha"],
+        from = "hsv"),
+      id = id)
   }
 )
 
@@ -273,6 +282,7 @@ S7::method(print, class_color) <- function(x, ...) {
 }
 
 S7::method(`[`, class_color) <- function(x, i) {
+  i <- character_index(i, x@id)
   S7::S7_data(x) <-  c(x)[i]
   x
 }

@@ -578,7 +578,7 @@ S7::method(connect, list(ob_point, ob_point)) <- function(
 
 
 
-    p_control <- d %>%
+    p_control <- d |>
       dplyr::mutate(rowid = dplyr::row_number()) |>
       tidyr::pivot_longer(-rowid) |>
       tidyr::separate(name, c("control", "name")) |>
@@ -589,7 +589,7 @@ S7::method(connect, list(ob_point, ob_point)) <- function(
       dplyr::arrange(rowid, control) |>
       dplyr::select(-control) |>
       tidyr::nest(.by = rowid) |>
-      dplyr::pull(data) %>%
+      dplyr::pull(data) |>
       purrr::map(ob_point)
 
     s <- ob_bezier(p = p_control,

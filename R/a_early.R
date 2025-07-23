@@ -26,18 +26,16 @@ the <- new.env(parent = emptyenv())
 
 
 
-
-#' @export
+#' @keywords internal
 #' @noRd
 character_index <- function(i, id) {
   if (is.character(i) || is.factor(i)) {
     i <- vctrs::vec_locate_matches(i, id)$haystack |>
-      na.omit() |>
+      stats::na.omit() |>
       unclass()
     if (length(i) == 0) stop("There are no objects with an id equal to the value specified.")
   }
   i
-
 }
 
 # classes ----
@@ -55,7 +53,6 @@ character_index <- function(i, id) {
 #' @param inherit.aes Defaults to `FALSE` so that ggdiagram objects do not interfere with other layers in the ggplot
 #' @keywords internal
 #' @return a class_aesthetics_list object
-#' @export
 class_aesthetics_list <- S7::new_class(
   name = "class_aesthetics_list",
   properties = list(
@@ -69,8 +66,8 @@ class_aesthetics_list <- S7::new_class(
     inherit.aes = S7::class_logical
   )
                                      )
-## class_ggplot ----
-class_ggplot <- S7::new_S3_class("ggplot")
+## class_gg ----
+class_gg <- S7::new_S3_class("gg")
 
 ## class_unit ----
 class_unit <- S7::new_S3_class(
@@ -185,7 +182,7 @@ set_default_arrowhead <- function(m) {
 has_style <- S7::new_class(name = "has_style", properties = list(id = class_character), abstract = TRUE)
 S7::S4_register(has_style)
 S7::method(print, has_style) <- function(x, ...) {
-  cli::cli_text("{.cls {S7::S7_class(x)@name}}")
+  cli::cli_h3("{.cls {S7::S7_class(x)@name}}")
   print(x@tibble)
   invisible(x)
 }
@@ -668,14 +665,15 @@ get_tibble_defaults_helper <- function(
     default_style,
     required_aes = c("x", "y")) {
 
-  d <- get_tibble(x) %>%
+  d <- get_tibble(x) |>
     dplyr::select(-dplyr::any_of("id"))
 
   if ("x0" %in% required_aes && "x" %in% colnames(d)) {
-    d <- dplyr::rename(d, x0 = x)
+    d <- dplyr::rename(d, dplyr::all_of(c(x0 = "x")))
   }
+
   if ("y0" %in% required_aes && "y" %in% colnames(d)) {
-    d <- dplyr::rename(d, y0 = y)
+    d <- dplyr::rename(d, dplyr::all_of(c(y0 = "y")))
   }
 
   for (n in setdiff(colnames(d), required_aes)) {
@@ -728,6 +726,7 @@ get_non_empty_tibble <- function(d) {
 #' @keywords internal
 #' @noRd
 replace_na <- function(x, y) {
+  if (rlang::is_quosure(x)) return(y)
   ifelse(is.na(x), y, x)
 }
 
@@ -1033,17 +1032,24 @@ prop_integer_coerce <- function(name) {
 as.geom <- S7::new_generic("as.geom", "x")
 
 S7::method(as.geom, ob_shape_list) <- function(x, ...) {
-  lapply(c(x), \(g) as.geom(g, ...)) |>
-    unlist()
+    unlist(lapply(c(x), \(g) as.geom(g, ...)))
 }
 
-S7::method(`+`, list(class_ggplot, has_style)) <- function(e1, e2) {
+S7::method(`+`, list(class_gg, has_style)) <- function(e1, e2) {
   e1 + as.geom(e2)
 }
 
-S7::method(`+`, list(class_ggplot, ob_shape_list)) <- function(e1, e2) {
+S7::method(`+`, list(class_gg, ob_shape_list)) <- function(e1, e2) {
   e1 + as.geom(e2)
 }
+
+if (packageVersion("ggplot2") >= "3.5.2.9000") {
+  S7::method(update_ggplot, list(has_style, class_ggplot)) <-
+    function(object, plot, ...) {
+      plot + as.geom(object)
+    }
+}
+
 
 
 #' @noRd
@@ -1427,3 +1433,69 @@ data2shape <- function(data, shape) {
   rlang::inject(shape(!!!l))
 }
 
+
+#' Function to calculate hierarchy depth in lavaan models
+#'
+#' @param x character vector of variables in a lavaan model
+#' @param model character, lavaan fit object, or lavaan parameter table
+#' @param depth initial depth
+#' @param max_depth max depth at which to stop (prevents infinite loops for non-recursive models)
+#'
+#' @returns integer
+#' @export
+#'
+#' @examples
+#' model <- "X =~ X1 + X2"
+#' get_depth("X", model = model)
+get_depth <- function(x, model, depth = 0L, max_depth = 20) {
+  if (class(model) == "character") {
+    model <- lavaan::lavaanify(model)
+  }
+
+  if (class(model) == "lavaan") {
+    model <- lavaan::parametertable(model)
+  }
+
+  if (!all(c("op", "lhs", "rhs") %in% colnames(model))) {
+    stop("model must be a lavaan fit object, a lavaan parameter table, or a character vector specifying a lavaan model.")
+  }
+
+  purrr::map_int(
+    x,
+    \(xx) get_depth_helper(
+      xx,
+      model = model,
+      depth = depth,
+      max_depth = 20
+    )
+  )
+}
+
+#' Function to calculate hierarchy depth in lavaan models
+#'
+#' Helps with get_depth
+#' @param x character vector of variables in a lavaan model
+#' @param model character, lavaan fit object, or lavaan parameter table
+#' @param depth initial depth
+#' @param max_depth max depth at which to stop (prevents infinite loops for non-recursive models)
+#' @keywords internal
+#' @noRd
+get_depth_helper <- function(x, model, depth = 0L, max_depth = 20) {
+
+  # Does it have children?
+  children <- model %>%
+    dplyr::filter(op == "=~", lhs %in% x) %>%
+    dplyr::pull(rhs) %>%
+    unique()
+
+  # Detect infinite loops
+  if (depth >= max_depth) stop("Maximum depth reached. May be nonrecursive. ")
+
+  # Do children have children?
+  if (length(children) > 0) {
+    get_depth_helper(children, model, depth = depth + 1)
+  } else {
+    # No children, return depth
+    return(depth + 1)
+  }
+}

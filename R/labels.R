@@ -94,7 +94,8 @@ lb_props <- list(
                 size = self@size,
                 text.color = self@text.color,
                 vjust = self@vjust,
-                id = self@id)
+                id = self@id
+                )
       d <- get_non_empty_tibble(d)
       if (!is.null(d$label.margin)) {
         d$label.margin <- purrr::map(d$label.margin, \(m) {
@@ -425,6 +426,7 @@ centerpoint <- S7::new_class(
 
 S7::method(as.geom, centerpoint) <- function(x, ...) {
   gc <- as.geom(S7::super(x, has_style), ...)
+
   if (S7::S7_inherits(x@label, ob_label)) {
     gl <- as.geom(x@label)
     gc <- list(gc, gl)
@@ -577,8 +579,8 @@ S7::method(`[`, ob_label) <- function(x, i) {
     return(character(0))
   }
 
-  as.list(d) %>%
-    get_non_empty_tibble() %>%
+  as.list(d) |>
+    get_non_empty_tibble() |>
     data2shape(ob_label)
 }
 
@@ -586,16 +588,16 @@ S7::method(`[`, ob_label) <- function(x, i) {
 S7::method(`[<-`, ob_label) <- function(x, i, value) {
     if (!S7::S7_inherits(value, ob_label)) stop("value must be of class ob_label.")
    i <- character_index(i, x@id)
-   d <- x@tibble %>%
-     dplyr::bind_rows(value@tibble %>% dplyr::filter(FALSE))
+   d <- x@tibble |>
+     dplyr::bind_rows(dplyr::filter(value@tibble, FALSE))
    d[i,] <- value@tibble
 
   if (all(is.na(d$label))) {
     return(character(0))
   }
 
-   as.list(d) %>%
-     get_non_empty_tibble() %>%
+   as.list(d) |>
+     get_non_empty_tibble() |>
      data2shape(ob_label)
 }
 

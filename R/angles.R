@@ -47,53 +47,67 @@ num2turn <- function(x, object_name) {
 #' sin(degree(30))
 #' cos(degree(30))
 #' tan(degree(30))
-ob_angle <- S7::new_class(
+ob_angle <- new_class(
   name = "ob_angle",
-  parent = S7::class_double,
+  parent = class_double,
   properties = list(
-    degree = S7::new_property(
-      # S7::class_numeric,
+    degree = new_property(
+      class_numeric,
       getter = function(self) {
         (c(self) %% ifelse(c(self) < 0, -1, 1)) * 360
       },
       setter = function(self, value) {
-        S7::S7_data(self, TRUE) <- value / 360
+        S7_data(self, TRUE) <- value / 360
         self
       }
     ),
-    radian = S7::new_property(
-      # S7::class_numeric,
+    radian = new_property(
+      class_numeric,
       getter = function(self) {
         (c(self) %% ifelse(c(self) < 0, -1, 1)) * (2 * pi)
       },
       setter = function(self, value) {
-        S7::S7_data(self, TRUE) <- value / (2 * pi)
+        S7_data(self, TRUE) <- value / (2 * pi)
         self
       }
     ),
-    turn = S7::new_property(
-      # S7::class_numeric,
+    turn = new_property(
+      class_numeric,
       getter = function(self) {
         (c(self) %% ifelse(c(self) < 0, -1, 1))
       },
       setter = function(self, value) {
-        S7::S7_data(self, TRUE) <- value
+        S7_data(self, TRUE) <- value
         self
       }
     ),
-    positive = S7::new_property(getter = \(self) {
+    positive = new_property(getter = \(self) {
       trn <- rep(0, length(c(self)))
       trn[self@turn < 0] <- floor(c(self))[self@turn < 0]
       turn(abs(trn)) + self
     }),
-    negative = S7::new_property(getter = \(self) {
+    negative = new_property(getter = \(self) {
       trn <- rep(0, length(c(self)))
       trn[self@turn > 0] <- floor(c(self))[self@turn > 0] + 1
       turn(-abs(trn)) + self
     })
-    ), constructor = function(.data = numeric(0), degree = numeric(0), radian = numeric(0), turn = numeric(0)) {
-      if (length(.data) == 0 && length(degree) > 0) {
+    ), constructor = function(
+    .data = numeric(0),
+    degree = numeric(0),
+    radian = numeric(0),
+    turn = numeric(0)) {
+      if (is.character(.data)) {
+        .data <- cardinalpoint(.data) / 360
+      }
 
+      if (length(.data) == 0) {
+        if (length(degree) > 0) {
+          .data = degree / 360
+        } else if (length(radian) > 0) {
+          .data = 0.5 * radian / pi
+        } else if (length(turn) > 0) {
+          .data = turn
+        }
       }
       new_object(.data)
     })
@@ -107,6 +121,7 @@ ob_angle_or_character <- S7::new_union(S7::class_character, ob_angle)
 
 
 # Angle wrappers ----
+# degree ----
 #' degree class
 #'
 #' @rdname ob_angle
@@ -120,7 +135,8 @@ degree <- S7::new_class(
     S7::new_object(degree / 360)
   })
 
-#' degree class
+# radian ----
+#' radian class
 #'
 #' @rdname ob_angle
 #' @export
@@ -133,8 +149,8 @@ radian <- S7::new_class(
     S7::new_object(radian / (2 * pi))
   })
 
-
-#' degree class
+# turn ----
+#' turn class
 #'
 #' @rdname ob_angle
 #' @export
@@ -148,35 +164,37 @@ turn <- S7::new_class(
   })
 
 # arithmetic ----
-purrr::walk(list(`+`, `-`, `*`, `/`, `^`), \(.f) { # nocov start
+purrr::walk(list(`+`, `-`, `*`, `/`, `^`), \(.f) {
   S7::method(.f, list(ob_angle, ob_angle)) <- function(e1, e2) {
-    S7::convert(
-      .f(c(e1), c(e2)),
-      S7::S7_class(e2))
-  } # nocov end
+    d <- .f(c(e1), c(e2))
+    S7::S7_data(e2) <- d
+    e2
+  }
 
-  S7::method(.f, list(ob_angle, S7::class_numeric)) <- function(e1, e2) { # nocov start
-    S7::convert(
-      num2turn(
-        .f(
-          S7::prop(
-            e1,
-            S7::S7_class(e1)@name),
-          e2),
-        S7::S7_class(e1)@name),
-      S7::S7_class(e1))
-  } # nocov end
-
-  S7::method(.f, list(S7::class_numeric, ob_angle)) <- function(e1, e2) { # nocov start
-    S7::convert(
-      num2turn(
-        .f(
+  S7::method(.f, list(ob_angle, S7::class_numeric)) <- function(e1, e2) {
+    d <- num2turn(
+      .f(
+        S7::prop(
           e1,
-          S7::prop(
-            e2, S7::S7_class(e2)@name)),
-        S7::S7_class(e2)@name),
-      S7::S7_class(e2))
-  } # nocov end
+          S7::S7_class(e1)@name),
+        e2),
+      S7::S7_class(e1)@name)
+
+    S7::S7_data(e1) <- d
+    e1
+  }
+
+  S7::method(.f, list(S7::class_numeric, ob_angle)) <- function(e1, e2) {
+    d <- num2turn(
+      .f(
+        e1,
+        S7::prop(
+          e2, S7::S7_class(e2)@name)),
+      S7::S7_class(e2)@name)
+
+    S7::S7_data(e2) <- d
+    e2
+  }
 })
 
 # equality ----
@@ -222,55 +240,47 @@ S7::method(tan, ob_angle) <- function(x) {
 }
 
 # Angle Conversions ----
-S7::method(convert, list(S7::class_numeric, degree)) <- function(from, to) {
-  degree(from * 360)
-}
-S7::method(convert, list(S7::class_numeric, turn)) <- function(from, to) {
-  turn(from)
-}
-#
-S7::method(convert, list(S7::class_numeric, radian)) <- function(from, to) {
-  radian(from * 2 * pi)
-}
+# S7::method(convert, list(S7::class_numeric, degree)) <- function(from, to) {
+#   degree(from * 360)
+# }
+# S7::method(convert, list(S7::class_numeric, turn)) <- function(from, to) {
+#   turn(from)
+# }
+# #
+# S7::method(convert, list(S7::class_numeric, radian)) <- function(from, to) {
+#   radian(from * 2 * pi)
+# }
 
 S7::method(str, ob_angle) <- function(object,
                                      nest.lev = 0,
                                      additional = FALSE,
                                      omit = c(".data", "positive", "negative")) {
-  str_properties(object,
-                 omit = omit,
-                 nest.lev = nest.lev,
-                 additional = additional)
+  print(c(object))
+  invisible(object)
 }
 
-S7::method(str, degree) <- function(object,
+S7::method(print, degree) <- function(object,
                                 nest.lev = 0,
                                 additional = FALSE,
                                 omit = c(".data", "turn", "radian", "positive", "negative")) {
-  str_properties(object,
-                 omit = omit,
-                 nest.lev = nest.lev,
-                 additional = additional)
+  print(as.character(object))
+  # invisible(object)
 }
 
 S7::method(str, radian) <- function(object,
                                 nest.lev = 0,
                                 additional = FALSE,
                                 omit = c(".data", "turn", "degree", "positive", "negative")) {
-  str_properties(object,
-                 omit = omit,
-                 nest.lev = nest.lev,
-                 additional = additional)
+  print(as.character(object))
+  invisible(object)
 }
 
 S7::method(str, turn) <- function(object,
                                 nest.lev = 0,
                                 additional = FALSE,
                                 omit = c(".data", "degree", "radian", "positive", "negative")) {
-  str_properties(object,
-                 omit = omit,
-                 nest.lev = nest.lev,
-                 additional = additional)
+  print(as.character(object))
+  invisible(object)
 }
 
 # as.character ----
