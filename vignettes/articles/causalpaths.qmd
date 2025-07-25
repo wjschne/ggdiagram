@@ -1178,21 +1178,23 @@ clr <-   class_color(
 
 clr <- c("#6B4B5E", "#515E72", "#376E6E", "#487956", "#747C3F")
 
-intercept <- function(center = ob_point(),
-                      r = 1,
-                      vertex_radius = unit(.6, "mm"),
-                      fill = clr[1],
-                      color = NA,
-                      ...) {
-  p <- purrr::map(unbind(center), \(cc) {
-    cc + ob_polar(degree(c(90, 210, 330)), r = r)
-  })
-  ob_polygon(p,
-             vertex_radius = vertex_radius,
-             fill = fill,
-             color = color,
-             ...)
-}
+# intercept <- redefault(ob_intercept, radius = 1, n = 3, angle = degree(-30), vertex_radius = unit(.6, "mm"), fill = clr[1], color = NA, center = ob_point())
+# 
+# intercept <- function(center = ob_point(),
+#                       r = 1,
+#                       vertex_radius = unit(.6, "mm"),
+#                       fill = clr[1],
+#                       color = NA,
+#                       ...) {
+#   p <- purrr::map(unbind(center), \(cc) {
+#     cc + ob_polar(degree(c(90, 210, 330)), r = r)
+#   })
+#   ob_polygon(p,
+#              vertex_radius = vertex_radius,
+#              fill = fill,
+#              color = color,
+#              ...)
+# }
 
 observed <- redefault(ob_ellipse, m1 = 10, color = NA)
 lb_observed <- redefault(ob_label, fill = NA, color = "white", size = 24)
@@ -1204,45 +1206,60 @@ tau_covariance <- redefault(ob_covariance,
                             head_length = 4, 
                             resect = 1)
 
+latent_slope_line <- ob_line(slope = -.8, intercept = 1.3)
+
+
+
 ggdiagram(font_family = my_font, font_size = 13) + 
-  {i1 <- intercept(label = ob_label(
-    label = "1~1~", 
-    color = "white",
-    fill = NA,
-    size = 24),
+  {i1 <- ob_intercept(
+    width = 2,
+    label = ob_label(
+      label = "1~1~", 
+      color = "white",
+      fill = NA,
+      size = 24),
+    vertex_radius = unit(.6, "mm"),
     fill = clr[1])} +
   {x1 <- observed(label = lb_observed("*X*~1*ij*~"), 
                   fill = clr[2]) |>
-    place(bind(i1@segment)@midpoint()[2], "below", 1.5)} + 
+    place(from = bind(i1@segment)@midpoint()[2], 
+          where = "below", 
+          sep = 1.5)} + 
   {x2 <- observed(label = lb_observed("*X*~2*ij*~"),
                   fill = clr[3]) |> 
-    place(x1, "below", 1.5)} + 
+    place(from = x1, 
+          where = "below", 
+          sep = 1.5)} + 
   {y = observed(label = lb_observed("*Y*~*ij*~"),
                 fill = clr[4]) |> 
-    place(x1, "right", sep = 9)} + 
+    place(from = x1, 
+          where = "right", 
+          sep = 9)} + 
   {i1_y <- connect(i1, y, resect = 2, color = clr[1])} + 
   {x1_y <- connect(x1, y, resect = 2, color = clr[2])} + 
   {x2_y <- connect(x2, y, resect = 2, color = clr[3])} +
   {latent_slope_line <- ob_line(slope = -.8, intercept = 1.3)
   b0j <- random_slope(
-    intersection(latent_slope_line, i1_y),
+    intersection(latent_slope_line, i1_y@line),
     fill = clr[1],
     label = lb_slope("*&beta;*~0*j*~")
   )} +
   {b1j <- random_slope(
-    intersection(latent_slope_line, x1_y),
+    intersection(latent_slope_line, x1_y@line),
     fill = clr[2],
     label = lb_slope("*&beta;*~1*j*~"))} +
   {b2j <- ob_circle(
-    intersection(latent_slope_line, x2_y),
+    intersection(latent_slope_line, x2_y@line),
     radius = .5,
     fill = clr[3],
     color = NA,
     label = lb_slope("*&beta;*~2*j*~")
   )} +
-  {i2 <- intercept(width = 2,
+  {i2 <- ob_intercept(width = 2,
     rotate(latent_slope_line, degree(90), origin = b0j@center)@point_at_x(b1j@center@x),
-    label = lb_observed("1~2~")
+    label = lb_observed("1~2~"),
+    fill = clr[1], 
+    vertex_radius = unit(.6, "mm")
   )} +
   {w1 <- observed(
     center = i2@center %-|% y@center,
@@ -1250,7 +1267,7 @@ ggdiagram(font_family = my_font, font_size = 13) +
     fill = clr[5]
   )} +
   {b <- bind(c(b0j, b1j, b2j))
-   i2b <- connect(
+    i2b <- connect(
      i2,
      b,
      color = i2@fill,

@@ -316,7 +316,7 @@ ggdiagram() +
                height = .7, 
                fill = "white", 
                color = NA) +
-    xdvir::geom_latex(
+  xdvir::geom_latex(
     data = x@tibble, 
     mapping = aes(x = x, 
                   y = y, 
@@ -324,7 +324,7 @@ ggdiagram() +
     size = 12, 
     vjust = .5) +
   xdvir::geom_latex(
-    data = v@midpoint()@tibble, 
+    data = v@midpoint()@tibble |> mutate(id = 1:5), 
     mapping = aes(x = x, 
                   y = y, 
                   label = paste0("$\\sigma_", id, "^2$")), 

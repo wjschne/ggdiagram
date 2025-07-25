@@ -167,11 +167,11 @@ ob_point <- S7::new_class(
 
     id <- as.character(id)
 
-    if ("data.frame" %in% class(x)) {
+    if (inherits(x, "data.frame")) {
       return(rlang::inject(ob_point(!!!get_non_empty_list(x))))
     }
 
-    if ("matrix" %in% class(x)) {
+    if (inherits(x, "matrix")) {
       if (ncol(x) == 2) {
         y <- x[,2]
         x <- x[,1]
@@ -435,7 +435,8 @@ S7::method(`[`, ob_point) <- function(x, i) {
   data2shape(x@tibble[i,], ob_point)
 }
 
-S7::method(`[<-`, ob_point) <- function(x, i, value) {
+#' @export
+`[<-.ggdiagram::ob_point` <- function(x, i, value) {
   i <- character_index(i, x@id)
   d <- assign_data(x, i, value)
   data2shape(d, ob_point)

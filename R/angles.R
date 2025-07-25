@@ -259,11 +259,8 @@ S7::method(str, ob_angle) <- function(object,
   invisible(object)
 }
 
-S7::method(print, degree) <- function(object,
-                                nest.lev = 0,
-                                additional = FALSE,
-                                omit = c(".data", "turn", "radian", "positive", "negative")) {
-  print(as.character(object))
+S7::method(print, degree) <- function(x, ...) {
+  print(as.character(x))
   # invisible(object)
 }
 
@@ -289,29 +286,45 @@ S7::method(as.character, ob_angle) <- function(x,
   ...,
   digits = NULL,
   type = NULL) {
-  if (is.null(type)) {
-    a_class <- match.arg(
-      arg = class(x)[1],
-      choices = c("ggdiagram::degree", "ggdiagram::radian", "ggdiagram::turn", "ggdiagram::ob_angle"))
-  } else {
-    a_class <- rlang::arg_match(type, c("degree", "radian", "turn"))
+
+  if (!is.null(type)) {
+    if (type == "degree" || type == "ggdiagram::degree") x <- degree(x)
+    if (type == "radian" || type == "ggdiagram::radian") x <- radian(x)
+    if (type == "turn" || type == "ggdiagram::turn") x <- turn(x)
   }
 
 
-  if (a_class == "ggdiagram::ob_angle") a_class <- "ggdiagram::degree"
 
-  if (is.null(digits)) {
-    digits <- unname(c(`ggdiagram::degree` = 0, `ggdiagram::radian` = 2, `ggdiagram::turn` = 2)[a_class])
+
+  if (inherits(x, "ggdiagram::radian")) {
+    if (is.null(digits)) digits <- 2
+    x <- paste0(ifelse(
+      abs(x@radian - pi) < .Machine$double.eps * 2,
+      "",
+      ifelse(
+        abs(x@radian + pi) < .Machine$double.eps * 2,
+        "\u2212",
+        signs::signs(
+          x@turn * 2,
+          accuracy = 10 ^ (-1 * digits),
+          drop0trailing = TRUE)
+      )
+                  ),
+      "\u03C0")
   }
-  switch(
-    a_class,
-    `ggdiagram::degree` = paste0(signs::signs(round(x@degree, digits)), "\u00B0"),
-    `ggdiagram::radian` = ifelse(
-      abs(x@radian - pi) < .Machine$double.eps,
-      "\u03C0",
-      paste0(round(x@turn * 2, digits), "\u03C0")),
-    `ggdiagram::turn` = paste0(round_probability(x@turn, digits = digits)),
-    ob_angle = 2 * pi)
+
+  if (inherits(x, "ggdiagram::turn")) {
+    if (is.null(digits)) digits <- 2
+    x <- round_probability(x@turn, accuracy = 10 ^ (-1 * digits))
+}
+
+  if (inherits(x, "ggdiagram::ob_angle") || inherits(x, "ggdiagram::degree")) {
+    if (is.null(digits)) digits <- 0
+    x <- paste0(signs::signs(x@degree, accuracy = 10 ^ (-1 * digits), drop0trailing = TRUE), "\u00B0")
+  }
+
+  x
+
 }
 
 # subset ----
@@ -324,7 +337,6 @@ S7::method(`[`, ob_angle) <- function(x, i) {
 S7::method(unbind, ob_angle) <- function(x) {
   purrr::map(seq(length(c(x))), \(i) x[i])
 }
-
 
 #' @export
 `[<-.ggdiagram::ob_angle` <- function(x, i, value) {

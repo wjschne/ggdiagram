@@ -162,7 +162,7 @@ S7::method(intersection, list(ob_point, ob_line)) <- function(x, y, ...) {
     yb = y@b,
     xy = x@y,
     yc = y@c,
-    is_on = abs(ya * xx + yb * xy + yc) < .Machine$double.eps) |>
+    is_on = abs(ya * xx + yb * xy + yc) < .Machine$double.eps * 2) |>
     dplyr::pull(is_on)
 
   if (all(!is_on_line)) {
@@ -188,7 +188,7 @@ S7::method(intersection, list(ob_point, ob_segment)) <- function(x, y, ...) {
       xp1 = distance(x, y@p1),
       xp2 = distance(x, y@p2),
       p1p2 = distance(y),
-      equalish = abs(p1p2 - xp1 - xp2) < .Machine$double.eps * 2) |>
+      equalish = abs(p1p2 - xp1 - xp2) < .Machine$double.eps * 5) |>
       dplyr::pull(equalish)
 
     s <- rlang::list2(...)
@@ -550,15 +550,11 @@ S7::method(intersection, list(ob_point, ob_circle)) <- function(x,y, ...) {
 S7::method(intersection, list(ob_arc, ob_point)) <- function(x, y, ...) {
 
   xy <- intersection(x@circle, y)
-  # print(xy)
+
   if (length(xy) > 0) {
     th <- c(x@angle_at(xy)) %% 1
     st <- c(x@start)
     en <- c(x@end)
-    # en[en < st] <- en[en < st] + turn(1)
-    # print(st)
-    # print(th)
-    # print(en)
     is_between <- ((st <= th & th <= en) | (en <= th & th <= st)) | ((st <= th + 1 & th + 1 <= en) | (en <= th + 1 & th + 1 <= st)) | ((st <= th - 1 & th - 1 <= en) | (en <= th - 1 & th - 1 <= st))
 
     if (any(is_between)) {

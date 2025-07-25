@@ -73,7 +73,7 @@ class_gg <- S7::new_S3_class("gg")
 class_unit <- S7::new_S3_class(
   "unit",
   constructor = function(.data = numeric(), units = "mm") {
-    if ("unit" %in% class(.data)) {
+    if (inherits(.data, "unit")) {
       return(.data)
     } else {
       ggplot2::unit(.data, units)
@@ -98,11 +98,11 @@ class_margin <- S7::new_class(
         x <- grid::unit(x, units = units)
       }
       if (is.list(x)) {
-         if (all(purrr::map_lgl(x, \(o) {"margin" %in% class(o)}))) {
+         if (all(purrr::map_lgl(x, \(o) {inherits(o, "margin")}))) {
 
           return(purrr::map(x, class_margin))
          }
-        if (all(purrr::map_lgl(x, \(o) {"unit" %in% class(o)}))) {
+        if (all(purrr::map_lgl(x, \(o) {inherits(o, "unit")}))) {
           return(purrr::map(x, class_margin))
         }
         if (all(purrr::map_lgl(x, \(o) {S7::S7_inherits(o, class_margin)}))) {
@@ -110,9 +110,9 @@ class_margin <- S7::new_class(
         }
       }
 
-      if ("margin" %in% class(x)) {
+      if (inherits(x, "margin")) {
 
-      } else if ("unit" %in% class(x)) {
+      } else if (inherits(x, "unit")) {
         if (length(x) == 1) {
           x <- rep(x, 4)
           class(x) <- c("margin", class(x))
@@ -482,9 +482,6 @@ map_ob <- function(.x, .f, ..., .progress = FALSE) {
 }
 
 
-
-
-# class(ob_bezier(ob_point(1:3)))
 ## str----
 str <- S7::new_external_generic(package = "utils", name = "str", dispatch_args = "object")
 
@@ -719,7 +716,6 @@ get_non_empty_list <- function(l) {
 get_non_empty_tibble <- function(d) {
   d <- Filter(\(x) length(x) > 0, d)
   d <- Filter(\(x) !is.null(x), d)
-  # d <- Filter(\(x) !is.na(x), d)
   tibble::as_tibble(d)
 }
 
@@ -1086,8 +1082,6 @@ make_geom_helper <- function(d = NULL,
                             dplyr::across(dplyr::all_of(d_unit_names),
                                           .fns = as.numeric))
 
-
-
   d_all <- tidyr::nest(d_nested, .by = dplyr::all_of("data"), .key = "unmappable")
 
   # make geom for each row in d_nested
@@ -1448,11 +1442,11 @@ data2shape <- function(data, shape) {
 #' model <- "X =~ X1 + X2"
 #' get_depth("X", model = model)
 get_depth <- function(x, model, depth = 0L, max_depth = 20) {
-  if (class(model) == "character") {
+  if (inherits(model, "character")) {
     model <- lavaan::lavaanify(model)
   }
 
-  if (class(model) == "lavaan") {
+  if (inherits(model, "lavaan")) {
     model <- lavaan::parametertable(model)
   }
 
@@ -1484,8 +1478,8 @@ get_depth_helper <- function(x, model, depth = 0L, max_depth = 20) {
 
   # Does it have children?
   children <- model %>%
-    dplyr::filter(op == "=~", lhs %in% x) %>%
-    dplyr::pull(rhs) %>%
+    dplyr::filter(.data$op == "=~", .data$lhs %in% x) %>%
+    dplyr::pull(.data$rhs) %>%
     unique()
 
   # Detect infinite loops

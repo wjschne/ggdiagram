@@ -35,7 +35,7 @@ ob_polygon_props <- list(
   # primary ----
   primary = list(
     p = S7::new_property(class = point_or_list, validator = function(value) {
-      if ("list" %in% class(value)) {
+      if (inherits(value, "list")) {
         allsameclass(value, "ob_point")
       }
 
@@ -87,7 +87,7 @@ ob_polygon_props <- list(
     }),
     length = S7::new_property(
       getter = function(self) {
-        if ("list" %in% class(self@p)) {
+        if (inherits(self@p, "list")) {
           l <- length(self@p)
         } else l <- 1
         l
@@ -309,7 +309,7 @@ S7::method(get_tibble, ob_polygon) <- function(x) {
     dplyr::mutate(p = purrr::map(p, \(x) {x@tibble |> dplyr::select(x,y)})) |>
     tidyr::unnest(p)
   if ("vertex_radius" %in% colnames(d)) {
-    d <- dplyr::rename(x@tibble, radius = vertex_radius)
+    d <- dplyr::rename(d, radius = vertex_radius)
   }
   d
 }
@@ -658,7 +658,10 @@ ob_intercept <- S7::new_class(
         })
       }),
       polygon = S7::new_property(getter = function(self) {
-        ob_polygon(self@p, style = self@style, vertex_radius = self@vertex_radius)
+        ob_polygon(
+          self@p,
+          style = self@style,
+          vertex_radius = self@vertex_radius)
       }),
       top = S7::new_property(getter = function(self) {
         self@center + ob_polar(degree(90),
@@ -722,13 +725,14 @@ ob_intercept <- S7::new_class(
 
 
     non_empty_list <- get_non_empty_props(ob_polygon_style)
+
     d <- tibble::tibble(x = center@x, y = center@y, width = width)
+
     if (length(non_empty_list) > 0) {
       d <- dplyr::bind_cols(
         d,
         tibble::tibble(!!!non_empty_list))
     }
-
 
     center = set_props(center, x = d$x, y = d$y)
 
@@ -767,9 +771,11 @@ ob_intercept <- S7::new_class(
 
 
 S7::method(get_tibble, ob_intercept) <- function(x) {
-  d <- x@tibble
+  d <- x@tibble |>
+    dplyr::mutate(p = purrr::map(p, \(x) {x@tibble |> dplyr::select(x,y)})) |>
+    tidyr::unnest(p)
   if ("vertex_radius" %in% colnames(d)) {
-    d <- dplyr::rename(x@tibble, radius = vertex_radius)
+    d <- dplyr::rename(d, radius = vertex_radius)
   }
   d
 }

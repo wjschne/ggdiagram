@@ -73,7 +73,7 @@ r2 <- ob_rectangle() |>
 ggdiagram() +
   c1 +
   r2 +
-  connect(c1, r2) 
+  connect(c1, r2, resect = 1) 
 ```
 
 <div id="fig-example">

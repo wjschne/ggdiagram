@@ -584,8 +584,8 @@ S7::method(`[`, ob_label) <- function(x, i) {
     data2shape(ob_label)
 }
 
-
-S7::method(`[<-`, ob_label) <- function(x, i, value) {
+#' @export
+`[<-.ggdiagram::ob_label` <- function(x, i, value) {
     if (!S7::S7_inherits(value, ob_label)) stop("value must be of class ob_label.")
    i <- character_index(i, x@id)
    d <- x@tibble |>

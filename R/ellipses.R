@@ -1171,10 +1171,10 @@ S7::method(ob_array, ob_ellipse) <- function(x, k = 2, sep = 1, where = "east", 
                         !!!sa$dots))
 }
 
-
-S7::method(`[<-`, shape) <- function(x, i, value) {
+#' @export
+`[<-.ggdiagram::shape` <- function(x, i, value) {
   .fn <- S7::S7_class(x)
-  if (!S7::S7_inherits(value, .fn)) stop("Relplacement value must be of the same type")
+  if (!S7::S7_inherits(value, .fn)) stop("Replacement value must be of the same type")
 
   i <- character_index(i, x@id)
 

@@ -26,7 +26,7 @@ path_props <- list(
   # primary ----
   primary = list(
     p = S7::new_property(class = point_or_list, validator = function(value) {
-      if ("list" %in% class(value)) {
+      if (inherits(value, "list")) {
         allsameclass(value, "ob_point")
       }
     })
@@ -52,7 +52,7 @@ path_props <- list(
     }),
     length = S7::new_property(
       getter = function(self) {
-        if ("list" %in% class(self@p)) {
+        if (inherits(self@p, "list")) {
           l <- length(self@p)
         } else l <- 1
         l

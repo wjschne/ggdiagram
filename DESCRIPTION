@@ -13,6 +13,7 @@ BugReports: https://github.com/wjschne/ggdiagram/issues
 Imports: 
     arrowheadr,
     bezier,
+    cli,
     dplyr,
     farver,
     geomtextpath,

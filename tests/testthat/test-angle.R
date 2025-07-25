@@ -92,10 +92,21 @@ test_that("misc angle", {
   expect_identical(unbind(degree(1:2)), list(degree(1), degree(2)))
   expect_identical(degree(1:2)[1], degree(1))
   expect_identical(as.character(degree(2)), "2°")
+  expect_identical(as.character(degree(0), digits = 2), "0°")
+  expect_identical(as.character(degree(c(1,2))), c("1°", "2°"))
+  expect_identical(as.character(degree(-2), digits = 2), "−2°")
+  expect_identical(as.character(degree(2.45), digits = 2), "2.45°")
   expect_identical(as.character(radian(2)), "0.64π")
+  expect_identical(as.character(radian(0)), "0π")
   expect_identical(as.character(radian(pi)), "π")
+  expect_identical(as.character(radian(-pi)), "−π")
   expect_identical(as.character(radian(2 * pi)), "0π")
+  expect_identical(as.character(radian(-2 * pi)), "0π")
+  expect_identical(as.character(radian(-.1 * pi)), "−0.1π")
   expect_identical(as.character(turn(.5)), ".50")
+  expect_identical(as.character(turn(0)), "0")
+  expect_identical(as.character(turn(1)), "0")
+  expect_identical(as.character(turn(-.5)), "−.50")
   a <- degree(0)
   a@degree <- 20
   expect_identical(a@degree, 20)
@@ -107,3 +118,12 @@ test_that("misc angle", {
   expect_no_error(capture.output(print(a), file = nullfile()))
 
 })
+
+# test_that(
+#   "selection and assignment with angles", {
+#     x <- degree(1:20)
+#     expect_identical(x[1:10], degree(1:10))
+#     x[2] <- degree(100)
+#     expect_identical(x, degree(c(1,100, 3:20)))
+#   }
+# )

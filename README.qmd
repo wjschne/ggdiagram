@@ -49,13 +49,14 @@ The `ob_*` functions have methods such that they can be added to any ggplot. Und
 
 The `connect` function connects the circle and rectangle at their edges with an arrow (drawn with `ggarrow::geom_arrow_segment`).
 
-```{r fig-example, fig.alt="An arrow points from a circle to a square."}
+```{r}
+#| label: fig-example
 #| fig-width: 6
 #| fig-height: 3.5
 #| fig-cap: Connecting a circle and a square with an arrow.
 #| dev: ragg_png
 #| fig-dpi: 320
-#| fig.alt: >
+#| fig-alt: >
 #|   Diagram of a circle on the left 
 #|   and a square on the right 
 #|   with an arrow connecting the two shapes.
@@ -69,7 +70,7 @@ r2 <- ob_rectangle() |>
 ggdiagram() +
   c1 +
   r2 +
-  connect(c1, r2) 
+  connect(c1, r2, resect = 1) 
 ```
 
 
