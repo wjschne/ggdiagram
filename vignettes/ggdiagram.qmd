@@ -294,7 +294,7 @@ ggdiagram(font_size = 16) +
     to = A_3,
     resect = 2,
     label = ob_label(label = round_probability(loadings), 
-                     angle = 0)) +
+                     angle = 0))@set_label_y() +
   # Error variances
   ob_variance(
     A_3,
