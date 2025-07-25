@@ -1201,8 +1201,12 @@ S7::method(ob_array, ob_ellipse) <- function(x, k = 2, sep = 1, where = "east", 
     }
   }
 
+
   z@label[i] <- value@label
-  z@label@center <- z@center
+  if (S7::S7_inherits(z@label, ob_label)) {
+    z@label@center <- z@center
+  }
+
 
   if (length(x@id) > 0) {
     if (length(value@id) > 0) {
@@ -1210,7 +1214,7 @@ S7::method(ob_array, ob_ellipse) <- function(x, k = 2, sep = 1, where = "east", 
     }
     z@id <- x@id
   }
-  if (!is.null(d$angle)) {
+  if ("angle" %in% colnames(d)) {
     z@angle[i] <- value@angle
   }
   z

@@ -287,3 +287,13 @@ test_that(desc = "rectangle", {
 })
 
 
+test_that("subsetting circles", {
+  x <- ob_circle(x = 0:1, y = 2)
+  x1 <- ob_circle(x = 0, y = 2)
+  x2 <- ob_circle(x = c(0,0), y = 2)
+  x11 <- x[1]
+  expect_equal(x11@tibble, x1@tibble)
+  x[2] <- ob_circle(x = 0, y = 2)
+  expect_equal(x@tibble, x2@tibble)
+
+})

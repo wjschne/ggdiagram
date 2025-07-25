@@ -119,11 +119,11 @@ test_that("misc angle", {
 
 })
 
-# test_that(
-#   "selection and assignment with angles", {
-#     x <- degree(1:20)
-#     expect_identical(x[1:10], degree(1:10))
-#     x[2] <- degree(100)
-#     expect_identical(x, degree(c(1,100, 3:20)))
-#   }
-# )
+test_that(
+  "selection and assignment with angles", {
+    x <- degree(1:20)
+    expect_identical(x[1:10], degree(1:10))
+    x[2] <- degree(100)
+    expect_identical(x, degree(c(1,100, 3:20)))
+  }
+)
