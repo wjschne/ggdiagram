@@ -345,4 +345,3 @@ S7::method(unbind, ob_angle) <- function(x) {
   S7::S7_data(x) <-  d
   x
 }
-

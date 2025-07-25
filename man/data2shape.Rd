@@ -2,7 +2,7 @@
 % Please edit documentation in R/a_early.R
 \name{data2shape}
 \alias{data2shape}
-\title{data2shape}
+\title{Make shapes from data}
 \usage{
 data2shape(data, shape)
 }
@@ -15,7 +15,7 @@ data2shape(data, shape)
 shape object
 }
 \description{
-Convert data.frame or tibble to shape
+Allows a data.frame or tibble to be converted to shape objects.
 }
 \examples{
 d <- data.frame(

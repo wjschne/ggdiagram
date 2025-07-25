@@ -1196,6 +1196,16 @@ emphasis <- function(x, output = "markdown") {
 #' @param digits rounding digits
 #' @export
 #' @return string
+#' @examples
+#' l1 <- ob_line(slope = 2, intercept = 1)
+#' c1 <- ob_circle(radius = 3)
+#' # Markdown
+#' equation(l1)
+#' equation(l1, type = "parametric")
+#' equation(c1)
+#' equation(c1, type = "parametric")
+#' # LaTeX
+#' equation(l1, output = "latex")
 equation <- S7::new_generic(
   "equation",
   dispatch_args = "x",
@@ -1405,10 +1415,9 @@ ggdiagram <- function(
 
 # data2shape ----
 
-#' data2shape
+#' Make shapes from data
 #'
-#' Convert data.frame or tibble to shape
-#'
+#' Allows a data.frame or tibble to be converted to shape objects.
 #' @param data data.frame or tibble
 #' @param shape shape function
 #' @returns shape object

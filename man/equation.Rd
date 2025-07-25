@@ -26,3 +26,14 @@ string
 \description{
 Get equation for object
 }
+\examples{
+l1 <- ob_line(slope = 2, intercept = 1)
+c1 <- ob_circle(radius = 3)
+# Markdown
+equation(l1)
+equation(l1, type = "parametric")
+equation(c1)
+equation(c1, type = "parametric")
+# LaTeX
+equation(l1, output = "latex")
+}

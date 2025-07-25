@@ -367,11 +367,14 @@ S7::method(equation, ob_circle) <- function(
   myemphasis <- redefault(emphasis, output = output)
   mysuperscript <- redefault(superscript, output = output)
   minus <- ifelse(output == "markdown", "\u2212", "-")
+  linebreak <- ifelse(output == "markdown", "<br>", "\\\\ ")
+  mysine <- ifelse(output == "markdown", "sin", "\\sin")
+  mycosine <- ifelse(output == "markdown", "cos", "\\cos")
 
 
   eq <- rep("", x@length)
 
-  if (type == "general") {
+  if (type == "general" || type == "y") {
     eq <- trimmer(paste0(
       ifelse(x@center@x == 0,
       paste0(mysuperscript(myemphasis("x"), "2")),
@@ -400,8 +403,29 @@ S7::method(equation, ob_circle) <- function(
     mysuperscript(myrounder(x@radius), "2")
     ))
   }
-  eq
 
+  if (type == "parametric") {
+    eq <- paste0(
+      ifelse(x@radius == 1, "", myrounder(x@radius)),
+      mycosine,
+      "(",
+      myemphasis("t"),")",
+      ifelse(x@center@x == 0,
+             "",
+             myrounder(x@center@x, add = TRUE)),
+      linebreak,
+      ifelse(x@radius == 1, "", myrounder(x@radius)),
+      mysine,
+      "(",
+      myemphasis("t"),
+      ")",
+      ifelse(x@center@y == 0,
+             "",
+             myrounder(x@center@y, add = TRUE))
+    )
+  }
+
+eq
 }
 
 #' Get a circle from 3 points

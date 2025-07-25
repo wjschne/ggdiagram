@@ -4,4 +4,92 @@ template:
   bootswatch: flatly
   bslib:
     base_font: {google: "Roboto Condensed"}
-
+reference:
+  - title: "Shapes"
+    desc: "Functions for creating shape objects"
+    contents:
+      - ob_arc
+      - ob_bezier
+      - ob_circle
+      - ob_covariance
+      - ob_ellipse
+      - ob_intercept
+      - ob_label
+      - ob_latex
+      - ob_line
+      - ob_ngon
+      - ob_path
+      - ob_point
+      - ob_polygon
+      - ob_rectangle
+      - ob_reuleaux
+      - ob_segment
+      - ob_variance
+  - title: "Alter shapes"
+    desc: "Functions that alter shapes"
+    contents:
+      - nudge
+      - place
+      - resect
+      - rotate
+  - title: "Get information about shapes"
+    desc: "Functions that compute information about shapes"
+    contents:
+      - circle_from_3_points
+      - connect
+      - distance
+      - get_tibble
+      - intersection
+      - intersection_angle
+      - inside
+      - midpoint
+      - perpendicular_point
+      - projection
+  - title: "Automation"
+    desc: "Functions for working with many shapes"
+    contents:
+      - bind
+      - data2shape
+      - map_ob
+      - ob_array
+      - ob_shape_list
+      - ob_style
+      - redefault
+      - unbind
+  - title: "Angles"
+    desc: "Functions about angles"
+    contents:
+      - ob_angle
+      - intersection_angle
+  - title: "Color"
+    desc: "Functions about colors"
+    contents:
+      - class_color
+      - latex_color
+      - mean_color
+  - title: "Labels"
+    desc: "Functions making and altering labels"
+    contents:
+      - equation
+      - label_object
+      - ob_label
+      - ob_latex
+      - polar2just
+      - round_probability
+      - signs_centered
+      - subscript
+      - superscript
+  - title: "Arrowheads"
+    desc: "Functions for getting and setting the default arrowhead"
+    contents:
+      - arrowhead
+      - set_default_arrowhead
+  - title: "Plotting functions"
+    desc: "Functions for plotting"
+    contents:
+      - ggdiagram
+      - as.geom
+  - title: "Other functions"
+    desc: "Helper functions"
+    contents:
+      - get_depth

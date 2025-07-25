@@ -31,9 +31,8 @@ vignettes/articles/_freeze/
 /cache/
 *_cache/
 /*_files/
-docs/
-docs
 /doc/
 /Meta/
 
 /.quarto/
+
