@@ -10,6 +10,8 @@ License: CC0
 URL: https://github.com/wjschne/ggdiagram,
     https://wjschne.github.io/ggdiagram/
 BugReports: https://github.com/wjschne/ggdiagram/issues
+Depends: 
+    R (>= 4.1.0)
 Imports: 
     arrowheadr,
     bezier,
@@ -57,6 +59,7 @@ VignetteBuilder:
 Config/Needs/website: quarto
 Encoding: UTF-8
 Language: en-US
+LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Collate: 
@@ -84,6 +87,3 @@ Collate:
     'inside.R'
     'rotate.R'
     'zzz.R'
-Depends: 
-    R (>= 4.1.0)
-LazyData: true

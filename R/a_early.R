@@ -64,8 +64,8 @@ class_aesthetics_list <- S7::new_class(
     required_aes = S7::class_character,
     omit_names = S7::class_character,
     inherit.aes = S7::class_logical
-  )
-                                     )
+  ))
+
 ## class_gg ----
 class_gg <- S7::new_S3_class("gg")
 
@@ -76,7 +76,7 @@ class_unit <- S7::new_S3_class(
     if (inherits(.data, "unit")) {
       return(.data)
     } else {
-      ggplot2::unit(.data, units)
+      grid::unit(.data, units)
     }
   },
   validator = function(self) {
@@ -165,6 +165,15 @@ the$arrow_head <- class_arrowhead(arrowheadr::arrow_head_deltoid(d = 2.3, n = 10
 #' The arrowhead function returns the default arrowhead. The set_default_arrowhead function will change the default arrowhead in the current R session. For details about making arrowheads, see the [ggarrow](https://teunbrand.github.io/ggarrow/articles/customisation.html) and [arrowheadr](https://wjschne.github.io/arrowheadr/) packages.
 #' @param m A matrix used to make a ggarrow arrowhead
 #' @export
+#' @return 2-column matrix
+#' @examples
+#' arrowhead()
+#' # Set new default
+#' set_default_arrowhead(ggarrow::arrow_head_wings(offset = 25))
+#' arrowhead()
+#' # restore default
+#' set_default_arrowhead()
+#' arrowhead()
 arrowhead <- function() {
   the$arrow_head
 
@@ -172,7 +181,11 @@ arrowhead <- function() {
 
 #' @rdname arrowhead
 #' @export
-set_default_arrowhead <- function(m) {
+#' @return previous default arrowhead
+set_default_arrowhead <- function(m = NULL) {
+  if (is.null(m)) {
+    m <- arrowheadr::arrow_head_deltoid(d = 2.3, n = 100)
+  }
   old <- the$arrow_head
   the$arrow_head <- class_arrowhead(m)
   invisible(old)
@@ -198,7 +211,7 @@ S7::method(print, has_style) <- function(x, ...) {
 #' makes a heterogeneous list of different ggdiagram objects
 #' @param .data a list of objects
 #' @export
-#' @return An object of `ob_shape_list` class. List of objects that can be converted to geoms
+#' @return An object of [`ob_shape_list`] class. List of objects that can be converted to geoms
 ob_shape_list <- S7::new_class(
   "ob_shape_list",
   S7::class_list,
@@ -260,23 +273,19 @@ xy <- S7::new_class(name = "xy",
                 parent = shape,
                 abstract = TRUE)
 
-
-
-
-
 # generics ----
 
 ## variance ----
 #' create double-headed arrow paths indicating variance
 #'
 #' @param x object
-#' @param where angle or named direction (e.g.,northwest, east, below, left)
+#' @param where Location on object. Can be numeric (degrees), [degree], [radian], [turn], or named direction (e.g., "northwest", "east", "below", "left")
 #' @param theta angle width
 #' @param looseness distance of control points as a ratio of the distance to the object's center (e.g., in a circle of radius 1, looseness = 1.5 means that that the control points will be 1.5 units from the start and end points.)
-#' @param bend Angle by which the control points are rotated
+#' @param bend Angle by which the control points are rotated. Can be numeric (degrees), [degree], [radian], [turn], or named direction (e.g., "northwest", "east", "below", "left"). Defaults to 0.
 #' @inherit ob_style params
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
-#' @return Returns an object of type `ob_bezier`
+#' @return Returns an object of type [`ob_bezier`]
 #' @export
 ob_variance <- S7::new_generic("ob_variance", dispatch_args = "x", fun = function(
     x,
@@ -296,12 +305,12 @@ ob_variance <- S7::new_generic("ob_variance", dispatch_args = "x", fun = functio
 #'
 #' @param x object
 #' @param y object
-#' @param where exit angle
+#' @param where exit angle. Can be numeric (degrees), [degree], [radian], [turn], or named direction (e.g., "northwest", "east", "below", "left")
 #' @param looseness distance of control points as a ratio of the distance to the object's center (e.g., in a circle of radius 1, looseness = 1.5 means that that the control points will be 1.5 units from the start and end points.)
-#' @param bend Angle by which the control points are rotated
+#' @param bend Angle by which the control points are rotated. Can be numeric (degrees), [degree], [radian], [turn], or named direction (e.g., "northwest", "east", "below", "left"). Defaults to 0
 #' @inherit ob_style params
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
-#' @return An `ob_bezier` object
+#' @return An [`ob_bezier`] object
 #' @export
 ob_covariance <- S7::new_generic(
   "ob_covariance",
@@ -320,7 +329,7 @@ ob_covariance <- S7::new_generic(
   }
 )
 
-## shape array ----
+## ob_array ----
 #' make an array of shapes along a line
 #'
 #' @param x shape
@@ -465,7 +474,7 @@ S7::method(unbind, ob_shape_list) <- function(x) {
 
 #' map_ob
 #'
-#' A wrapper for purrr::map. It takes a ggdiagram object with multiple elements, applies a function to each element within the object, and returns a ggdiagram object
+#' A wrapper for [purrr::map]. It takes a ggdiagram object with multiple elements, applies a function to each element within the object, and returns a ggdiagram object
 #' @param .x a ggdiagram object
 #' @param .f a function that returns a ggdiagram object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to .f
@@ -507,7 +516,7 @@ S7::method(`+`, list(S7::class_character, S7::class_numeric)) <- function(e1, e2
 #'
 #' @param x object
 #' @export
-#' @return a tibble
+#' @return a [tibble::tibble]
 get_tibble <- S7::new_generic("get_tibble", "x", fun = function(x) {S7::S7_dispatch()})
 S7::method(get_tibble, S7::class_list) <- function(x) {
   purrr::map_df(S7::S7_data(x), get_tibble)
@@ -530,7 +539,7 @@ resect <- S7::new_generic("resect", c("x", "distance"))
 #'
 #' @param x object
 #' @export
-#' @return tibble
+#' @return a [tibble::tibble]
 #' @rdname get_tibble
 get_tibble_defaults <- S7::new_generic("get_tibble_defaults", "x", fun = function(x) S7::S7_dispatch())
 S7::method(get_tibble_defaults, S7::class_any) <- function(x) {
@@ -558,7 +567,7 @@ class_numeric_or_unit <- S7::new_union(S7::class_numeric, class_unit)
 
 #' Make a variant of a function with alternate defaults
 #'
-#' Makes a copy of a function with new defaults. Similar to `purrr::partial` except that arguments with new defaults still accept input.
+#' Makes a copy of a function with new defaults. Similar to [`purrr::partial`] except that arguments with new defaults still accept input.
 #'
 #' @param .f function
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> new defaults
@@ -812,8 +821,9 @@ ob_array_helper <- function(x, k = 2, sep = 1, where = "east", anchor = "center"
 #' @export
 #'
 #' @examples
-#' subscript("X", 1:3)
-#' superscript(c("A", "B"), 2)
+#' ggdiagram() +
+#'   ob_circle(label = ob_label(subscript("X", 1), size = 16)) +
+#'   ob_circle(x = 3, label = ob_label(superscript("A", 2), size = 16))
 subscript <- function(x,
                       subscript = seq(length(x)),
                       output = c("markdown", "latex")) {
@@ -859,7 +869,8 @@ superscript <- function(x,
 #'
 #' @return a vector of numbers converted to characters
 #' @export
-signs_centered <- function(x, space = "\u2007", encoding = "UTF-8", ...) {
+signs_centered <- function(x, space = NULL, encoding = "UTF-8", ...) {
+  if (is.null(space)) space <- "\u2007"
   x_new <- paste0(signs::signs(x, ...), ifelse(x < 0, space, ""))
   Encoding(x_new) <- encoding
   x_new
@@ -971,6 +982,8 @@ round_probability <- function(p,
 
 
 # https://github.com/RConsortium/S7/issues/370
+#' @keywords internal
+#' @noRd
 prop_integer_coerce <- function(name) {
   S7::new_property(
     name = name,
@@ -985,7 +998,8 @@ prop_integer_coerce <- function(name) {
   )
 }
 
-
+#' @keywords internal
+#' @noRd
 .simpleCap <- function(x) {
   s <- strsplit(x, " ")[[1]]
   paste(toupper(substring(s, 1, 1)),
@@ -995,7 +1009,8 @@ prop_integer_coerce <- function(name) {
 }
 
 
-
+#' @keywords internal
+#' @noRd
 .between <- function(x, lb, ub) {
   b <- cbind(lb = lb, ub = ub)
   ub <- apply(b, 1, max)
@@ -1197,15 +1212,19 @@ emphasis <- function(x, output = "markdown") {
 #' @export
 #' @return string
 #' @examples
-#' l1 <- ob_line(slope = 2, intercept = 1)
+#' l1 <- ob_line(slope = 2, intercept = 4)
 #' c1 <- ob_circle(radius = 3)
-#' # Markdown
-#' equation(l1)
-#' equation(l1, type = "parametric")
-#' equation(c1)
-#' equation(c1, type = "parametric")
-#' # LaTeX
-#' equation(l1, output = "latex")
+#' ggdiagram() +
+#'   l1 +
+#'   c1 +
+#'   ob_label(label = equation(c1),
+#'            center = c1@center,
+#'            size = 16) +
+#'   ob_label(label = equation(l1),
+#'            center = ob_segment(intersection(l1, c1))@midpoint(),
+#'            angle = l1@angle,
+#'            size = 16) +
+#'  ggplot2::theme_minimal(base_size = 20)
 equation <- S7::new_generic(
   "equation",
   dispatch_args = "x",
@@ -1222,7 +1241,7 @@ equation <- S7::new_generic(
 #'
 #' @param p ob_point
 #' @param object object (e.g., line or segment)
-#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style object
 #' @export
 #' @return ob_point
 projection <- S7::new_generic("projection", c("p", "object"))
@@ -1275,14 +1294,14 @@ label_object <- S7::new_generic("label_object", "object")
 
 #' Arrow connect one shape to another
 #'
-#' By default, will create an `ob_segment` with an arrowhead on the end. If `arc_bend` is specified, an `ob_arc` with an arrowhead will be created instead. If `from_offset` or `to_offset` are specified, an `ob_bezier` with an arrowhead will be created.
+#' By default, will create an [`ob_segment`] with an arrowhead on the end. If `arc_bend` is specified, an [`ob_arc`] with an arrowhead will be created instead. If `from_offset` or `to_offset` are specified, an [`ob_bezier`] with an arrowhead will be created.
 #' @param from first shape object
 #' @param to second shape object
 #' @param arc_bend If specified, the arrow will be an arc with a sagitta sized in proportion to the distance between points. The sagitta is is the largest distance from the arc's chord to the arc itself. Negative values bend left. Positive values bend right. 1 and -1 create semi-circles. 0 is a straight segment. If specified, will override `from_offset` and `to_offset`.
 #' @param from_offset If specified, arrow will be a bezier curve. The `from_offset` is a point (ob_point or ob_polar) that is added to `from` to act as a control point in the bezier curve.
 #' @param to_offset If specified, arrow will be a bezier curve. The `to_offset` is a point (ob_point or ob_polar) that is added to `to` to act as a control point in the bezier curve.
 #' @inheritParams ob_bezier
-#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> Arguments passed to style
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> Arguments passed to [ob_style]
 #' @export
 #' @return ob_segment
 connect <- S7::new_generic(
@@ -1327,7 +1346,7 @@ connect <- S7::new_generic(
 #' @param from shape that x is placed in relation to
 #' @param where named direction, angle, or number (degrees)
 #' @param sep separation distance
-#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> Arguments passed to style
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> Arguments passed to [ob_style]
 #' @export
 #' @return object of same class as `x`
 place <- S7::new_generic("place", c("x", "from"),
@@ -1346,14 +1365,16 @@ place <- S7::new_generic("place", c("x", "from"),
 #' @param font_size font size in points
 #' @param point_size point size
 #' @param linewidth line width
-#' @param rect_linewidth line with of rectangles
-#' @param theme_function ggplot2 theme
-#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> Arguments sent to ggplot2::theme
+#' @param rect_linewidth line width of rectangles
+#' @param theme_function A complete [ggplot2 theme][ggplot2::theme_minimal] function (e.g., [ggplot2::theme_minimal]). Defaults to [ggplot2::theme_void]
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> Arguments sent to [ggplot2::theme]
 #' @return ggplot function
 #' @export
 #'
 #' @examples
-#' ggdiagram() + ob_circle()
+#' ggdiagram(font_size = 20, font_family = "serif", linewidth = 3) +
+#'    ob_circle(label = "Circle") +
+#'    ob_rectangle(label = "Rectangle", x = 3, width = 3)
 ggdiagram <- function(
     font_family = "sans",
     font_size = 11,
@@ -1420,13 +1441,14 @@ ggdiagram <- function(
 #' Allows a data.frame or tibble to be converted to shape objects.
 #' @param data data.frame or tibble
 #' @param shape shape function
-#' @returns shape object
+#' @return shape object
 #' @export
 #' @examples
 #' d <- data.frame(
 #'   x = 1:2,
 #'   y = 1:2,
 #'   fill = c("blue", "forestgreen"),
+#'   color = NA,
 #'   radius = c(.25,0.5))
 #'
 #' ggdiagram() +
@@ -1444,12 +1466,13 @@ data2shape <- function(data, shape) {
 #' @param depth initial depth
 #' @param max_depth max depth at which to stop (prevents infinite loops for non-recursive models)
 #'
-#' @returns integer
+#' @return integer
 #' @export
 #'
 #' @examples
 #' model <- "X =~ X1 + X2"
 #' get_depth("X", model = model)
+#' get_depth("X1", model = model)
 get_depth <- function(x, model, depth = 0L, max_depth = 20) {
   if (inherits(model, "character")) {
     model <- lavaan::lavaanify(model)

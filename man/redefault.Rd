@@ -15,7 +15,7 @@ redefault(.f, ...)
 function
 }
 \description{
-Makes a copy of a function with new defaults. Similar to \code{purrr::partial} except that arguments with new defaults still accept input.
+Makes a copy of a function with new defaults. Similar to \code{\link[purrr:partial]{purrr::partial}} except that arguments with new defaults still accept input.
 }
 \examples{
 squircle <- redefault(ob_ellipse, m1 = 4)

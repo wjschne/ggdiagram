@@ -47,7 +47,7 @@ ob_line(
 
 \item{linetype}{type of lines}
 
-\item{style}{a style list}
+\item{style}{an \link{ob_style} object}
 
 \item{id}{character string to identify object}
 

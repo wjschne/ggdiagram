@@ -48,7 +48,7 @@ ob_circle(
 
 \item{id}{character string to identify object}
 
-\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> arguments passed to style object}
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style object}
 }
 \value{
 ob_circle object

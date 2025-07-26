@@ -287,22 +287,24 @@ el_props <- list(
 #' @param y x-coordinate of center point. If specified, overrides y-coordinate of `@center`.
 #' @inherit ob_style params
 #' @param style gets and sets style parameters
-#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style object
 #' @examples
 #' # specify center point and semi-major axes
-#' ob_ellipse(center = ob_point(0,0), a = 2, b = 3)
+#' e <- ob_ellipse(center = ob_point(0,0), a = 2, b = 3)
+#' ggdiagram() +
+#'   e
 #' @export
 #' @return ob_ellipse object
 ob_ellipse <- S7::new_class(
   name = "ob_ellipse",
   parent = centerpoint,
-  properties = rlang::inject(list(
+  properties = rlang::list2(
     !!!el_props$primary,
     !!!el_props$styles,
     !!!el_props$derived,
     !!!compass_props,
     !!!el_props$funs,
-    !!!el_props$info)),
+    !!!el_props$info),
   constructor = function(center = ob_point(0,0),
                          a = 1,
                          b = a,
@@ -1030,17 +1032,18 @@ S7::method(ob_variance, centerpoint) <- function(
 #' @rdname ob_covariance
 #' @examples
 #' ggdiagram() +
-#' {x <- ob_circle(ob_point(c(-2, 2), 0))} +
-#' ob_covariance(x = x[1],
-#'               y = x[2],
-#'               label = ob_label("A"))
+#'   {x <- ob_circle(ob_point(c(-2, 2), 0))} +
+#'   ob_covariance(x = x[1],
+#'                 y = x[2],
+#'                 label = ob_label("A"))
 #'
 #' ggdiagram() +
-#' x +
-#' ob_covariance(x = x[1],
-#'               y = x[2],
-#'               label = ob_label("A"),
-#'               where = -45, looseness = .75)
+#'   x +
+#'   ob_covariance(x = x[1],
+#'                 y = x[2],
+#'                 label = ob_label("A"),
+#'                 where = -45,
+#'                 looseness = .75)
 S7::method(ob_covariance, list(centerpoint, centerpoint)) <- function(
     x,
     y,
@@ -1055,52 +1058,47 @@ S7::method(ob_covariance, list(centerpoint, centerpoint)) <- function(
   if (!S7::S7_inherits(where, ob_angle) && !is.null(where)) where <- degree(where)
   if (!S7::S7_inherits(bend, ob_angle)) bend <- degree(bend)
 
+  p <- purrr::pmap(
+    .l = list(
+      xx = unbind(x),
+      yy = unbind(y),
+      bb = unbind(bend)
+      ),
+    .f = \(xx, yy, bb) {
+      if (is.null(where)) {
+        d_xy <- yy@center - xx@center
+        x_angle <- d_xy@theta + degree(45)
+        y_angle <- degree(135) + (d_xy@theta)
+        } else {
+          x_angle <- where
+          y_angle <- degree(180) - where
+          }
+      s <- xx@point_at(x_angle)
+      e <- yy@point_at(y_angle)
+      m_dist <- looseness * (s - e)@r / 2
 
-
-  p <- purrr::pmap(list(xx = unbind(x), yy = unbind(y), bb = unbind(bend)), \(xx, yy, bb) {
-
-    if (is.null(where)) {
-      d_xy <- yy@center - xx@center
-      x_angle <- d_xy@theta + degree(45)
-      y_angle <- degree(135) + (d_xy@theta)
-    } else {
-      x_angle <- where
-      y_angle <- degree(180) - where
-    }
-    s <- xx@point_at(x_angle)
-    e <- yy@point_at(y_angle)
-    m_dist <- looseness * (s - e)@r / 2
-
-    bind(c(
-      s,
-      rotate(
-        xx@normal_at(
-          theta = x_angle,
-          distance = m_dist),
-        theta = bb,
-        origin = s),
-      rotate(
-        yy@normal_at(
-          theta = y_angle,
-          distance = m_dist),
-        theta = bb * -1,
-        origin = e),
-      e))
-  })
+      bind(c(
+        s,
+        rotate(
+          xx@normal_at(theta = x_angle, distance = m_dist),
+          theta = bb,
+          origin = s
+          ),
+        rotate(
+          yy@normal_at(theta = y_angle, distance = m_dist),
+          theta = bb * -1,
+          origin = e),
+        e))
+      })
 
   dots <- rlang::list2(...)
-
   l <- character(0)
 
   if (!is.null(dots$label)) {
     l <- dots$label
     if (!S7::S7_inherits(l, ob_label)) l <- ob_label(l)
     dots$label <- NULL
-  }
-
-
-
-
+    }
 
   rlang::inject(ob_bezier(p = p,
                         label = l,

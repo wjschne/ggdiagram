@@ -40,7 +40,7 @@ ob_label(
 \arguments{
 \item{label}{text label}
 
-\item{center}{ob_point indicating the center of the label}
+\item{center}{\link{ob_point} indicating the center of the label}
 
 \item{angle}{angle of text}
 
@@ -58,9 +58,9 @@ ob_label(
 
 \item{label.color}{Color of label outline.}
 
-\item{label.margin}{Amount of distance around label. Unit vector of length four. Usually created with \code{ggplot2::margin}.}
+\item{label.margin}{Amount of distance around label. A \link[grid:unit]{grid::unit} vector of length four. Usually created with \code{\link[ggplot2:element]{ggplot2::margin}}.}
 
-\item{label.padding}{Amount of padding around label. Unit vector of length four. Usually created with \code{ggplot2::margin}.}
+\item{label.padding}{Amount of padding around label. A \link[grid:unit]{grid::unit} vector of length four. Usually created with \code{\link[ggplot2:element]{ggplot2::margin}}.}
 
 \item{label.r}{Radius of rounded corners. Defaults to 0.15 lines.}
 
@@ -84,9 +84,9 @@ ob_label(
 
 \item{style}{a style list}
 
-\item{plot_point}{plot ob_point (default = FALSE)}
+\item{plot_point}{plot center \link{ob_point} (default = FALSE)}
 
-\item{position}{position (0 to 1)}
+\item{position}{position (0 to 1). Used to position a label on an \link{ob_segment}, \link{ob_arc}, \link{ob_path}, or \link{ob_bezier}}
 
 \item{spacing}{letter spacing for labels used with ob_path and ob_bezier}
 

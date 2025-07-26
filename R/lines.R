@@ -143,20 +143,20 @@ info = list(
 #' @param slope coefficient in y = slope * x + intercept
 #' @param intercept value of y when x is 0
 #' @param xintercept value of x when y is 0
-#' @param style a style list
+#' @param style an [ob_style] object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
-#' @inherit ob_style params
+#' @inheritParams ob_style
 #' @export
 #' @return ob_line object
 ob_line <- S7::new_class(
   "ob_line",
   parent = shape,
-  properties =  rlang::inject(list(
+  properties = rlang::list2(
     !!!ln_props$primary,
     !!!ln_props$styles,
     !!!ln_props$derived,
     !!!ln_props$funs,
-    !!!ln_props$info)),
+    !!!ln_props$info),
   constructor = function(slope = numeric(0),
                          intercept = numeric(0),
                          xintercept = numeric(0),

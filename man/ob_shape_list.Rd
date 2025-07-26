@@ -10,7 +10,7 @@ ob_shape_list(.data = list())
 \item{.data}{a list of objects}
 }
 \value{
-An object of \code{ob_shape_list} class. List of objects that can be converted to geoms
+An object of \code{\link{ob_shape_list}} class. List of objects that can be converted to geoms
 }
 \description{
 makes a heterogeneous list of different ggdiagram objects

@@ -18,22 +18,22 @@ ob_variance(
 \arguments{
 \item{x}{object}
 
-\item{where}{angle or named direction (e.g.,northwest, east, below, left)}
+\item{where}{Location on object. Can be numeric (degrees), \link{degree}, \link{radian}, \link{turn}, or named direction (e.g., "northwest", "east", "below", "left")}
 
 \item{theta}{angle width}
 
-\item{bend}{Angle by which the control points are rotated}
+\item{bend}{Angle by which the control points are rotated. Can be numeric (degrees), \link{degree}, \link{radian}, \link{turn}, or named direction (e.g., "northwest", "east", "below", "left"). Defaults to 0.}
 
 \item{looseness}{distance of control points as a ratio of the distance to the object's center (e.g., in a circle of radius 1, looseness = 1.5 means that that the control points will be 1.5 units from the start and end points.)}
 
 \item{arrow_head}{A 2-column matrix of polygon points}
 
-\item{resect}{A numeric(1) denoting millimeters or \if{html}{\out{<unit>}} to shorten the arrow head and fins.}
+\item{resect}{A numeric(1) denoting millimeters or \link[grid:unit]{grid::unit} to shorten the arrow head and fins.}
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
 }
 \value{
-Returns an object of type \code{ob_bezier}
+Returns an object of type \code{\link{ob_bezier}}
 }
 \description{
 create double-headed arrow paths indicating variance

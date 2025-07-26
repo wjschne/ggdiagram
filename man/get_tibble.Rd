@@ -13,9 +13,9 @@ get_tibble_defaults(x)
 \item{x}{object}
 }
 \value{
-a tibble
+a \link[tibble:tibble]{tibble::tibble}
 
-tibble
+a \link[tibble:tibble]{tibble::tibble}
 }
 \description{
 Get object data with styles in a tibble

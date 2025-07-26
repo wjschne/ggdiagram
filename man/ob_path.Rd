@@ -33,9 +33,9 @@ ob_path(
 )
 }
 \arguments{
-\item{p}{\code{ob_point} or list of \code{ob_point}s}
+\item{p}{\code{\link{ob_point}} or list of \code{\link{ob_point}}s}
 
-\item{label}{A character, angle, or label object}
+\item{label}{A character, angle, or \code{\link{ob_label}} object}
 
 \item{label_sloped}{A logical value indicating whether the label should be sloped with the curve}
 
@@ -45,11 +45,11 @@ ob_path(
 
 \item{arrow_fins}{A 2-column matrix of polygon points}
 
-\item{arrowhead_length}{Determines the size of the arrow ornaments. This parameter becomes the \code{length} parameter in ggarrow functions. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner.}
+\item{arrowhead_length}{Determines the size of the arrow ornaments. This parameter becomes the \code{length} parameter in ggarrow functions. Numeric values set the ornament size relative to the linewidth. A \link[grid:unit]{grid::unit} value sets the ornament size in an absolute manner.}
 
-\item{length_head}{Determines the size of the arrow head. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner. From ggarrow.}
+\item{length_head}{Determines the size of the arrow head. Numeric values set the ornament size relative to the linewidth. A \link[grid:unit]{grid::unit} value sets the ornament size in an absolute manner. From ggarrow.}
 
-\item{length_fins}{Determines the size of the arrow fins. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner. From ggarrow.}
+\item{length_fins}{Determines the size of the arrow fins. Numeric values set the ornament size relative to the linewidth. A \link[grid:unit]{grid::unit} value sets the ornament size in an absolute manner. From ggarrow.}
 
 \item{color}{character string for color}
 
@@ -67,11 +67,11 @@ ob_path(
 
 \item{linetype}{type of lines}
 
-\item{resect}{A numeric(1) denoting millimeters or \if{html}{\out{<unit>}} to shorten the arrow head and fins.}
+\item{resect}{A numeric(1) denoting millimeters or \link[grid:unit]{grid::unit} to shorten the arrow head and fins.}
 
-\item{resect_fins}{A numeric(1) denoting millimeters or \if{html}{\out{<unit>}} to shorten the arrow fins}
+\item{resect_fins}{A numeric(1) denoting millimeters or \link[grid:unit]{grid::unit} to shorten the arrow fins}
 
-\item{resect_head}{A numeric(1) denoting millimeters or \if{html}{\out{<unit>}} to shorten the arrow head.}
+\item{resect_head}{A numeric(1) denoting millimeters or \link[grid:unit]{grid::unit} to shorten the arrow head.}
 
 \item{stroke_color}{Color of point border line}
 
@@ -87,16 +87,16 @@ ob_path(
 ob_path object
 }
 \description{
-A \code{ob_path} is specified with an \code{ob_point} object that contains at least 2 points, the start and the end. Any number of intermediate points are possible.
+An \code{\link{ob_path}} is specified with an \code{\link{ob_point}} object that contains at least 2 points, the start and the end. Any number of intermediate points are possible.
 }
 \details{
-If you wish to specify multiple paths, you must supply a list of \code{ob_point} objects. When plotted, the \code{ob_path} function uses the ggarrow::geom_arrow function to create the geom.
+If you wish to specify multiple paths, you must supply a list of \code{\link{ob_point}} objects. When plotted, the \code{\link{ob_path}} function uses the ggarrow::geom_arrow function to create the geom.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{length}}{The number of paths in the ob_path object}
+\item{\code{length}}{The number of paths in the \code{\link{ob_path}} object}
 
-\item{\code{tibble}}{Gets a tibble (data.frame) containing parameters and styles used by \code{ggarrow::geom_arrow}.}
+\item{\code{tibble}}{Gets a \code{\link[tibble:tibble]{tibble::tibble}} containing parameters and styles used by \code{\link[ggarrow:geom_arrow]{ggarrow::geom_arrow}}.}
 }}
 

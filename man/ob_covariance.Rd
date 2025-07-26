@@ -22,39 +22,40 @@ ob_covariance(
 
 \item{y}{object}
 
-\item{where}{exit angle}
+\item{where}{exit angle. Can be numeric (degrees), \link{degree}, \link{radian}, \link{turn}, or named direction (e.g., "northwest", "east", "below", "left")}
 
-\item{bend}{Angle by which the control points are rotated}
+\item{bend}{Angle by which the control points are rotated. Can be numeric (degrees), \link{degree}, \link{radian}, \link{turn}, or named direction (e.g., "northwest", "east", "below", "left"). Defaults to 0}
 
 \item{looseness}{distance of control points as a ratio of the distance to the object's center (e.g., in a circle of radius 1, looseness = 1.5 means that that the control points will be 1.5 units from the start and end points.)}
 
 \item{arrow_head}{A 2-column matrix of polygon points}
 
-\item{length_head}{Determines the size of the arrow head. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner. From ggarrow.}
+\item{length_head}{Determines the size of the arrow head. Numeric values set the ornament size relative to the linewidth. A \link[grid:unit]{grid::unit} value sets the ornament size in an absolute manner. From ggarrow.}
 
-\item{length_fins}{Determines the size of the arrow fins. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner. From ggarrow.}
+\item{length_fins}{Determines the size of the arrow fins. Numeric values set the ornament size relative to the linewidth. A \link[grid:unit]{grid::unit} value sets the ornament size in an absolute manner. From ggarrow.}
 
-\item{resect}{A numeric(1) denoting millimeters or \if{html}{\out{<unit>}} to shorten the arrow head and fins.}
+\item{resect}{A numeric(1) denoting millimeters or \link[grid:unit]{grid::unit} to shorten the arrow head and fins.}
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
 }
 \value{
-An \code{ob_bezier} object
+An \code{\link{ob_bezier}} object
 }
 \description{
 create double-headed arrow paths indicating variance
 }
 \examples{
 ggdiagram() +
-{x <- ob_circle(ob_point(c(-2, 2), 0))} +
-ob_covariance(x = x[1],
-              y = x[2],
-              label = ob_label("A"))
+  {x <- ob_circle(ob_point(c(-2, 2), 0))} +
+  ob_covariance(x = x[1],
+                y = x[2],
+                label = ob_label("A"))
 
 ggdiagram() +
-x +
-ob_covariance(x = x[1],
-              y = x[2],
-              label = ob_label("A"),
-              where = -45, looseness = .75)
+  x +
+  ob_covariance(x = x[1],
+                y = x[2],
+                label = ob_label("A"),
+                where = -45,
+                looseness = .75)
 }

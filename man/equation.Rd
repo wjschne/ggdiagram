@@ -27,13 +27,17 @@ string
 Get equation for object
 }
 \examples{
-l1 <- ob_line(slope = 2, intercept = 1)
+l1 <- ob_line(slope = 2, intercept = 4)
 c1 <- ob_circle(radius = 3)
-# Markdown
-equation(l1)
-equation(l1, type = "parametric")
-equation(c1)
-equation(c1, type = "parametric")
-# LaTeX
-equation(l1, output = "latex")
+ggdiagram() +
+  l1 +
+  c1 +
+  ob_label(label = equation(c1),
+           center = c1@center,
+           size = 16) +
+  ob_label(label = equation(l1),
+           center = ob_segment(intersection(l1, c1))@midpoint(),
+           angle = l1@angle,
+           size = 16) +
+ ggplot2::theme_minimal(base_size = 20)
 }

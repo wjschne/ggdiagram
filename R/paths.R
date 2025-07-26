@@ -196,31 +196,29 @@ path_props <- list(
 
 #' The ob_path class
 #'
-#' A `ob_path` is specified with an `ob_point` object that contains at least 2 points, the start and the end. Any number of intermediate points are possible.
+#' An [`ob_path`] is specified with an [`ob_point`] object that contains at least 2 points, the start and the end. Any number of intermediate points are possible.
 #'
-#' If you wish to specify multiple paths, you must supply a list of `ob_point` objects. When plotted, the `ob_path` function uses the ggarrow::geom_arrow function to create the geom.
+#' If you wish to specify multiple paths, you must supply a list of [`ob_point`] objects. When plotted, the [`ob_path`] function uses the ggarrow::geom_arrow function to create the geom.
 #' @export
 #' @return ob_path object
-#' @param p `ob_point` or list of `ob_point`s
-#' @param label A character, angle, or label object
+#' @param p [`ob_point`] or list of [`ob_point`]s
+#' @param label A character, angle, or [`ob_label`] object
 #' @param style Gets and sets the styles associated with paths
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
-#' @slot length The number of paths in the ob_path object
-#' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggarrow::geom_arrow`.
+#' @slot length The number of paths in the [`ob_path`] object
+#' @slot tibble Gets a [`tibble::tibble`] containing parameters and styles used by [`ggarrow::geom_arrow`].
 #' @inherit ob_style params
 #' @inherit ob_bezier params
 ob_path <- S7::new_class(
   name = "ob_path",
   parent = has_style,
-  properties = rlang::inject(
-    list(
+  properties = rlang::list2(
       !!!path_props$primary,
       !!!path_props$extra,
       !!!path_props$styles,
       !!!path_props$derived,
       !!!path_props$funs,
       !!!path_props$info
-    )
   ),
   constructor = function(p = S7::class_missing,
                          label = character(0),

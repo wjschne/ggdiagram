@@ -188,7 +188,7 @@ cr_props <- list(
 #' @param y x-coordinate of center point. If specified, overrides y-coordinate of `@center`.
 #' @param n number of points in circle (default = 360)
 #' @param style an ob_style object
-#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style object
 #' @inherit ob_style params
 #' @slot aesthetics A list of information about the circle's aesthetic properties
 #' @slot angle_at A function that finds the angle of the specified point in relation to the circle's center
@@ -202,21 +202,21 @@ cr_props <- list(
 #' @slot polygon a tibble containing information to create all the polygon points in a circle.
 #' @slot tangent_at A function that finds the tangent line at the specified angle.
 #' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggforce::geom_cirlce`.
+#' @export
+#' @return ob_circle object
 #' @examples
 #' # specify center point and radius
 #' ob_circle(center = ob_point(0,0), radius = 6)
-#' @export
-#' @return ob_circle object
 ob_circle <- S7::new_class(
   name = "ob_circle",
   parent = centerpoint,
-  properties = rlang::inject(list(
+  properties = rlang::list2(
     !!!cr_props$primary,
     !!!cr_props$styles,
     !!!cr_props$derived,
     !!!compass_props,
     !!!cr_props$funs,
-    !!!cr_props$info)),
+    !!!cr_props$info),
   constructor = function(center = ob_point(0,0),
                          radius = 1,
                          label = character(0),

@@ -1060,7 +1060,7 @@ ggdiagram(font_family = my_serif_font, font_size = 16) +
                    grid::radialGradient(c(tinter::lighten(fill, .15), 
                                           tinter::lighten(fill, .4)), 
                                         stops = c(0.2, 1), 
-                                        group = F)}) |> 
+                                        group = FALSE)}) |> 
       `names<-`(broad@fill)) +
   theme(legend.position = "none") +
   ob_label(
@@ -1230,7 +1230,7 @@ ggdiagram(font_family = my_font, font_size = 13) +
     place(from = x1, 
           where = "below", 
           sep = 1.5)} + 
-  {y = observed(label = lb_observed("*Y*~*ij*~"),
+  {y <- observed(label = lb_observed("*Y*~*ij*~"),
                 fill = clr[4]) |> 
     place(from = x1, 
           where = "right", 

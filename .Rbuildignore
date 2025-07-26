@@ -20,3 +20,4 @@ vignettes/.quarto/
 ^cran-comments\.md$
 ^codecov\.yml$
 ^data-raw$
+logo.png

@@ -1,3 +1,5 @@
+#' @keywords internal
+#' @noRd
 find_side <- function(theta, width = 1, height = 1) {
   my_pi <- turn(.5)
   if (!S7::S7_inherits(theta, ob_angle)) theta <- radian(theta)
@@ -9,6 +11,8 @@ find_side <- function(theta, width = 1, height = 1) {
   side
 }
 
+#' @keywords internal
+#' @noRd
 rectangle_side <- S7::new_class(
   name = "retangle_side",
   properties = list(
@@ -25,6 +29,8 @@ rc_styles <- c(
   "linetype"
 )
 
+#' @keywords internal
+#' @noRd
 rc_aesthetics_list <- class_aesthetics_list(
   geom = ggforce::geom_shape,
   mappable_bare = character(0),
@@ -343,38 +349,40 @@ rc_props <- list(
 # ob_rectangle ----
 
 #' ob_rectangle class
-#' @param center point at center of the rectangle
+#' @param center [`ob_point`] at center of the rectangle
 #' @param width width
 #' @param height height
-#' @param east right middle point
-#' @param north top middle point
-#' @param west left middle point
-#' @param south top middle point
-#' @param northeast upper right point
-#' @param northwest upper left point
-#' @param southwest lower left point
-#' @param southeast lower right point
-#' @param label A character, angle, or label object
+#' @param east right middle point ([`ob_point`])
+#' @param north top middle point ([`ob_point`])
+#' @param west left middle point ([`ob_point`])
+#' @param south top middle point ([`ob_point`])
+#' @param northeast upper right point ([`ob_point`])
+#' @param northwest upper left point ([`ob_point`])
+#' @param southwest lower left point ([`ob_point`])
+#' @param southeast lower right point ([`ob_point`])
+#' @param label A character, angle, or [`ob_label`] object
 #' @param x overrides x-coordinate in `center@x`
 #' @param y overrides y-coordinate in `center@x`
 #' @param vertex_radius A numeric or unit vector of length one, specifying the corner radius for rounded corners
 #' @param style a style object
-#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to `style`
 #' @inherit ob_style params
-#' @examples
-#' ob_rectangle(center = ob_point(0,0), width = 2, height = 2)
 #' @export
-#' @return ob_rectangle object
+#' @return [`ob_rectangle`] object
+#'
+#' @examples
+#' ggdiagram() +
+#'   ob_rectangle(center = ob_point(0,0), width = 3, height = 2)
 ob_rectangle <- S7::new_class(
   name = "ob_rectangle",
   parent = centerpoint,
-  properties = rlang::inject(list(
+  properties = rlang::list2(
     !!!rc_props$primary,
     !!!rc_props$extra,
     !!!rc_props$styles,
     !!!rc_props$derived,
     !!!rc_props$funs,
-    !!!rc_props$info)),
+    !!!rc_props$info),
   constructor = function(center = S7::class_missing,
                          width = numeric(0),
                          height = numeric(0),

@@ -25,11 +25,11 @@ ob_intercept(
 )
 }
 \arguments{
-\item{center}{point at center}
+\item{center}{\code{\link{ob_point}} at center}
 
 \item{width}{length of side}
 
-\item{label}{A character, angle, or label object}
+\item{label}{A character, angle, or \code{\link{ob_label}} object}
 
 \item{top}{Top vertex of triangle}
 

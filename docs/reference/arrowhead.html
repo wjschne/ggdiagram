@@ -59,7 +59,7 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">arrowhead</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">set_default_arrowhead</span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">set_default_arrowhead</span><span class="op">(</span>m <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -70,7 +70,51 @@
 <dd><p>A matrix used to make a ggarrow arrowhead</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    <p>2-column matrix</p>
+<p>previous default arrowhead</p>
+    </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">arrowhead</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── &lt;class_arrowhead&gt; </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> A matrix with 2 columns and 200 rows. First 6 rows:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          x    y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] -0.39 0.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] -0.39 0.02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -0.39 0.04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] -0.40 0.06</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,] -0.40 0.08</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,] -0.40 0.10</span>
+<span class="r-in"><span><span class="co"># Set new default</span></span></span>
+<span class="r-in"><span><span class="fu">set_default_arrowhead</span><span class="op">(</span><span class="fu">ggarrow</span><span class="fu">::</span><span class="fu"><a href="https://teunbrand.github.io/ggarrow/reference/arrow_ornaments.html" class="external-link">arrow_head_wings</a></span><span class="op">(</span>offset <span class="op">=</span> <span class="fl">25</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">arrowhead</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── &lt;class_arrowhead&gt; </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> A matrix with 2 columns and 4 rows.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          x     y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  1.00  0.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] -0.48  0.69</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]  0.00  0.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] -0.48 -0.69</span>
+<span class="r-in"><span><span class="co"># restore default</span></span></span>
+<span class="r-in"><span><span class="fu">set_default_arrowhead</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">arrowhead</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── &lt;class_arrowhead&gt; </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> A matrix with 2 columns and 200 rows. First 6 rows:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          x    y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] -0.39 0.00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] -0.39 0.02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -0.39 0.04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] -0.40 0.06</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,] -0.40 0.08</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6,] -0.40 0.10</span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

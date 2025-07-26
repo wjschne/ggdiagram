@@ -19,5 +19,5 @@ map_ob(.x, .f, ..., .progress = FALSE)
 a ggdiagram object
 }
 \description{
-A wrapper for purrr::map. It takes a ggdiagram object with multiple elements, applies a function to each element within the object, and returns a ggdiagram object
+A wrapper for \link[purrr:map]{purrr::map}. It takes a ggdiagram object with multiple elements, applies a function to each element within the object, and returns a ggdiagram object
 }

@@ -163,31 +163,29 @@ ob_polygon_props <- list(
 
 #' The ob_polygon class
 #'
-#' A polygon is specified with an ob_point that contains at least 3 points, the start and the end. Any number of intermediate points are possible.
+#' A polygon is specified with an [`ob_point`] that contains at least 3 points, the start and the end. Any number of intermediate points are possible.
 #'
-#' If you wish to specify multiple polygons, you must supply a list of ob_points. When plotted, the ob_polygon function uses the ggforce::geom_shape function to create the geom.
+#' If you wish to specify multiple polygons, you must supply a list of [`ob_point`] objects. When plotted, the ob_polygon function uses the [`ggforce::geom_shape`] function to create the geom.
 #' @export
 #' @return ob_polygon object
-#' @param p ob_point or list of ob_point objects
-#' @param label A character, angle, or label object
+#' @param p [`ob_point`] or list of [`ob_point`] objects
+#' @param label A character, angle, or [`ob_label`] object
 #' @param vertex_radius A numeric or unit vector of length one, specifying the corner radius
 #' @slot length The number of polygons in the ob_polygon object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @param style Gets and sets the styles associated with polygons
-#' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggforce::geom_shape`.
+#' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by [`ggforce::geom_shape`].
 #' @inherit ob_style params
 ob_polygon <- S7::new_class(
   name = "ob_polygon",
   parent = has_style,
-  properties = rlang::inject(
-    list(
+  properties = rlang::list2(
       !!!ob_polygon_props$primary,
       !!!ob_polygon_props$extra,
       !!!ob_polygon_props$styles,
       !!!ob_polygon_props$derived,
       !!!ob_polygon_props$funs,
       !!!ob_polygon_props$info
-    )
   ),
   constructor = function(p = S7::class_missing,
                          label = character(0),
@@ -629,9 +627,9 @@ S7::method(connect, list(ob_polygon, centerpoint)) <- function(
 #' ob_intercept
 #'
 #' Triangle polygons used in path diagrams.
-#' @param center point at center
+#' @param center [`ob_point`] at center
 #' @param width length of side
-#' @param label A character, angle, or label object
+#' @param label A character, angle, or [`ob_label`] object
 #' @param vertex_radius A numeric or unit vector of length one, specifying the vertex radius
 #' @param top Top vertex of triangle
 #' @param left Left vertex of triangle
@@ -648,8 +646,7 @@ S7::method(connect, list(ob_polygon, centerpoint)) <- function(
 ob_intercept <- S7::new_class(
   name = "ob_intercept",
   parent = centerpoint,
-  properties = rlang::inject(
-    list(
+  properties = rlang::list2(
       width = S7::class_numeric,
       p = S7::new_property(getter = function(self) {
         purrr::map(unbind(self@center), \(cc) {
@@ -680,7 +677,6 @@ ob_intercept <- S7::new_class(
       !!!ob_polygon_props$derived[!names(ob_polygon_props$derived) %in% c("center")],
       !!!ob_polygon_props$funs,
       !!!ob_polygon_props$info
-    )
   ),
   constructor = function(center = ob_point(0,0),
                          width = 1,
@@ -1262,9 +1258,9 @@ ob_ngon_props <- list(
 
 #' The ob_ngon (regular polygon) class
 #'
-#' An ngon is a regular polygon, meaning that each side is of equal length. The `ob_ngon` object can be specified with a center, n (number of sides), radius, and angle. Instead of specifying a radius, one can specify either the `side_length` or the length of the `apothem` (i.e., the distance from the center to a side's midpoint.
+#' An ngon is a regular polygon, meaning that each side is of equal length. The [`ob_ngon`] object can be specified with a center, n (number of sides), radius, and angle. Instead of specifying a radius, one can specify either the `side_length` or the length of the `apothem` (i.e., the distance from the center to a side's midpoint.
 #' @export
-#' @return ob_ngon object
+#' @return [`ob_ngon`] object
 #' @param center point at center of the ngon
 #' @param n Number of sides
 #' @param radius Distance from center to a vertex
@@ -1274,9 +1270,9 @@ ob_ngon_props <- list(
 #' @param label A character, angle, or label object
 #' @param vertex_radius A numeric or unit vector of length one, specifying the corner radius
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
-#' @param style Gets and sets the styles associated with ob_ngon
-#' @slot area The area of the ngons in the ob_ngon object
-#' @slot length The number of ngons in the ob_ngon object
+#' @param style Gets and sets the styles associated with [`ob_ngon`]
+#' @slot area The area of the ngons in the [`ob_ngon`] object
+#' @slot length The number of ngons in the [`ob_ngon`] object
 #' @slot normal_at A function that finds a point that is perpendicular from the ngon and at a specified distance
 #' @slot perimeter The length of all the side segments
 #' @slot point_at A function that finds a point on the ngon at the specified angle.
@@ -1290,8 +1286,7 @@ ob_ngon_props <- list(
 ob_ngon <- S7::new_class(
   name = "ob_ngon",
   parent = centerpoint,
-  properties = rlang::inject(
-    list(
+  properties = rlang::list2(
       !!!ob_ngon_props$primary,
       !!!ob_polygon_props$extra,
       !!!ob_polygon_props$styles,
@@ -1300,7 +1295,6 @@ ob_ngon <- S7::new_class(
       !!!ob_polygon_props$funs["geom"],
       !!!ob_ngon_props$funs,
       !!!ob_polygon_props$info
-    )
   ),
   constructor = function(center = ob_point(0,0),
                          n = 3L,
@@ -1700,7 +1694,7 @@ S7::method(connect, list(centerpoint, ob_ngon)) <- function(
 # ob_reuleaux ----
 #' Reuleaux polygon
 #'
-#' @param center point at center of the rectangle
+#' @param center [`ob_point`] at center of the rectangle
 #' @param n Number of sides. True Reuleaux polygons have an odd number of sides, but Reauleaux-like shapes with an even number of sides are possible.
 #' @param radius Distance from center to a vertex
 #' @inherit ob_style params
@@ -1997,10 +1991,3 @@ S7::method(as.geom, ob_reuleaux) <- function(x, ...) {
   }
   gp
 }
-
-# S7::method(`[`, ob_reuleaux) <- function(x, i) {
-#   i <- character_index(i, x@id)
-#   z <- data2shape(x@tibble[i,], ob_releaux)
-#   z@label <- na2zero(x@label[i])
-#   z
-# }

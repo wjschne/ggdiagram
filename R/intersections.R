@@ -1,10 +1,10 @@
 # Intersection angle----
 #' Compute the angle of the intersection of two objects
 #'
-#' @param x an object (point, segment, line)
-#' @param y an object (point, segment, line)
+#' @param x an object (e.g., [ob_point], [ob_segment], [ob_line])
+#' @param y an object (e.g., [ob_point], [ob_segment], [ob_line])
 #' @export
-#' @return ob_angle object
+#' @return [ob_angle] object
 intersection_angle <- S7::new_generic("intersection_angle", c("x", 'y'), function(x,y) S7::S7_dispatch())
 S7::method(intersection_angle, list(ob_line, ob_line)) <- function(x, y) {
   y@angle - x@angle

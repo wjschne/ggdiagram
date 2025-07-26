@@ -200,15 +200,13 @@ bz_props <- list(
 ob_bezier <- S7::new_class(
   name = "ob_bezier",
   parent = has_style,
-  properties = rlang::inject(
-    list(
+  properties = rlang::list2(
       !!!bz_props$primary,
       !!!bz_props$extra,
       !!!bz_props$styles,
       !!!bz_props$derived,
       !!!bz_props$funs,
       !!!bz_props$info
-    )
   ),
   constructor = function(p = S7::class_missing,
                          label = character(0),

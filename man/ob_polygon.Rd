@@ -19,9 +19,9 @@ ob_polygon(
 )
 }
 \arguments{
-\item{p}{ob_point or list of ob_point objects}
+\item{p}{\code{\link{ob_point}} or list of \code{\link{ob_point}} objects}
 
-\item{label}{A character, angle, or label object}
+\item{label}{A character, angle, or \code{\link{ob_label}} object}
 
 \item{vertex_radius}{A numeric or unit vector of length one, specifying the corner radius}
 
@@ -45,16 +45,16 @@ ob_polygon(
 ob_polygon object
 }
 \description{
-A polygon is specified with an ob_point that contains at least 3 points, the start and the end. Any number of intermediate points are possible.
+A polygon is specified with an \code{\link{ob_point}} that contains at least 3 points, the start and the end. Any number of intermediate points are possible.
 }
 \details{
-If you wish to specify multiple polygons, you must supply a list of ob_points. When plotted, the ob_polygon function uses the ggforce::geom_shape function to create the geom.
+If you wish to specify multiple polygons, you must supply a list of \code{\link{ob_point}} objects. When plotted, the ob_polygon function uses the \code{\link[ggforce:geom_shape]{ggforce::geom_shape}} function to create the geom.
 }
 \section{Slots}{
 
 \describe{
 \item{\code{length}}{The number of polygons in the ob_polygon object}
 
-\item{\code{tibble}}{Gets a tibble (data.frame) containing parameters and styles used by \code{ggforce::geom_shape}.}
+\item{\code{tibble}}{Gets a tibble (data.frame) containing parameters and styles used by \code{\link[ggforce:geom_shape]{ggforce::geom_shape}}.}
 }}
 

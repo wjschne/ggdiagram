@@ -9,7 +9,6 @@ knitr:
     collapse: true
     comment: '#>'
     dev: "ragg_png"
-    cache: true
 ---
 
 ```{r}
@@ -87,7 +86,7 @@ bp <- ggdiagram(theme_function = ggplot2::theme_minimal,
                 font_size = 18)
 bp +
   p1 +
-  p2 + 
+  p2 +
   s1
 ```
 
@@ -127,8 +126,8 @@ A "pipe-friendly" way to modify any ggdiagram object is to use S7's `set_props` 
 #| label: fig-setprops
 #| fig-cap: Setting styles in a ggplot pipeline.
 bp +
-  s1 |> 
-  set_props(color = "red", 
+  s1 |>
+  set_props(color = "red",
             linetype = "dashed")
 ```
 
@@ -143,13 +142,13 @@ To style an object the same way repeatedly, use the `redefault` function to crea
 #| fig-width: 5.5
 #| fig-height: 2.5
 ob_squircle <- redefault(
-  .f = ob_ellipse, 
-  m1 = 4, 
-  color = NA, 
+  .f = ob_ellipse,
+  m1 = 4,
+  color = NA,
   fill = "black")
 
-ggdiagram() + 
-  ob_squircle() + 
+ggdiagram() +
+  ob_squircle() +
   ob_squircle(x = 3, fill = "dodgerblue")
 ```
 
@@ -163,10 +162,9 @@ Suppose you want to create a list of styles that you want to pass to multiple ob
 #| fig-cap: The `ob_style` function creates a list of styles that can be passed to other ggdiagram functions
 #| fig-width: 7
 #| fig-height: 5
-style_shape <- ob_style(
-  color = NA,
-  fill = "dodgerblue4",
-  family = "serif")
+style_shape <- ob_style(color = NA,
+                        fill = "dodgerblue4",
+                        family = "serif")
 
 my_label <- redefault(
   ob_label,
@@ -179,7 +177,7 @@ my_label <- redefault(
 ggdiagram() +
   ob_circle(
     x = -3,
-    style = style_shape, 
+    style = style_shape,
     label = my_label("Circle")) +
   ob_rectangle(
     width = 3,
@@ -193,15 +191,15 @@ ggdiagram() +
     label = my_label("Ellipse")
   ) + 
   ob_ngon(
-    y = 2, 
-    n = 6, 
+    y = 2,
+    n = 6,
     angle = degree(90), 
     style = style_shape,
-    label = my_label("Hexagon")) + 
+    label = my_label("Hexagon")) +
   ob_ngon(
-    y = -2, 
-    n = 3, 
-    angle = degree(90), 
+    y = -2,
+    n = 3,
+    angle = degree(90),
     style = style_shape,
     label = my_label("Triangle", nudge_y = -.25))
 ```
@@ -214,12 +212,14 @@ The `place` function will place an object a specified distance and direction fro
 #| label: fig-place
 x <- ob_circle()
 y <- ob_rectangle() |>
-  place(from = x, where = "above", sep = .5)
+  place(from = x,
+        where = "above",
+        sep = .5)
 
 ggdiagram() +
   x +
-  y + 
-  connect(x,y, resect = 2)
+  y +
+  connect(x, y, resect = 2)
 ```
 
 The `where` parameter can be specified with 
@@ -243,8 +243,11 @@ Sometimes it is useful to make arrays of objects. The `ob_array` function makes 
 #| fig-cap: "An array of 5 unit circles, separated by 0.5, pointing southeast"
 
 ggdiagram(font_size = 18) +
-  ob_circle() |> 
-  ob_array(k = 5, label = 1:5, where = "southeast", sep = .5) 
+  ob_circle() |>
+  ob_array(k = 5,
+           label = 1:5,
+           where = "southeast",
+           sep = .5) 
 ```
 
 # Building Plots Sequentially in a ggplot2 Pipeline
@@ -270,14 +273,14 @@ error_variances <- sqrt(1 - loadings ^ 2)
 
 ggdiagram(font_size = 16) +
   # Latent variable
-  {A <- ob_circle(radius = 2, 
-                  label = ob_label("A", 
-                                   size = 96, 
+  {A <- ob_circle(radius = 2,
+                  label = ob_label("A",
+                                   size = 96,
                                    nudge_y = -.15))} +
   # Observed variables (array of 3 superellipses below A)
   {A_3 <- ob_ellipse(m1 = 20) |>
-    place(from = A, 
-          where = "below", 
+    place(from = A,
+          where = "below",
           sep = 3) |>
     ob_array(
       k = 3,
@@ -293,7 +296,7 @@ ggdiagram(font_size = 16) +
     from = A,
     to = A_3,
     resect = 2,
-    label = ob_label(label = round_probability(loadings), 
+    label = ob_label(label = round_probability(loadings),
                      angle = 0))@set_label_y() +
   # Error variances
   ob_variance(
@@ -331,8 +334,7 @@ Now any function that uses the default arrow will use the new default.
 
 ```{r}
 ggdiagram() +
-  x + 
+  x +
   y +
-  connect(x,y, resect = 2)
-
+  connect(x, y, resect = 2)
 ```

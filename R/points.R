@@ -133,26 +133,34 @@ pt_props <- list(
 #' @param x Vector of coordinates on the x-axis (also can take a tibble/data.frame or 2-column matrix as input.)
 #' @param y Vector of coordinates on the y-axis
 #' @param r Radius = Distance from the origin to the ob_point
-#' @param theta Angle of the vector from the origin to the ob_point
-#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
+#' @param theta Angle of the vector from the origin to the [`ob_point`]
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to `style`
 #' @slot auto_label Gets x and y coordinates and makes a label `"(x,y)"`
 #' @slot geom A function that converts the object to a geom. Any additional parameters are passed to `ggplot2::geom_point`.
 #' @slot length The number of points in the ob_point object
 #' @param style Gets and sets the styles associated with points
-#' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggplot2::geom_point`.
+#' @slot tibble Gets a [`tibble::tibble`] containing parameters and styles used by [`ggplot2::geom_point`].
 #' @slot xy Gets a 2-column matrix of the x and y coordinates of the ob_point object.
 #' @inherit ob_style params
 #' @export
 #' @return ob_point object
+#' @examples
+#' ggdiagram() +
+#'   ob_point(1:5, 1:5) +
+#'   ggplot2::theme_minimal()
+#'
+#' ggdiagram() +
+#'   ob_polar(degree(seq(0, 330, 30)), r = 2) +
+#'   ggplot2::theme_minimal()
 ob_point <- S7::new_class(
   name = "ob_point",
   parent = xy,
-  properties = rlang::inject(list(
+  properties = rlang::list2(
     !!!pt_props$primary,
     !!!pt_props$styles,
     !!!pt_props$derived,
     !!!pt_props$funs,
-    !!!pt_props$info)),
+    !!!pt_props$info),
   constructor = function(x = 0,
                          y = 0,
                          alpha = numeric(0),
@@ -299,23 +307,28 @@ S7::method(get_tibble_defaults, ob_point) <- function(x) {
   get_tibble_defaults_helper(x, sp, required_aes = c("x", "y"))
 }
 
-#' polar2just
-#'
 #' Convert hjust and vjust parameters from polar coordinates
-#' @param x angle
+#'
+#' This function is how [`ob_label`]'s `vjust` and
+#' `hjust` values are recalculated automatically when the `polar_just` parameter is specified.
+#' @param x angle. Can be a named direction (e.g., "north"), number (in degrees), [`degree`], [`radian`], or [`turn`]
 #' @param multiplier distance
 #' @param axis vertical (v) or horizontal (h)
 #' @export
 #' @return ob_angle object
+#' @examples
+#' a <- "northwest"
+#' polar2just(a, axis = "h")
+#' polar2just(a, axis = "v")
 polar2just <- S7::new_generic(
   name = "polar2just",
   dispatch_args = "x",
-  fun = function(x, multiplier = 1.2, axis = c("h", "v")) {
+  fun = function(x, multiplier = NULL, axis = c("h", "v")) {
     S7::S7_dispatch()
   }
 )
-S7::method(polar2just, S7::class_numeric) <- function(x, multiplier = 1.2, axis = c("h", "v")) {
-  if (length(multiplier) == 0) multiplier <- 1.2
+S7::method(polar2just, S7::class_numeric) <- function(x, multiplier = NULL, axis = c("h", "v")) {
+  if (length(multiplier) == 0 | is.null(multiplier)) multiplier <- 1.2
   axis <- match.arg(axis)
   if (axis == "h") {
     (((cos(x + pi) + 1)/2) - 0.5) * multiplier + 0.5
@@ -325,8 +338,23 @@ S7::method(polar2just, S7::class_numeric) <- function(x, multiplier = 1.2, axis 
 
 }
 
-S7::method(polar2just, ob_angle) <- function(x, multiplier = 1.2, axis = c("h", "v")) {
+S7::method(polar2just, S7::class_character) <- function(x, multiplier = NULL, axis = c("h", "v")) {
+  x <- degree(x)
   polar2just(x@radian, multiplier, axis)
+}
+
+S7::method(polar2just, ob_angle) <- function(x, multiplier = NULL, axis = c("h", "v")) {
+  polar2just(x@radian, multiplier, axis)
+}
+
+S7::method(polar2just, ob_point) <- function(x, multiplier = NULL, axis = c("h", "v")) {
+  if (length(multiplier) == 0 | is.null(multiplier)) multiplier <- x@r
+  polar2just(x@theta, multiplier, axis)
+}
+
+S7::method(polar2just, ob_polar) <- function(x, multiplier = NULL, axis = c("h", "v")) {
+  if (length(multiplier) == 0 | is.null(multiplier)) multiplier <- x@r
+  polar2just(x@theta, multiplier, axis)
 }
 
 S7::method(`==`, list(ob_point, ob_point)) <- function(e1, e2) {

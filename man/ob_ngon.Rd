@@ -52,7 +52,7 @@ ob_ngon(
 
 \item{linetype}{type of lines}
 
-\item{style}{Gets and sets the styles associated with ob_ngon}
+\item{style}{Gets and sets the styles associated with \code{\link{ob_ngon}}}
 
 \item{x}{overrides x-coordinate in \code{center@x}}
 
@@ -63,17 +63,17 @@ ob_ngon(
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
 }
 \value{
-ob_ngon object
+\code{\link{ob_ngon}} object
 }
 \description{
-An ngon is a regular polygon, meaning that each side is of equal length. The \code{ob_ngon} object can be specified with a center, n (number of sides), radius, and angle. Instead of specifying a radius, one can specify either the \code{side_length} or the length of the \code{apothem} (i.e., the distance from the center to a side's midpoint.
+An ngon is a regular polygon, meaning that each side is of equal length. The \code{\link{ob_ngon}} object can be specified with a center, n (number of sides), radius, and angle. Instead of specifying a radius, one can specify either the \code{side_length} or the length of the \code{apothem} (i.e., the distance from the center to a side's midpoint.
 }
 \section{Slots}{
 
 \describe{
-\item{\code{area}}{The area of the ngons in the ob_ngon object}
+\item{\code{area}}{The area of the ngons in the \code{\link{ob_ngon}} object}
 
-\item{\code{length}}{The number of ngons in the ob_ngon object}
+\item{\code{length}}{The number of ngons in the \code{\link{ob_ngon}} object}
 
 \item{\code{normal_at}}{A function that finds a point that is perpendicular from the ngon and at a specified distance}
 

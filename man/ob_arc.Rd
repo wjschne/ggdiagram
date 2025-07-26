@@ -118,13 +118,13 @@ ob_circular_segment(
 )
 }
 \arguments{
-\item{center}{point at center of the arc (default = ob_point(0,0))}
+\item{center}{point at center of the arc (default = \code{ob_point(0,0)})}
 
 \item{radius}{distance between center and edge arc (default = 1)}
 
-\item{start}{start angle (default = 0 degrees)}
+\item{start}{start angle. Can be numeric (degrees), \link{degree}, \link{radian}, \link{turn}, or named direction (e.g., "northwest", "east", "below", "left"). Defaults to 0.}
 
-\item{end}{end angle (default = 0 degrees)}
+\item{end}{end angle Can be numeric (degrees), \link{degree}, \link{radian}, \link{turn}, or named direction (e.g., "northwest", "east", "below", "left"). Defaults to 0.}
 
 \item{label}{A character, angle, or label object}
 
@@ -144,11 +144,11 @@ ob_circular_segment(
 
 \item{arrow_fins}{A 2-column matrix of polygon points}
 
-\item{arrowhead_length}{Determines the size of the arrow ornaments. This parameter becomes the \code{length} parameter in ggarrow functions. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner.}
+\item{arrowhead_length}{Determines the size of the arrow ornaments. This parameter becomes the \code{length} parameter in ggarrow functions. Numeric values set the ornament size relative to the linewidth. A \link[grid:unit]{grid::unit} value sets the ornament size in an absolute manner.}
 
-\item{length_head}{Determines the size of the arrow head. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner. From ggarrow.}
+\item{length_head}{Determines the size of the arrow head. Numeric values set the ornament size relative to the linewidth. A \link[grid:unit]{grid::unit} value sets the ornament size in an absolute manner. From ggarrow.}
 
-\item{length_fins}{Determines the size of the arrow fins. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner. From ggarrow.}
+\item{length_fins}{Determines the size of the arrow fins. Numeric values set the ornament size relative to the linewidth. A \link[grid:unit]{grid::unit} value sets the ornament size in an absolute manner. From ggarrow.}
 
 \item{color}{character string for color}
 
@@ -166,17 +166,17 @@ ob_circular_segment(
 
 \item{linetype}{type of lines}
 
-\item{resect}{A numeric(1) denoting millimeters or \if{html}{\out{<unit>}} to shorten the arrow head and fins.}
+\item{resect}{A numeric(1) denoting millimeters or \link[grid:unit]{grid::unit} to shorten the arrow head and fins.}
 
-\item{resect_fins}{A numeric(1) denoting millimeters or \if{html}{\out{<unit>}} to shorten the arrow fins}
+\item{resect_fins}{A numeric(1) denoting millimeters or \link[grid:unit]{grid::unit} to shorten the arrow fins}
 
-\item{resect_head}{A numeric(1) denoting millimeters or \if{html}{\out{<unit>}} to shorten the arrow head.}
+\item{resect_head}{A numeric(1) denoting millimeters or \link[grid:unit]{grid::unit} to shorten the arrow head.}
 
 \item{stroke_color}{Color of point border line}
 
 \item{stroke_width}{Stroke width in arrows}
 
-\item{style}{a style object}
+\item{style}{an \code{\link{ob_style}} object}
 
 \item{x}{x-coordinate of center point. If specified, overrides x-coordinate of \verb{@center}.}
 
@@ -184,7 +184,7 @@ ob_circular_segment(
 
 \item{id}{character string to identify object}
 
-\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> arguments passed to style object}
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style object}
 }
 \value{
 ob_arc object
@@ -205,25 +205,25 @@ Create arcs and wedges
 
 \item{\code{auto_label}}{Places a label at the arc's midpoint}
 
-\item{\code{chord}}{\code{ob_segment} from \code{start_point} to \code{end_point}}
+\item{\code{chord}}{\code{\link{ob_segment}} from \code{start_point} to \code{end_point}}
 
-\item{\code{geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggarrow::geom_arrow}.}
+\item{\code{geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{\link[ggarrow:geom_arrow]{ggarrow::geom_arrow}}.}
 
-\item{\code{hatch}}{A function that puts hatch (tally) marks on arcs. Often used to indicate which arcs have the same angle. The \code{k} parameter controls how many hatch marks to display. The \code{height} parameter controls how long the hatch mark segment is. The \code{sep} parameter controls the separation between hatch marks when \code{k > 2}. Additional parameters sent to \code{ob_segment}.}
+\item{\code{hatch}}{A function that puts hatch (tally) marks on arcs. Often used to indicate which arcs have the same angle. The \code{k} parameter controls how many hatch marks to display. The \code{height} parameter controls how long the hatch mark segment is. The \code{sep} parameter controls the separation between hatch marks when \code{k > 2}. Additional parameters sent to \code{\link{ob_segment}}.}
 
 \item{\code{length}}{The number of arcs in the arc object}
 
-\item{\code{midpoint}}{A function that selects 1 or more midpoints of the ob_arc. The \code{position} argument can be between 0 and 1. Additional arguments are passed to \code{ob_point}.}
+\item{\code{midpoint}}{A function that selects 1 or more midpoints of the ob_arc. The \code{position} argument can be between 0 and 1. Additional arguments are passed to \code{\link{ob_point}}.}
 
 \item{\code{point_at}}{A function that finds a point on the arc at the specified angle.}
 
-\item{\code{sagitta}}{\code{ob_segment} from \code{chord} midpoint to \code{ob_arc} midpoint}
+\item{\code{sagitta}}{\code{\link{ob_segment}} from \code{chord} midpoint to \code{\link{ob_arc}} midpoint}
 
 \item{\code{tangent_at}}{A function that finds the tangent line at the specified angle.}
 
 \item{\code{theta}}{interior angle (end - start)}
 
-\item{\code{tibble}}{Gets a tibble (data.frame) containing parameters and styles used by \code{ggarrow::geom_arrow}.}
+\item{\code{tibble}}{Gets a \link[tibble:tibble]{tibble::tibble} or data.frame containing parameters and styles used by \code{\link[ggarrow:geom_arrow]{ggarrow::geom_arrow}}.}
 }}
 
 \examples{

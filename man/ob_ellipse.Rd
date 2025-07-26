@@ -60,7 +60,7 @@ ob_ellipse(
 
 \item{id}{character string to identify object}
 
-\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> arguments passed to style object}
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style object}
 }
 \value{
 ob_ellipse object
@@ -86,5 +86,7 @@ Makes ellipses and superellipses
 
 \examples{
 # specify center point and semi-major axes
-ob_ellipse(center = ob_point(0,0), a = 2, b = 3)
+e <- ob_ellipse(center = ob_point(0,0), a = 2, b = 3)
+ggdiagram() +
+  e
 }

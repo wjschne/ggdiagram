@@ -173,11 +173,11 @@ lb_props <- list(
 #' ob_label class
 #'
 #' @param label text label
-#' @param center ob_point indicating the center of the label
+#' @param center [ob_point] indicating the center of the label
 #' @param style a style list
-#' @param plot_point plot ob_point (default = FALSE)
+#' @param plot_point plot center [ob_point] (default = FALSE)
 #' @param spacing letter spacing for labels used with ob_path and ob_bezier
-#' @param position position (0 to 1)
+#' @param position position (0 to 1). Used to position a label on an [ob_segment], [ob_arc], [ob_path], or [ob_bezier]
 #' @param x x-coordinate of center point. If specified, overrides x-coordinate of `@center`.
 #' @param y x-coordinate of center point. If specified, overrides y-coordinate of `@center`.
 #' @inherit ob_style params
@@ -187,13 +187,13 @@ lb_props <- list(
 ob_label <- S7::new_class(
   name = "ob_label",
   parent = has_style,
-  properties = rlang::inject(list(
+  properties = rlang::list2(
     !!!lb_props$primary,
     !!!lb_props$styles,
     !!!lb_props$extras,
     !!!lb_props$derived,
     !!!lb_props$funs,
-    !!!lb_props$info)),
+    !!!lb_props$info),
   constructor = function(label = character(0),
                          center = S7::class_missing,
                          angle = numeric(0),

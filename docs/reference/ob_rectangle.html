@@ -90,7 +90,7 @@
 
 
 <dl><dt id="arg-center">center<a class="anchor" aria-label="anchor" href="#arg-center"></a></dt>
-<dd><p>point at center of the rectangle</p></dd>
+<dd><p><code><a href="ob_point.html">ob_point</a></code> at center of the rectangle</p></dd>
 
 
 <dt id="arg-width">width<a class="anchor" aria-label="anchor" href="#arg-width"></a></dt>
@@ -102,35 +102,35 @@
 
 
 <dt id="arg-east">east<a class="anchor" aria-label="anchor" href="#arg-east"></a></dt>
-<dd><p>right middle point</p></dd>
+<dd><p>right middle point (<code><a href="ob_point.html">ob_point</a></code>)</p></dd>
 
 
 <dt id="arg-north">north<a class="anchor" aria-label="anchor" href="#arg-north"></a></dt>
-<dd><p>top middle point</p></dd>
+<dd><p>top middle point (<code><a href="ob_point.html">ob_point</a></code>)</p></dd>
 
 
 <dt id="arg-west">west<a class="anchor" aria-label="anchor" href="#arg-west"></a></dt>
-<dd><p>left middle point</p></dd>
+<dd><p>left middle point (<code><a href="ob_point.html">ob_point</a></code>)</p></dd>
 
 
 <dt id="arg-south">south<a class="anchor" aria-label="anchor" href="#arg-south"></a></dt>
-<dd><p>top middle point</p></dd>
+<dd><p>top middle point (<code><a href="ob_point.html">ob_point</a></code>)</p></dd>
 
 
 <dt id="arg-northeast">northeast<a class="anchor" aria-label="anchor" href="#arg-northeast"></a></dt>
-<dd><p>upper right point</p></dd>
+<dd><p>upper right point (<code><a href="ob_point.html">ob_point</a></code>)</p></dd>
 
 
 <dt id="arg-northwest">northwest<a class="anchor" aria-label="anchor" href="#arg-northwest"></a></dt>
-<dd><p>upper left point</p></dd>
+<dd><p>upper left point (<code><a href="ob_point.html">ob_point</a></code>)</p></dd>
 
 
 <dt id="arg-southwest">southwest<a class="anchor" aria-label="anchor" href="#arg-southwest"></a></dt>
-<dd><p>lower left point</p></dd>
+<dd><p>lower left point (<code><a href="ob_point.html">ob_point</a></code>)</p></dd>
 
 
 <dt id="arg-southeast">southeast<a class="anchor" aria-label="anchor" href="#arg-southeast"></a></dt>
-<dd><p>lower right point</p></dd>
+<dd><p>lower right point (<code><a href="ob_point.html">ob_point</a></code>)</p></dd>
 
 
 <dt id="arg-angle">angle<a class="anchor" aria-label="anchor" href="#arg-angle"></a></dt>
@@ -142,7 +142,7 @@
 
 
 <dt id="arg-label">label<a class="anchor" aria-label="anchor" href="#arg-label"></a></dt>
-<dd><p>A character, angle, or label object</p></dd>
+<dd><p>A character, angle, or <code><a href="ob_label.html">ob_label</a></code> object</p></dd>
 
 
 <dt id="arg-alpha">alpha<a class="anchor" aria-label="anchor" href="#arg-alpha"></a></dt>
@@ -182,23 +182,19 @@
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>&lt;<code><a href="https://rlang.r-lib.org/reference/dyn-dots.html" class="external-link">dynamic-dots</a></code>&gt; arguments passed to style object</p></dd>
+<dd><p>&lt;<code><a href="https://rlang.r-lib.org/reference/dyn-dots.html" class="external-link">dynamic-dots</a></code>&gt; properties passed to <code>style</code></p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>ob_rectangle object</p>
+    <p><code>ob_rectangle</code> object</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">ob_rectangle</span><span class="op">(</span>center <span class="op">=</span> <span class="fu"><a href="ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>, width <span class="op">=</span> <span class="fl">2</span>, height <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="color: #0000BB;">&lt;ob_rectangle&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 7</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       x     y width height angle color fill </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     0     0     2      2     0 black <span style="color: #BB0000;">NA</span>   </span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="ggdiagram.html">ggdiagram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">ob_rectangle</span><span class="op">(</span>center <span class="op">=</span> <span class="fu"><a href="ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span>, width <span class="op">=</span> <span class="fl">3</span>, height <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="ob_rectangle-1.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

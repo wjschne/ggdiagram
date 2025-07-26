@@ -30,7 +30,7 @@ ob_latex(
 \arguments{
 \item{tex}{LaTeX equation}
 
-\item{center}{ob_point}
+\item{center}{An \link{ob_point}}
 
 \item{width}{width (specify width or height but not both)}
 

@@ -420,7 +420,7 @@ rc_plot +
   ob_segment(r1@center, r1_theta) +
   r1_theta@label(
     polar_just = ob_polar(theta, 1.5),
-    plot_point = T) +
+    plot_point = TRUE) +
   ob_arc(center = r1@center,
       radius = .5,
       end = theta,

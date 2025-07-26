@@ -84,11 +84,11 @@
 
 
 <dt id="arg-where">where<a class="anchor" aria-label="anchor" href="#arg-where"></a></dt>
-<dd><p>exit angle</p></dd>
+<dd><p>exit angle. Can be numeric (degrees), <a href="ob_angle.html">degree</a>, <a href="ob_angle.html">radian</a>, <a href="ob_angle.html">turn</a>, or named direction (e.g., "northwest", "east", "below", "left")</p></dd>
 
 
 <dt id="arg-bend">bend<a class="anchor" aria-label="anchor" href="#arg-bend"></a></dt>
-<dd><p>Angle by which the control points are rotated</p></dd>
+<dd><p>Angle by which the control points are rotated. Can be numeric (degrees), <a href="ob_angle.html">degree</a>, <a href="ob_angle.html">radian</a>, <a href="ob_angle.html">turn</a>, or named direction (e.g., "northwest", "east", "below", "left"). Defaults to 0</p></dd>
 
 
 <dt id="arg-looseness">looseness<a class="anchor" aria-label="anchor" href="#arg-looseness"></a></dt>
@@ -100,15 +100,15 @@
 
 
 <dt id="arg-length-head">length_head<a class="anchor" aria-label="anchor" href="#arg-length-head"></a></dt>
-<dd><p>Determines the size of the arrow head. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner. From ggarrow.</p></dd>
+<dd><p>Determines the size of the arrow head. Numeric values set the ornament size relative to the linewidth. A <a href="https://rdrr.io/r/grid/unit.html" class="external-link">grid::unit</a> value sets the ornament size in an absolute manner. From ggarrow.</p></dd>
 
 
 <dt id="arg-length-fins">length_fins<a class="anchor" aria-label="anchor" href="#arg-length-fins"></a></dt>
-<dd><p>Determines the size of the arrow fins. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner. From ggarrow.</p></dd>
+<dd><p>Determines the size of the arrow fins. Numeric values set the ornament size relative to the linewidth. A <a href="https://rdrr.io/r/grid/unit.html" class="external-link">grid::unit</a> value sets the ornament size in an absolute manner. From ggarrow.</p></dd>
 
 
 <dt id="arg-resect">resect<a class="anchor" aria-label="anchor" href="#arg-resect"></a></dt>
-<dd><p>A numeric(1) denoting millimeters or <unit> to shorten the arrow head and fins.</unit></p></dd>
+<dd><p>A numeric(1) denoting millimeters or <a href="https://rdrr.io/r/grid/unit.html" class="external-link">grid::unit</a> to shorten the arrow head and fins.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -117,24 +117,25 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>An <code>ob_bezier</code> object</p>
+    <p>An <code><a href="ob_bezier.html">ob_bezier</a></code> object</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="ggdiagram.html">ggdiagram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span><span class="op">{</span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="ob_circle.html">ob_circle</a></span><span class="op">(</span><span class="fu"><a href="ob_point.html">ob_point</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span></span>
-<span class="r-in"><span><span class="fu">ob_covariance</span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span></span>
-<span class="r-in"><span>              y <span class="op">=</span> <span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>,</span></span>
-<span class="r-in"><span>              label <span class="op">=</span> <span class="fu"><a href="ob_label.html">ob_label</a></span><span class="op">(</span><span class="st">"A"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">{</span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="ob_circle.html">ob_circle</a></span><span class="op">(</span><span class="fu"><a href="ob_point.html">ob_point</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>, <span class="fl">2</span><span class="op">)</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">ob_covariance</span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>                y <span class="op">=</span> <span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>                label <span class="op">=</span> <span class="fu"><a href="ob_label.html">ob_label</a></span><span class="op">(</span><span class="st">"A"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="ob_covariance-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="ggdiagram.html">ggdiagram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span><span class="va">x</span> <span class="op">+</span></span></span>
-<span class="r-in"><span><span class="fu">ob_covariance</span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span></span>
-<span class="r-in"><span>              y <span class="op">=</span> <span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>,</span></span>
-<span class="r-in"><span>              label <span class="op">=</span> <span class="fu"><a href="ob_label.html">ob_label</a></span><span class="op">(</span><span class="st">"A"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>              where <span class="op">=</span> <span class="op">-</span><span class="fl">45</span>, looseness <span class="op">=</span> <span class="fl">.75</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">x</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">ob_covariance</span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>                y <span class="op">=</span> <span class="va">x</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>                label <span class="op">=</span> <span class="fu"><a href="ob_label.html">ob_label</a></span><span class="op">(</span><span class="st">"A"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                where <span class="op">=</span> <span class="op">-</span><span class="fl">45</span>,</span></span>
+<span class="r-in"><span>                looseness <span class="op">=</span> <span class="fl">.75</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="ob_covariance-2.png" alt="" width="700" height="433"></span>
 </code></pre></div>
     </div>

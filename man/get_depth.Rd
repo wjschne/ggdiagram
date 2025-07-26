@@ -24,4 +24,5 @@ Function to calculate hierarchy depth in lavaan models
 \examples{
 model <- "X =~ X1 + X2"
 get_depth("X", model = model)
+get_depth("X1", model = model)
 }

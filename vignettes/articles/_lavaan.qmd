@@ -66,11 +66,11 @@ v_names <- c(visual_perc = "x1",
              speeded_addition = "x7",
              speeded_counting = "x8",
              speeded_disc = "x9")
-HS.model <- '
+HS.model <- "
 visual  =~ visual_perc + cubes + lozenges
 textual =~ paragraph_comp + sentence_comp + word_meaning
 speed   =~ speeded_addition + speeded_counting + speeded_disc
-'
+"
 
 fit <- cfa(HS.model, data = HolzingerSwineford1939 %>% rename(all_of(v_names)))
 summary(fit, fit.measures = TRUE)
@@ -86,7 +86,8 @@ ov <- ob_observed() %>% ob_array(
   length(ov_names),
   sep = .2,
   id = ov_names,
-  label = ov_names %>% snakecase::to_title_case() %>% 
+  label = ov_names %>%
+    snakecase::to_title_case() %>%
     str_replace(" ", "<br>")
 )
 

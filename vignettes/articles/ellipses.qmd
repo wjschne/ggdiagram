@@ -103,7 +103,7 @@ $$\left(\frac{x-c_x}{a}\right)^2+\left(\frac{y-c_y}{b}\right)^2=1$$
 #| label: abellipse
 a <- 4
 b <- 3
-c1 <- ob_point(0,0)
+c1 <- ob_point(0, 0)
 e1 <- ob_ellipse(c1, a = a, b = b)
 ```
 
@@ -112,14 +112,14 @@ e1 <- ob_ellipse(c1, a = a, b = b)
 #| label: fig-abellipse
 #| fig-cap: An ellipse can be specified with a center, and semi-major radii.
 #| code-fold: true
-bp + 
-  e1 + 
-  ob_segment(c1, 
-          ob_point(c(a, 0), c(0, b)), 
-          color = my_colors, 
+bp +
+  e1 +
+  ob_segment(c1,
+          ob_point(c(a, 0), c(0, b)),
+          color = my_colors,
           label = ob_label(
-            label = paste0(c("*a* = ", "*b* = "), 
-                           c(a, b)), 
+            label = paste0(c("*a* = ", "*b* = "),
+                           c(a, b)),
             angle = 0)) +
   c1
 ```
@@ -131,10 +131,14 @@ A circle has one focus, the center. If *a* &ne; *b*, an ellipse has two foci.
 ```{r}
 #| label: fig-foci
 #| fig-cap: An ellipse has two foci
-bp + 
-  e1 + 
-  ob_label("*F*~1~", e1@focus_1, plot_point = TRUE, vjust = 1.2) +
-  ob_label("*F*~2~", e1@focus_2, plot_point = TRUE, vjust = 1.2)
+bp +
+  e1 +
+  ob_label("*F*~1~", e1@focus_1, 
+           plot_point = TRUE, 
+           vjust = 1.2) +
+  ob_label("*F*~2~", e1@focus_2, 
+           plot_point = TRUE, 
+           vjust = 1.2)
 ```
 
 
@@ -145,24 +149,24 @@ For any point *P* on the ellipse, the sum of PF~1~ and PF~2~ is 2*a* if *a* > *b
 #| fig-cap: The sum of distances from the foci is constant.
 deg <- degree(61.5)
 
-bp + 
-  e1 + 
+bp +
+  e1 +
   ob_label("*F*~1~", e1@focus_1, plot_point = TRUE, vjust = 1.2) +
-  ob_label("*F*~2~", e1@focus_2, plot_point = TRUE, vjust = 1.2) + 
+  ob_label("*F*~2~", e1@focus_2, plot_point = TRUE, vjust = 1.2) +
   {p <- e1@point_at(deg)} +
   p@label("*P*", polar_just = ob_polar(deg, 1.5)) +
-  ob_segment(e1@focus_1, 
-          p, 
+  ob_segment(e1@focus_1,
+          p,
           label = paste0("*PF*~1~ = ",
                          distance(e1@focus_1, p) |>
-                           round())) + 
-  ob_segment(p, 
-          e1@focus_2, 
+                           round())) +
+  ob_segment(p,
+          e1@focus_2,
           label = paste0("*PF*~2~ = ",
-                         distance(e1@focus_2, p) |> 
-                           round())) + 
-  ob_label("*PF*~1~ + *PF*~2~ = 2*a* = 8", 
-        center = ob_point(0,4), 
+                         distance(e1@focus_2, p) |>
+                           round())) +
+  ob_label("*PF*~1~ + *PF*~2~ = 2*a* = 8",
+        center = ob_point(0,4),
         size = 20)
 
 ```
@@ -175,7 +179,7 @@ As seen in fig-ellipserotated, rotate an ellipse by setting the `angle` property
 ```{r}
 #| label: fig-ellipserotated
 #| fig-cap: An ellipse rotated 45 degrees
-bp + 
+bp +
   ob_ellipse(a  = 2, b = 1, angle = 45)
 ```
 
@@ -184,7 +188,7 @@ Setting the angle of an ellipse will rotate it about its center. If you want to 
 ```{r}
 #| label: fig-ellipserotated1
 #| fig-cap: An ellipse rotated 45 degrees about point (2, 0)
-bp + 
+bp +
   {p1 = ob_point(2,0)} +
   {e2 <- ob_ellipse(a  = 2, b = 1)} +
   rotate(e2, theta = degree(45), origin = p1, color = "red") 
@@ -239,8 +243,8 @@ $$
 
 theta <- degree(seq(0, 350, 30))
 
-bp + 
-  {c1 = ob_circle(radius = 3.6, color = "gray30")} +
+bp +
+  {c1 <- ob_circle(radius = 3.6, color = "gray30")} +
   {e1 <- ob_ellipse(a = 2.8, b = 1)} +
   {p1 <- c1@point_at(theta)} +
   ob_label(theta, p1, polar_just = ob_polar(theta, r = 1.5)) +
@@ -462,7 +466,7 @@ bp +
     x = ob_line(),
     from = e1,
     where = {deg1 <- degree(45)},
-    sep = {d = 3}
+    sep = {d <- 3}
   )} + 
   connect(
     e1,

@@ -2,9 +2,8 @@ library(testthat)
 library(ggdiagram)
 
 test_that("style", {
-
   s1 <- ob_style()
-  expect_no_error(s1@polar_just <- ob_point(1,2))
+  expect_no_error(s1@polar_just <- ob_point(1, 2))
   expect_no_error(s1@polar_just <- degree(45))
   expect_no_error(s1@polar_just <- 45)
   expect_no_error(ob_style(linetype = NA))
@@ -17,7 +16,10 @@ test_that("style", {
   expect_no_error(ob_style(arrow_mid = arrowheadr::arrow_head_deltoid()))
   expect_no_error(ob_style(angle = degree(45)))
   expect_no_error(capture.output(print(ob_style(color = "red")), file = nullfile()))
-  expect_identical(ob_style(color = "red") + ob_style(fill = "blue"), ob_style(color = "red", fill = "blue"))
+  expect_identical(
+    ob_style(color = "red") + ob_style(fill = "blue"),
+    ob_style(color = "red", fill = "blue")
+  )
   expect_no_error(`+`(ob_style(color = "red"), ob_style(fill = "blue")))
   expect_identical(`+`(ob_style(color = "red"), S7::class_missing), ob_style(color = "red"))
   expect_identical(`+`(S7::class_missing, ob_style(color = "red")), ob_style(color = "red"))
@@ -26,4 +28,3 @@ test_that("style", {
   expect_identical(get_tibble(ob_style(color = "red")), tibble::tibble(color = "red"))
   expect_identical(ob_style(color = c("red", "blue"))[2], ob_style(color = "blue"))
 })
-

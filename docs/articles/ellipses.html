@@ -143,19 +143,19 @@
 <div class="sourceCode cell-code" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fl">4</span></span>
 <span><span class="va">b</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
-<span><span class="va">c1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span></span>
+<span><span class="va">c1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span></span>
 <span><span class="va">e1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_ellipse.html">ob_ellipse</a></span><span class="op">(</span><span class="va">c1</span>, a <span class="op">=</span> <span class="va">a</span>, b <span class="op">=</span> <span class="va">b</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
-<span>  <span class="va">e1</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/ob_segment.html">ob_segment</a></span><span class="op">(</span><span class="va">c1</span>, </span>
-<span>          <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">a</span>, <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">b</span><span class="op">)</span><span class="op">)</span>, </span>
-<span>          color <span class="op">=</span> <span class="va">my_colors</span>, </span>
+<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
+<span>  <span class="va">e1</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_segment.html">ob_segment</a></span><span class="op">(</span><span class="va">c1</span>,</span>
+<span>          <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">a</span>, <span class="fl">0</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">b</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>          color <span class="op">=</span> <span class="va">my_colors</span>,</span>
 <span>          label <span class="op">=</span> <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span></span>
-<span>            label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"*a* = "</span>, <span class="st">"*b* = "</span><span class="op">)</span>, </span>
-<span>                           <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">a</span>, <span class="va">b</span><span class="op">)</span><span class="op">)</span>, </span>
+<span>            label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"*a* = "</span>, <span class="st">"*b* = "</span><span class="op">)</span>,</span>
+<span>                           <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">a</span>, <span class="va">b</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>            angle <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="va">c1</span></span></code></pre></div>
 </details><div class="cell-output-display">
@@ -174,10 +174,14 @@ Figure 1: An ellipse can be specified with a center, and semi-major radii.
 <p>A circle has one focus, the center. If <em>a</em> ≠ <em>b</em>, an ellipse has two foci.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
-<span>  <span class="va">e1</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="st">"*F*~1~"</span>, <span class="va">e1</span><span class="op">@</span><span class="va">focus_1</span>, plot_point <span class="op">=</span> <span class="cn">TRUE</span>, vjust <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="st">"*F*~2~"</span>, <span class="va">e1</span><span class="op">@</span><span class="va">focus_2</span>, plot_point <span class="op">=</span> <span class="cn">TRUE</span>, vjust <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
+<span>  <span class="va">e1</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="st">"*F*~1~"</span>, <span class="va">e1</span><span class="op">@</span><span class="va">focus_1</span>, </span>
+<span>           plot_point <span class="op">=</span> <span class="cn">TRUE</span>, </span>
+<span>           vjust <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="st">"*F*~2~"</span>, <span class="va">e1</span><span class="op">@</span><span class="va">focus_2</span>, </span>
+<span>           plot_point <span class="op">=</span> <span class="cn">TRUE</span>, </span>
+<span>           vjust <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div id="fig-foci" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-foci-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -194,24 +198,24 @@ Figure 2: An ellipse has two foci
 <div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">deg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">61.5</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">bp</span> <span class="op">+</span> </span>
-<span>  <span class="va">e1</span> <span class="op">+</span> </span>
+<span><span class="va">bp</span> <span class="op">+</span></span>
+<span>  <span class="va">e1</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="st">"*F*~1~"</span>, <span class="va">e1</span><span class="op">@</span><span class="va">focus_1</span>, plot_point <span class="op">=</span> <span class="cn">TRUE</span>, vjust <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="st">"*F*~2~"</span>, <span class="va">e1</span><span class="op">@</span><span class="va">focus_2</span>, plot_point <span class="op">=</span> <span class="cn">TRUE</span>, vjust <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="st">"*F*~2~"</span>, <span class="va">e1</span><span class="op">@</span><span class="va">focus_2</span>, plot_point <span class="op">=</span> <span class="cn">TRUE</span>, vjust <span class="op">=</span> <span class="fl">1.2</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="op">{</span><span class="va">p</span> <span class="op">&lt;-</span> <span class="va">e1</span><span class="op">@</span><span class="va">point_at</span><span class="op">(</span><span class="va">deg</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
 <span>  <span class="va">p</span><span class="op">@</span><span class="va">label</span><span class="op">(</span><span class="st">"*P*"</span>, polar_just <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span><span class="va">deg</span>, <span class="fl">1.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/ob_segment.html">ob_segment</a></span><span class="op">(</span><span class="va">e1</span><span class="op">@</span><span class="va">focus_1</span>, </span>
-<span>          <span class="va">p</span>, </span>
+<span>  <span class="fu"><a href="../reference/ob_segment.html">ob_segment</a></span><span class="op">(</span><span class="va">e1</span><span class="op">@</span><span class="va">focus_1</span>,</span>
+<span>          <span class="va">p</span>,</span>
 <span>          label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"*PF*~1~ = "</span>,</span>
 <span>                         <span class="fu"><a href="../reference/distance.html">distance</a></span><span class="op">(</span><span class="va">e1</span><span class="op">@</span><span class="va">focus_1</span>, <span class="va">p</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>                           <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/ob_segment.html">ob_segment</a></span><span class="op">(</span><span class="va">p</span>, </span>
-<span>          <span class="va">e1</span><span class="op">@</span><span class="va">focus_2</span>, </span>
+<span>                           <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_segment.html">ob_segment</a></span><span class="op">(</span><span class="va">p</span>,</span>
+<span>          <span class="va">e1</span><span class="op">@</span><span class="va">focus_2</span>,</span>
 <span>          label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"*PF*~2~ = "</span>,</span>
-<span>                         <span class="fu"><a href="../reference/distance.html">distance</a></span><span class="op">(</span><span class="va">e1</span><span class="op">@</span><span class="va">focus_2</span>, <span class="va">p</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
-<span>                           <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="st">"*PF*~1~ + *PF*~2~ = 2*a* = 8"</span>, </span>
-<span>        center <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">4</span><span class="op">)</span>, </span>
+<span>                         <span class="fu"><a href="../reference/distance.html">distance</a></span><span class="op">(</span><span class="va">e1</span><span class="op">@</span><span class="va">focus_2</span>, <span class="va">p</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>                           <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="st">"*PF*~1~ + *PF*~2~ = 2*a* = 8"</span>,</span>
+<span>        center <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">4</span><span class="op">)</span>,</span>
 <span>        size <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div id="fig-focilength" class="quarto-float quarto-figure quarto-figure-center">
@@ -229,7 +233,7 @@ Figure 3: The sum of distances from the foci is constant.
 <p>As seen in fig-ellipserotated, rotate an ellipse by setting the <code>angle</code> property with a <code>degree</code>, <code>radian</code>, or <code>turn</code> object or a numeric value (degrees).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
+<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/ob_ellipse.html">ob_ellipse</a></span><span class="op">(</span>a  <span class="op">=</span> <span class="fl">2</span>, b <span class="op">=</span> <span class="fl">1</span>, angle <span class="op">=</span> <span class="fl">45</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div id="fig-ellipserotated" class="quarto-float quarto-figure quarto-figure-center">
@@ -245,7 +249,7 @@ Figure 4: An ellipse rotated 45 degrees
 <p>Setting the angle of an ellipse will rotate it about its center. If you want to rotate it around a different point, use the <code>rotate</code> function, setting the <code>origin</code> parameter to any point you wish to rotate the ellipse around.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
+<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
 <span>  <span class="op">{</span><span class="va">p1</span> <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">0</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
 <span>  <span class="op">{</span><span class="va">e2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_ellipse.html">ob_ellipse</a></span><span class="op">(</span>a  <span class="op">=</span> <span class="fl">2</span>, b <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/rotate.html">rotate</a></span><span class="op">(</span><span class="va">e2</span>, theta <span class="op">=</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">45</span><span class="op">)</span>, origin <span class="op">=</span> <span class="va">p1</span>, color <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span> </span></code></pre></div>
@@ -313,8 +317,8 @@ t&amp;=[0,2\pi)\\
 <details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">theta</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">350</span>, <span class="fl">30</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">bp</span> <span class="op">+</span> </span>
-<span>  <span class="op">{</span><span class="va">c1</span> <span class="op">=</span> <span class="fu"><a href="../reference/ob_circle.html">ob_circle</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fl">3.6</span>, color <span class="op">=</span> <span class="st">"gray30"</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
+<span><span class="va">bp</span> <span class="op">+</span></span>
+<span>  <span class="op">{</span><span class="va">c1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_circle.html">ob_circle</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fl">3.6</span>, color <span class="op">=</span> <span class="st">"gray30"</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
 <span>  <span class="op">{</span><span class="va">e1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_ellipse.html">ob_ellipse</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">2.8</span>, b <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
 <span>  <span class="op">{</span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="va">c1</span><span class="op">@</span><span class="va">point_at</span><span class="op">(</span><span class="va">theta</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="va">theta</span>, <span class="va">p1</span>, polar_just <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span><span class="va">theta</span>, r <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -599,7 +603,7 @@ Figure 16: Many ellipses can be placed at once.
 <span>    x <span class="op">=</span> <span class="fu"><a href="../reference/ob_line.html">ob_line</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>    from <span class="op">=</span> <span class="va">e1</span>,</span>
 <span>    where <span class="op">=</span> <span class="op">{</span><span class="va">deg1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">45</span><span class="op">)</span><span class="op">}</span>,</span>
-<span>    sep <span class="op">=</span> <span class="op">{</span><span class="va">d</span> <span class="op">=</span> <span class="fl">3</span><span class="op">}</span></span>
+<span>    sep <span class="op">=</span> <span class="op">{</span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fl">3</span><span class="op">}</span></span>
 <span>  <span class="op">)</span><span class="op">}</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/connect.html">connect</a></span><span class="op">(</span></span>
 <span>    <span class="va">e1</span>,</span>

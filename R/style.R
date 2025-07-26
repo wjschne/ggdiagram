@@ -27,7 +27,7 @@ prop_vjust = S7::new_property(
 #' @param arrow_fins A 2-column matrix of polygon points
 #' @param arrow_head A 2-column matrix of polygon points
 #' @param arrow_mid A 2-column matrix of polygon points
-#' @param arrowhead_length Determines the size of the arrow ornaments. This parameter becomes the `length` parameter in ggarrow functions. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner.
+#' @param arrowhead_length Determines the size of the arrow ornaments. This parameter becomes the `length` parameter in ggarrow functions. Numeric values set the ornament size relative to the linewidth. A [grid::unit] value sets the ornament size in an absolute manner.
 #' @param color character string for color
 #' @param family font family
 #' @param fill character string for fill color
@@ -35,13 +35,13 @@ prop_vjust = S7::new_property(
 #' @param hjust horizontal justification. 0 means left justified, 1 means right justified, 0.5 means horizontally centered
 #' @param justify A numeric(1) between 0 and 1 to control where the arrows should be drawn relative to the path's endpoints. A value of 0 sets the arrow's tips at the path's end, whereas a value of 1 sets the arrow's base at the path's end. From ggarrow.
 #' @param label.color Color of label outline.
-#' @param label.padding Amount of padding around label. Unit vector of length four. Usually created with `ggplot2::margin`.
-#' @param label.margin Amount of distance around label. Unit vector of length four. Usually created with `ggplot2::margin`.
+#' @param label.padding Amount of padding around label. A [grid::unit] vector of length four. Usually created with [`ggplot2::margin`].
+#' @param label.margin Amount of distance around label. A [grid::unit] vector of length four. Usually created with [`ggplot2::margin`].
 #' @param label.r Radius of rounded corners. Defaults to 0.15 lines.
 #' @param label.size Width of label outline.
-#' @param length_head Determines the size of the arrow head. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner. From ggarrow.
-#' @param length_mid Determines the size of the middle arrows. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner. From ggarrow.
-#' @param length_fins Determines the size of the arrow fins. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner. From ggarrow.
+#' @param length_head Determines the size of the arrow head. Numeric values set the ornament size relative to the linewidth. A [grid::unit] value sets the ornament size in an absolute manner. From ggarrow.
+#' @param length_mid Determines the size of the middle arrows. Numeric values set the ornament size relative to the linewidth. A [grid::unit] value sets the ornament size in an absolute manner. From ggarrow.
+#' @param length_fins Determines the size of the arrow fins. Numeric values set the ornament size relative to the linewidth. A [grid::unit] value sets the ornament size in an absolute manner. From ggarrow.
 #' @param linewidth_fins Line width for arrow fins
 #' @param linewidth_head Line width for arrow fins
 #' @param lineend Line end style (round, butt, square).
@@ -53,12 +53,12 @@ prop_vjust = S7::new_property(
 #' @param nudge_x Horizontal adjustment to nudge labels by.
 #' @param nudge_y Vertical adjustment to nudge labels by.
 #' @param polar_just an angle, polar point, or point that alters hjust and vjust (polar polar_just not stored in style)
-#' @param resect A numeric(1) denoting millimeters or <unit> to shorten the arrow head and fins.
-#' @param resect_fins A numeric(1) denoting millimeters or <unit> to shorten the arrow fins
-#' @param resect_head A numeric(1) denoting millimeters or <unit> to shorten the arrow head.
+#' @param resect A numeric(1) denoting millimeters or [grid::unit] to shorten the arrow head and fins.
+#' @param resect_fins A numeric(1) denoting millimeters or [grid::unit] to shorten the arrow fins
+#' @param resect_head A numeric(1) denoting millimeters or [grid::unit] to shorten the arrow head.
 #' @param shape Point shape type. Can be specified with an integer (between 0 and 25), a single character (which uses that character as the plotting symbol), a . to draw the smallest rectangle that is visible (i.e., about one pixel), an NA to draw nothing, or a mapping to a discrete variable.
 #' @param size numeric size
-#' @param size.unit How the size aesthetic is interpreted: as points ("pt"), millimeters ("mm"), centimeters ("cm"), inches ("in"), or picas ("pc").
+#' @param size.unit How the size aesthetic is interpreted: as points (`"pt"`), millimeters (`"mm"`), centimeters (`"cm"`), inches (`"in"`), or picas (`"pc"`).
 #' @param stroke Width of point border line
 #' @param stroke_color Color of point border line
 #' @param stroke_width Stroke width in arrows

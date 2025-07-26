@@ -7,12 +7,12 @@
 intersection_angle(x, y)
 }
 \arguments{
-\item{x}{an object (point, segment, line)}
+\item{x}{an object (e.g., \link{ob_point}, \link{ob_segment}, \link{ob_line})}
 
-\item{y}{an object (point, segment, line)}
+\item{y}{an object (e.g., \link{ob_point}, \link{ob_segment}, \link{ob_line})}
 }
 \value{
-ob_angle object
+\link{ob_angle} object
 }
 \description{
 Compute the angle of the intersection of two objects

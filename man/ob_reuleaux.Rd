@@ -22,7 +22,7 @@ ob_reuleaux(
 )
 }
 \arguments{
-\item{center}{point at center of the rectangle}
+\item{center}{\code{\link{ob_point}} at center of the rectangle}
 
 \item{n}{Number of sides. True Reuleaux polygons have an odd number of sides, but Reauleaux-like shapes with an even number of sides are possible.}
 
@@ -30,7 +30,7 @@ ob_reuleaux(
 
 \item{angle}{angle of text}
 
-\item{label}{A character, angle, or label object}
+\item{label}{A character, angle, or \code{\link{ob_label}} object}
 
 \item{vertex_radius}{A numeric or unit vector of length one, specifying the corner radius}
 

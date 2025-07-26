@@ -2,12 +2,12 @@
 % Please edit documentation in R/points.R
 \name{polar2just}
 \alias{polar2just}
-\title{polar2just}
+\title{Convert hjust and vjust parameters from polar coordinates}
 \usage{
-polar2just(x, multiplier = 1.2, axis = c("h", "v"))
+polar2just(x, multiplier = NULL, axis = c("h", "v"))
 }
 \arguments{
-\item{x}{angle}
+\item{x}{angle. Can be a named direction (e.g., "north"), number (in degrees), \code{\link{degree}}, \code{\link{radian}}, or \code{\link{turn}}}
 
 \item{multiplier}{distance}
 
@@ -17,5 +17,11 @@ polar2just(x, multiplier = 1.2, axis = c("h", "v"))
 ob_angle object
 }
 \description{
-Convert hjust and vjust parameters from polar coordinates
+This function is how \code{\link{ob_label}}'s \code{vjust} and
+\code{hjust} values are recalculated automatically when the \code{polar_just} parameter is specified.
+}
+\examples{
+a <- "northwest"
+polar2just(a, axis = "h")
+polar2just(a, axis = "v")
 }

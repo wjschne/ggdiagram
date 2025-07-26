@@ -1,8 +1,8 @@
 # distance----
 #' Calculate distance between 2 points
 #'
-#' @param x a point, line, segment, or circle object
-#' @param y a point, line, or circle object
+#' @param x an [ob_point], [ob_line], [ob_segment], or object with a center point (e.g., [ob_circle], [ob_rectangle], [ob_ellipse])
+#' @param y an [ob_point], [ob_line], [ob_segment], or object with a center point (e.g., [ob_circle], [ob_rectangle], [ob_ellipse])
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> Not used
 #' @rdname distance
 #' @return numeric

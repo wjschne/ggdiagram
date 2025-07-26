@@ -40,7 +40,7 @@ connect(
 
 \item{to}{second shape object}
 
-\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> Arguments passed to style}
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> Arguments passed to \link{ob_style}}
 
 \item{label}{A character, angle, or label object}
 
@@ -56,11 +56,11 @@ connect(
 
 \item{arrow_fins}{A 2-column matrix of polygon points}
 
-\item{arrowhead_length}{Determines the size of the arrow ornaments. This parameter becomes the \code{length} parameter in ggarrow functions. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner.}
+\item{arrowhead_length}{Determines the size of the arrow ornaments. This parameter becomes the \code{length} parameter in ggarrow functions. Numeric values set the ornament size relative to the linewidth. A \link[grid:unit]{grid::unit} value sets the ornament size in an absolute manner.}
 
-\item{length_head}{Determines the size of the arrow head. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner. From ggarrow.}
+\item{length_head}{Determines the size of the arrow head. Numeric values set the ornament size relative to the linewidth. A \link[grid:unit]{grid::unit} value sets the ornament size in an absolute manner. From ggarrow.}
 
-\item{length_fins}{Determines the size of the arrow fins. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner. From ggarrow.}
+\item{length_fins}{Determines the size of the arrow fins. Numeric values set the ornament size relative to the linewidth. A \link[grid:unit]{grid::unit} value sets the ornament size in an absolute manner. From ggarrow.}
 
 \item{color}{character string for color}
 
@@ -76,11 +76,11 @@ connect(
 
 \item{linetype}{type of lines}
 
-\item{resect}{A numeric(1) denoting millimeters or \if{html}{\out{<unit>}} to shorten the arrow head and fins.}
+\item{resect}{A numeric(1) denoting millimeters or \link[grid:unit]{grid::unit} to shorten the arrow head and fins.}
 
-\item{resect_fins}{A numeric(1) denoting millimeters or \if{html}{\out{<unit>}} to shorten the arrow fins}
+\item{resect_fins}{A numeric(1) denoting millimeters or \link[grid:unit]{grid::unit} to shorten the arrow fins}
 
-\item{resect_head}{A numeric(1) denoting millimeters or \if{html}{\out{<unit>}} to shorten the arrow head.}
+\item{resect_head}{A numeric(1) denoting millimeters or \link[grid:unit]{grid::unit} to shorten the arrow head.}
 
 \item{stroke_color}{Color of point border line}
 
@@ -96,5 +96,5 @@ connect(
 ob_segment
 }
 \description{
-By default, will create an \code{ob_segment} with an arrowhead on the end. If \code{arc_bend} is specified, an \code{ob_arc} with an arrowhead will be created instead. If \code{from_offset} or \code{to_offset} are specified, an \code{ob_bezier} with an arrowhead will be created.
+By default, will create an \code{\link{ob_segment}} with an arrowhead on the end. If \code{arc_bend} is specified, an \code{\link{ob_arc}} with an arrowhead will be created instead. If \code{from_offset} or \code{to_offset} are specified, an \code{\link{ob_bezier}} with an arrowhead will be created.
 }

@@ -215,9 +215,9 @@ sg_props <- list(
 
 #' ob_segment class
 #'
-#' @param p1 starting point
-#' @param p2 end point
-#' @param label A character, angle, or label object
+#' @param p1 starting point ([`ob_point`])
+#' @param p2 end point ([`ob_point`])
+#' @param label A character, angle, or [`ob_label`] object
 #' @param label_sloped A logical value indicating whether the label should be sloped with the segment
 #' @param x overrides the x-coordinate of p1
 #' @param xend overrides the y-coordinate of p1

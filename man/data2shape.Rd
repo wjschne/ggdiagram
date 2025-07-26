@@ -22,6 +22,7 @@ d <- data.frame(
   x = 1:2,
   y = 1:2,
   fill = c("blue", "forestgreen"),
+  color = NA,
   radius = c(.25,0.5))
 
 ggdiagram() +

@@ -380,36 +380,38 @@ arc_props <- list(
 #' ob_arc class
 #'
 #' Create arcs and wedges
-#' @param center point at center of the arc (default = ob_point(0,0))
+#' @param center point at center of the arc (default = `ob_point(0,0)`)
 #' @param radius distance between center and edge arc (default = 1)
-#' @param start start angle (default = 0 degrees)
-#' @param end end angle (default = 0 degrees)
+#' @param start start angle. Can be numeric (degrees), [degree], [radian], [turn], or named direction (e.g., "northwest", "east", "below", "left"). Defaults to 0.
+#' @param end end angle Can be numeric (degrees), [degree], [radian], [turn], or named direction (e.g., "northwest", "east", "below", "left"). Defaults to 0.
 #' @param label A character, angle, or label object
 #' @param label_sloped If TRUE, label runs along arc.
 #' @param start_point Specify where arc starts. Overrides `@center`
 #' @param end_point Specify where arc ends Overrides `@center`
 #' @param n number of points in arc (default = 360)
 #' @param type Type of object to drawn. Can be "arc", "wedge", or "segment"
-#' @param style a style object
+#' @param style an [`ob_style`] object
 #' @param x x-coordinate of center point. If specified, overrides x-coordinate of `@center`.
 #' @param y x-coordinate of center point. If specified, overrides y-coordinate of `@center`.
-#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to style object
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style object
 #' @inherit ob_style params
 #' @slot aesthetics A list of information about the arc's aesthetic properties
 #' @slot angle_at A function that finds the angle of the specified point in relation to the arc's center
 #' @slot apothem Distance from center to the chord's midpoint
 #' @slot arc_length Distance along arc from `start_point` to `end_point`
 #' @slot auto_label Places a label at the arc's midpoint
-#' @slot chord `ob_segment` from `start_point` to `end_point`
-#' @slot geom A function that converts the object to a geom. Any additional parameters are passed to `ggarrow::geom_arrow`.
-#' @slot hatch A function that puts hatch (tally) marks on arcs. Often used to indicate which arcs have the same angle. The `k` parameter controls how many hatch marks to display. The `height` parameter controls how long the hatch mark segment is. The `sep` parameter controls the separation between hatch marks when `k > 2`. Additional parameters sent to `ob_segment`.
+#' @slot chord [`ob_segment`] from `start_point` to `end_point`
+#' @slot geom A function that converts the object to a geom. Any additional parameters are passed to [`ggarrow::geom_arrow`].
+#' @slot hatch A function that puts hatch (tally) marks on arcs. Often used to indicate which arcs have the same angle. The `k` parameter controls how many hatch marks to display. The `height` parameter controls how long the hatch mark segment is. The `sep` parameter controls the separation between hatch marks when `k > 2`. Additional parameters sent to [`ob_segment`].
 #' @slot length The number of arcs in the arc object
-#' @slot midpoint A function that selects 1 or more midpoints of the ob_arc. The `position` argument can be between 0 and 1. Additional arguments are passed to `ob_point`.
+#' @slot midpoint A function that selects 1 or more midpoints of the ob_arc. The `position` argument can be between 0 and 1. Additional arguments are passed to [`ob_point`].
 #' @slot point_at A function that finds a point on the arc at the specified angle.
-#' @slot sagitta `ob_segment` from `chord` midpoint to `ob_arc` midpoint
+#' @slot sagitta [`ob_segment`] from `chord` midpoint to [`ob_arc`] midpoint
 #' @slot tangent_at A function that finds the tangent line at the specified angle.
 #' @slot theta interior angle (end - start)
-#' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggarrow::geom_arrow`.
+#' @slot tibble Gets a [tibble::tibble] or data.frame containing parameters and styles used by [`ggarrow::geom_arrow`].
+#' @export
+#' @return ob_arc object
 #' @examples
 #' # 90-degree arc
 #' ggdiagram() +
@@ -418,21 +420,17 @@ arc_props <- list(
 #'     start = degree(0),
 #'     end = degree(90)
 #'  )
-#' @export
-#' @return ob_arc object
 ob_arc <- S7::new_class(
   name = "ob_arc",
   parent = centerpoint,
-  properties = rlang::inject(
-    list(
+  properties = rlang::list2(
       !!!arc_props$primary,
       !!!arc_props$extra,
       !!!arc_props$styles,
       !!!arc_props$derived,
       !!!arc_props$funs,
       !!!arc_props$info
-    )
-  ),
+    ),
   constructor = function(center = ob_point(0,0),
                          radius = 1,
                          start = 0,

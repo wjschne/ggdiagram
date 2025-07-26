@@ -7,11 +7,25 @@
 \usage{
 arrowhead()
 
-set_default_arrowhead(m)
+set_default_arrowhead(m = NULL)
 }
 \arguments{
 \item{m}{A matrix used to make a ggarrow arrowhead}
 }
+\value{
+2-column matrix
+
+previous default arrowhead
+}
 \description{
 The arrowhead function returns the default arrowhead. The set_default_arrowhead function will change the default arrowhead in the current R session. For details about making arrowheads, see the \href{https://teunbrand.github.io/ggarrow/articles/customisation.html}{ggarrow} and \href{https://wjschne.github.io/arrowheadr/}{arrowheadr} packages.
+}
+\examples{
+arrowhead()
+# Set new default
+set_default_arrowhead(ggarrow::arrow_head_wings(offset = 25))
+arrowhead()
+# restore default
+set_default_arrowhead()
+arrowhead()
 }

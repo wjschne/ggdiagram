@@ -2,7 +2,7 @@
 #'
 #' make a latex equation
 #' @param tex LaTeX equation
-#' @param center ob_point
+#' @param center An [ob_point]
 #' @param width width (specify width or height but not both)
 #' @param height height (specify width or height but not both)
 #' @param hjust horizontal adjustment. 0 means left justified, 1 means right justified, 0.5 means centered

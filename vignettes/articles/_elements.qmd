@@ -498,9 +498,7 @@ circumscribed <- intersection(
 baseplot +
   ob_polygon(p, fill = blue, color = NA) +
   c1 +
-  circumscribed 
-  
-  
+  circumscribed
 ```
 
 
@@ -533,43 +531,26 @@ transition <- redefault(
   linewidth = .75
 )
 ggdiagram(font_family = "Roboto Condensed", font_size = 20) +
-  {
-    waiting <- node()
-  } +
-  {
-    critical <- node() %>% place(waiting, "below", d)
-  } +
-  {
-    s <- node() %>% place(critical, "below", d)
-    s1 <- node(fill = red, color = red) %>% place(s, "left", 0)
-  } +
-  {
-    s2 <- node(fill = red, color = red) %>% place(s, "right", 0)
-  } +
-  {
-    leave <- transition() %>% place(critical, "right", d)
-  } +
-  {
-    enter <- transition() %>% place(critical, "left", d)
-  } +
-  {
-    s3 <- node() %>% place(s, "below", d)
-  } +
-  {
-    e2 <- transition() %>% place(s3, "left", d)
-  } +
-  {
-    l2 <- transition() %>% place(s3, "right", d)
-  } +
-  {
-    s4 <- node() %>% place(s3, "below", d)
-  } +
-  bind(c(
-    waiting@center,
-    s4@center,
-    s2@center + ob_polar(degree(c(90, 210, 330)), .2)
-  )) %>%
-    set_props(color = black, fill = NA_character_, size = 4, alpha = 1) +
+  {waiting <- node()} +
+  {critical <- node() %>% place(waiting, "below", d)} +
+  {s <- node() %>% place(critical, "below", d)
+    s1 <- node(fill = red, color = red) %>% place(s, "left", 0)} +
+  {s2 <- node(fill = red, color = red) %>% place(s, "right", 0)} +
+  {leave <- transition() %>% place(critical, "right", d)} +
+  {enter <- transition() %>% place(critical, "left", d)} +
+  {s3 <- node() %>% place(s, "below", d)} +
+  {e2 <- transition() %>% place(s3, "left", d)} +
+  {l2 <- transition() %>% place(s3, "right", d)} +
+  {s4 <- node() %>% place(s3, "below", d)} +
+  bind(c(waiting@center, s4@center, s2@center + ob_polar(degree(c(
+    90, 210, 330
+  )), .2))) %>%
+  set_props(
+    color = black,
+    fill = NA_character_,
+    size = 4,
+    alpha = 1
+  ) +
   bind(c(
     ct(enter, bind(c(critical, s1))),
     ct(critical, leave),
@@ -581,28 +562,15 @@ ggdiagram(font_family = "Roboto Condensed", font_size = 20) +
     ct(s3, l2)
   )) +
   ob_bezier(
-    c(
-      bind(c(
-        waiting@west,
-        waiting@center %-|% enter@center,
-        enter@north
-      )),
-      bind(c(
-        s4@west,
-        s4@center %-|% e2@center,
-        e2@south
-      )),
-      bind(c(
-        l2@south,
-        l2@center %|-% s4@center,
-        s4@east
-      )),
-      bind(c(
-        leave@north,
-        leave@center %|-% waiting@center,
-        waiting@east
-      ))
-    ),
+    c(bind(
+      c(waiting@west, waiting@center %-|% enter@center, enter@north)
+    ), bind(
+      c(s4@west, s4@center %-|% e2@center, e2@south)
+    ), bind(
+      c(l2@south, l2@center %|-% s4@center, s4@east)
+    ), bind(
+      c(leave@north, leave@center %|-% waiting@center, waiting@east)
+    )),
     resect = 2,
     arrow_head = arrowhead(),
     linewidth = .75,
@@ -632,33 +600,45 @@ ggdiagram(font_family = "Roboto Condensed", font_size = 20) +
 
 
 ```{r}
-p_quadrilateral <- ob_point(c(0,2, 1.9,.3), c(0, 1.2, -.1, 1))
+p_quadrilateral <- ob_point(c(0, 2, 1.9, .3), c(0, 1.2, -.1, 1))
 p_complex <- p_quadrilateral + ob_polar(degree(340), 5)
-p_simple <- ob_point(c(0,2, 1.5,1.8), c(0, -.1, .6, 1.4)) 
-p_simple <- p_simple - p_simple@centroid + rotate(p_complex@centroid,theta = degree(-140), origin = p_quadrilateral@centroid )
+p_simple <- ob_point(c(0, 2, 1.5, 1.8), c(0, -.1, .6, 1.4))
+p_simple <- p_simple - p_simple@centroid + rotate(p_complex@centroid,
+                                                  theta = degree(-140),
+                                                  origin = p_quadrilateral@centroid)
 
-my_polygon <- redefault(ob_polygon, fill = class_color("blue")@lighten(.1), color = "blue4")
+my_polygon <- redefault(ob_polygon,
+                        fill = class_color("blue")@lighten(.1),
+                        color = "blue4")
 my_connect <- redefault(connect, arrow_head = ggarrow::arrow_fins_minimal())
 
 
 quadrilateral <- my_polygon(p_quadrilateral)
 complex <- my_polygon(p_complex)
 
-ggdiagram(font_family = "serif", font_size = 14) + 
-  ob_label(label = "quadrilateral", 
-           center = quadrilateral@bounding_box@south, 
-           vjust = 1) + 
-  ob_label(label = "complex", 
-           center = complex@bounding_box@south, 
-           vjust = 1) +
+ggdiagram(font_family = "serif", font_size = 14) +
+  ob_label(
+    label = "quadrilateral",
+    center = quadrilateral@bounding_box@south,
+    vjust = 1
+  ) +
+  ob_label(
+    label = "complex",
+    center = complex@bounding_box@south,
+    vjust = 1
+  ) +
   my_connect(quadrilateral, complex) +
   complex +
-  {simple <- my_polygon(p_simple)} + 
+  {
+    simple <- my_polygon(p_simple)
+  } +
   my_connect(quadrilateral, simple) +
-  quadrilateral + 
-  ob_label(label = "simple", 
-           center = simple@bounding_box@south, 
-           vjust = 1)
+  quadrilateral +
+  ob_label(
+    label = "simple",
+    center = simple@bounding_box@south,
+    vjust = 1
+  )
 
 ```
 
@@ -740,29 +720,34 @@ ggdiagram(font_family = "Roboto Condensed", font_size = 16) +
 ```
 
 ```{r}
-ggdiagram() + 
-  geom_vline(xintercept = -3:3, color = "gray60", linetype = "dotted") +
-  geom_hline(yintercept = -3:3, color = "gray60", linetype = "dotted") +
-  ob_segment(ob_point(c(-3, 0), c(0, -3)), 
-             {xy <- ob_point(c(3, 0), c(0, 3))}, 
-             arrow_head = arrowhead(), arrow_fins = arrowhead()) +
+ggdiagram() +
+  geom_vline(xintercept = -3:3,
+             color = "gray60",
+             linetype = "dotted") +
+  geom_hline(yintercept = -3:3,
+             color = "gray60",
+             linetype = "dotted") +
+  ob_segment(ob_point(c(-3, 0), c(0, -3)),
+             {
+               xy <- ob_point(c(3, 0), c(0, 3))
+             },
+             arrow_head = arrowhead(),
+             arrow_fins = arrowhead()) +
   ob_label(c("x", "y"),
            xy,
            vjust = c(0.5, 0),
            hjust = c(0, 0.5)) +
-  tibble(dx = c(-3,1,1,2, 1, 1),
-         dy = c(-1, 0, 2, 0, -2, 0),
-         x = cumsum(dx),
-         y = cumsum(dy)) %>% 
-  ob_point() %>% 
+  tibble(
+    dx = c(-3, 1, 1, 2, 1, 1),
+    dy = c(-1, 0, 2, 0, -2, 0),
+    x = cumsum(dx),
+    y = cumsum(dy)
+  ) %>%
+  ob_point() %>%
   ob_path(color = "blue", linewidth = 1)
-
 ```
 
 ```{r}
 my_fill <- grid::radialGradient(c("gold", "white")) 
-
-
-
 ```
 

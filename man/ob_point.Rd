@@ -53,9 +53,9 @@ ob_polar(
 
 \item{id}{character string to identify object}
 
-\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to \code{style}}
 
-\item{theta}{Angle of the vector from the origin to the ob_point}
+\item{theta}{Angle of the vector from the origin to the \code{\link{ob_point}}}
 
 \item{r}{Radius = Distance from the origin to the ob_point}
 }
@@ -76,8 +76,17 @@ Polar points are ordinary points but are specified with an angle (theta) and a r
 
 \item{\code{length}}{The number of points in the ob_point object}
 
-\item{\code{tibble}}{Gets a tibble (data.frame) containing parameters and styles used by \code{ggplot2::geom_point}.}
+\item{\code{tibble}}{Gets a \code{\link[tibble:tibble]{tibble::tibble}} containing parameters and styles used by \code{\link[ggplot2:geom_point]{ggplot2::geom_point}}.}
 
 \item{\code{xy}}{Gets a 2-column matrix of the x and y coordinates of the ob_point object.}
 }}
 
+\examples{
+ggdiagram() +
+  ob_point(1:5, 1:5) +
+  ggplot2::theme_minimal()
+
+ggdiagram() +
+  ob_polar(degree(seq(0, 330, 30)), r = 2) +
+  ggplot2::theme_minimal()
+}

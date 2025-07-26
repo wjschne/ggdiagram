@@ -174,7 +174,7 @@
 
 
 <dl><dt id="arg-center">center<a class="anchor" aria-label="anchor" href="#arg-center"></a></dt>
-<dd><p>point at center of the arc (default = ob_point(0,0))</p></dd>
+<dd><p>point at center of the arc (default = <code>ob_point(0,0)</code>)</p></dd>
 
 
 <dt id="arg-radius">radius<a class="anchor" aria-label="anchor" href="#arg-radius"></a></dt>
@@ -182,11 +182,11 @@
 
 
 <dt id="arg-start">start<a class="anchor" aria-label="anchor" href="#arg-start"></a></dt>
-<dd><p>start angle (default = 0 degrees)</p></dd>
+<dd><p>start angle. Can be numeric (degrees), <a href="ob_angle.html">degree</a>, <a href="ob_angle.html">radian</a>, <a href="ob_angle.html">turn</a>, or named direction (e.g., "northwest", "east", "below", "left"). Defaults to 0.</p></dd>
 
 
 <dt id="arg-end">end<a class="anchor" aria-label="anchor" href="#arg-end"></a></dt>
-<dd><p>end angle (default = 0 degrees)</p></dd>
+<dd><p>end angle Can be numeric (degrees), <a href="ob_angle.html">degree</a>, <a href="ob_angle.html">radian</a>, <a href="ob_angle.html">turn</a>, or named direction (e.g., "northwest", "east", "below", "left"). Defaults to 0.</p></dd>
 
 
 <dt id="arg-label">label<a class="anchor" aria-label="anchor" href="#arg-label"></a></dt>
@@ -226,15 +226,15 @@
 
 
 <dt id="arg-arrowhead-length">arrowhead_length<a class="anchor" aria-label="anchor" href="#arg-arrowhead-length"></a></dt>
-<dd><p>Determines the size of the arrow ornaments. This parameter becomes the <code>length</code> parameter in ggarrow functions. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner.</p></dd>
+<dd><p>Determines the size of the arrow ornaments. This parameter becomes the <code>length</code> parameter in ggarrow functions. Numeric values set the ornament size relative to the linewidth. A <a href="https://rdrr.io/r/grid/unit.html" class="external-link">grid::unit</a> value sets the ornament size in an absolute manner.</p></dd>
 
 
 <dt id="arg-length-head">length_head<a class="anchor" aria-label="anchor" href="#arg-length-head"></a></dt>
-<dd><p>Determines the size of the arrow head. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner. From ggarrow.</p></dd>
+<dd><p>Determines the size of the arrow head. Numeric values set the ornament size relative to the linewidth. A <a href="https://rdrr.io/r/grid/unit.html" class="external-link">grid::unit</a> value sets the ornament size in an absolute manner. From ggarrow.</p></dd>
 
 
 <dt id="arg-length-fins">length_fins<a class="anchor" aria-label="anchor" href="#arg-length-fins"></a></dt>
-<dd><p>Determines the size of the arrow fins. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner. From ggarrow.</p></dd>
+<dd><p>Determines the size of the arrow fins. Numeric values set the ornament size relative to the linewidth. A <a href="https://rdrr.io/r/grid/unit.html" class="external-link">grid::unit</a> value sets the ornament size in an absolute manner. From ggarrow.</p></dd>
 
 
 <dt id="arg-color">color<a class="anchor" aria-label="anchor" href="#arg-color"></a></dt>
@@ -270,15 +270,15 @@
 
 
 <dt id="arg-resect">resect<a class="anchor" aria-label="anchor" href="#arg-resect"></a></dt>
-<dd><p>A numeric(1) denoting millimeters or <unit> to shorten the arrow head and fins.</unit></p></dd>
+<dd><p>A numeric(1) denoting millimeters or <a href="https://rdrr.io/r/grid/unit.html" class="external-link">grid::unit</a> to shorten the arrow head and fins.</p></dd>
 
 
 <dt id="arg-resect-fins">resect_fins<a class="anchor" aria-label="anchor" href="#arg-resect-fins"></a></dt>
-<dd><p>A numeric(1) denoting millimeters or <unit> to shorten the arrow fins</unit></p></dd>
+<dd><p>A numeric(1) denoting millimeters or <a href="https://rdrr.io/r/grid/unit.html" class="external-link">grid::unit</a> to shorten the arrow fins</p></dd>
 
 
 <dt id="arg-resect-head">resect_head<a class="anchor" aria-label="anchor" href="#arg-resect-head"></a></dt>
-<dd><p>A numeric(1) denoting millimeters or <unit> to shorten the arrow head.</unit></p></dd>
+<dd><p>A numeric(1) denoting millimeters or <a href="https://rdrr.io/r/grid/unit.html" class="external-link">grid::unit</a> to shorten the arrow head.</p></dd>
 
 
 <dt id="arg-stroke-color">stroke_color<a class="anchor" aria-label="anchor" href="#arg-stroke-color"></a></dt>
@@ -290,7 +290,7 @@
 
 
 <dt id="arg-style">style<a class="anchor" aria-label="anchor" href="#arg-style"></a></dt>
-<dd><p>a style object</p></dd>
+<dd><p>an <code><a href="ob_style.html">ob_style</a></code> object</p></dd>
 
 
 <dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
@@ -306,7 +306,7 @@
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>&lt;<code><a href="https://rlang.r-lib.org/reference/dyn-dots.html" class="external-link">dynamic-dots</a></code>&gt; arguments passed to style object</p></dd>
+<dd><p>&lt;<code><a href="https://rlang.r-lib.org/reference/dyn-dots.html" class="external-link">dynamic-dots</a></code>&gt; properties passed to style object</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -338,7 +338,7 @@
 
 
 <dt><code>chord</code></dt>
-<dd><p><code>ob_segment</code> from <code>start_point</code> to <code>end_point</code></p></dd>
+<dd><p><code><a href="ob_segment.html">ob_segment</a></code> from <code>start_point</code> to <code>end_point</code></p></dd>
 
 
 <dt><code>geom</code></dt>
@@ -346,7 +346,7 @@
 
 
 <dt><code>hatch</code></dt>
-<dd><p>A function that puts hatch (tally) marks on arcs. Often used to indicate which arcs have the same angle. The <code>k</code> parameter controls how many hatch marks to display. The <code>height</code> parameter controls how long the hatch mark segment is. The <code>sep</code> parameter controls the separation between hatch marks when <code>k &gt; 2</code>. Additional parameters sent to <code>ob_segment</code>.</p></dd>
+<dd><p>A function that puts hatch (tally) marks on arcs. Often used to indicate which arcs have the same angle. The <code>k</code> parameter controls how many hatch marks to display. The <code>height</code> parameter controls how long the hatch mark segment is. The <code>sep</code> parameter controls the separation between hatch marks when <code>k &gt; 2</code>. Additional parameters sent to <code><a href="ob_segment.html">ob_segment</a></code>.</p></dd>
 
 
 <dt><code>length</code></dt>
@@ -354,7 +354,7 @@
 
 
 <dt><code>midpoint</code></dt>
-<dd><p>A function that selects 1 or more midpoints of the ob_arc. The <code>position</code> argument can be between 0 and 1. Additional arguments are passed to <code>ob_point</code>.</p></dd>
+<dd><p>A function that selects 1 or more midpoints of the ob_arc. The <code>position</code> argument can be between 0 and 1. Additional arguments are passed to <code><a href="ob_point.html">ob_point</a></code>.</p></dd>
 
 
 <dt><code>point_at</code></dt>
@@ -362,7 +362,7 @@
 
 
 <dt><code>sagitta</code></dt>
-<dd><p><code>ob_segment</code> from <code>chord</code> midpoint to <code>ob_arc</code> midpoint</p></dd>
+<dd><p><code><a href="ob_segment.html">ob_segment</a></code> from <code>chord</code> midpoint to <code>ob_arc</code> midpoint</p></dd>
 
 
 <dt><code>tangent_at</code></dt>
@@ -374,7 +374,7 @@
 
 
 <dt><code>tibble</code></dt>
-<dd><p>Gets a tibble (data.frame) containing parameters and styles used by <code><a href="https://teunbrand.github.io/ggarrow/reference/geom_arrow.html" class="external-link">ggarrow::geom_arrow</a></code>.</p></dd>
+<dd><p>Gets a <a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble::tibble</a> or data.frame containing parameters and styles used by <code><a href="https://teunbrand.github.io/ggarrow/reference/geom_arrow.html" class="external-link">ggarrow::geom_arrow</a></code>.</p></dd>
 
 
 </dl></div>

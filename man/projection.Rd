@@ -11,7 +11,7 @@ projection(p, object, ...)
 
 \item{object}{object (e.g., line or segment)}
 
-\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> arguments passed to style object}
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style object}
 }
 \value{
 ob_point

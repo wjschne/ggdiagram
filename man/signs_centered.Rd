@@ -4,7 +4,7 @@
 \alias{signs_centered}
 \title{Centering signed numbers}
 \usage{
-signs_centered(x, space = " ", encoding = "UTF-8", ...)
+signs_centered(x, space = NULL, encoding = "UTF-8", ...)
 }
 \arguments{
 \item{x}{a numeric vector}

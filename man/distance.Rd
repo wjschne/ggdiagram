@@ -7,9 +7,9 @@
 distance(x, y, ...)
 }
 \arguments{
-\item{x}{a point, line, segment, or circle object}
+\item{x}{an \link{ob_point}, \link{ob_line}, \link{ob_segment}, or object with a center point (e.g., \link{ob_circle}, \link{ob_rectangle}, \link{ob_ellipse})}
 
-\item{y}{a point, line, or circle object}
+\item{y}{an \link{ob_point}, \link{ob_line}, \link{ob_segment}, or object with a center point (e.g., \link{ob_circle}, \link{ob_rectangle}, \link{ob_ellipse})}
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> Not used}
 }

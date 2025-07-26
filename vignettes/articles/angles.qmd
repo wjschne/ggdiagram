@@ -81,7 +81,7 @@ p <- ob_polar(theta, r = 1)
 r <- seq(1, .5, length.out = length(angle_types))
 my_shades <- (tinter::tinter("royalblue", 
                             steps = 7, 
-                            direction = "tints")[seq(length(angle_types))])
+                            direction = "tints")[seq_along(angle_types)])
 
 ggplot() +
   coord_equal() +
@@ -99,7 +99,7 @@ ggplot() +
     .f = \(rs, ts, ss) {
       ob_circle(radius = rs - 1/8)@point_at(ts)@label(ts, fill = ss, size = 16)@geom(family = my_font)
       }) +
-  ob_point(0, y = r - 1/18)@label(angle_types, 
+  ob_point(0, y = r - 1 / 18)@label(angle_types, 
                                fill = my_shades, 
                                fontface = "bold", 
                                family = my_font,

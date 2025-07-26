@@ -5,6 +5,8 @@
 \alias{ggdiagram-package}
 \title{ggdiagram: Object-Oriented Diagram Plots with ggplot2}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 The ggdiagram package creates path diagrams with an object-oriented approach and plots diagrams with ggplot2.
 }
 \seealso{

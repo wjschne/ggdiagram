@@ -23,11 +23,11 @@ ggdiagram(
 
 \item{point_size}{point size}
 
-\item{rect_linewidth}{line with of rectangles}
+\item{rect_linewidth}{line width of rectangles}
 
-\item{theme_function}{ggplot2 theme}
+\item{theme_function}{A complete \link[ggplot2:ggtheme]{ggplot2 theme} function (e.g., \link[ggplot2:ggtheme]{ggplot2::theme_minimal}). Defaults to \link[ggplot2:ggtheme]{ggplot2::theme_void}}
 
-\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> Arguments sent to ggplot2::theme}
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> Arguments sent to \link[ggplot2:theme]{ggplot2::theme}}
 }
 \value{
 ggplot function
@@ -36,5 +36,7 @@ ggplot function
 This is a convenient way to specify geom defaults
 }
 \examples{
-ggdiagram() + ob_circle()
+ggdiagram(font_size = 20, font_family = "serif", linewidth = 3) +
+   ob_circle(label = "Circle") +
+   ob_rectangle(label = "Rectangle", x = 3, width = 3)
 }

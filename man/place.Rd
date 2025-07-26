@@ -15,7 +15,7 @@ place(x, from, where = "right", sep = 1, ...)
 
 \item{sep}{separation distance}
 
-\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> Arguments passed to style}
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> Arguments passed to \link{ob_style}}
 }
 \value{
 object of same class as \code{x}

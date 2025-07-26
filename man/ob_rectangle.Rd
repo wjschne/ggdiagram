@@ -32,33 +32,33 @@ ob_rectangle(
 )
 }
 \arguments{
-\item{center}{point at center of the rectangle}
+\item{center}{\code{\link{ob_point}} at center of the rectangle}
 
 \item{width}{width}
 
 \item{height}{height}
 
-\item{east}{right middle point}
+\item{east}{right middle point (\code{\link{ob_point}})}
 
-\item{north}{top middle point}
+\item{north}{top middle point (\code{\link{ob_point}})}
 
-\item{west}{left middle point}
+\item{west}{left middle point (\code{\link{ob_point}})}
 
-\item{south}{top middle point}
+\item{south}{top middle point (\code{\link{ob_point}})}
 
-\item{northeast}{upper right point}
+\item{northeast}{upper right point (\code{\link{ob_point}})}
 
-\item{northwest}{upper left point}
+\item{northwest}{upper left point (\code{\link{ob_point}})}
 
-\item{southwest}{lower left point}
+\item{southwest}{lower left point (\code{\link{ob_point}})}
 
-\item{southeast}{lower right point}
+\item{southeast}{lower right point (\code{\link{ob_point}})}
 
 \item{angle}{angle of text}
 
 \item{vertex_radius}{A numeric or unit vector of length one, specifying the corner radius for rounded corners}
 
-\item{label}{A character, angle, or label object}
+\item{label}{A character, angle, or \code{\link{ob_label}} object}
 
 \item{alpha}{numeric value for alpha transparency}
 
@@ -78,14 +78,15 @@ ob_rectangle(
 
 \item{id}{character string to identify object}
 
-\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> arguments passed to style object}
+\item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to \code{style}}
 }
 \value{
-ob_rectangle object
+\code{\link{ob_rectangle}} object
 }
 \description{
 ob_rectangle class
 }
 \examples{
-ob_rectangle(center = ob_point(0,0), width = 2, height = 2)
+ggdiagram() +
+  ob_rectangle(center = ob_point(0,0), width = 3, height = 2)
 }

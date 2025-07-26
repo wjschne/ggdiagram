@@ -30,7 +30,7 @@ class_color(
 class_color object
 }
 \description{
-color class
+Useful for manipulating colors in R.
 }
 \section{Slots}{
 

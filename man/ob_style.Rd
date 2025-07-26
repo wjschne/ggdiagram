@@ -79,21 +79,21 @@ ob_style(
 
 \item{label.color}{Color of label outline.}
 
-\item{label.margin}{Amount of distance around label. Unit vector of length four. Usually created with \code{ggplot2::margin}.}
+\item{label.margin}{Amount of distance around label. A \link[grid:unit]{grid::unit} vector of length four. Usually created with \code{\link[ggplot2:element]{ggplot2::margin}}.}
 
-\item{label.padding}{Amount of padding around label. Unit vector of length four. Usually created with \code{ggplot2::margin}.}
+\item{label.padding}{Amount of padding around label. A \link[grid:unit]{grid::unit} vector of length four. Usually created with \code{\link[ggplot2:element]{ggplot2::margin}}.}
 
 \item{label.r}{Radius of rounded corners. Defaults to 0.15 lines.}
 
 \item{label.size}{Width of label outline.}
 
-\item{arrowhead_length}{Determines the size of the arrow ornaments. This parameter becomes the \code{length} parameter in ggarrow functions. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner.}
+\item{arrowhead_length}{Determines the size of the arrow ornaments. This parameter becomes the \code{length} parameter in ggarrow functions. Numeric values set the ornament size relative to the linewidth. A \link[grid:unit]{grid::unit} value sets the ornament size in an absolute manner.}
 
-\item{length_head}{Determines the size of the arrow head. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner. From ggarrow.}
+\item{length_head}{Determines the size of the arrow head. Numeric values set the ornament size relative to the linewidth. A \link[grid:unit]{grid::unit} value sets the ornament size in an absolute manner. From ggarrow.}
 
-\item{length_fins}{Determines the size of the arrow fins. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner. From ggarrow.}
+\item{length_fins}{Determines the size of the arrow fins. Numeric values set the ornament size relative to the linewidth. A \link[grid:unit]{grid::unit} value sets the ornament size in an absolute manner. From ggarrow.}
 
-\item{length_mid}{Determines the size of the middle arrows. Numeric values set the ornament size relative to the linewidth. A unit value sets the ornament size in an absolute manner. From ggarrow.}
+\item{length_mid}{Determines the size of the middle arrows. Numeric values set the ornament size relative to the linewidth. A \link[grid:unit]{grid::unit} value sets the ornament size in an absolute manner. From ggarrow.}
 
 \item{lineend}{Line end style (round, butt, square).}
 
@@ -117,17 +117,17 @@ ob_style(
 
 \item{polar_just}{an angle, polar point, or point that alters hjust and vjust (polar polar_just not stored in style)}
 
-\item{resect}{A numeric(1) denoting millimeters or \if{html}{\out{<unit>}} to shorten the arrow head and fins.}
+\item{resect}{A numeric(1) denoting millimeters or \link[grid:unit]{grid::unit} to shorten the arrow head and fins.}
 
-\item{resect_fins}{A numeric(1) denoting millimeters or \if{html}{\out{<unit>}} to shorten the arrow fins}
+\item{resect_fins}{A numeric(1) denoting millimeters or \link[grid:unit]{grid::unit} to shorten the arrow fins}
 
-\item{resect_head}{A numeric(1) denoting millimeters or \if{html}{\out{<unit>}} to shorten the arrow head.}
+\item{resect_head}{A numeric(1) denoting millimeters or \link[grid:unit]{grid::unit} to shorten the arrow head.}
 
 \item{shape}{Point shape type. Can be specified with an integer (between 0 and 25), a single character (which uses that character as the plotting symbol), a . to draw the smallest rectangle that is visible (i.e., about one pixel), an NA to draw nothing, or a mapping to a discrete variable.}
 
 \item{size}{numeric size}
 
-\item{size.unit}{How the size aesthetic is interpreted: as points ("pt"), millimeters ("mm"), centimeters ("cm"), inches ("in"), or picas ("pc").}
+\item{size.unit}{How the size aesthetic is interpreted: as points (\code{"pt"}), millimeters (\code{"mm"}), centimeters (\code{"cm"}), inches (\code{"in"}), or picas (\code{"pc"}).}
 
 \item{straight}{logical. If TRUE, make bzpath label text straight instead of curved.}
 
