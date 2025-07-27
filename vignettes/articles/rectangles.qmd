@@ -4,9 +4,13 @@ knitr:
   opts_chunk: 
     collapse: true
     comment: '#>'
+    dev: "svglite"
 format: 
   html:
     toc: true
+    html-math-method: katex
+    fig-width:  7
+    fig-height: 7
 vignette: >
   %\VignetteIndexEntry{rectangles}
   %\VignetteEngine{quarto::html}
@@ -16,13 +20,6 @@ vignette: >
 ```{r}
 #| label: presetup
 #| include: false
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  dev = "ragg_png",
-  comment = "#>",
-  fig.width = 7,
-  fig.height = 7
-)
 
 library(ggdiagram)
 library(ggplot2)

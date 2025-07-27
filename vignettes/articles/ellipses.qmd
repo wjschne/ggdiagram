@@ -4,10 +4,13 @@ knitr:
   opts_chunk: 
     collapse: true
     comment: '#>'
+    dev: "svglite"
 format: 
   html:
     toc: true
     html-math-method: katex
+    fig-width:  7
+    fig-height: 7
 vignette: >
   %\VignetteIndexEntry{ellipses}
   %\VignetteEngine{quarto::html}
@@ -22,13 +25,7 @@ library(ggplot2)
 library(dplyr)
 library(ggtext)
 library(ggarrow)
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  dev = "ragg_png",
-  comment = "#>",
-  fig.width = 7,
-  fig.height = 7
-)
+
 my_font <- "Roboto Condensed"
 # gdtools::register_gfont(family = my_font)
 # gdtools::addGFontHtmlDependency(family = my_font)
@@ -240,6 +237,8 @@ $$
 #| label: fig-definitionalpoints
 #| fig-cap: The ellipse's definitional parameter *t* does not always line up with angles on a circle
 #| code-fold: true
+#| fig-width: 8
+#| fig-height: 8
 
 theta <- degree(seq(0, 350, 30))
 
@@ -252,7 +251,8 @@ bp +
   {p2 <- e1@point_at(theta, definitional = T, color = "dodgerblue")} +
   ob_segment(ob_point(), p2) + 
   ob_label(theta@degree, p2, polar_just = ob_polar(theta, r = 1.5)) +
-  theme_void()
+  theme_void() + 
+  scale_x_continuous(expand = expansion(.12))
 ```
 
 

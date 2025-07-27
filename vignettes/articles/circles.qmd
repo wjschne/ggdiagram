@@ -4,9 +4,13 @@ knitr:
   opts_chunk: 
     collapse: true
     comment: '#>'
+    dev: "svglite"
 format: 
   html:
     toc: true
+    html-math-method: katex
+    fig-width:  7
+    fig-height: 7
 vignette: >
   %\VignetteIndexEntry{circles}
   %\VignetteEngine{quarto::html}
@@ -21,13 +25,7 @@ library(ggplot2)
 library(dplyr)
 library(ggtext)
 library(ggarrow)
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  dev = "ragg_png",
-  comment = "#>",
-  fig.width = 7,
-  fig.height = 7
-)
+
 my_font <- "Roboto Condensed"
 # gdtools::register_gfont(family = my_font)
 # gdtools::addGFontHtmlDependency(family = my_font)

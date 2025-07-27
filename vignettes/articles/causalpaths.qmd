@@ -1,9 +1,16 @@
 ---
 title: "Path Diagrams"
+knitr:
+  opts_chunk: 
+    collapse: true
+    comment: '#>'
+    dev: "svglite"
 format: 
   html:
     toc: true
     html-math-method: katex
+    fig-width: 7
+    fig-height: 7
 vignette: >
   %\VignetteIndexEntry{pathdiagrams}
   %\VignetteEngine{quarto::html}
@@ -15,7 +22,6 @@ csl: apa.csl
 ```{r}
 #| label: presetup
 #| include: false
-#| cache: false
 library(ggplot2)
 library(ggdiagram)
 library(tibble)
@@ -24,14 +30,6 @@ library(purrr)
 library(ggtext)
 library(geomtextpath)
 library(ggarrow)
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  dev = "ragg_png",
-  comment = "#>",
-  fig.width = 7,
-  fig.height = 7,
-  cache = FALSE
-)
 
 my_font <- "Roboto Condensed"
 update_geom_defaults("richtext", 
@@ -893,9 +891,9 @@ str_specifics <- "Specifics"
 # gradient fills
 black_gradient <- grid::radialGradient(
   colours = rev(c("gray50", "gray2", "gray2")), 
-  stops = c(0, .35, 1))
+  stops = c(0, .35, 1), group = FALSE)
 black_gradient_rev <- grid::radialGradient(
-  colours = c("gray50", "black"))
+  colours = c("gray50", "black"), group = FALSE)
 
 ggdiagram(font_family = my_serif_font, font_size = 16) +
   {g <- ob_circle(
@@ -945,7 +943,8 @@ ggdiagram(font_family = my_serif_font, font_size = 16) +
       fill = grid::radialGradient(
         colours = c(tinter::lighten(b@fill, .4), 
                     tinter::lighten(b@fill, .8)), 
-        stops = c(0,1)))}) +
+        stops = c(0,1),
+        group = FALSE))}) +
   ob_label(
     c("Ga", "Gc", "Gf", "Gv", "Gs", "Gr", "Gl", "Gwm"),
     broad@center + ob_point(0, -.05),

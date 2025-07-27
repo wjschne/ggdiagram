@@ -1,9 +1,16 @@
 ---
 title: "Polygons"
+knitr:
+  opts_chunk: 
+    collapse: true
+    comment: '#>'
+    dev: "svglite"
 format: 
   html:
     toc: true
     html-math-method: katex
+    fig-width:  7
+    fig-height: 7
 vignette: >
   %\VignetteIndexEntry{polygons}
   %\VignetteEngine{quarto::html}
@@ -18,14 +25,6 @@ library(ggplot2)
 library(dplyr)
 library(ggtext)
 library(ggarrow)
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  dev = "ragg_png",
-  comment = "#>",
-  fig.width = 7,
-  fig.height = 7
-)
-
 ```
 
 # Setup
