@@ -167,7 +167,7 @@ ob_polygon_props <- list(
 #'
 #' If you wish to specify multiple polygons, you must supply a list of [`ob_point`] objects. When plotted, the ob_polygon function uses the [`ggforce::geom_shape`] function to create the geom.
 #' @export
-#' @return ob_polygon object
+#' @returns ob_polygon object
 #' @param p [`ob_point`] or list of [`ob_point`] objects
 #' @param label A character, angle, or [`ob_label`] object
 #' @param vertex_radius A numeric or unit vector of length one, specifying the corner radius
@@ -642,7 +642,7 @@ S7::method(connect, list(ob_polygon, centerpoint)) <- function(
 #' @inherit ob_style params
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @export
-#' @return ob_polygon object
+#' @returns ob_polygon object
 ob_intercept <- S7::new_class(
   name = "ob_intercept",
   parent = centerpoint,
@@ -1260,7 +1260,7 @@ ob_ngon_props <- list(
 #'
 #' An ngon is a regular polygon, meaning that each side is of equal length. The [`ob_ngon`] object can be specified with a center, n (number of sides), radius, and angle. Instead of specifying a radius, one can specify either the `side_length` or the length of the `apothem` (i.e., the distance from the center to a side's midpoint.
 #' @export
-#' @return [`ob_ngon`] object
+#' @returns [`ob_ngon`] object
 #' @param center point at center of the ngon
 #' @param n Number of sides
 #' @param radius Distance from center to a vertex
@@ -1701,7 +1701,7 @@ S7::method(connect, list(centerpoint, ob_ngon)) <- function(
 #' @inherit ob_polygon params
 #'
 #' @export
-#' @return ob_reuleaux object
+#' @returns ob_reuleaux object
 ob_reuleaux <- S7::new_class(
   name = "ob_reuleaux",
   parent = centerpoint,

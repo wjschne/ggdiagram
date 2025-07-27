@@ -5,7 +5,7 @@
 #' @param y an [ob_point], [ob_line], [ob_segment], or object with a center point (e.g., [ob_circle], [ob_rectangle], [ob_ellipse])
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> Not used
 #' @rdname distance
-#' @return numeric
+#' @returns numeric
 #' @examples
 #' # Distance between two objects
 #' p1 <- ob_point(0, 0)

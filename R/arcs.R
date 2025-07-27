@@ -411,7 +411,7 @@ arc_props <- list(
 #' @slot theta interior angle (end - start)
 #' @slot tibble Gets a [tibble::tibble] or data.frame containing parameters and styles used by [`ggarrow::geom_arrow`].
 #' @export
-#' @return ob_arc object
+#' @returns ob_arc object
 #' @examples
 #' # 90-degree arc
 #' ggdiagram() +

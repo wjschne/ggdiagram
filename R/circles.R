@@ -203,7 +203,7 @@ cr_props <- list(
 #' @slot tangent_at A function that finds the tangent line at the specified angle.
 #' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggforce::geom_cirlce`.
 #' @export
-#' @return ob_circle object
+#' @returns ob_circle object
 #' @examples
 #' # specify center point and radius
 #' ob_circle(center = ob_point(0,0), radius = 6)
@@ -434,7 +434,7 @@ eq
 #' @param p2 an ob_point of length 1 or NULL
 #' @param p3 an ob_point of length 1 or NULL
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> Pass arguments to ob_circle
-#' @return ob_point object
+#' @returns ob_point object
 #' @export
 #'
 #' @examples

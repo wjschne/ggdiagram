@@ -294,7 +294,7 @@ el_props <- list(
 #' ggdiagram() +
 #'   e
 #' @export
-#' @return ob_ellipse object
+#' @returns ob_ellipse object
 ob_ellipse <- S7::new_class(
   name = "ob_ellipse",
   parent = centerpoint,

@@ -68,7 +68,7 @@ prop_vjust = S7::new_property(
 #' @param linetype type of lines
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> unused
 #' @export
-#' @return ob_style object
+#' @returns ob_style object
 ob_style <- S7::new_class(
   name = "ob_style",
   properties = list(

@@ -22,7 +22,7 @@
 #' @param delete_files Delete .tex and .pdf files after image is generated.
 #' @inherit ob_style params
 #' @export
-#' @return ob_latex object
+#' @returns ob_latex object
 ob_latex <- S7::new_class(
   name = "ob_latex",
   properties = list(

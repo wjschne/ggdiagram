@@ -231,7 +231,7 @@ sg_props <- list(
 #' @slot nudge A function to move the segment by x and y units.
 #' @inherit ob_style params
 #' @export
-#' @return ob_segment object
+#' @returns ob_segment object
 ob_segment <- S7::new_class(
   name = "ob_segment",
   parent = shape,

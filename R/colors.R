@@ -11,7 +11,7 @@
 #' @param alpha get or set the transparency of a color
 #' @param id character identifier
 #' @export
-#' @return class_color object
+#' @returns class_color object
 #' @examples
 #' mycolor <- class_color("blue")
 #' mycolor
@@ -301,7 +301,7 @@ S7::method(mean, class_color) <- function(x, ...) {
 #'
 #' @param x color
 #'
-#' @return string
+#' @returns string
 #' @export
 #'
 #' @examples
@@ -325,7 +325,7 @@ mean_color <- function(x) {
 #' @param x TeX expression
 #' @param color color
 #'
-#' @return string
+#' @returns string
 #' @export
 #'
 #' @examples

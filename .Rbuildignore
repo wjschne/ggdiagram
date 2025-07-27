@@ -21,3 +21,4 @@ vignettes/.quarto/
 ^codecov\.yml$
 ^data-raw$
 logo.png
+^CRAN-SUBMISSION$

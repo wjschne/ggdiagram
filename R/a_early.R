@@ -52,7 +52,7 @@ character_index <- function(i, id) {
 #' @param omit_names properties that are ignored
 #' @param inherit.aes Defaults to `FALSE` so that ggdiagram objects do not interfere with other layers in the ggplot
 #' @keywords internal
-#' @return a class_aesthetics_list object
+#' @returns a class_aesthetics_list object
 class_aesthetics_list <- S7::new_class(
   name = "class_aesthetics_list",
   properties = list(
@@ -165,7 +165,7 @@ the$arrow_head <- class_arrowhead(arrowheadr::arrow_head_deltoid(d = 2.3, n = 10
 #' The arrowhead function returns the default arrowhead. The set_default_arrowhead function will change the default arrowhead in the current R session. For details about making arrowheads, see the [ggarrow](https://teunbrand.github.io/ggarrow/articles/customisation.html) and [arrowheadr](https://wjschne.github.io/arrowheadr/) packages.
 #' @param m A matrix used to make a ggarrow arrowhead
 #' @export
-#' @return 2-column matrix
+#' @returns 2-column matrix
 #' @examples
 #' arrowhead()
 #' # Set new default
@@ -181,7 +181,7 @@ arrowhead <- function() {
 
 #' @rdname arrowhead
 #' @export
-#' @return previous default arrowhead
+#' @returns previous default arrowhead
 set_default_arrowhead <- function(m = NULL) {
   if (is.null(m)) {
     m <- arrowheadr::arrow_head_deltoid(d = 2.3, n = 100)
@@ -211,7 +211,7 @@ S7::method(print, has_style) <- function(x, ...) {
 #' makes a heterogeneous list of different ggdiagram objects
 #' @param .data a list of objects
 #' @export
-#' @return An object of [`ob_shape_list`] class. List of objects that can be converted to geoms
+#' @returns An object of [`ob_shape_list`] class. List of objects that can be converted to geoms
 ob_shape_list <- S7::new_class(
   "ob_shape_list",
   S7::class_list,
@@ -285,7 +285,7 @@ xy <- S7::new_class(name = "xy",
 #' @param bend Angle by which the control points are rotated. Can be numeric (degrees), [degree], [radian], [turn], or named direction (e.g., "northwest", "east", "below", "left"). Defaults to 0.
 #' @inherit ob_style params
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
-#' @return Returns an object of type [`ob_bezier`]
+#' @returns Returns an object of type [`ob_bezier`]
 #' @export
 ob_variance <- S7::new_generic("ob_variance", dispatch_args = "x", fun = function(
     x,
@@ -310,7 +310,7 @@ ob_variance <- S7::new_generic("ob_variance", dispatch_args = "x", fun = functio
 #' @param bend Angle by which the control points are rotated. Can be numeric (degrees), [degree], [radian], [turn], or named direction (e.g., "northwest", "east", "below", "left"). Defaults to 0
 #' @inherit ob_style params
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
-#' @return An [`ob_bezier`] object
+#' @returns An [`ob_bezier`] object
 #' @export
 ob_covariance <- S7::new_generic(
   "ob_covariance",
@@ -338,7 +338,7 @@ ob_covariance <- S7::new_generic(
 #' @param where angle or named direction (e.g.,northwest, east, below, left)
 #' @param anchor bounding box anchor
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to shape
-#' @return An array of shapes of the same class as object passed to x
+#' @returns An array of shapes of the same class as object passed to x
 #' @export
 ob_array <- S7::new_generic(name = "ob_array", dispatch_args = "x", fun = function(x, k = 2, sep = 1, where = "east", anchor = "center", ...) {
   S7::S7_dispatch()
@@ -354,7 +354,7 @@ ob_array <- S7::new_generic(name = "ob_array", dispatch_args = "x", fun = functi
 #' bind(c(ob_circle(ob_point(0,0), radius = 1),
 #'        ob_circle(ob_point(1,1), radius = 2)))
 #' @export
-#' @return a bound object of same class as x (or list of objects if x contains objects of different types)
+#' @returns a bound object of same class as x (or list of objects if x contains objects of different types)
 bind <- S7::new_generic(name = "bind", dispatch_args = "x")
 
 S7::method(bind, S7::class_list) <- function(x, ...) {
@@ -461,7 +461,7 @@ S7::method(bind, ob_shape_list) <- function(x, ...) {
 #' @param x object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> additional arguments (not used at this time)
 #' @export
-#' @return a list of objects, each of length 1
+#' @returns a list of objects, each of length 1
 unbind <- S7::new_generic("unbind", dispatch_args = "x")
 
 S7::method(unbind, has_style) <- function(x) {
@@ -480,7 +480,7 @@ S7::method(unbind, ob_shape_list) <- function(x) {
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to .f
 #' @param .progress display progress if TRUE
 #'
-#' @return a ggdiagram object
+#' @returns a ggdiagram object
 #' @export
 map_ob <- function(.x, .f, ..., .progress = FALSE) {
   if (S7::S7_inherits(.x, has_style) | S7::S7_inherits(.x, ob_angle)) {
@@ -516,7 +516,7 @@ S7::method(`+`, list(S7::class_character, S7::class_numeric)) <- function(e1, e2
 #'
 #' @param x object
 #' @export
-#' @return a [tibble::tibble]
+#' @returns a [tibble::tibble]
 get_tibble <- S7::new_generic("get_tibble", "x", fun = function(x) {S7::S7_dispatch()})
 S7::method(get_tibble, S7::class_list) <- function(x) {
   purrr::map_df(S7::S7_data(x), get_tibble)
@@ -531,7 +531,7 @@ S7::method(get_tibble, S7::class_list) <- function(x) {
 #' @param distance resect distance
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @export
-#' @return object of same class as x
+#' @returns object of same class as x
 resect <- S7::new_generic("resect", c("x", "distance"))
 
 
@@ -539,7 +539,7 @@ resect <- S7::new_generic("resect", c("x", "distance"))
 #'
 #' @param x object
 #' @export
-#' @return a [tibble::tibble]
+#' @returns a [tibble::tibble]
 #' @rdname get_tibble
 get_tibble_defaults <- S7::new_generic("get_tibble_defaults", "x", fun = function(x) S7::S7_dispatch())
 S7::method(get_tibble_defaults, S7::class_any) <- function(x) {
@@ -558,7 +558,7 @@ S7::method(get_tibble_defaults, S7::class_any) <- function(x) {
 #' # Alternative to nudge:
 #' ob_circle() + ob_point(2, 0)
 #' @export
-#' @return object of same class as `object`
+#' @returns object of same class as `object`
 nudge <- S7::new_generic("nudge", c("object", "x", "y"))
 
 # unions ----
@@ -572,7 +572,7 @@ class_numeric_or_unit <- S7::new_union(S7::class_numeric, class_unit)
 #' @param .f function
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> new defaults
 #'
-#' @return function
+#' @returns function
 #' @export
 #'
 #' @examples
@@ -817,7 +817,7 @@ ob_array_helper <- function(x, k = 2, sep = 1, where = "east", anchor = "center"
 #' @param subscript subscript
 #' @param output Can be `markdown` (default) or `latex`
 #'
-#' @return text
+#' @returns text
 #' @export
 #'
 #' @examples
@@ -842,7 +842,7 @@ subscript <- function(x,
 #' @param superscript superscript
 #' @param output Can be `markdown` (default) or `latex`
 #'
-#' @return string
+#' @returns string
 #' @rdname subscript
 #' @export
 superscript <- function(x,
@@ -867,7 +867,7 @@ superscript <- function(x,
 #' @param encoding type of encoding (defaults to UTF-8)
 #' @param ... parameters passed to signs:signs
 #'
-#' @return a vector of numbers converted to characters
+#' @returns a vector of numbers converted to characters
 #' @export
 signs_centered <- function(x, space = NULL, encoding = "UTF-8", ...) {
   if (is.null(space)) space <- "\u2007"
@@ -888,7 +888,7 @@ signs_centered <- function(x, space = NULL, encoding = "UTF-8", ...) {
 #' @param round_zero_one round 0 and 1
 #' @param phantom_text invisible text inserted on the right
 #' @param phantom_color color of phantom text
-#' @return a character vector
+#' @returns a character vector
 #' @export
 #' @examples
 #' round_probability(c(0, .0012, .012, .12, .99, .992, .9997, 1), digits = 2)
@@ -1031,7 +1031,7 @@ prop_integer_coerce <- function(name) {
 #' @param x a shape
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> Pass arguments to ggplot2::geom_point
 #' @rdname as.geom
-#' @return geom
+#' @returns geom
 #' @export
 #' @examples
 #' library(ggplot2)
@@ -1210,7 +1210,7 @@ emphasis <- function(x, output = "markdown") {
 #' @param output Can be `markdown` (default) or `latex`
 #' @param digits rounding digits
 #' @export
-#' @return string
+#' @returns string
 #' @examples
 #' l1 <- ob_line(slope = 2, intercept = 4)
 #' c1 <- ob_circle(radius = 3)
@@ -1243,7 +1243,7 @@ equation <- S7::new_generic(
 #' @param object object (e.g., line or segment)
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style object
 #' @export
-#' @return ob_point
+#' @returns ob_point
 projection <- S7::new_generic("projection", c("p", "object"))
 
 
@@ -1256,7 +1256,7 @@ projection <- S7::new_generic("projection", c("p", "object"))
 #' @param position numeric vector. 0 is start, 1 is end. Defaults to .5
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @export
-#' @return ob_point
+#' @returns ob_point
 midpoint <- S7::new_generic(
   "midpoint",
   c("x", "y"),
@@ -1286,7 +1286,7 @@ rotate2columnmatrix <- function(x, theta) {
 #'
 #' @param object object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> additional arguments
-#' @return string
+#' @returns string
 #' @export
 label_object <- S7::new_generic("label_object", "object")
 
@@ -1303,7 +1303,7 @@ label_object <- S7::new_generic("label_object", "object")
 #' @inheritParams ob_bezier
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> Arguments passed to [ob_style]
 #' @export
-#' @return ob_segment
+#' @returns ob_segment
 connect <- S7::new_generic(
   "connect",
   c("from", "to"),
@@ -1348,7 +1348,7 @@ connect <- S7::new_generic(
 #' @param sep separation distance
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> Arguments passed to [ob_style]
 #' @export
-#' @return object of same class as `x`
+#' @returns object of same class as `x`
 place <- S7::new_generic("place", c("x", "from"),
                      fun = function(x, from, where = "right", sep = 1, ...) {
                        S7::S7_dispatch()
@@ -1368,7 +1368,7 @@ place <- S7::new_generic("place", c("x", "from"),
 #' @param rect_linewidth line width of rectangles
 #' @param theme_function A complete [ggplot2 theme][ggplot2::theme_minimal] function (e.g., [ggplot2::theme_minimal]). Defaults to [ggplot2::theme_void]
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> Arguments sent to [ggplot2::theme]
-#' @return ggplot function
+#' @returns ggplot function
 #' @export
 #'
 #' @examples
@@ -1441,7 +1441,7 @@ ggdiagram <- function(
 #' Allows a data.frame or tibble to be converted to shape objects.
 #' @param data data.frame or tibble
 #' @param shape shape function
-#' @return shape object
+#' @returns shape object
 #' @export
 #' @examples
 #' d <- data.frame(
@@ -1466,7 +1466,7 @@ data2shape <- function(data, shape) {
 #' @param depth initial depth
 #' @param max_depth max depth at which to stop (prevents infinite loops for non-recursive models)
 #'
-#' @return integer
+#' @returns integer
 #' @export
 #'
 #' @examples

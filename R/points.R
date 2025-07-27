@@ -143,7 +143,7 @@ pt_props <- list(
 #' @slot xy Gets a 2-column matrix of the x and y coordinates of the ob_point object.
 #' @inherit ob_style params
 #' @export
-#' @return ob_point object
+#' @returns ob_point object
 #' @examples
 #' ggdiagram() +
 #'   ob_point(1:5, 1:5) +
@@ -315,7 +315,7 @@ S7::method(get_tibble_defaults, ob_point) <- function(x) {
 #' @param multiplier distance
 #' @param axis vertical (v) or horizontal (h)
 #' @export
-#' @return ob_angle object
+#' @returns ob_angle object
 #' @examples
 #' a <- "northwest"
 #' polar2just(a, axis = "h")
@@ -416,7 +416,7 @@ NULL
 #' @rdname perpendicular_point
 #' @aliases %|-%
 #' @export
-#' @return ob_point object
+#' @returns ob_point object
 `%|-%` <- S7::new_generic("%|-%", c("e1", "e2"), fun = function(e1,e2) {S7::S7_dispatch()})
 
 S7::method(`%|-%`, list(ob_point, ob_point)) <- function(e1,e2) {
@@ -430,7 +430,7 @@ S7::method(`%|-%`, list(ob_point, ob_point)) <- function(e1,e2) {
 #' @rdname perpendicular_point
 #' @aliases %-|%
 #' @export
-#' @return ob_point object
+#' @returns ob_point object
 `%-|%` <- S7::new_generic("%-|%", c("e1", "e2"), fun = function(e1,e2) {S7::S7_dispatch()})
 
 S7::method(`%-|%`, list(ob_point, ob_point)) <- function(e1,e2) {

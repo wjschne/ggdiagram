@@ -368,7 +368,7 @@ rc_props <- list(
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to `style`
 #' @inherit ob_style params
 #' @export
-#' @return [`ob_rectangle`] object
+#' @returns [`ob_rectangle`] object
 #'
 #' @examples
 #' ggdiagram() +

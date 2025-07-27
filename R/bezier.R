@@ -181,7 +181,7 @@ bz_props <- list(
 #'
 #' If you wish to specify multiple bezier curves, you must supply a list of ob_point objects. When plotted, the ob_bezier function uses the bezier::bezier function to create the point coordinates of the curve and the ggarrow::geom_arrow function to create the geom.
 #' @export
-#' @return ob_bezier object
+#' @returns ob_bezier object
 #' @param p ob_point or list of ob_points
 #' @param label A character, angle, or label object
 #' @param label_sloped A logical value indicating whether the label should be sloped with the curve

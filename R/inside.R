@@ -4,7 +4,7 @@
 #' @param x object
 #' @param y object
 #' @export
-#' @return numeric vector where 1 = inside, 0 = on, -1 = outside
+#' @returns numeric vector where 1 = inside, 0 = on, -1 = outside
 inside <- S7::new_generic("inside", c("x", "y"), fun = function(x,y) S7::S7_dispatch())
 
 S7::method(inside, list(ob_point, ob_rectangle)) <- function(x,y) {
