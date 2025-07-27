@@ -1332,7 +1332,7 @@ ggdiagram(font_family = my_font, font_size = 13) +
   
 ```
 
-# Path Models for Bivariate Latent Growth Models
+## Path Models for Bivariate Latent Growth Models
 
 Bivariate latent growth models are used to model the change in two variables over time. The latent intercepts *i~X~* and *i~Y~* represent the initial status of the two variables, while the latent slopes *s~X~* and *s~Y~* represent the linear growth rate. The model also includes structured residuals that allow for the separation of between-person change and within-person change @curranSeparationBetweenpersonWithinperson2014. The *b~XX~* and *b~YY~* autocorrelation parameters measures within-person stability, and the *b~XY~* and *b~YX~* cross-lag parameters measures within-person bidirectional influence.
 
