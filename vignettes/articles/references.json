@@ -114,5 +114,56 @@
         "title": "Building path diagrams for multilevel models.",
         "type": "article-journal",
         "volume": "12"
+    },
+    {
+        "DOI": "10.1037/a0035297",
+        "ISSN": "1939-2117, 0022-006X",
+        "URL": "https://doi.apa.org/doi/10.1037/a0035297",
+        "accessed": {
+            "date-parts": []
+        },
+        "author": [
+            {
+                "family": "Curran",
+                "given": "Patrick J."
+            },
+            {
+                "family": "Howard",
+                "given": "Andrea L."
+            },
+            {
+                "family": "Bainter",
+                "given": "Sierra A."
+            },
+            {
+                "family": "Lane",
+                "given": "Stephanie T."
+            },
+            {
+                "family": "McGinley",
+                "given": "James S."
+            }
+        ],
+        "container-title": "Journal of Consulting and Clinical Psychology",
+        "container-title-short": "Journal of Consulting and Clinical Psychology",
+        "id": "curranSeparationBetweenpersonWithinperson2014",
+        "issue": "5",
+        "issued": {
+            "date-parts": [
+                [
+                    2014
+                ]
+            ]
+        },
+        "key": "JJ5IL89C",
+        "language": "en",
+        "libraryid": "1",
+        "page": "879-894",
+        "providerkey": "2509FBBE-5BB0-44C4-B119-6083A81ED673",
+        "source": "DOI.org (Crossref)",
+        "title": "The separation of between-person and within-person components of individual change over time: A latent curve model with structured residuals.",
+        "title-short": "The separation of between-person and within-person components of individual change over time",
+        "type": "article-journal",
+        "volume": "82"
     }
 ]
