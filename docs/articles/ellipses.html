@@ -161,7 +161,7 @@
 </details><div class="cell-output-display">
 <div id="fig-abellipse" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-abellipse-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="ellipses_files/figure-html/fig-abellipse-1.png" width="672">
+<img src="ellipses_files/figure-html/fig-abellipse-1.svg" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-abellipse-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 1: An ellipse can be specified with a center, and semi-major radii.
@@ -185,7 +185,7 @@ Figure 1: An ellipse can be specified with a center, and semi-major radii.
 <div class="cell-output-display">
 <div id="fig-foci" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-foci-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="ellipses_files/figure-html/fig-foci-1.png" width="672">
+<img src="ellipses_files/figure-html/fig-foci-1.svg" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-foci-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 2: An ellipse has two foci
@@ -220,7 +220,7 @@ Figure 2: An ellipse has two foci
 <div class="cell-output-display">
 <div id="fig-focilength" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-focilength-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="ellipses_files/figure-html/fig-focilength-1.png" width="672">
+<img src="ellipses_files/figure-html/fig-focilength-1.svg" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-focilength-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 3: The sum of distances from the foci is constant.
@@ -238,7 +238,7 @@ Figure 3: The sum of distances from the foci is constant.
 <div class="cell-output-display">
 <div id="fig-ellipserotated" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-ellipserotated-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="ellipses_files/figure-html/fig-ellipserotated-1.png" width="672">
+<img src="ellipses_files/figure-html/fig-ellipserotated-1.svg" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ellipserotated-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 4: An ellipse rotated 45 degrees
@@ -256,7 +256,7 @@ Figure 4: An ellipse rotated 45 degrees
 <div class="cell-output-display">
 <div id="fig-ellipserotated1" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-ellipserotated1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="ellipses_files/figure-html/fig-ellipserotated1-1.png" width="672">
+<img src="ellipses_files/figure-html/fig-ellipserotated1-1.svg" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ellipserotated1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 5: An ellipse rotated 45 degrees about point (2, 0)
@@ -295,7 +295,7 @@ Figure 5: An ellipse rotated 45 degrees about point (2, 0)
 </details><div class="cell-output-display">
 <div id="fig-ptheta" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-ptheta-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="ellipses_files/figure-html/fig-ptheta-1.png" width="672">
+<img src="ellipses_files/figure-html/fig-ptheta-1.svg" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ptheta-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 6: Point on ellipse that is 45° from the x-axis.
@@ -326,11 +326,14 @@ t&amp;=[0,2\pi)\\
 <span>  <span class="op">{</span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="va">e1</span><span class="op">@</span><span class="va">point_at</span><span class="op">(</span><span class="va">theta</span>, definitional <span class="op">=</span> <span class="cn">T</span>, color <span class="op">=</span> <span class="st">"dodgerblue"</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/ob_segment.html">ob_segment</a></span><span class="op">(</span><span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">p2</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="va">theta</span><span class="op">@</span><span class="va">degree</span>, <span class="va">p2</span>, polar_just <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span><span class="va">theta</span>, r <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>expand <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expansion.html" class="external-link">expansion</a></span><span class="op">(</span><span class="fl">.12</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Scale for x is already present.</span></span>
+<span><span class="co">#&gt; Adding another scale for x, which will replace the existing scale.</span></span></code></pre></div>
 </details><div class="cell-output-display">
 <div id="fig-definitionalpoints" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-definitionalpoints-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="ellipses_files/figure-html/fig-definitionalpoints-1.png" width="672">
+<img src="ellipses_files/figure-html/fig-definitionalpoints-1.svg" width="768">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-definitionalpoints-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 7: The ellipse’s definitional parameter <em>t</em> does not always line up with angles on a circle
@@ -361,7 +364,7 @@ Figure 7: The ellipse’s definitional parameter <em>t</em> does not always lin
 <div class="cell-output-display">
 <div id="fig-tangent" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-tangent-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="ellipses_files/figure-html/fig-tangent-1.png" width="672">
+<img src="ellipses_files/figure-html/fig-tangent-1.svg" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tangent-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 8: Tangent lines on an ellipse
@@ -379,7 +382,7 @@ Figure 8: Tangent lines on an ellipse
 <div class="cell-output-display">
 <div id="fig-tangentpoint" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-tangentpoint-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="ellipses_files/figure-html/fig-tangentpoint-1.png" width="672">
+<img src="ellipses_files/figure-html/fig-tangentpoint-1.svg" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tangentpoint-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 9: Tangent line at a specific point on an ellipse
@@ -398,7 +401,7 @@ Figure 9: Tangent line at a specific point on an ellipse
 <div class="cell-output-display">
 <div id="fig-tangentpointprojection" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-tangentpointprojection-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="ellipses_files/figure-html/fig-tangentpointprojection-1.png" width="672">
+<img src="ellipses_files/figure-html/fig-tangentpointprojection-1.svg" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tangentpointprojection-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 10: Tangent line at a specific point projected onto an ellipse
@@ -421,7 +424,7 @@ Figure 10: Tangent line at a specific point projected onto an ellipse
 <div class="cell-output-display">
 <div id="fig-squircle" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-squircle-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="ellipses_files/figure-html/fig-squircle-1.png" width="672">
+<img src="ellipses_files/figure-html/fig-squircle-1.svg" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-squircle-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 11: A squircle
@@ -449,7 +452,7 @@ Figure 11: A squircle
 <div class="cell-output-display">
 <div id="fig-myvariable" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-myvariable-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="ellipses_files/figure-html/fig-myvariable-1.png" width="672">
+<img src="ellipses_files/figure-html/fig-myvariable-1.svg" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-myvariable-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 12: A superellipse can look like a rectangle with rounded corners.
@@ -468,7 +471,7 @@ Figure 12: A superellipse can look like a rectangle with rounded corners.
 <div class="cell-output-display">
 <div id="fig-connectellipse" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-connectellipse-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="ellipses_files/figure-html/fig-connectellipse-1.png" width="672">
+<img src="ellipses_files/figure-html/fig-connectellipse-1.svg" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-connectellipse-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 13: Connections between ellipses
@@ -490,7 +493,7 @@ Figure 13: Connections between ellipses
 <div class="cell-output-display">
 <div id="fig-placeellipse" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-placeellipse-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="ellipses_files/figure-html/fig-placeellipse-1.png" width="672">
+<img src="ellipses_files/figure-html/fig-placeellipse-1.svg" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-placeellipse-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 14: Place an ellipse 2 units to the right of another ellipse.
@@ -532,7 +535,7 @@ Figure 14: Place an ellipse 2 units to the right of another ellipse.
 <div class="cell-output-display">
 <div id="fig-placedistance" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-placedistance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="ellipses_files/figure-html/fig-placedistance-1.png" width="672">
+<img src="ellipses_files/figure-html/fig-placedistance-1.svg" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-placedistance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 15: The separation distance between ellipses is along the path that connects their centers.
@@ -586,7 +589,7 @@ Figure 15: The separation distance between ellipses is along the path that conn
 <div class="cell-output-display">
 <div id="fig-manyconnections" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-manyconnections-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="ellipses_files/figure-html/fig-manyconnections-1.png" width="672">
+<img src="ellipses_files/figure-html/fig-manyconnections-1.svg" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-manyconnections-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 16: Many ellipses can be placed at once.
@@ -624,7 +627,7 @@ Figure 16: Many ellipses can be placed at once.
 <div class="cell-output-display">
 <div id="fig-placeline" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-placeline-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="ellipses_files/figure-html/fig-placeline-1.png" width="672">
+<img src="ellipses_files/figure-html/fig-placeline-1.svg" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-placeline-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 17: A line placed 3 units and 45 degrees from a squircle.

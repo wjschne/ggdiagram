@@ -17,8 +17,6 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 bibliography: references.json
 csl: apa.csl
-execute: 
-  cache: true
 ---
 
 ```{r}
