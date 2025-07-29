@@ -27,6 +27,7 @@ library(ggtext)
 library(ggarrow)
 
 my_font <- "Roboto Condensed"
+systemfonts::get_from_google_fonts(my_font)
 
 update_geom_defaults("richtext",
                      list(family = my_font, 
