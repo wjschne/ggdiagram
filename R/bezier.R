@@ -44,6 +44,7 @@ bz_props <- list(
     bounding_box = S7::new_property(getter = function(self) {
 
       d_rect <- get_tibble(self) |>
+        tidyr::unnest(p_unnest) |>
         dplyr::summarise(xmin = min(x),
                          xmax = max(x),
                          ymin = min(y),
@@ -237,6 +238,16 @@ ob_bezier <- S7::new_class(
     id <- as.character(id)
 
     if (S7::S7_inherits(p, ob_point)) p <- list(p)
+    if (missing(p)) stop("Must specify 2 or more control points.")
+    purrr::walk(p, \(pp) {
+      if (!S7::S7_inherits(pp, ob_point)) {
+        stop("Each item in list p must be an ob_point object of length 2 or more.")
+      }
+      if (pp@length < 1) {
+        stop("Each item in list p must be an ob_point object of length 2 or more.")
+      }
+    })
+
     p_style <- purrr::map(p, \(x) {
       purrr::map(unbind(x), \(xx) xx@style) |>
         purrr::reduce(`+`)
@@ -335,7 +346,6 @@ S7::method(str, ob_bezier) <- function(
                  omit = omit,
                  nest.lev = nest.lev,
                  additional = additional)
-  cat(" <control points>\n")
   purrr::walk(object@p,
               \(o) {
                 str_properties(

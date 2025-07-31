@@ -112,10 +112,10 @@ str_properties <- function(
 
 
 
-S7::method(print, class_arrowhead) <- function(x, ...) {
-  str(x, ...)
-  invisible(x)
-}
+# S7::method(print, class_arrowhead) <- function(x, ...) {
+#   str(x, ...)
+#   invisible(x)
+# }
 
 S7::method(str, class_arrowhead) <- function(
   object,
@@ -123,7 +123,6 @@ S7::method(str, class_arrowhead) <- function(
   additional = TRUE,
   omit = omit_props(object, include = c("x","y"))) {
 
-  cat(if (nest.lev > 0) " ")
   cli::cli_h3("<class_arrowhead>")
 
   for (i in S7::S7_data(object)) {
@@ -145,7 +144,6 @@ S7::method(str, class_margin) <- function(
   nest.lev = 0,
   additional = FALSE,
   omit = "") {
-  cat(if (nest.lev > 0) " ")
   cli::cli_h3("<class_margin>")
 
   for (i in S7::S7_data(object)) {

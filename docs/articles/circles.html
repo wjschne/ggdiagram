@@ -115,7 +115,7 @@
 <span><span class="co"># my_colors &lt;- viridis::viridis(2, begin = .25, end = .5)</span></span>
 <span><span class="va">my_colors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#3B528B"</span>, <span class="st">"#21908C"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/get_theme.html" class="external-link">theme_set</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme_get.html" class="external-link">theme_set</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span></span>
 <span>    base_size <span class="op">=</span> <span class="va">my_font_size</span>,</span>
 <span>    base_family <span class="op">=</span> <span class="va">my_font</span><span class="op">)</span> <span class="op">+</span></span>
@@ -171,7 +171,7 @@
 </details><div class="cell-output-display">
 <div id="fig-circle" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-circle-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="circles_files/figure-html/fig-circle-1.svg" width="672">
+<img src="circles_files/figure-html/fig-circle-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-circle-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 1: A circle can be specified with a center and a radius,
@@ -205,7 +205,7 @@ Figure 1: A circle can be specified with a center and a radius,
 </details><div class="cell-output-display">
 <div id="fig-ptheta" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-ptheta-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="circles_files/figure-html/fig-ptheta-1.svg" width="672">
+<img src="circles_files/figure-html/fig-ptheta-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ptheta-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 2: Point on circle that is 45° from the x-axis.
@@ -223,7 +223,7 @@ Figure 2: Point on circle that is 45° from the x-axis.
 <div class="cell-output-display">
 <div id="fig-pthetas" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-pthetas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="circles_files/figure-html/fig-pthetas-1.svg" width="672">
+<img src="circles_files/figure-html/fig-pthetas-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pthetas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 3: Points on circle 20 degrees apart.
@@ -242,7 +242,7 @@ Figure 3: Points on circle 20 degrees apart.
 <span>  <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="va">positions</span>, <span class="va">p</span>, polar_just <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span><span class="va">p</span><span class="op">@</span><span class="va">theta</span>, <span class="fl">1.7</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure><p><img src="circles_files/figure-html/fig_namedpoints-1.svg" width="672"></p>
+<figure><p><img src="circles_files/figure-html/fig_namedpoints-1.png" width="672"></p>
 <figcaption>The <code>@point_at</code> property can take angles or named positions</figcaption></figure>
 </div>
 </div>
@@ -268,7 +268,7 @@ Figure 3: Points on circle 20 degrees apart.
 <div class="cell-output-display">
 <div id="fig-place" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-place-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="circles_files/figure-html/fig-place-1.svg" width="672">
+<img src="circles_files/figure-html/fig-place-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-place-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 4: Place Circle B one unit to the right of Circle A
@@ -293,7 +293,7 @@ Figure 4: Place Circle B one unit to the right of Circle A
 <div class="cell-output-display">
 <div id="fig-multplace" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-multplace-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="circles_files/figure-html/fig-multplace-1.svg" width="672">
+<img src="circles_files/figure-html/fig-multplace-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-multplace-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 5: Place mutliple circles using named directions
@@ -313,7 +313,7 @@ Figure 5: Place mutliple circles using named directions
 <div class="cell-output-display">
 <div id="fig-multdegree" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-multdegree-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="circles_files/figure-html/fig-multdegree-1.svg" width="672">
+<img src="circles_files/figure-html/fig-multdegree-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-multdegree-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 6: Place mutliple circles using degrees
@@ -343,7 +343,7 @@ Figure 6: Place mutliple circles using degrees
 <div class="cell-output-display">
 <div id="fig-style" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-style-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="circles_files/figure-html/fig-style-1.svg" width="672">
+<img src="circles_files/figure-html/fig-style-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-style-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 7: Place mutliple circles with styling
@@ -378,7 +378,7 @@ Figure 7: Place mutliple circles with styling
 <div class="cell-output-display">
 <div id="fig-multimulti" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-multimulti-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="circles_files/figure-html/fig-multimulti-1.svg" width="672">
+<img src="circles_files/figure-html/fig-multimulti-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-multimulti-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 8: Place circles around a point, and points around each circle
@@ -396,7 +396,7 @@ Figure 8: Place circles around a point, and points around each circle
 <div class="cell-output-display">
 <div id="fig-linecircle" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-linecircle-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="circles_files/figure-html/fig-linecircle-1.svg" width="672">
+<img src="circles_files/figure-html/fig-linecircle-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-linecircle-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 9: Placing a line one unit northeast of a circle
@@ -416,7 +416,7 @@ Figure 9: Placing a line one unit northeast of a circle
 <div class="cell-output-display">
 <div id="fig-connectcircles" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-connectcircles-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="circles_files/figure-html/fig-connectcircles-1.svg" width="672">
+<img src="circles_files/figure-html/fig-connectcircles-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-connectcircles-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 10: Connect two circles
@@ -459,7 +459,7 @@ Figure 10: Connect two circles
 <div class="cell-output-display">
 <div id="fig-connectcirclesstyles" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-connectcirclesstyles-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="circles_files/figure-html/fig-connectcirclesstyles-1.svg" width="672">
+<img src="circles_files/figure-html/fig-connectcirclesstyles-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-connectcirclesstyles-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 11: Connect two circles with labels and styles
@@ -481,7 +481,7 @@ Figure 11: Connect two circles with labels and styles
 <div class="cell-output-display">
 <div id="fig-connectcircleline" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-connectcircleline-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="circles_files/figure-html/fig-connectcircleline-1.svg" width="672">
+<img src="circles_files/figure-html/fig-connectcircleline-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-connectcircleline-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 12: Connect a circle to a line and a line to a circle
@@ -500,7 +500,7 @@ Figure 12: Connect a circle to a line and a line to a circle
 <div class="cell-output-display">
 <div id="fig-connectcirclelinehv" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-connectcirclelinehv-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="circles_files/figure-html/fig-connectcirclelinehv-1.svg" width="672">
+<img src="circles_files/figure-html/fig-connectcirclelinehv-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-connectcirclelinehv-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure 13: Connect a circle to a line via horiztonal and vertical lines

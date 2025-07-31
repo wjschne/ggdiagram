@@ -367,9 +367,6 @@ S7::method(intersection, list(ob_line, ob_ellipse)) <- function(x, y, ...) {
     s <- ob_segment(anchor(y, angle(degree = current_angle)),
                  anchor(y, angle(degree = current_angle + delta_angle)))
     intersect_line_segment <- intersection(x, s)
-    # cat(paste0(distance(s), "\n"))
-
-
 
     if (length(intersect_line_segment) > 0) {
       first <- TRUE
