@@ -3,11 +3,11 @@
 \docType{package}
 \name{ggdiagram-package}
 \alias{ggdiagram-package}
-\title{ggdiagram: Object-Oriented Diagram Plots with ggplot2}
+\title{ggdiagram: Object-Oriented Diagram Plots with 'ggplot2'}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-The ggdiagram package creates path diagrams with an object-oriented approach and plots diagrams with ggplot2.
+Creates diagrams with an object-oriented approach. Geometric objects have computed properties with information about themselves (e.g., their area) or about their relationships with other objects (e.g, the distance between their edges). The objects have methods to convert them to geoms that can be plotted in 'ggplot2'.
 }
 \seealso{
 Useful links:

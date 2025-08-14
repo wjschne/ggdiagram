@@ -212,6 +212,7 @@ path_props <- list(
 ob_path <- S7::new_class(
   name = "ob_path",
   parent = has_style,
+  package = "ggdiagram",
   properties = rlang::list2(
       !!!path_props$primary,
       !!!path_props$extra,

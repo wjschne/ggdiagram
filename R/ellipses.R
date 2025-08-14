@@ -297,6 +297,7 @@ el_props <- list(
 #' @returns ob_ellipse object
 ob_ellipse <- S7::new_class(
   name = "ob_ellipse",
+  package = "ggdiagram",
   parent = centerpoint,
   properties = rlang::list2(
     !!!el_props$primary,

@@ -1,15 +1,17 @@
 ---
-title: "Tutorial: Euclid's Amber Version of the Elements"
+title: "Euclid's Amber Version of the Elements"
 format: 
   html:
     toc: true
-    code-fold: true
+    toc-location: left
+    code-fold: false
     html-math-method: katex
     backgroundcolor: "#fcf3d9"
     mainfont: "Libre Caslon Text"
+    theme: [amber.scss]
 vignette: >
   %\VignetteIndexEntry{elements}
-  %\VignetteEngine{quarto::html}
+  %\VignetteEngine{quarto::format}
   %\VignetteEncoding{UTF-8}
 ---
 
@@ -20,10 +22,11 @@ vignette: >
 library(ggdiagram)
 library(ggplot2)
 red <- "#d42a20"
-yellow <- "#FAC22B"
+yellow <- "#D6A624"
 blue <- "#0C7AA5"
 black <- "#000000"
 bg <- "#fcf3d9"
+gray <- "#656565"
 my_font <- "Libre Caslon Text"
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -53,29 +56,15 @@ Slightly disgruntled, Euclid starts converting his papyrus entitled *Book I, Pro
 
 # Book I, Proposition I
 
-:::{.callout-note}
-
-## Proposition I
-
-To construct an equilateral triangle on a given finite straight-line.
-
-Let AB be the given finite straight-line.
-
-So it is required to construct an equilateral triangle on the straight-line AB.
-
-Let the circle BCD with center A and radius AB have been drawn, and again let the circle ACE with center B and radius BA have been drawn. And let the straight-lines CA and CB have been joined from the point C, where the circles cut one another, to the points A and B (respectively).
-
-And since the point A is the center of the circle CDB, AC is equal to AB. Again, since the point B is the center of the circle CAE, BC is equal to BA. But CA was also shown (to be) equal to AB. Thus, CA and CB are each equal to AB. But things equal to the same thing are also equal to one another. Thus, CA is also equal to CB. Thus, the three (straight lines) CA, AB, and BC are equal to one another.
-
-Thus, the triangle ABC is equilateral, and has been constructed on the given finite straight-line AB.
-
-:::
+:::{.callout-note title="Proposition I"}
 
 ```{r}
 #| label: fig-equilateral
 #| fig-width: 6
 #| fig-height: 4
 #| fig-cap: "Make an equilateral trigangle starting with line AB."
+#| echo: false
+#| fig-column: margin
 
 # Radius
 r <- 1
@@ -112,7 +101,7 @@ lABCDE <- ob_label(
   bind(c(pA, pB, pC, pD, pE)),
   fill = bg,
   color = c(red, blue, black, blue, red),
-  size = 18,
+  size = 22,
   family = my_font,
   vjust = .5,
   label.padding = margin(4,3,0,3),
@@ -127,6 +116,21 @@ baseplot +
   hABC
 ```
 
+To construct an equilateral triangle on a given finite straight-line.
+
+Let AB be the given finite straight-line.
+
+So it is required to construct an equilateral triangle on the straight-line AB.
+
+Let the circle BCD with center A and radius AB have been drawn, and again let the circle ACE with center B and radius BA have been drawn. And let the straight-lines CA and CB have been joined from the point C, where the circles cut one another, to the points A and B (respectively).
+
+And since the point A is the center of the circle CDB, AC is equal to AB. Again, since the point B is the center of the circle CAE, BC is equal to BA. But CA was also shown (to be) equal to AB. Thus, CA and CB are each equal to AB. But things equal to the same thing are also equal to one another. Thus, CA is also equal to CB. Thus, the three (straight lines) CA, AB, and BC are equal to one another.
+
+Thus, the triangle ABC is equilateral, and has been constructed on the given finite straight-line AB.
+
+:::
+
+
 Let us have a look at how Euclid can turn this into R code with ggdiagram.
 
 ## Setting up the Environment
@@ -137,9 +141,10 @@ First we need to load some R packages and define some colors:
 ```{r loading}
 library(ggdiagram)
 red <- "#d42a20"
-yellow <- "#FAC22B"
+yellow <- "#D6A624"
 blue <- "#0C7AA5"
 black <- "#000000"
+gray <- "#656565"
 ```
 
 ## The Line *AB*
@@ -149,7 +154,7 @@ The first part of the picture that Euclid wishes to draw is the line *AB*. That 
 
 So, Euclid starts with defining two coordinates using the `ob_point` function:
 
-```{r fig-ab}
+```{r ab, fig.height=3}
 A <- ob_point(0, 0)
 B <- ob_point(2, 1)
 AB <- ob_segment(A, B, color = blue)
@@ -162,11 +167,12 @@ ggdiagram() +
 That was easy enough. What is missing at this point are the labels for the coordinates. Euclid does not want them on the points, but next to them. He decides to use the label slot on points `A` and `B`:
 
 
-```{r fig-ablabel}
-ggdiagram(font_size = 16) +
+```{r ablabel, fig.height=3}
+ggdiagram(font_size = 16, 
+          font_family = my_font) +
   AB +
-  A@label("A", hjust = 1, color = blue) +
-  B@label("B", hjust = 0, color = blue)
+  A@label("A", hjust = 1, color = blue, fill = NA) +
+  B@label("B", hjust = 0, color = blue, fill = NA)
 ```
 
 At this point, Euclid decides that it would be even nicer if the points *A* and 
@@ -194,7 +200,7 @@ It turns out that the R allows him to do exactly this kind of computation. We ca
 
 The new code for the coordinates is the following:
 
-```{r vablabel}
+```{r vablabel, fig.height=2}
 rvector <- function(scalar = 1) {
   scalar * ob_point(
     runif(n = 1, min = -.1, max = .1),
@@ -205,10 +211,10 @@ A <- ob_point(0, 0) + rvector(.1)
 B <- ob_point(1.25, 0.25) + rvector(.1)
 AB <- ob_segment(A, B, color = blue)
 
-ggdiagram(font_size = 16) +
+ggdiagram(font_size = 16, font_family = my_font) +
   AB +
-  A@label("A", hjust = 1, color = blue) +
-  B@label("B", hjust = 0, color = blue)
+  A@label("A", hjust = 1, color = blue, fill = NA) +
+  B@label("B", hjust = 0, color = blue, fill = NA)
 ```
 
 ## The Circle Around A
@@ -238,18 +244,18 @@ AB@distance
 Thus, circles `D` and `E` can be created like so:
 
 
-```{r circlesDE}
+```{r circlesDE, fig.height=5}
 D <- ob_circle(center = A, radius = AB@distance)
 E <- ob_circle(center = B, radius = AB@distance)
 
-ggdiagram(font_size = 16) +
+ggdiagram(font_size = 16, font_family = my_font) +
   AB +
-  A@label("A", hjust = 1, color = blue) +
-  B@label("B", hjust = 0, color = blue) + 
+  A@label("A", hjust = 1, color = blue, fill = NA) +
+  B@label("B", hjust = 0, color = blue, fill = NA) + 
   D + 
   E + 
-  D@west@label("D", hjust = 1.1) +
-  E@east@label("E", hjust = -0.1)
+  D@west@label("D", hjust = 1.1, fill = NA) +
+  E@east@label("E", hjust = -0.1, fill = NA)
 ```
 
 # The Intersection of the Circles
@@ -257,7 +263,7 @@ ggdiagram(font_size = 16) +
 Euclid can now draw the line and the circles. The final problem is to compute the intersection of the two circles. This computation is a bit involved if you want to do it "by hand." Fortunately, the `intersection` function allows us to compute the intersection of two circles. In this case, there are two points of intersection, *C* and *C'*. For point *C*, we will take the first of the two intersection points between circles *D* and *E*.
 
 
-```{r intersectDE}
+```{r intersectDE, fig.height=5}
 intersect_DE <- intersection(D, E)
 C <- intersect_DE[1]
 
@@ -265,46 +271,49 @@ AC <- ob_segment(A, C, color = red)
 BC <- ob_segment(B, C, color = red)
 ABC <- bind(c(AB, BC, AC))
 
-ggdiagram(font_size = 16) +
+ggdiagram(font_size = 16, font_family = my_font) +
   ABC +
   ABC@hatch() +
-  A@label("A", hjust = 1, color = blue) +
-  B@label("B", hjust = 0, color = blue) + 
+  A@label("A", hjust = 1, color = blue, fill = NA) +
+  B@label("B", hjust = 0, color = blue, fill = NA) + 
   D + 
   E + 
-  D@west@label("D", hjust = 1.1) +
-  E@east@label("E", hjust = -0.1) +
-  C@label("C", vjust = -.2, hjust = .6) 
+  D@west@label("D", hjust = 1.1, fill = NA) +
+  E@east@label("E", hjust = -0.1, fill = NA) +
+  C@label("C", vjust = -.2, hjust = .6, fill = NA) 
 ```
 
 Although Euclid does not need it for the current picture, it is just a few steps to compute the bisection of the line *AB*:
 
-```{r cprime}
+```{r cprime, fig.height=5}
 Cprime <- intersect_DE[2]
 CCprime <- ob_segment(intersect_DE, color = red)
 pF <- intersection(AB, CCprime, color = red)
-ggdiagram(font_size = 16) +
+ggdiagram(font_size = 16, font_family = my_font) +
   ABC +
-  A@label("A", hjust = 1, color = blue) +
-  B@label("B", hjust = 0, color = blue) + 
+  A@label("A", hjust = 1, color = blue, fill = NA) +
+  B@label("B", hjust = 0, color = blue, fill = NA) + 
   D + 
   E + 
-  D@west@label("D", hjust = 1.1) +
-  E@east@label("E", hjust = -0.1) +
-  C@label("C", vjust = -.2, hjust = .6) +
-  Cprime@label("C&prime;", vjust = 1.3) +
+  D@west@label("D", hjust = 1.1, fill = NA) +
+  E@east@label("E", hjust = -0.1, fill = NA) +
+  C@label("C", vjust = -.2, hjust = .6, fill = NA) +
+  Cprime@label("C&prime;", vjust = 1.3, fill = NA) +
   CCprime + 
   pF +
-  pF@label("F", vjust = 1.1, hjust = -.3)
+  pF@label("F", vjust = 1.1, hjust = -.3, fill = NA)
 
 ```
 
-# The Complete Code
+## Proposition I: The Complete Code
 
 Back to Euclid’s code. He uses the background layer for drawing the triangle behind everything at the end.
 
 
-```{r fig-completeab}
+```{r}
+#| label: fig-completeab
+#| fig-cap: "Proposition I: Construct an equilateral triangle on a given finite straight-line"
+#| fig-height: 5
 rvector <- function(scalar = 1) {
   scalar * ob_point(
     runif(n = 1, min = -.1, max = .1),
@@ -312,7 +321,7 @@ rvector <- function(scalar = 1) {
   )
 }
 
-ggdiagram(font_size = 16) +
+ggdiagram(font_size = 16, font_family = my_font) +
   {A <- ob_point(0, 0) + rvector(.1)} +
   {B <- ob_point(1.25, 0.25) + rvector(.1)} +
   {AB <- ob_segment(A, B, color = blue)} +
@@ -320,26 +329,31 @@ ggdiagram(font_size = 16) +
     label = "A",
     center = A,
     color = blue,
-    polar_just = AB@line@angle + degree(180)) +
+    polar_just = AB@line@angle + degree(180), 
+    fill = NA) +
   ob_label(
     label = "B",
     center = B,
     color = blue,
-    polar_just = AB@line@angle) + 
+    polar_just = AB@line@angle, 
+    fill = NA) + 
   {D <- ob_circle(A, radius = AB@distance)} +
   {E <- ob_circle(B, radius = AB@distance)} + 
   D@point_at((A - B)@theta)@label(
     label = "D", 
-    polar_just = (A - B)@theta) +  
+    polar_just = (A - B)@theta, 
+    fill = NA) +  
   E@point_at((B - A)@theta)@label(
     label = "E", 
-    polar_just = (B - A)@theta) +
+    polar_just = (B - A)@theta, 
+    fill = NA) +
   {C <- intersection(D, E)[1]} +
   ob_label("C", C, 
            color = red, 
            polar_just = (C - AB@midpoint())@theta, 
            label.margin = margin(2, 2, 2, 2), 
-           label.padding = margin()) + 
+           label.padding = margin(), 
+           fill = NA) + 
   ob_polygon(bind(c(A, B, C)), 
              color = NA, 
              fill = class_color("orange")@lighten(.3)) +
@@ -349,3 +363,260 @@ ggdiagram(font_size = 16) +
 
   
 ```
+
+
+# Book I, Proposition II
+
+The second proposition in the Elements is the following:
+
+:::{.callout-note title="Proposition II"}
+
+```{r}
+#| label: fig-prop2
+#| fig-cap: "Proposition II: Draw a segment of the same size as another segment from an arbitrary point."
+#| fig-column: margin
+#| echo: false
+my_segment <- redefault(ob_segment, color = gray)
+
+my_label <- redefault(
+  ob_label,
+  color = gray,
+  fill = NA,
+  size = 30,
+  plot_point = TRUE, 
+  label.margin = margin(3,3,3,3, "pt")
+)
+ggdiagram(font_family = my_font) +
+  {A <- ob_point()} + 
+  {B <- ob_point(1, .2)} + 
+  {C <- ob_point(1, 2.5)} + 
+  {BC <- my_segment(B, C, color = blue, linewidth = 1)} + 
+  {AB <- my_segment(A, B)} +
+  {D <- intersection(ob_circle(A, AB@distance),
+                     ob_circle(B, AB@distance))[1]} +
+  {AD <- my_segment(A, D)}  +
+  {DB <- my_segment(D, B)} +
+  {AE <- AD@line |> set_props(color = "transparent")} +
+  {BF <- DB@line |> set_props(color = "transparent")} + 
+  {CGH <- ob_circle(B, BC@distance, color = gray)} + 
+  {G <- intersection(BF, CGH)[1]} +
+  {DG <- my_segment(D, G)} +
+  {GKL <- ob_circle(D, DG@distance, color = gray)} + 
+  {L <- intersection(AE, GKL)[2]} + 
+  {E <- AE@point_at_y(L@y - .5)} +
+  {`F` <- BF@point_at_y(G@y - .5)} +
+  {AL <- my_segment(A, L, color = red, linewidth = 1)} +
+  my_label("A", A, polar_just = (A - B)@theta, color = yellow) +
+  my_label("B", B, polar_just = (B - A)@theta, color = blue) +
+  my_label("C", C, polar_just = (C - B)@theta, color = blue) +
+  my_label("D", D, polar_just = (D - AB@midpoint())@theta, color = gray) +
+  connect(L, E, color = gray) +
+  connect(G, `F`, color = gray) +
+  my_label("E", E, polar_just = (E - L)@theta) + 
+  my_label("F", `F`, polar_just = (`F` - G)@theta, color = gray) + 
+  my_label("G", G, polar_just = degree(-10)) + 
+  my_label("L", L, polar_just = degree(-65), color = red) + 
+  my_label("H", intersection(BF, CGH)[2], polar_just = (D - B)@theta, plot_point = FALSE) +
+  my_label("K", intersection(BF, GKL)[2], polar_just = (D - B)@theta, plot_point = FALSE) +
+  scale_y_continuous(NULL, breaks = NULL, minor_breaks = NULL, expand = expansion(c(.1, .01)))
+```
+
+To place a straight line equal to a given straight line with one end at a given point.
+
+Let A be the given point, and BC the given straight line. It is required to place a straight line equal to the given straight line BC with one end at the point A.
+
+Join the straight line AB from the point A to the point B, and construct the equilateral triangle DAB on it.
+
+Produce the straight lines AE and BF in a straight line with DA and DB. Describe the circle CGH with center B and radius BC, and again, describe the circle GKL with center D and radius DG.
+
+Since the point B is the center of the circle CGH, therefore BC equal BG. Again, since the point D is the center of the circle GKL, therefore DL equals DG. And in these DA equals DB, therefore the remainder AL equals the remainder BG. But BC was also proved equal to BG, therefore each of the straight lines AL and BC equal BG. And things which equal the same thing also equal one another, therefore AL also equal BC.
+
+Therefore, the straight line AL equal to the given straight line BC has been placed with one end at the given point A.
+:::
+
+## Using Partway Calculations for the Construction of Point D
+
+Euclid’s construction starts with "referencing" Proposition I for the construction of the point D. Now, while we could simply repeat the construction, it seems a bit bothersome that one has to draw all these circles and do all these complicated constructions.
+
+For this reason, ggdiagram supports some simplifications. The `midpoint` function can be called on two `ob_point`s or on an `ob_segment` (or an `ob_arc`). Also, `ob_segment` has a slot function such that `AB@midpoint()` is the same as `midpoint(AB)`.
+
+Here is the computation of the point in the middle of the line AB:
+
+```{r plotAB, fig.height=2}
+my_segment <- redefault(ob_segment, color = gray)
+my_label <- redefault(
+  ob_label,
+  color = gray,
+  fill = NA,
+  size = 18,
+  plot_point = TRUE, 
+  label.margin = margin(3,3,3,3, "pt")
+)
+plot_AB <- ggdiagram(font_family = my_font) +
+  {A <- ob_point()} + 
+  {B <- ob_point(1, .2)} + 
+  {AB <- my_segment(A, B)} +
+  my_label("A", A, polar_just = (A - B)@theta) + 
+  my_label("B", B, polar_just = (B - A)@theta) 
+plot_AB +
+  {X <- midpoint(A, B, color = red)} +
+  my_label("X", X, polar_just = (B - A)@theta - degree(90)) 
+```
+
+The computation of point D could be calculated in many ways. The traditional way is to take the intersection of two circles centered at the two points, with the same radius as distance between the points. 
+
+```{r plotABD}
+plot_AB + 
+  {D <- intersection(
+    ob_circle(A, AB@distance),
+    ob_circle(B, AB@distance))[1]} 
+```
+
+
+Here we we rotate AB by 60 degrees and take the second point in the segment:
+
+```{r ABDrotate}
+plot_AB + 
+  {D <- rotate(AB, degree(60))@p2} 
+```
+
+Of course, equilateral triangles are more easily created with the `ob_ngon` function, which makes regular polygons.
+
+```{r ABDngon}
+ggdiagram(font_family = my_font) + 
+  {ABD <- ob_ngon(
+    n = 3, 
+    color = gray, 
+    fill = NA, 
+    angle = degree(-140))} +
+  ABD@vertices@label(
+    label = c("A", "B", "D"), 
+    polar_just = (ABD@vertices - ABD@center) * 1.5, 
+    size = 16, 
+    plot_point = TRUE,
+    fill = NA)
+```
+
+## Intersecting a Line and a Circle
+
+```{r plot_CGH}
+plot_CGH <- plot_AB + 
+  D + 
+  ob_path(bind(c(B, D, A))) +
+  {C <- ob_point(1.5, 2.5)} +
+  {BC <- my_segment(B, C)} +
+  {CGH <- ob_circle(B, BC@distance, color = gray)} + 
+  {DE <- connect(D, A + (A - D) * 3, color = gray)} + 
+  {DF <- connect(D, B + (B - D) * 3, color = gray)} + 
+  {G <- intersection(DF, CGH)} + 
+  DF@p2@label("F", size = 16, fill = NA, polar_just = (B - D)@theta, color = gray) +
+  DE@p2@label("E", size = 16, fill = NA, polar_just = (A - D)@theta, color = gray) +
+  D@label(
+    "D",
+    polar_just = (D - AB@midpoint())@theta,
+    size = 16,
+    color = gray,
+    plot_point = TRUE,
+    fill = NA
+  ) +
+  C@label(
+    "C",
+    polar_just = (C - B)@theta,
+    size = 16,
+    plot_point = TRUE,
+    fill = NA
+  ) +
+  G@label(
+    "G",
+    size = 16,
+    fill = NA,
+    nudge_x = .2,
+    color = red
+  ) + 
+  A +
+  B +
+  CGH@point_at(
+    theta = (G - B)@theta + degree(180))@label(
+      label = "H",
+      polar_just = (D - B) * 1.5,
+      size = 16,
+      fill = NA
+  )
+
+plot_CGH
+```
+
+
+## Proposition II: The Complete Code
+
+```{r complete2}
+ggdiagram(font_family = my_font) +
+  {A <- ob_point()} + 
+  {B <- ob_point(1, .2)} + 
+  {AB <- my_segment(A, B)} +
+  my_label(label = "A", 
+           center = A, 
+           polar_just = (A - B)@theta, 
+           color = yellow) + 
+  my_label(label = "B", 
+           center = B, 
+           color = blue,
+           polar_just = (B - A)@theta)  + 
+  {D <- rotate(AB, degree(60))@p2} +
+  {C <- ob_point(1.5, 2.5)} +
+  {BC <- my_segment(B, C, color = blue)} +
+  {CGH <- ob_circle(B, BC@distance, color = gray)} + 
+  {DE <- connect(D, A + (A - D) * 3, color = gray)} + 
+  {DF <- connect(D, B + (B - D) * 3, color = gray)} + 
+  {G <- intersection(DF, CGH)} + 
+  DF@p2@label("F", size = 16, fill = NA, polar_just = (B - D)@theta, color = gray) +
+  DE@p2@label("E", size = 16, fill = NA, polar_just = (A - D)@theta, color = gray) +
+  D@label(
+    "D",
+    polar_just = (D - AB@midpoint())@theta,
+    size = 16,
+    color = gray,
+    plot_point = TRUE,
+    fill = NA
+  ) +
+  C@label(
+    "C",
+    polar_just = (C - B)@theta,
+    size = 16,
+    plot_point = TRUE,
+    color = blue,
+    fill = NA
+  ) +
+  G@label(
+    "G",
+    size = 16,
+    nudge_x = .2,
+    color = red,
+    fill = NA
+  ) + 
+  A +
+  B +
+  CGH@point_at(
+    theta = (G - B)@theta + degree(180))@label(
+      label = "H", 
+      fill = NA,
+      polar_just = (D - B) * 1.5, 
+      size = 16) +
+  {GKL <- ob_circle(D, distance(D, G), color = gray)} + 
+  {L <- intersection(GKL, DE)} +
+  my_segment(A, L, color = red) + 
+  GKL@point_at(
+    theta = (G - B)@theta + degree(180))@label(
+      label = "K", 
+      fill = NA,
+      polar_just = (D - B) * 1.5, 
+      size = 16) + 
+  L@label(
+    label = "L", 
+    polar_just = ob_polar(degree(-65), 1.5), 
+    size = 16, 
+    fill = NA, 
+    color = red) +
+  bind(c(A, B, C, D, G, L), color = gray, size = 2)
+```
+

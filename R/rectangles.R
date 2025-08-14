@@ -15,6 +15,7 @@ find_side <- function(theta, width = 1, height = 1) {
 #' @noRd
 rectangle_side <- S7::new_class(
   name = "retangle_side",
+  package = "ggdiagram",
   properties = list(
     east = ob_segment,
     north = ob_segment,
@@ -376,6 +377,7 @@ rc_props <- list(
 ob_rectangle <- S7::new_class(
   name = "ob_rectangle",
   parent = centerpoint,
+  package = "ggdiagram",
   properties = rlang::list2(
     !!!rc_props$primary,
     !!!rc_props$extra,

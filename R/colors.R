@@ -26,6 +26,7 @@
 class_color <- S7::new_class(
   name = "class_color",
   parent = S7::class_character,
+  package = "ggdiagram",
   properties = list(
     color = S7::new_property(
       class = S7::class_character,

@@ -187,6 +187,7 @@ lb_props <- list(
 ob_label <- S7::new_class(
   name = "ob_label",
   parent = has_style,
+  package = "ggdiagram",
   properties = rlang::list2(
     !!!lb_props$primary,
     !!!lb_props$styles,
@@ -413,6 +414,7 @@ label_or_character_or_angle <- S7::new_union(ob_label, S7::class_character, ob_a
 # Centerpoint----
 centerpoint <- S7::new_class(
   name = "centerpoint",
+  package = "ggdiagram",
   parent = xy,
   properties = list(center = S7::new_property(
     class = ob_point,

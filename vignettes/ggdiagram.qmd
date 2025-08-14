@@ -53,12 +53,11 @@ ggplot() +
   ob_circle(radius = 1) +
   ob_rectangle(width = 2, 
                height = 2) + 
-  coord_equal() + 
+  coord_fixed() + 
   theme_void()
 ```
 
 The `ggdiagram` function calls the `ggplot` function, sets the ggplot2 theme (defaults to `theme_void`), and also sets the defaults of key geoms so that font families, font sizes, line widths, and point sizes do not have to be specified repeatedly.
-
 
 In @fig-theta, we can locate points on a circle's circumference at any angle. The `degree` function makes it easy to compute and label angles as degrees. 
 
@@ -90,7 +89,6 @@ bp +
   s1
 ```
 
-
 The primary options for styling a segment are alpha, color, linetype, and linewidth. However, it can take any style from [`ggarrow::geom_arrow_segment`](https://teunbrand.github.io/ggarrow/reference/geom_arrow_segment.html)
 
 If you are not sure which properties can be set, you an see them in the `@aesthetics@style` slot.
@@ -99,7 +97,6 @@ If you are not sure which properties can be set, you an see them in the `@aesthe
 #| label: segstyle
 s1@aesthetics@style
 ```
-
 
 Styles can be specified when the object is created.
 
@@ -119,7 +116,6 @@ s2@linewidth <- 3
 bp + s2
 ```
 
-
 A "pipe-friendly" way to modify any ggdiagram object is to use S7's `set_props` function, which has been re-exported to ggdiagram for the sake of convenience. 
 
 ```{r}
@@ -130,7 +126,6 @@ bp +
   set_props(color = "red",
             linetype = "dashed")
 ```
-
 
 # Making Styles Stick with `redefault`
 
@@ -151,7 +146,6 @@ ggdiagram() +
   ob_squircle() +
   ob_squircle(x = 3, fill = "dodgerblue")
 ```
-
 
 # Apply Styles Across Shapes with `ob_style`
 
@@ -230,13 +224,9 @@ The `where` parameter can be specified with
 - Radians using the `radian` function (e.g., `radian(pi)`)
 - Turns using the `turn` function (e.g., `turn(1/5)`)
 
-
-
-
-
 # Object Arrays with `ob_array`
 
-Sometimes it is useful to make arrays of objects. The `ob_array` function makes `k` copies of an object,arranges them in a line in a specified direction, and separates the objects by a specified amount. By default, the array is arranged horizontally, centered on the original object, separated by 1 unit. Here we make an array of 5 circles.
+Sometimes it is useful to make arrays of objects. The `ob_array` function makes `k` copies of an object, arranges them in a line in a specified direction, and separates the objects by a specified amount. By default, the array is arranged horizontally, centered on the original object, separated by 1 unit. Here we make an array of 5 circles.
 
 ```{r}
 #| label: fig-array1
@@ -312,9 +302,6 @@ ggdiagram(font_size = 16) +
 
 Functions that can make arrows (e.g., `connect`, `ob_segment`, `ob_arc`, `ob_path`, `ob_bezier`) use functions from the `ggarrow` package. The arrowheads are [fully customizable](https://teunbrand.github.io/ggarrow/articles/customisation.html). The [arrowheadr](https://wjschne.github.io/arrowheadr/) package has functions for many custom arrowheads and for creating new arrowheads.
 
-
-
-
 The `arrowhead` function returns a matrix that draws the default arrowhead.
 
 ```{r}
@@ -338,3 +325,11 @@ ggdiagram() +
   y +
   connect(x, y, resect = 2)
 ```
+
+The original default can be restored like so:
+
+```{r}
+set_default_arrowhead()
+arrowhead()
+```
+

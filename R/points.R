@@ -154,6 +154,7 @@ pt_props <- list(
 #'   ggplot2::theme_minimal()
 ob_point <- S7::new_class(
   name = "ob_point",
+  package = "ggdiagram",
   parent = xy,
   properties = rlang::list2(
     !!!pt_props$primary,
@@ -235,6 +236,7 @@ ob_point <- S7::new_class(
 ob_polar <- S7::new_class(
   name = "ob_polar",
   parent = ob_point,
+  package = "ggdiagram",
   constructor = function(theta = S7::class_missing,
                          r = numeric(0),
                          alpha = numeric(0),

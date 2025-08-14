@@ -235,6 +235,7 @@ sg_props <- list(
 ob_segment <- S7::new_class(
   name = "ob_segment",
   parent = shape,
+  package = "ggdiagram",
   properties =  rlang::inject(
     list(
       !!!sg_props$primary,

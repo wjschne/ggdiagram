@@ -49,6 +49,7 @@ num2turn <- function(x, object_name) {
 #' tan(degree(30))
 ob_angle <- new_class(
   name = "ob_angle",
+  package = "ggdiagram",
   parent = class_double,
   properties = list(
     degree = new_property(
@@ -128,6 +129,7 @@ ob_angle_or_character <- S7::new_union(S7::class_character, ob_angle)
 #' @export
 degree <- S7::new_class(
   name = "degree",
+  package = "ggdiagram",
   parent = ob_angle,
   constructor = function(degree = numeric(0)) {
     if (is.character(degree)) degree <- cardinalpoint(degree)
@@ -142,6 +144,7 @@ degree <- S7::new_class(
 #' @export
 radian <- S7::new_class(
   name = "radian",
+  package = "ggdiagram",
   parent = ob_angle,
   constructor = function(radian = numeric(0)) {
     if (is.character(radian)) radian <- cardinalpoint(radian) * pi / 180
@@ -156,6 +159,7 @@ radian <- S7::new_class(
 #' @export
 turn <- S7::new_class(
   name = "turn",
+  package = "ggdiagram",
   parent = ob_angle,
   constructor = function(turn = numeric(0)) {
     if (is.character(turn)) turn <- cardinalpoint(turn) / 360

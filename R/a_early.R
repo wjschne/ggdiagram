@@ -55,6 +55,7 @@ character_index <- function(i, id) {
 #' @returns a class_aesthetics_list object
 class_aesthetics_list <- S7::new_class(
   name = "class_aesthetics_list",
+  package = "ggdiagram",
   properties = list(
     geom = S7::class_function,
     style = S7::class_character,
@@ -88,6 +89,7 @@ class_unit <- S7::new_S3_class(
 ## class_margin ----
 class_margin <- S7::new_class(
   name = "class_margin",
+  package = "ggdiagram",
   parent = S7::class_list,
   constructor = function(x = numeric(0), units = "pt") {
 
@@ -139,6 +141,7 @@ class_margin <- S7::new_class(
 ## class_arrowhead ----
 class_arrowhead <- S7::new_class(
   "class_arrowhead",
+  package = "ggdiagram",
   S7::class_list,
   constructor = function(x) {
     if (S7::S7_inherits(x, class_arrowhead))
@@ -192,7 +195,7 @@ set_default_arrowhead <- function(m = NULL) {
 }
 
 ## has_style ----
-has_style <- S7::new_class(name = "has_style", properties = list(id = class_character), abstract = TRUE)
+has_style <- S7::new_class(name = "has_style", package = "ggdiagram", properties = list(id = class_character), abstract = TRUE)
 S7::S4_register(has_style)
 S7::method(print, has_style) <- function(x, ...) {
   cli::cli_h3("{.cls {S7::S7_class(x)@name}}")
@@ -214,6 +217,7 @@ S7::method(print, has_style) <- function(x, ...) {
 #' @returns An object of [`ob_shape_list`] class. List of objects that can be converted to geoms
 ob_shape_list <- S7::new_class(
   "ob_shape_list",
+  package = "ggdiagram",
   S7::class_list,
   validator = function(self) {
     if (!all(purrr::map_lgl(self, S7::S7_inherits, class = has_style)))
@@ -258,9 +262,12 @@ assign_data <- function(x,i, value) {
 }
 
 # shape ----
-shape <- S7::new_class(name = "shape",
-                   parent = has_style,
-                   abstract = TRUE)
+shape <- S7::new_class(
+  name = "shape",
+  package = "ggdiagram",
+  parent = has_style,
+  abstract = TRUE
+)
 
 S7::method(`[`, shape) <- function(x, i) {
   i <- character_index(i, x@id)
@@ -269,9 +276,12 @@ S7::method(`[`, shape) <- function(x, i) {
   z
 }
 
-xy <- S7::new_class(name = "xy",
-                parent = shape,
-                abstract = TRUE)
+xy <- S7::new_class(
+  name = "xy",
+  package = "ggdiagram",
+  parent = shape,
+  abstract = TRUE
+)
 
 # generics ----
 

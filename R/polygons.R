@@ -179,6 +179,7 @@ ob_polygon_props <- list(
 ob_polygon <- S7::new_class(
   name = "ob_polygon",
   parent = has_style,
+  package = "ggdiagram",
   properties = rlang::list2(
       !!!ob_polygon_props$primary,
       !!!ob_polygon_props$extra,
@@ -646,6 +647,7 @@ S7::method(connect, list(ob_polygon, centerpoint)) <- function(
 ob_intercept <- S7::new_class(
   name = "ob_intercept",
   parent = centerpoint,
+  package = "ggdiagram",
   properties = rlang::list2(
       width = S7::class_numeric,
       p = S7::new_property(getter = function(self) {
@@ -1286,6 +1288,7 @@ ob_ngon_props <- list(
 ob_ngon <- S7::new_class(
   name = "ob_ngon",
   parent = centerpoint,
+  package = "ggdiagram",
   properties = rlang::list2(
       !!!ob_ngon_props$primary,
       !!!ob_polygon_props$extra,
@@ -1705,6 +1708,7 @@ S7::method(connect, list(centerpoint, ob_ngon)) <- function(
 ob_reuleaux <- S7::new_class(
   name = "ob_reuleaux",
   parent = centerpoint,
+  package = "ggdiagram",
   properties = list(
     n = S7::class_integer,
     radius = S7::class_double,

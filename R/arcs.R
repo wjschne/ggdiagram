@@ -422,6 +422,7 @@ arc_props <- list(
 #'  )
 ob_arc <- S7::new_class(
   name = "ob_arc",
+  package = "ggdiagram",
   parent = centerpoint,
   properties = rlang::list2(
       !!!arc_props$primary,

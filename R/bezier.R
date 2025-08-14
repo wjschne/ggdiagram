@@ -201,6 +201,7 @@ bz_props <- list(
 ob_bezier <- S7::new_class(
   name = "ob_bezier",
   parent = has_style,
+  package = "ggdiagram",
   properties = rlang::list2(
       !!!bz_props$primary,
       !!!bz_props$extra,

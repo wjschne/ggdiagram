@@ -25,6 +25,7 @@
 #' @returns ob_latex object
 ob_latex <- S7::new_class(
   name = "ob_latex",
+  package = "ggdiagram",
   properties = list(
     tex = S7::class_character,
     center = ob_point,

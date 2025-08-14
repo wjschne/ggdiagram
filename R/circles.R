@@ -210,6 +210,7 @@ cr_props <- list(
 ob_circle <- S7::new_class(
   name = "ob_circle",
   parent = centerpoint,
+  package = "ggdiagram",
   properties = rlang::list2(
     !!!cr_props$primary,
     !!!cr_props$styles,

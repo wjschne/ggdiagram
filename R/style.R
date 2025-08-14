@@ -71,6 +71,7 @@ prop_vjust = S7::new_property(
 #' @returns ob_style object
 ob_style <- S7::new_class(
   name = "ob_style",
+  package = "ggdiagram",
   properties = list(
     id = S7::class_character,
     alpha = S7::new_property(S7::class_numeric, default = NULL),

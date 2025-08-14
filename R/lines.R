@@ -151,6 +151,7 @@ info = list(
 ob_line <- S7::new_class(
   "ob_line",
   parent = shape,
+  package = "ggdiagram",
   properties = rlang::list2(
     !!!ln_props$primary,
     !!!ln_props$styles,
