@@ -1,5 +1,6 @@
 ---
 format: gfm
+default-image-extension: ""
 ---
 
 # ggdiagram <a href="https://wjschne.github.io/ggdiagram/"><img src="man/figures/logo.png" align="right" height="120" alt="ggdiagram website" /></a>
@@ -15,9 +16,12 @@ knitr::opts_chunk$set(
 )
 ```
 
+
+
 <!-- badges: start -->
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
-[![CRAN status](https://www.r-pkg.org/badges/version/ggdiagram)](https://CRAN.R-project.org/package=ggdiagram)
+[![CRAN status](https://www.r-pkg.org/badges/version-last-release/ggdiagram)](https://CRAN.R-project.org/package=ggdiagram)
+[![ggdiagram status badge](https://wjschne.r-universe.dev/ggdiagram/badges/version)](https://wjschne.r-universe.dev/ggdiagram)
 <!-- badges: end -->
 
 The ggdiagram package takes an object-oriented approach to making diagrams and plots the results using [ggplot2](https://ggplot2.tidyverse.org/).

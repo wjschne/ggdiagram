@@ -7,7 +7,9 @@
 [![Lifecycle:
 stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![CRAN
-status](https://www.r-pkg.org/badges/version/ggdiagram.png)](https://CRAN.R-project.org/package=ggdiagram)
+status](https://www.r-pkg.org/badges/version-last-release/ggdiagram)](https://CRAN.R-project.org/package=ggdiagram)
+[![ggdiagram status
+badge](https://wjschne.r-universe.dev/ggdiagram/badges/version)](https://wjschne.r-universe.dev/ggdiagram)
 <!-- badges: end -->
 
 The ggdiagram package takes an object-oriented approach to making

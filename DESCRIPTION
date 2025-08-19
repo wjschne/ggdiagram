@@ -4,8 +4,11 @@ Version: 0.1.0
 Authors@R: 
     person("W. Joel", "Schneider", , "w.joel.schneider@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-8393-5316"))
-Description: Creates diagrams with an
-    object-oriented approach. Geometric objects have computed properties with information about themselves (e.g., their area) or about their relationships with other objects (e.g, the distance between their edges). The objects have methods to convert them to geoms that can be plotted in 'ggplot2'.
+Description: Creates diagrams with an object-oriented approach. Geometric
+    objects have computed properties with information about themselves
+    (e.g., their area) or about their relationships with other objects
+    (e.g, the distance between their edges). The objects have methods to
+    convert them to geoms that can be plotted in 'ggplot2'.
 License: CC0
 URL: https://github.com/wjschne/ggdiagram,
     https://wjschne.github.io/ggdiagram/
