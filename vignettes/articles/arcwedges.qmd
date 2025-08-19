@@ -178,8 +178,6 @@ ggdiagram(font_family = my_font,
          end = turn(1))
 ```
 
-
-
 # Midpoints
 
 The midpoint function can find one or more midpoints at different positions. The default position is .5.
@@ -282,7 +280,6 @@ bp +
                position = 0)
 ```
 
-
 # Arcs with arrows
 
 The arc object is plotted using `ggarrow::arrow`. This means that arrows can be placed on either end of an arc.
@@ -300,10 +297,9 @@ bp +
       arrowhead_length = 8)
 ```
 
-
 # Connecting Points and Shapes with Arcs
 
-The `connect` function makes it easy to draw connectors between points and/or shapes. Normally the connector is a line segment but it is possible to connect with arcs and bezier curves. To connect two shapes with an arc, set the `arc_bend` parameter. 
+The `connect` function makes it easy to draw connectors between points and/or shapes. Normally the connector is a line segment but it is possible to connect with arcs and bezier curves. To connect two shapes with an arc, set the `arc_bend` parameter.
 
 Negative values bend left, and positive values bend right. By default, a value of 1 or -1 makes a full semi-circular path between the centers of the shapes. Values close to 0 make the arc appear more straight. Large values make the circle the arc follows larger. The `arc_bend` specifically refers to ratio of arc's sagitta to the arc's radius. Thus, `arc_bend` cannot actually be set to 0, because this would cause an infinite ratio.
 
@@ -328,10 +324,9 @@ bp +
   connect(A, C@south, arc_bend = .6)
 ```
 
-
 # Wedges
 
-The `ob_arc` function has a `@type` property that can be set to `"arc"`, `"wedge"`, or `"segment"`. When set to `arc`, the arc is drawn with `geom::arrow` so that the arc endpoints can be arrows. Otherwise, when `@type` is `wedge` or `segment`, `ob_arc` drawn with `ggplot2::geom_polygon`. 
+The `ob_arc` function has a `@type` property that can be set to `"arc"`, `"wedge"`, or `"segment"`. When set to `arc`, the arc is drawn with `geom::arrow` so that the arc endpoints can be arrows. Otherwise, when `@type` is `wedge` or `segment`, `ob_arc` drawn with `ggplot2::geom_polygon`.
 
 The `ob_wedge` function is a convenient wrapper function for `ob_arc` that sets the `@type` property to `wedge`.
 
@@ -352,13 +347,11 @@ bp +
       linewidth = 1)
 ```
 
-
 # Circular Segments
 
-A circular segment is an arc made into a polygon. 
+A circular segment is an arc made into a polygon.
 
 The `ob_circular_segment` function is a convenient wrapper function for `ob_arc` that sets the `@type` property to `segment`.
-
 
 ```{r}
 #| label: fig-threecircularsegments
@@ -423,7 +416,4 @@ bp +
 
 ```
 
-
-Fun fact: Our geometric concepts *arc*, *chord*, and *sagitta* are all archery terms, deriving from the Latin words *arcus* (bow), *chorda* (string), and *sagitta* (arrow). 
-
-
+Fun fact: Our geometric concepts *arc*, *chord*, and *sagitta* are all archery terms, deriving from the Latin words *arcus* (bow), *chorda* (string), and *sagitta* (arrow).

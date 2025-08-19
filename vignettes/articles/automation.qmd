@@ -346,8 +346,6 @@ Functions with an `ob_*` prefix have an `id` property that can be used to subset
 ```{r subsetid}
 p <- ob_point(1:3, 4:6, id = c("A", "B", "C"))
 p[c("B", "A")]
-
-
 ```
 
 ## Creating objects from data.frames/tibbles
@@ -540,7 +538,6 @@ ggdiagram(font_family = my_font,
   e
 ```
 
-
 ```{r}
 #| label: fig-efa
 #| eval: false
@@ -605,6 +602,3 @@ ggdiagram(font_family = "Roboto Condensed") +
   }
 
 ```
-
-
-

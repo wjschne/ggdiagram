@@ -79,6 +79,16 @@ Polar points are ordinary points but are specified with an angle (theta) and a r
 \item{\code{tibble}}{Gets a \code{\link[tibble:tibble]{tibble::tibble}} containing parameters and styles used by \code{\link[ggplot2:geom_point]{ggplot2::geom_point}}.}
 
 \item{\code{xy}}{Gets a 2-column matrix of the x and y coordinates of the ob_point object.}
+
+\item{\code{centroid}}{ob_point at the average of the x and y values}
+
+\item{\code{bounding_box}}{ob_rectangle that contains all the points in the object}
+
+\item{\code{place}}{function to place point in relation to other objects}
+
+\item{\code{label}}{function to create ob_label for points in the object}
+
+\item{\code{aesthetics}}{returns class_aesthetics for ob_point}
 }}
 
 \examples{

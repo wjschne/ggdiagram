@@ -3,13 +3,15 @@ title: "Recreating Figures form Byrne's *Elements of Euclid*"
 format: 
   html:
     toc: true
-    code-fold: true
+    toc-location: left
+    code-fold: false
     html-math-method: katex
     backgroundcolor: "#fcf3d9"
     mainfont: "Libre Caslon Text"
+    theme: [amber.scss]
 vignette: >
   %\VignetteIndexEntry{elements}
-  %\VignetteEngine{quarto::html}
+  %\VignetteEngine{quarto::format}
   %\VignetteEncoding{UTF-8}
 ---
 
@@ -24,6 +26,14 @@ From [Common_straightedge-and-compass_constructions](https://en.wikipedia.org/wi
 * Creating the point at the intersection of two (non-parallel) lines 
 * Creating the one point or two points in the intersection of a line and a circle (if they intersect) 
 * Creating the one point or two points in the intersection of two circles (if they intersect).
+
+```{r presep, include=FALSE}
+library(ggdiagram)
+library(ggplot2)
+library(tibble)
+library(dplyr)
+```
+
 
 ```{r setup}
 library(ggdiagram)

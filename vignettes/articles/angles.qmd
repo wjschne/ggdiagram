@@ -52,7 +52,7 @@ my_font <- "Roboto Condensed"
 
 Angles have different kinds of units associated with them: turns (1 turn = one full rotation a circle), degrees (1 turn = 360 degrees), and radians (1 turn = $2\pi$ = $\tau$).
 
-I like &pi; just fine, but I agree with Michael Hartl's [Tau Manifesto](https://tauday.com/tau-manifesto) that we would have been better off if we had recognized that the number of radians to complete a full turn of a circle (&tau; = 2&pi; &asymp; 6.283185) is more fundamental than the number of radians to complete a half turn (&pi;). 
+I like &pi; just fine, but I agree with Michael Hartl's [Tau Manifesto](https://tauday.com/tau-manifesto) that we would have been better off if we had recognized that the number of radians to complete a full turn of a circle (&tau; = 2&pi; &asymp; 6.283185) is more fundamental than the number of radians to complete a half turn (&pi;).
 
 Turns | Radians | Degrees |
 :----:|:-------:|:-------:|
@@ -63,7 +63,6 @@ $\frac{1}{4}$  | $\frac{\tau}{4}=\frac{\pi}{2}$     | $90^\circ$  |
 $\frac{1}{3}$  | $\frac{\tau}{3}=\frac{2\pi}{3}$    | $120^\circ$ |
 $\frac{1}{2}$  | $\frac{\tau}{2}=\pi$               | $180^\circ$ |
 $1$            | $\tau=2\pi$                        | $360^\circ$ |
-
 
 ```{r}
 #| label: fig-angles
@@ -134,8 +133,6 @@ turn(.5)@radian
 turn(.5)@degree
 ```
 
-
-
 # Character Printing
 
 For labeling, sometimes is convenient to convert angles to text:
@@ -159,7 +156,6 @@ radian(a)
 turn(a)
 
 ```
-
 
 # Arithmetic Operations
 
@@ -216,8 +212,6 @@ ggplot() +
 
 ```
 
-
-
 ```{r}
 #| label: fig-3060
 #| code-fold: true
@@ -228,7 +222,6 @@ make_angles(a = c(30, 60),
             r = c(.12,.24, .36), 
             multiplier = c(1.5,1.5,1.5)) 
 ```
-
 
 ```{r}
 #| label: add
@@ -265,7 +258,6 @@ $$
 &=20^\circ\end{aligned}
 $$
 
-
 ```{r}
 #| label: fig-80300
 #| code-fold: true
@@ -273,14 +265,10 @@ $$
 make_angles(c(80, 300)) 
 ```
 
-
 ```{r}
 #| label: add380
 degree(80) + degree(300)
 ```
-
-
-
 
 $$
 \begin{aligned}
@@ -306,7 +294,6 @@ degree(40) - degree(60)
 
 $$2\cdot20^\circ=40^\circ$$
 
-
 ```{r}
 #| label: mult20
 2 * degree(20)
@@ -323,7 +310,6 @@ $$
 2 * degree(180)
 ```
 
-
 ## Positive and Negative Angles
 
 You can ensure that an angle is always positive or negative with the `@positive` and `@negative` attributes.
@@ -336,8 +322,6 @@ degree(-30)@positive
 degree(330)@negative
 ```
 
-
-
 # Trigonometry
 
 The outputs of `degree`, `radian`, and `turn` can take the three standard trigonometric functions
@@ -349,7 +333,6 @@ cos(theta)
 sin(theta)
 tan(theta)
 ```
-
 
 ```{r}
 #| label: fig-trig
@@ -461,7 +444,6 @@ ggdiagram() +
    
 ```
 
-
 Benefits of using trigonometric functions with angles instead of numeric radians include:
 
 * Angle metric conversions are handled automatically.
@@ -495,4 +477,3 @@ c(theta)
 # Alternative method of extracting data
 S7::S7_data(theta)
 ```
-

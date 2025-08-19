@@ -46,7 +46,9 @@ baseplot <- ggdiagram(
   linewidth = 2, font_size = 18)
 ```
 
-**NOTE** The text of this tutorial is an adaptation of a [TikZ tutorial of the same name](https://tikz.dev/tutorial-Euclid). I adapted the tutorial to see if ggdiagram could duplicate TikZ's capabilities.
+
+
+**NOTE**. The text of this tutorial is a mostly word-for-word---including jokes---adaptation of a [TikZ tutorial of the same name](https://tikz.dev/tutorial-Euclid). I adapted the tutorial to see if ggdiagram could duplicate TikZ's capabilities, and made changes to the wording only in places that were required to translate concepts and code from TikZ/LaTeX to ggdiagram/R.
 
 In this tutorial, we have a look at how ggdiagram can be used to draw geometric constructions.
 
@@ -139,6 +141,7 @@ First we need to load some R packages and define some colors:
 
 
 ```{r loading}
+library(ggplot2)
 library(ggdiagram)
 red <- "#d42a20"
 yellow <- "#D6A624"
@@ -175,8 +178,7 @@ ggdiagram(font_size = 16,
   B@label("B", hjust = 0, color = blue, fill = NA)
 ```
 
-At this point, Euclid decides that it would be even nicer if the points *A* and 
-*B* were in some sense "random." Then, neither Euclid nor the reader can make the mistake of taking "anything for granted" concerning these position of these points. Euclid is pleased to learn that there is a rand function in R that does exactly what he needs: `runif`. It produces a number between any two numbers. Here we want a unit vector between &minus;1 and 1. Since R can do a bit of math, Euclid can change the coordinates of the points as follows:
+At this point, Euclid decides that it would be even nicer if the points *A* and *B* were in some sense "random." Then, neither Euclid nor the reader can make the mistake of taking "anything for granted" concerning these position of these points. Euclid is pleased to learn that there is a rand function in R that does exactly what he needs: `runif`. It produces a number between any two numbers. Here we want a unit vector between &minus;1 and 1. Since R can do a bit of math, Euclid can change the coordinates of the points as follows:
 
 
 ```{r randomab}
@@ -201,14 +203,15 @@ It turns out that the R allows him to do exactly this kind of computation. We ca
 The new code for the coordinates is the following:
 
 ```{r vablabel, fig.height=2}
+set.seed(123)
 rvector <- function(scalar = 1) {
   scalar * ob_point(
-    runif(n = 1, min = -.1, max = .1),
-    runif(n = 1, min = -.1, max = .1)
+    runif(n = 1, min = -1, max = 1),
+    runif(n = 1, min = -1, max = 1)
   )
 }
-A <- ob_point(0, 0) + rvector(.1)
-B <- ob_point(1.25, 0.25) + rvector(.1)
+A <- ob_point(0, 0) + rvector(1)
+B <- ob_point(1.25, 0.25) + rvector(1)
 AB <- ob_segment(A, B, color = blue)
 
 ggdiagram(font_size = 16, font_family = my_font) +
@@ -271,16 +274,21 @@ AC <- ob_segment(A, C, color = red)
 BC <- ob_segment(B, C, color = red)
 ABC <- bind(c(AB, BC, AC))
 
+pABC <- bind(c(A,B,C))
+
 ggdiagram(font_size = 16, font_family = my_font) +
   ABC +
   ABC@hatch() +
-  A@label("A", hjust = 1, color = blue, fill = NA) +
-  B@label("B", hjust = 0, color = blue, fill = NA) + 
+  ob_label(c("A", "B", "C"), 
+           center = pABC, 
+           polar_just = (pABC - pABC@centroid) * 2, 
+           color = c(blue, blue, gray), 
+           fill = NA, 
+           plot_point = TRUE) +
   D + 
   E + 
   D@west@label("D", hjust = 1.1, fill = NA) +
-  E@east@label("E", hjust = -0.1, fill = NA) +
-  C@label("C", vjust = -.2, hjust = .6, fill = NA) 
+  E@east@label("E", hjust = -0.1, fill = NA)
 ```
 
 Although Euclid does not need it for the current picture, it is just a few steps to compute the bisection of the line *AB*:
@@ -325,18 +333,6 @@ ggdiagram(font_size = 16, font_family = my_font) +
   {A <- ob_point(0, 0) + rvector(.1)} +
   {B <- ob_point(1.25, 0.25) + rvector(.1)} +
   {AB <- ob_segment(A, B, color = blue)} +
-  ob_label(
-    label = "A",
-    center = A,
-    color = blue,
-    polar_just = AB@line@angle + degree(180), 
-    fill = NA) +
-  ob_label(
-    label = "B",
-    center = B,
-    color = blue,
-    polar_just = AB@line@angle, 
-    fill = NA) + 
   {D <- ob_circle(A, radius = AB@distance)} +
   {E <- ob_circle(B, radius = AB@distance)} + 
   D@point_at((A - B)@theta)@label(
@@ -348,20 +344,17 @@ ggdiagram(font_size = 16, font_family = my_font) +
     polar_just = (B - A)@theta, 
     fill = NA) +
   {C <- intersection(D, E)[1]} +
-  ob_label("C", C, 
-           color = red, 
-           polar_just = (C - AB@midpoint())@theta, 
-           label.margin = margin(2, 2, 2, 2), 
-           label.padding = margin(), 
-           fill = NA) + 
-  ob_polygon(bind(c(A, B, C)), 
+  ob_polygon(p = {p_ABC <- bind(c(A, B, C))}, 
              color = NA, 
              fill = class_color("orange")@lighten(.3)) +
-  {ABC <- ob_segment(bind(c(A,B,C,A)), color = c(red, blue, blue))} + 
-  ABC@hatch() +
-  ABC@p1
-
-  
+  {s_ABC <- ob_segment(bind(c(A,B,C,A)), color = c(red, blue, blue))} + 
+  s_ABC@hatch() +
+  p_ABC +
+  ob_label(LETTERS[1:3], 
+           center = p_ABC, 
+           polar_just = (p_ABC - p_ABC@centroid) * 2, 
+           fill = NA, 
+           color = c(red,red, blue))
 ```
 
 
@@ -590,8 +583,9 @@ ggdiagram(font_family = my_font) +
   G@label(
     "G",
     size = 16,
-    nudge_x = .2,
-    color = red,
+    nudge_x = .25,
+    nudge_y = -.05,
+    color = gray,
     fill = NA
   ) + 
   A +

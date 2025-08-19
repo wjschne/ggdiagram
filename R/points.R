@@ -141,6 +141,11 @@ pt_props <- list(
 #' @param style Gets and sets the styles associated with points
 #' @slot tibble Gets a [`tibble::tibble`] containing parameters and styles used by [`ggplot2::geom_point`].
 #' @slot xy Gets a 2-column matrix of the x and y coordinates of the ob_point object.
+#' @slot centroid ob_point at the average of the x and y values
+#' @slot bounding_box ob_rectangle that contains all the points in the object
+#' @slot place function to place point in relation to other objects
+#' @slot label function to create ob_label for points in the object
+#' @slot aesthetics returns class_aesthetics for ob_point
 #' @inherit ob_style params
 #' @export
 #' @returns ob_point object
