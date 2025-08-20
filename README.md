@@ -33,17 +33,17 @@ be thought of as extensions of `ggplot2::annotate`.
 
 ## Installation
 
-You can install ggdiagram from R-universe like so:
+To install the published version from CRAN:
+
+``` r
+install.packages("ggdiagram")
+```
+
+You can install the development versin of ggdiagram from R-universe like
+so:
 
 ``` r
 install.packages("ggdiagram", repos = "https://wjschne.r-universe.dev")
-```
-
-Assuming the [remotes package](https://remotes.r-lib.org/) is already
-installed, you can install the development version of ggdiagram like so:
-
-``` r
-remotes::install_github("wjschne/ggdiagram")
 ```
 
 ## Example
