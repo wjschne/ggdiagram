@@ -24,6 +24,7 @@ FB
 Foci
 GIJ
 GKI
+GKL
 Hartl's
 KJEB
 Labelling
@@ -36,6 +37,9 @@ Sewall
 Superellipses
 TikZ
 TikZ's
+XY
+YX
+YY
 apothem
 arcus
 arrowheadr
@@ -77,7 +81,6 @@ mathcal
 mitre
 ngon
 ngons
-pc
 picas
 pixelated
 purrr
