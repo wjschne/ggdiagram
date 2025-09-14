@@ -131,6 +131,9 @@ cr_props <- list(
       getter = function(self) {
         \(theta = degree(0), ...) {
           if (!S7::S7_inherits(theta, ob_angle)) theta <- degree(theta)
+          if (S7::S7_inherits(theta, ob_point)) {
+            theta <- (projection(theta, self) - self@center)@theta
+          }
           x <- self@center@x
           y <- self@center@y
           x1 <- cos(theta) * self@radius + self@center@x
@@ -156,7 +159,15 @@ cr_props <- list(
           self@center + ob_polar(theta = theta, r = self@radius, style = self@style, ...)
           }
       }
-    )),
+    ),
+    polar_line_at = S7::new_property(
+      S7::class_function,
+      getter = function(self) {
+        \(x) {
+          x0 <- x - self@center
+          ob_line(a = x0@x, b = x0@y, c = -self@radius ^ 2 - self@center@x * x0@x - self@center@y * x0@y)
+        }
+      })),
   # info ----
   info = list(
   aesthetics = S7::new_property(getter = function(self) {

@@ -281,12 +281,11 @@ S7::method(`+`, list(class_gg, ob_latex)) <- function(e1, e2) {
   e1 + as.geom(e2)
 }
 
-if (packageVersion("ggplot2") >= "3.5.2.9000") {
+
 S7::method(update_ggplot, list(ob_latex, class_ggplot)) <-
   function(object, plot, ...) {
     plot + as.geom(object)
   }
-}
 
 S7::method(place, list(ob_latex, centerpoint)) <- function(x, from, where = "right", sep = 1) {
   r1 <- x@rectangle

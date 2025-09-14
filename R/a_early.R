@@ -1064,14 +1064,10 @@ S7::method(`+`, list(class_gg, ob_shape_list)) <- function(e1, e2) {
   e1 + as.geom(e2)
 }
 
-if (packageVersion("ggplot2") >= "3.5.2.9000") {
-  S7::method(update_ggplot, list(has_style, class_ggplot)) <-
-    function(object, plot, ...) {
-      plot + as.geom(object)
-    }
-}
-
-
+S7::method(update_ggplot, list(has_style, class_ggplot)) <-
+  function(object, plot, ...) {
+    plot + as.geom(object)
+  }
 
 #' @noRd
 #' @keywords internal

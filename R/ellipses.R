@@ -217,7 +217,7 @@ el_props <- list(
       getter = function(self) {
         \(theta = degree(0), ...) {
           if (S7::S7_inherits(theta, ob_point)) {
-            theta <- projection(theta, self)@theta
+            theta <- (projection(theta, self) - self@center)@theta
             }
         if (!S7::S7_inherits(theta, ob_angle)) {
           theta <- degree(theta)
@@ -232,7 +232,15 @@ el_props <- list(
         s <- rlang::list2(...)
         rlang::inject(set_props(l, !!!s))
       }
-    })
+    }),
+    polar_line_at = S7::new_property(
+      S7::class_function,
+      getter = function(self) {
+        \(x) {
+          x0 <- x - self@center
+          ob_line(a = x0@x * self@b ^ self@m2, b = x0@y * self@a ^ self@m1, c = -1 * (self@b ^ self@m2) * (self@a ^ self@m1) - self@center@x * x0@x - self@center@y * x0@y)
+        }
+      })
   ),
   info = list(
     aesthetics = S7::new_property(getter = function(self) {

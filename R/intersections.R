@@ -257,43 +257,45 @@ S7::method(intersection, list(ob_rectangle, ob_point)) <- function(x, y, ...) {
 
 
 S7::method(intersection, list(ob_segment, ob_ellipse)) <- function(x, y, ...) {
-         # https://raw.org/book/computer-graphics/line-segment-ellipse-intersection/
+  intersection(intersection(x@line, y), x, ...)
 
-         A <- rotate(x@p1 - y@center, y@angle * -1)
-         B <- rotate(x@p2 - y@center, y@angle * -1)
-         Ax <- A@x
-         Ay <- A@y
-         Bx <- B@x
-         By <- B@y
-         rx2 <- y@a ^ 2
-         ry2 <- y@b ^ 2
-
-         aa <- rx2 * ((By - Ay) ^ 2) + ry2 * ((Bx - Ax) ^ 2)
-         bb <- 2 * rx2 * Ay * (By - Ay) + 2 * ry2 * Ax * (Bx - Ax)
-         cc <- rx2 * (Ay ^ 2) + ry2 * (Ax ^ 2) - rx2 * ry2
-         D <- (bb ^ 2) - 4 * aa * cc
-         D[D < 0] <- NA
-
-         postt <- (-bb + sqrt(D)) / (2 * aa)
-         negtt <- (-bb - sqrt(D)) / (2 * aa)
-
-         same <- abs(postt - negtt) < .Machine$double.eps
-         negtt[same] <- NULL
-         tt <- c(postt, negtt)
-         tt <- tt[tt <= 1 & tt >= 0]
-
-         if (length(tt) == 0) {
-           message("There are no points of intersections with this ellipse.")
-           return(list())
-         }
-
-
-
-
-         P <- A + ((B - A) * tt)
-         i <- y@center + rotate(P, y@angle)
-         s <- rlang::list2(...)
-         rlang::inject(set_props(i, !!!s))
+         # # https://raw.org/book/computer-graphics/line-segment-ellipse-intersection/
+         #
+         # A <- rotate(x@p1 - y@center, y@angle * -1)
+         # B <- rotate(x@p2 - y@center, y@angle * -1)
+         # Ax <- A@x
+         # Ay <- A@y
+         # Bx <- B@x
+         # By <- B@y
+         # rx2 <- y@a ^ 2
+         # ry2 <- y@b ^ 2
+         #
+         # aa <- rx2 * ((By - Ay) ^ 2) + ry2 * ((Bx - Ax) ^ 2)
+         # bb <- 2 * rx2 * Ay * (By - Ay) + 2 * ry2 * Ax * (Bx - Ax)
+         # cc <- rx2 * (Ay ^ 2) + ry2 * (Ax ^ 2) - rx2 * ry2
+         # D <- (bb ^ 2) - 4 * aa * cc
+         # D[D < 0] <- NA
+         #
+         # postt <- (-bb + sqrt(D)) / (2 * aa)
+         # negtt <- (-bb - sqrt(D)) / (2 * aa)
+         #
+         # same <- abs(postt - negtt) < .Machine$double.eps
+         # negtt[same] <- NULL
+         # tt <- c(postt, negtt)
+         # tt <- tt[tt <= 1 & tt >= 0]
+         #
+         # if (length(tt) == 0) {
+         #   message("There are no points of intersections with this ellipse.")
+         #   return(list())
+         # }
+         #
+         #
+         #
+         #
+         # P <- A + ((B - A) * tt)
+         # i <- y@center + rotate(P, y@angle)
+         # s <- rlang::list2(...)
+         # rlang::inject(set_props(i, !!!s))
 
 
 
@@ -303,159 +305,212 @@ S7::method(intersection, list(ob_ellipse, ob_segment)) <- function(x,y, ...) {
   intersection(y, x, ...)
 }
 
-# S7::method(intersection, list(ob_line, ob_ellipse)) <- function(x,y) {
-#   x <- ob_ellipse()
-#   y <- ob_line(slope = 4, intercept = 1)
-#   p1 <- y@point_at_x(x@center - x@a - x@b)
-#   p2 <- y@point_at_x(x@center + x@a + x@b)
-#   intersection(ob_segment(p1,p2), y)
-# }
+#' @keywords internal
+intersect1line1ellipse <- function(x,y, ...) {
+  rx <- rotate(x, theta = y@angle, origin = y@center)
+
+  A <- rx@a
+  B <- rx@b
+  C <- rx@c + A * y@center@x + B * y@center@y
+  a <- y@a
+  b <- y@b
+  m1 <- y@m1
+  m2 <- y@m2
 
 
+  # Normalize direction vector perpendicular to line
+  norm_factor <- sqrt(A^2 + B^2)
+  dx <- -B / norm_factor
+  dy <- A / norm_factor
 
+  # Find a particular point on the line
+  x0 <- double(x@length)
+  y0 <- double(x@length)
+  x0[B == 0 & A != 0] <- -C[B == 0 & A != 0] / A[B == 0 & A != 0]
+  y0[B != 0] <- -C[B != 0] / B[B != 0]
 
-# points(x = intersect_line_segment@x, y = intersect_line_segment@y)
-S7::method(intersection, list(ob_line, ob_ellipse)) <- function(x, y, ...) {
-  # theta <- angle(degree = seq(0, 360))
-  x <- ob_line(slope = 1, intercept = 0)
-  y <- ob_ellipse(center = ob_point(0,0),a = 1, b = 1)
+  # Parametric form of line: (x(t), y(t)) = (x0 + dx * t, y0 + dy * t)
+  superellipse_eq <- function(t) {
+    xt <- x0 + dx * t
+    yt <- y0 + dy * t
+    (abs(xt / a) ^ m1 + abs(yt / b) ^ m2) - 1
+  }
 
-  eps <- distance(y@point_at(radian(0)), y@point_at(radian(.Machine$double.eps)))
-  # eps <- .00001
-  # par(pty = "s")
-  xmax <- max(y@xy[,1])
-  xmin <- min(y@xy[,1])
-  ymax <- max(y@xy[,2])
-  ymin <- min(y@xy[,2])
-  if (is.infinite(x@slope)) {
-    s <- ob_segment(ob_point(x@xintercept,ymin),
-                 ob_point(x@xintercept,ymax))
+  # Root finding over a large enough range
+  t_vals <- seq(-10 * max(a, b), 10 * max(a, b), length.out = 2000)
+  sign_change <- which(diff(sign(superellipse_eq(t_vals))) != 0)
+
+  roots <- vapply(sign_change, function(i) {
+    tryCatch({
+      stats::uniroot(superellipse_eq, lower = t_vals[i], upper = t_vals[i + 1])$root
+    }, error = function(e) NA_real_)
+  }, numeric(1))
+
+  roots <- roots[!is.na(roots)]
+
+  if (length(roots) > 0) {
+    p <- ob_point(x0 + dx * roots,
+                  y0 + dy * roots, ...)
+    theta <- y@angle
+    rotate(p, theta = y@angle) + y@center
   } else {
-    s1 <- ob_segment(x@point_at_x(xmin),
-                  x@point_at_x(xmax))
-
-    s2 <- ob_segment(ob_point((ymin - x@intercept) / x@slope, ymin),
-                  ob_point((ymax - x@intercept) / x@slope,ymax))
-    if (distance(s1) < distance(s2)) {
-      s <- s1
-    } else {
-      s <- s2
-    }
+    ob_point(numeric(0), numeric(0))
   }
-
-
-
-  d <- s1@p2 - s1@p1
-  s_points <- s1@p1 + seq(0,1,.5) * d
-  c_points <- s_points - y@center
-
-
-  test_x <- seq(xmax, ymax, length.out = 1000)
-  text_y <- x@slope * test_x + x@intercept
-
-  delta_angle <- 2
-  current_angle <- 0
-
-  m1 <- ob_point(1,0)
-  first <- FALSE
-  second <- FALSE
-
-  line_ellipse_intersection <- list()
-  i <- 0
-
-  while (current_angle < 362 && !(m1@r < eps * 10) && delta_angle > .Machine$double.eps * 10) {
-    s <- ob_segment(anchor(y, angle(degree = current_angle)),
-                 anchor(y, angle(degree = current_angle + delta_angle)))
-    intersect_line_segment <- intersection(x, s)
-
-    if (length(intersect_line_segment) > 0) {
-      first <- TRUE
-      s_low <- ob_segment(
-        anchor(y, angle(degree = current_angle)),
-        anchor(y, angle(degree = current_angle + delta_angle / 2)))
-
-      s_high <- ob_segment(
-        anchor(y, angle(degree = current_angle + delta_angle / 2)),
-        anchor(y, angle(degree = current_angle + delta_angle )))
-
-      s_low@p1 == s@p1
-      s_low@p1 == s_high@p1
-      s_low@p2 == s_high@p1
-      s_low@p1 == s_low@p2
-
-      i_test_low <- intersection(x, s_low@line)
-      i_test_high <- intersection(x, s_high@line)
-
-      if (length(i_test_low) + length(i_test_high) == 0) {
-        stop("wtf")
-        s_low <- ob_segment(
-          anchor(
-            y,
-            angle(
-              degree = current_angle - delta_angle * 0.0000001)),
-          anchor(
-            y,
-            angle(degree = current_angle + .5 * delta_angle)))
-
-        s_high <- ob_segment(
-          anchor(
-            y,
-            angle(degree = current_angle + .5 * delta_angle)),
-          anchor(
-            y,
-            angle(
-              degree = current_angle + delta_angle * 1.0000001 )))
-        i_test_low <- intersection(x, s_low@line)
-        i_test_high <- intersection(x, s_high@line)
-
-        }
-
-      delta_angle <- delta_angle / 2
-
-      if (length(i_test_low) == 0) {
-        current_angle <- current_angle + delta_angle
-      }
-
-
-
-
-
-      d1 <- s@p1 - intersect_line_segment
-      m1 <- midpoint(s) - intersect_line_segment
-      if (d1@r < eps * 10) {
-        m1 <- ob_point(0,0)
-        line_ellipse_intersection <- s@p1
-      }
-      d2 <- s@p2 - intersect_line_segment
-      if (d2@r < eps * 10) {
-        m1 <- ob_point(0,0)
-        line_ellipse_intersection <- s@p2
-      }
-    } else {
-      # delta_angle <- delta_angle * 1.01
-      i <- i + 1
-      if (delta_angle < 2) {
-        if (first && !second) {
-          line_ellipse_intersection$first <- y@point_theta(degree(current_angle))
-          second <- TRUE
-        }
-        if (second) {
-          line_ellipse_intersection$second <- y@point_theta(degree(current_angle))
-        }
-
-        delta_angle <- 2
-        current_angle <- current_angle + delta_angle
-
-      } else {
-        current_angle <- current_angle + delta_angle
-      }
-
-    }
-  }
-  s <- rlang::list2(...)
-  rlang::inject(set_props(line_ellipse_intersection, !!!s))
 
 }
+
+
+S7::method(intersection, list(ob_line, ob_ellipse)) <- function(x,y, ...) {
+  purrr::map2(unbind(x), unbind(y), \(xx, yy) intersect1line1ellipse(xx, yy, ...)) |>
+    bind()
+}
+
+S7::method(intersection, list(ob_ellipse, ob_line)) <- function(x,y, ...) {
+  intersection(y, x, ...)
+}
+
+
+# S7::method(intersection, list(ob_line, ob_ellipse)) <- function(x, y, ...) {
+#   # theta <- angle(degree = seq(0, 360))
+#   x <- ob_line(slope = 1, intercept = 0)
+#   y <- ob_ellipse(center = ob_point(0,0),a = 1, b = 1)
+#
+#   eps <- distance(y@point_at(radian(0)), y@point_at(radian(.Machine$double.eps)))
+#   # eps <- .00001
+#   # par(pty = "s")
+#   xmax <- max(y@xy[,1])
+#   xmin <- min(y@xy[,1])
+#   ymax <- max(y@xy[,2])
+#   ymin <- min(y@xy[,2])
+#   if (is.infinite(x@slope)) {
+#     s <- ob_segment(ob_point(x@xintercept,ymin),
+#                  ob_point(x@xintercept,ymax))
+#   } else {
+#     s1 <- ob_segment(x@point_at_x(xmin),
+#                   x@point_at_x(xmax))
+#
+#     s2 <- ob_segment(ob_point((ymin - x@intercept) / x@slope, ymin),
+#                   ob_point((ymax - x@intercept) / x@slope,ymax))
+#     if (distance(s1) < distance(s2)) {
+#       s <- s1
+#     } else {
+#       s <- s2
+#     }
+#   }
+#
+#
+#
+#   d <- s1@p2 - s1@p1
+#   s_points <- s1@p1 + seq(0,1,.5) * d
+#   c_points <- s_points - y@center
+#
+#
+#   test_x <- seq(xmax, ymax, length.out = 1000)
+#   text_y <- x@slope * test_x + x@intercept
+#
+#   delta_angle <- 2
+#   current_angle <- 0
+#
+#   m1 <- ob_point(1,0)
+#   first <- FALSE
+#   second <- FALSE
+#
+#   line_ellipse_intersection <- list()
+#   i <- 0
+#
+#   while (current_angle < 362 && !(m1@r < eps * 10) && delta_angle > .Machine$double.eps * 10) {
+#     s <- ob_segment(anchor(y, angle(degree = current_angle)),
+#                  anchor(y, angle(degree = current_angle + delta_angle)))
+#     intersect_line_segment <- intersection(x, s)
+#
+#     if (length(intersect_line_segment) > 0) {
+#       first <- TRUE
+#       s_low <- ob_segment(
+#         anchor(y, angle(degree = current_angle)),
+#         anchor(y, angle(degree = current_angle + delta_angle / 2)))
+#
+#       s_high <- ob_segment(
+#         anchor(y, angle(degree = current_angle + delta_angle / 2)),
+#         anchor(y, angle(degree = current_angle + delta_angle )))
+#
+#       s_low@p1 == s@p1
+#       s_low@p1 == s_high@p1
+#       s_low@p2 == s_high@p1
+#       s_low@p1 == s_low@p2
+#
+#       i_test_low <- intersection(x, s_low@line)
+#       i_test_high <- intersection(x, s_high@line)
+#
+#       if (length(i_test_low) + length(i_test_high) == 0) {
+#         stop("wtf")
+#         s_low <- ob_segment(
+#           anchor(
+#             y,
+#             angle(
+#               degree = current_angle - delta_angle * 0.0000001)),
+#           anchor(
+#             y,
+#             angle(degree = current_angle + .5 * delta_angle)))
+#
+#         s_high <- ob_segment(
+#           anchor(
+#             y,
+#             angle(degree = current_angle + .5 * delta_angle)),
+#           anchor(
+#             y,
+#             angle(
+#               degree = current_angle + delta_angle * 1.0000001 )))
+#         i_test_low <- intersection(x, s_low@line)
+#         i_test_high <- intersection(x, s_high@line)
+#
+#         }
+#
+#       delta_angle <- delta_angle / 2
+#
+#       if (length(i_test_low) == 0) {
+#         current_angle <- current_angle + delta_angle
+#       }
+#
+#
+#
+#
+#
+#       d1 <- s@p1 - intersect_line_segment
+#       m1 <- midpoint(s) - intersect_line_segment
+#       if (d1@r < eps * 10) {
+#         m1 <- ob_point(0,0)
+#         line_ellipse_intersection <- s@p1
+#       }
+#       d2 <- s@p2 - intersect_line_segment
+#       if (d2@r < eps * 10) {
+#         m1 <- ob_point(0,0)
+#         line_ellipse_intersection <- s@p2
+#       }
+#     } else {
+#       # delta_angle <- delta_angle * 1.01
+#       i <- i + 1
+#       if (delta_angle < 2) {
+#         if (first && !second) {
+#           line_ellipse_intersection$first <- y@point_theta(degree(current_angle))
+#           second <- TRUE
+#         }
+#         if (second) {
+#           line_ellipse_intersection$second <- y@point_theta(degree(current_angle))
+#         }
+#
+#         delta_angle <- 2
+#         current_angle <- current_angle + delta_angle
+#
+#       } else {
+#         current_angle <- current_angle + delta_angle
+#       }
+#
+#     }
+#   }
+#   s <- rlang::list2(...)
+#   rlang::inject(set_props(line_ellipse_intersection, !!!s))
+#
+# }
 
 
 S7::method(intersection, list(ob_circle, ob_circle)) <- function(x,y, ...) {

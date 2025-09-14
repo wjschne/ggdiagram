@@ -41,8 +41,6 @@ To install the published version from CRAN:
 install.packages("ggdiagram")
 ```
 
-
-
 You can install the development version of ggdiagram from R-universe like so:
 
 ``` r

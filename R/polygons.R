@@ -1237,7 +1237,7 @@ ob_ngon_props <- list(
       getter = function(self) {
         \(theta = degree(0), ...) {
           if (S7::S7_inherits(theta, ob_point)) {
-            theta <- projection(theta, self)@theta
+            theta <- (projection(theta, self) - self@center)@theta
           }
           if (!S7::S7_inherits(theta, ob_angle)) {
             theta <- degree(theta)

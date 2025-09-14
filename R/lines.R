@@ -200,7 +200,7 @@ ob_line <- S7::new_class(
     if (all(c("a", "b", "c") %in% d_names)) {
       check_ab0 <- d |>
         dplyr::mutate(ab0 = (a == 0) & (b == 0) & (c != 0)) |>
-        dplyr::pull(.data$ab0) |>
+        dplyr::pull("ab0") |>
         any()
       if (check_ab0) stop("If a and b are 0, c must be 0.")
 

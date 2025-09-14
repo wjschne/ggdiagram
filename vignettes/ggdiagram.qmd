@@ -300,7 +300,7 @@ ggdiagram(font_size = 16) +
 
 # Changing the default arrowhead
 
-Functions that can make arrows (e.g., `connect`, `ob_segment`, `ob_arc`, `ob_path`, `ob_bezier`) use functions from the `ggarrow` package. The arrowheads are [fully customizable](https://teunbrand.github.io/ggarrow/articles/customisation.html). The [arrowheadr](https://wjschne.github.io/arrowheadr/) package has functions for many custom arrowheads and for creating new arrowheads.
+Functions that can make arrows (e.g., `connect`, `ob_segment`, `ob_arc`, `ob_path`, `ob_bezier`) use functions from the [ggarrow](https://teunbrand.github.io/ggarrow/) package. The arrowheads are [fully customizable](https://teunbrand.github.io/ggarrow/articles/customisation.html). The [arrowheadr](https://wjschne.github.io/arrowheadr/) package has functions for many custom arrowheads and for creating new arrowheads.
 
 The `arrowhead` function returns a matrix that draws the default arrowhead.
 
