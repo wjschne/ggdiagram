@@ -278,11 +278,6 @@ S7::method(str, class_color) <- function(
     nest.lev = nest.lev)
 }
 
-# S7::method(print, class_color) <- function(x, ...) {
-#   str(x, ...)
-#   invisible(x)
-# }
-
 S7::method(`[`, class_color) <- function(x, i) {
   i <- character_index(i, x@id)
   S7::S7_data(x) <-  c(x)[i]

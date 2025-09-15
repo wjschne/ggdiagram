@@ -1,3 +1,7 @@
+# ggdiagram 0.1.2 _2025-09-15_
+
+* Fix print method for `class_color`
+
 # ggdiagram 0.1.1 _2025-09-14_
 
 * ggplot2 4.0.0 broke ggdiagram 0.1.0. New version requires ggplot2 4.0.0 or higher. 
