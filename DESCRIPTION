@@ -23,7 +23,7 @@ Imports:
     farver,
     geomtextpath,
     ggarrow,
-    ggforce,
+    ggforce ( >= 0.5.0),
     ggplot2 (>= 4.0.0),
     ggtext,
     grDevices,

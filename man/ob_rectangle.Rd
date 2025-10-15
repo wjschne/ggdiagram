@@ -86,6 +86,30 @@ ob_rectangle(
 \description{
 ob_rectangle class
 }
+\section{Slots}{
+
+\describe{
+\item{\code{xy}}{returns a matrix of xy coordinates of \code{center} points}
+
+\item{\code{area}}{returns rectangle area}
+
+\item{\code{bounding_box}}{returns the \code{ob_rectangle} that contains all the rectangles in the object}
+
+\item{\code{perimeter}}{returns the rectangle perimeter}
+
+\item{\code{side}}{returns the east, north, west, and south \code{ob_segment} of the rectangles}
+
+\item{\code{length}}{returns the number of rectangles in the object}
+
+\item{\code{geom}}{a function that returns a \code{ggforce::geom_shape} object}
+
+\item{\code{normal_at}}{A function that finds a point perpendicular to the rectangle at angle \code{theta} at the specified distance.}
+
+\item{\code{point_at}}{A function that finds a point on the rectangle at an angle \code{theta}}
+
+\item{\code{tangent_at}}{A function that finds a tangent line on the retangle. Uses point_at to find the tangent point at angle theta and then returns the tangent line at that point. If a point is supplied instead of an angle, the point is projected onto the ellipse and then the tangent line is found from there.}
+}}
+
 \examples{
 ggdiagram() +
   ob_rectangle(center = ob_point(0,0), width = 3, height = 2)

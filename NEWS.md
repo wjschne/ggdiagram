@@ -1,6 +1,11 @@
+# ggdiagram 0.1.3 _2025-10-15_
+
+* [6](https://github.com/wjschne/ggdiagram/issues/6) ggforce 0.5.0 or higher is now required
+
 # ggdiagram 0.1.2 _2025-09-15_
 
 * Fix print method for `class_color`
+* Fix bug in polygon slot for `ob_ellipse`
 
 # ggdiagram 0.1.1 _2025-09-14_
 

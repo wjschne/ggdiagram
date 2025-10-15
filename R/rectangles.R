@@ -2,11 +2,17 @@
 #' @noRd
 find_side <- function(theta, width = 1, height = 1) {
   my_pi <- turn(.5)
-  if (!S7::S7_inherits(theta, ob_angle)) theta <- radian(theta)
+  if (!S7::S7_inherits(theta, ob_angle)) {
+    theta <- radian(theta)
+  }
   theta <- turn(theta@turn + 1 * (theta@turn < 0))
   ne <- radian(atan2(height, width))
   corners <- c(ne, my_pi - ne, ne + my_pi, 2 * my_pi - ne)
-  side <- as.integer(theta > ne) + as.integer(theta > my_pi - ne) + as.integer(theta > my_pi + ne) + as.integer(theta > 2 * my_pi - ne) + 1L
+  side <- as.integer(theta > ne) +
+    as.integer(theta > my_pi - ne) +
+    as.integer(theta > my_pi + ne) +
+    as.integer(theta > 2 * my_pi - ne) +
+    1L
   side[side == 5L] <- 1L
   side
 }
@@ -20,7 +26,9 @@ rectangle_side <- S7::new_class(
     east = ob_segment,
     north = ob_segment,
     west = ob_segment,
-    south = ob_segment))
+    south = ob_segment
+  )
+)
 
 rc_styles <- c(
   "alpha",
@@ -40,19 +48,22 @@ rc_aesthetics_list <- class_aesthetics_list(
     "fill",
     "linewidth",
     "linetype",
-    "alpha"),
+    "alpha"
+  ),
   not_mappable = c(
     "radius"
   ),
   required_aes = c(
     "x",
     "y",
-    "group"),
+    "group"
+  ),
   omit_names = c(
     "rule",
     "angle",
     "label",
-    "id"),
+    "id"
+  ),
   inherit.aes = FALSE,
   style = rc_styles
 )
@@ -60,15 +71,20 @@ rc_aesthetics_list <- class_aesthetics_list(
 rc_props <- list(
   # Primary ----
   primary = list(
-      width = S7::new_property(class = S7::class_numeric, default = 1),
-      height = S7::new_property(class = S7::class_numeric, default = 1),
-      angle = S7::new_property(ob_angle_or_numeric, default = 0)
+    width = S7::new_property(class = S7::class_numeric, default = 1),
+    height = S7::new_property(class = S7::class_numeric, default = 1),
+    angle = S7::new_property(ob_angle_or_numeric, default = 0)
   ),
   # extra ----
   extra = list(
-    vertex_radius = S7::new_property(class = class_numeric_or_unit, validator = function(value) {
-      if (length(value) > 1) stop("The vertex_radius property must be of length 1.")
-    })
+    vertex_radius = S7::new_property(
+      class = class_numeric_or_unit,
+      validator = function(value) {
+        if (length(value) > 1) {
+          stop("The vertex_radius property must be of length 1.")
+        }
+      }
+    )
   ),
   styles = ob_style@properties[rc_styles],
   # Derived ----
@@ -77,7 +93,6 @@ rc_props <- list(
       self@width * self@height
     }),
     bounding_box = S7::new_property(getter = function(self) {
-
       d_rect <- tibble::tibble(
         x = c(
           self@northwest@x,
@@ -92,14 +107,17 @@ rc_props <- list(
           self@southeast@y
         )
       ) |>
-        dplyr::summarise(xmin = min(x),
-                         xmax = max(x),
-                         ymin = min(y),
-                         ymax = max(y))
+        dplyr::summarise(
+          xmin = min(x),
+          xmax = max(x),
+          ymin = min(y),
+          ymax = max(y)
+        )
 
-      ob_rectangle(southwest = ob_point(d_rect$xmin, d_rect$ymin),
-                northeast = ob_point(d_rect$xmax, d_rect$ymax))
-
+      ob_rectangle(
+        southwest = ob_point(d_rect$xmin, d_rect$ymin),
+        northeast = ob_point(d_rect$xmax, d_rect$ymax)
+      )
     }),
     perimeter = S7::new_property(getter = function(self) {
       self@width * 2 + self@height * 2
@@ -107,81 +125,93 @@ rc_props <- list(
     northeast = S7::new_property(
       ob_point,
       getter = function(self) {
-        rotate(ob_point(self@width / 2,
-                     self@height / 2,
-                     style = self@style),
-               self@angle) + self@center
+        rotate(
+          ob_point(self@width / 2, self@height / 2, style = self@style),
+          self@angle
+        ) +
+          self@center
       }
     ),
     northwest = S7::new_property(
       ob_point,
       getter = function(self) {
-        rotate(ob_point(self@width / -2,
-                     self@height / 2,
-                     style = self@style),
-               self@angle) + self@center
+        rotate(
+          ob_point(self@width / -2, self@height / 2, style = self@style),
+          self@angle
+        ) +
+          self@center
       }
     ),
     southwest = S7::new_property(
       ob_point,
       getter = function(self) {
-        rotate(ob_point(self@width / -2,
-                     self@height / -2,
-                     style = self@style),
-               self@angle) + self@center
+        rotate(
+          ob_point(self@width / -2, self@height / -2, style = self@style),
+          self@angle
+        ) +
+          self@center
       }
     ),
     southeast = S7::new_property(
       ob_point,
       getter = function(self) {
-        rotate(ob_point(self@width / 2,
-                     self@height / -2,
-                     style = self@style),
-               self@angle) + self@center
+        rotate(
+          ob_point(self@width / 2, self@height / -2, style = self@style),
+          self@angle
+        ) +
+          self@center
       }
     ),
     east = S7::new_property(
       ob_point,
       getter = function(self) {
-        rotate(ob_point(self@width / 2,
-                     0,
-                     style = self@style),
-               self@angle) + self@center
+        rotate(ob_point(self@width / 2, 0, style = self@style), self@angle) +
+          self@center
       }
     ),
     north = S7::new_property(
       ob_point,
       getter = function(self) {
-        rotate(ob_point(0,
-                     self@height / 2,
-                     style = self@style),
-               self@angle) + self@center
+        rotate(ob_point(0, self@height / 2, style = self@style), self@angle) +
+          self@center
       }
     ),
     west = S7::new_property(
       ob_point,
       getter = function(self) {
-        rotate(ob_point(self@width / -2,
-                     0,
-                     style = self@style),
-               self@angle) + self@center
+        rotate(ob_point(self@width / -2, 0, style = self@style), self@angle) +
+          self@center
       }
     ),
     south = S7::new_property(
       ob_point,
       getter = function(self) {
-        rotate(ob_point(0,
-                     self@height / -2,
-                     style = self@style),
-               self@angle) + self@center
+        rotate(ob_point(0, self@height / -2, style = self@style), self@angle) +
+          self@center
       }
     ),
     side = S7::new_property(rectangle_side, getter = function(self) {
       re = rectangle_side(
-        east = ob_segment(p1 = self@northeast, p2 = self@southeast, style = self@style),
-        north = ob_segment(p1 = self@northwest, p2 = self@northeast, style = self@style),
-        west = ob_segment(p1 = self@northwest, p2 = self@southwest, style = self@style),
-        south = ob_segment(p1 = self@southwest, p2 = self@southeast, style = self@style)
+        east = ob_segment(
+          p1 = self@northeast,
+          p2 = self@southeast,
+          style = self@style
+        ),
+        north = ob_segment(
+          p1 = self@northwest,
+          p2 = self@northeast,
+          style = self@style
+        ),
+        west = ob_segment(
+          p1 = self@northwest,
+          p2 = self@southwest,
+          style = self@style
+        ),
+        south = ob_segment(
+          p1 = self@southwest,
+          p2 = self@southeast,
+          style = self@style
+        )
       )
     }),
     length = S7::new_property(
@@ -191,8 +221,7 @@ rc_props <- list(
     ),
     style = S7::new_property(
       getter = function(self) {
-        pr <- purrr::map(rc_styles,
-                         prop, object = self) |>
+        pr <- purrr::map(rc_styles, prop, object = self) |>
           `names<-`(rc_styles)
         rlang::inject(ob_style(!!!get_non_empty_list(pr)))
       },
@@ -205,9 +234,6 @@ rc_props <- list(
       }
     ),
     tibble = S7::new_property(getter = function(self) {
-
-
-
       d <- list(
         x = self@center@x,
         y = self@center@y,
@@ -221,13 +247,13 @@ rc_props <- list(
         linewidth = self@linewidth,
         linetype = self@linetype,
         id = self@id
-        )
+      )
       get_non_empty_tibble(d)
     })
   ),
   # Functions ----
   funs = list(
-    geom = S7::new_property(S7::class_function,  getter = function(self) {
+    geom = S7::new_property(S7::class_function, getter = function(self) {
       \(...) {
         as.geom(self, ...)
       }
@@ -244,7 +270,8 @@ rc_props <- list(
           linewidth = self@linewidth,
           linetype = self@linetype,
           vertex_radius = self@vertex_radius
-        ) |> get_non_empty_tibble()
+        ) |>
+          get_non_empty_tibble()
 
         d <- tibble::tibble(
           x0 = self@center@x,
@@ -258,24 +285,30 @@ rc_props <- list(
           dplyr::mutate(
             rtheta = theta - angle,
             side = find_side(rtheta, width, height),
-            x = ifelse(side %in% c(1L, 3L),
-                       sign(cos(rtheta)) * (width / 2 + distance),
-                       sign(cos(rtheta)) * (height / 2) * abs(cos(rtheta) / sin(rtheta))),
-            y = ifelse(side %in% c(2L, 4L),
-                       sign(sin(rtheta)) * (height / 2 + distance),
-                       sign(sin(rtheta)) * (width / 2) * abs(tan(rtheta)))) |>
+            x = ifelse(
+              side %in% c(1L, 3L),
+              sign(cos(rtheta)) * (width / 2 + distance),
+              sign(cos(rtheta)) * (height / 2) * abs(cos(rtheta) / sin(rtheta))
+            ),
+            y = ifelse(
+              side %in% c(2L, 4L),
+              sign(sin(rtheta)) * (height / 2 + distance),
+              sign(sin(rtheta)) * (width / 2) * abs(tan(rtheta))
+            )
+          ) |>
           dplyr::select(group, x, y, angle, x0, y0) |>
           tidyr::nest(.by = c(group, angle, x0, y0)) |>
-          dplyr::mutate(data = purrr::map2(data, angle, \(dd,aa) {
-            as.matrix(dd) |>
-              rotate2columnmatrix(aa) |>
-              `colnames<-`(c("x", "y")) |>
-              tibble::as_tibble()
-          })) |>
+          dplyr::mutate(
+            data = purrr::map2(data, angle, \(dd, aa) {
+              as.matrix(dd) |>
+                rotate2columnmatrix(aa) |>
+                `colnames<-`(c("x", "y")) |>
+                tibble::as_tibble()
+            })
+          ) |>
           tidyr::unnest(data) |>
-          dplyr::mutate(x = x  + x0,
-                 y = y  + y0) |>
-          dplyr::select(group, x,y) |>
+          dplyr::mutate(x = x + x0, y = y + y0) |>
+          dplyr::select(group, x, y) |>
           tidyr::nest(.by = group) |>
           dplyr::bind_cols(dl) |>
           tidyr::unnest(data)
@@ -299,7 +332,8 @@ rc_props <- list(
             linewidth = self@linewidth,
             linetype = self@linetype,
             vertex_radius = self@vertex_radius
-          ) |> get_non_empty_tibble()
+          ) |>
+            get_non_empty_tibble()
 
           d <- tibble::tibble(
             x0 = self@center@x,
@@ -313,39 +347,51 @@ rc_props <- list(
             dplyr::mutate(
               rtheta = theta - angle,
               side = find_side(rtheta, width, height),
-              x = ifelse(side %in% c(1L, 3L),
-                         sign(cos(rtheta)) * width / 2,
-                         sign(cos(rtheta)) * (height / 2) * abs(cos(rtheta) / sin(rtheta))),
-              y = ifelse(side %in% c(2L, 4L),
-                         sign(sin(rtheta)) * height / 2,
-                         sign(sin(rtheta)) * (width / 2) * abs(sin(rtheta) / cos(rtheta)))) |>
+              x = ifelse(
+                side %in% c(1L, 3L),
+                sign(cos(rtheta)) * width / 2,
+                sign(cos(rtheta)) *
+                  (height / 2) *
+                  abs(cos(rtheta) / sin(rtheta))
+              ),
+              y = ifelse(
+                side %in% c(2L, 4L),
+                sign(sin(rtheta)) * height / 2,
+                sign(sin(rtheta)) * (width / 2) * abs(sin(rtheta) / cos(rtheta))
+              )
+            ) |>
             dplyr::select(group, x, y, angle, x0, y0) |>
             tidyr::nest(.by = c(group, angle, x0, y0)) |>
-            dplyr::mutate(data = purrr::map2(data, angle, \(dd,aa) {
-              if (is.na(aa)) aa <- 0
-              as.matrix(dd) |>
-                rotate2columnmatrix(aa) |>
-                `colnames<-`(c("x", "y")) |>
-                tibble::as_tibble()
-            })) |>
+            dplyr::mutate(
+              data = purrr::map2(data, angle, \(dd, aa) {
+                if (is.na(aa)) {
+                  aa <- 0
+                }
+                as.matrix(dd) |>
+                  rotate2columnmatrix(aa) |>
+                  `colnames<-`(c("x", "y")) |>
+                  tibble::as_tibble()
+              })
+            ) |>
             tidyr::unnest(data) |>
-            dplyr::mutate(x = x  + x0,
-                          y = y  + y0) |>
-            dplyr::select(group, x,y) |>
+            dplyr::mutate(x = x + x0, y = y + y0) |>
+            dplyr::select(group, x, y) |>
             tidyr::nest(.by = group) |>
             dplyr::bind_cols(dl) |>
             tidyr::unnest(data)
 
           data2shape(d, ob_point)
-
         }
       }
-    )),
+    )
+  ),
   # Information ----
   info = list(
     aesthetics = S7::new_property(getter = function(self) {
       rc_aesthetics_list
-    })))
+    })
+  )
+)
 
 # ob_rectangle ----
 
@@ -368,6 +414,16 @@ rc_props <- list(
 #' @param style a style object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to `style`
 #' @inherit ob_style params
+#' @slot xy returns a matrix of xy coordinates of `center` points
+#' @slot area returns rectangle area
+#' @slot bounding_box returns the `ob_rectangle` that contains all the rectangles in the object
+#' @slot perimeter returns the rectangle perimeter
+#' @slot side returns the east, north, west, and south `ob_segment` of the rectangles
+#' @slot length returns the number of rectangles in the object
+#' @slot geom a function that returns a `ggforce::geom_shape` object
+#' @slot normal_at A function that finds a point perpendicular to the rectangle at angle `theta` at the specified distance.
+#' @slot point_at A function that finds a point on the rectangle at an angle `theta`
+#' @slot tangent_at A function that finds a tangent line on the retangle. Uses point_at to find the tangent point at angle theta and then returns the tangent line at that point. If a point is supplied instead of an angle, the point is projected onto the ellipse and then the tangent line is found from there.
 #' @export
 #' @returns [`ob_rectangle`] object
 #'
@@ -384,40 +440,43 @@ ob_rectangle <- S7::new_class(
     !!!rc_props$styles,
     !!!rc_props$derived,
     !!!rc_props$funs,
-    !!!rc_props$info),
-  constructor = function(center = S7::class_missing,
-                         width = numeric(0),
-                         height = numeric(0),
-                         east = S7::class_missing,
-                         north = S7::class_missing,
-                         west = S7::class_missing,
-                         south = S7::class_missing,
-                         northeast = S7::class_missing,
-                         northwest = S7::class_missing,
-                         southwest = S7::class_missing,
-                         southeast = S7::class_missing,
-                         angle = numeric(0),
-                         vertex_radius = numeric(0),
-                         label = character(0),
-                         alpha = numeric(0),
-                         color = character(0),
-                         fill = character(0),
-                         linewidth = numeric(0),
-                         linetype = numeric(0),
-                         style = S7::class_missing,
-                         x = numeric(0),
-                         y = numeric(0),
-                         id = character(0),
-                         ...) {
-
+    !!!rc_props$info
+  ),
+  constructor = function(
+    center = S7::class_missing,
+    width = numeric(0),
+    height = numeric(0),
+    east = S7::class_missing,
+    north = S7::class_missing,
+    west = S7::class_missing,
+    south = S7::class_missing,
+    northeast = S7::class_missing,
+    northwest = S7::class_missing,
+    southwest = S7::class_missing,
+    southeast = S7::class_missing,
+    angle = numeric(0),
+    vertex_radius = numeric(0),
+    label = character(0),
+    alpha = numeric(0),
+    color = character(0),
+    fill = character(0),
+    linewidth = numeric(0),
+    linetype = numeric(0),
+    style = S7::class_missing,
+    x = numeric(0),
+    y = numeric(0),
+    id = character(0),
+    ...
+  ) {
     id <- as.character(id)
 
-    if (length(angle) == 0) angle <- degree(0)
-
+    if (length(angle) == 0) {
+      angle <- degree(0)
+    }
 
     if (!S7::S7_inherits(angle, ob_angle)) {
       angle <- degree(angle)
-      }
+    }
 
     if (length(x) > 0 | length(y) > 0) {
       if (length(x) == 0) {
@@ -463,7 +522,6 @@ ob_rectangle <- S7::new_class(
         top <- south@y + height
         hasnorth <- TRUE
       }
-
     }
 
     if (length(west) > 0) {
@@ -535,13 +593,16 @@ ob_rectangle <- S7::new_class(
       width <- abs(left - right)
     }
 
-    if (length(center) > 0 &&
+    if (
+      length(center) > 0 &&
         length(width) > 0 &&
-        length(height) > 0) {
-
-    } else if (length(center) > 0 &&
-               (hasnorth ||
-                hassouth) && (haswest || haseast)) {
+        length(height) > 0
+    ) {} else if (
+      length(center) > 0 &&
+        (hasnorth ||
+          hassouth) &&
+        (haswest || haseast)
+    ) {
       if (haseast) {
         width <- abs(center@x - right) * 2
       } else {
@@ -552,11 +613,13 @@ ob_rectangle <- S7::new_class(
       } else {
         height <- abs(center@y - bottom) * 2
       }
-
-    } else if (length(width) > 0 &&
-               length(height) > 0 &&
-               (hasnorth ||
-                hassouth) && (haswest || haseast)) {
+    } else if (
+      length(width) > 0 &&
+        length(height) > 0 &&
+        (hasnorth ||
+          hassouth) &&
+        (haswest || haseast)
+    ) {
       if (haseast) {
         c.x <- right - width / 2
       } else {
@@ -569,27 +632,28 @@ ob_rectangle <- S7::new_class(
       }
       center = ob_point(c.x, c.y)
     } else {
-      if (length(width)  == 0)
+      if (length(width) == 0) {
         width <- 1
-      if (length(height) == 0)
+      }
+      if (length(height) == 0) {
         height <- 1
-      if (length(center) == 0)
+      }
+      if (length(center) == 0) {
         center <- ob_point(0, 0)
+      }
       # stop("There is not enough information to make a rectangle.")
     }
 
-
-    rc_style <- ob_style(fill = NA_character_,
-                         color = "black") +
+    rc_style <- ob_style(fill = NA_character_, color = "black") +
       style +
       ob_style(
-      alpha = alpha,
-      color = color,
-      fill = fill,
-      linewidth = linewidth,
-      linetype = linetype,
-      id = id
-    ) +
+        alpha = alpha,
+        color = color,
+        fill = fill,
+        linewidth = linewidth,
+        linetype = linetype,
+        id = id
+      ) +
       ob_style(...)
 
     non_empty_list <- get_non_empty_props(rc_style)
@@ -630,10 +694,10 @@ ob_rectangle <- S7::new_class(
       label = label,
       vertex_radius = vertex_radius,
       alpha = d[["alpha"]] %||% alpha,
-      color = d[["color"]] %||% color ,
-      fill = d[["fill"]]  %||% fill,
-      linewidth = d[["linewidth"]]  %||% linewidth,
-      linetype = d[["linetype"]]  %||% linetype,
+      color = d[["color"]] %||% color,
+      fill = d[["fill"]] %||% fill,
+      linewidth = d[["linewidth"]] %||% linewidth,
+      linetype = d[["linetype"]] %||% linetype,
       id = d[["id"]] %||% id
     )
   }
@@ -641,29 +705,21 @@ ob_rectangle <- S7::new_class(
 
 
 S7::method(str, ob_rectangle) <- function(
-    object,
-    nest.lev = 0,
-    additional = FALSE,
-    omit = omit_props(object, include = c("center", "width", "height"))) {
-  str_properties(object,
-    omit = omit,
-    nest.lev = nest.lev
-  )
+  object,
+  nest.lev = 0,
+  additional = FALSE,
+  omit = omit_props(object, include = c("center", "width", "height"))
+) {
+  str_properties(object, omit = omit, nest.lev = nest.lev)
 }
 
 S7::method(get_tibble, ob_rectangle) <- function(x) {
   xx <- x
   d <- list(
     p = tibble::tibble(
-      x = c(xx@northeast@x,
-            xx@northwest@x,
-            xx@southwest@x,
-            xx@southeast@x),
-      y = c(xx@northeast@y,
-            xx@northwest@y,
-            xx@southwest@y,
-            xx@southeast@y),
-      group = rep(seq(1,xx@length), 4)
+      x = c(xx@northeast@x, xx@northwest@x, xx@southwest@x, xx@southeast@x),
+      y = c(xx@northeast@y, xx@northwest@y, xx@southwest@y, xx@southeast@y),
+      group = rep(seq(1, xx@length), 4)
     ) |>
       tidyr::nest(.by = group) |>
       dplyr::mutate(p = purrr::map(data, ob_point)) |>
@@ -680,7 +736,9 @@ S7::method(get_tibble, ob_rectangle) <- function(x) {
     dplyr::mutate(
       p = purrr::map(p, \(xxx) {
         xxx@tibble |>
-          dplyr::select(dplyr::all_of(c("x", "y")))})) |>
+          dplyr::select(dplyr::all_of(c("x", "y")))
+      })
+    ) |>
     tidyr::unnest(p)
 }
 
@@ -697,10 +755,12 @@ S7::method(get_tibble_defaults, ob_rectangle) <- function(x) {
   get_tibble_defaults_helper(
     x = x,
     default_style = sp,
-    required_aes = c(rc_aesthetics_list@required_aes, "radius"))
+    required_aes = c(rc_aesthetics_list@required_aes, "radius")
+  )
 }
 
-S7::method(`==`, list(ob_rectangle, ob_rectangle)) <- function(e1, e2) { # nocov start
+S7::method(`==`, list(ob_rectangle, ob_rectangle)) <- function(e1, e2) {
+  # nocov start
   (e1@center == e2@center) &&
     (e1@width == e2@width) &&
     (e1@height == e2@height) &&
@@ -721,10 +781,11 @@ S7::method(`[`, ob_rectangle) <- function(x, i) {
     linewidth = x@linewidth,
     linetype = x@linetype,
     angle = x@angle@radian,
-    id = x@id) |>
+    id = x@id
+  ) |>
     get_non_empty_tibble()
 
-  d <- d[i,]
+  d <- d[i, ]
   z <- data2shape(d, ob_rectangle)
 
   z@label <- na2zero(x@label[i])
@@ -735,34 +796,46 @@ S7::method(`[`, ob_rectangle) <- function(x, i) {
 }
 
 
-S7::method(place, list(ob_point, ob_rectangle)) <- function(x, from, where = "right", sep = 1) {
+S7::method(place, list(ob_point, ob_rectangle)) <- function(
+  x,
+  from,
+  where = "right",
+  sep = 1
+) {
   where <- degree(where)
   p <- from@point_at(where)
   p_sep <- ob_polar((p - from@center)@theta, sep)
   x@x <- p@x + p_sep@x
   x@y <- p@y + p_sep@y
   x
-
 }
 
-S7::method(place, list(ob_rectangle, ob_point)) <- function(x, from, where = "right", sep = 1) {
+S7::method(place, list(ob_rectangle, ob_point)) <- function(
+  x,
+  from,
+  where = "right",
+  sep = 1
+) {
   where <- degree(where)
   p_sep <- ob_polar(where, sep)
   p <- x@center - x@point_at(where + degree(180))
   x@center@x <- from@x + p@x + p_sep@x
   x@center@y <- from@y + p@y + p_sep@y
-  if (S7::S7_inherits(x@label)) x@label@center <- x@center
+  if (S7::S7_inherits(x@label)) {
+    x@label@center <- x@center
+  }
   x
 }
 
 
 S7::method(ob_array, ob_rectangle) <- function(
-    x,
-    k = 2,
-    sep = 1,
-    where = "east",
-    anchor = "center",
-    ...) {
+  x,
+  k = 2,
+  sep = 1,
+  where = "east",
+  anchor = "center",
+  ...
+) {
   sa <- ob_array_helper(
     x = x,
     k = k,
@@ -782,5 +855,3 @@ S7::method(ob_array, ob_rectangle) <- function(
     !!!sa$dots
   ))
 }
-
-
