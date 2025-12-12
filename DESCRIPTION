@@ -1,6 +1,6 @@
 Package: ggdiagram
 Title: Object-Oriented Diagram Plots with 'ggplot2'
-Version: 0.1.2
+Version: 0.1.3
 Authors@R: 
     person("W. Joel", "Schneider", , "w.joel.schneider@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-8393-5316"))
@@ -23,7 +23,7 @@ Imports:
     farver,
     geomtextpath,
     ggarrow,
-    ggforce ( >= 0.5.0),
+    ggforce (>= 0.5.0),
     ggplot2 (>= 4.0.0),
     ggtext,
     grDevices,
