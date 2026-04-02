@@ -48,10 +48,10 @@ class_color <- S7::new_class(
             purrr::pmap(\(amount, x) {
               if (amount == 0) {
                 return("#FFFFFF")
-                } else {
+              } else {
                 tinter::lighten(x = x, amount = amount)
               }
-            } ) |>
+            }) |>
             unlist() |>
             class_color()
         }
@@ -68,7 +68,7 @@ class_color <- S7::new_class(
               } else {
                 tinter::darken(x = x, amount = amount)
               }
-            } ) |>
+            }) |>
             unlist() |>
             class_color()
         }
@@ -78,7 +78,6 @@ class_color <- S7::new_class(
       class = S7::class_integer,
       getter = function(self) {
         farver::get_channel(c(self), channel = "s", space = "hsv")
-
       },
       setter = function(self, value) {
         S7::S7_data(self) <- farver::set_channel(
@@ -93,12 +92,15 @@ class_color <- S7::new_class(
     hue = S7::new_property(
       class = S7::class_integer,
       getter = function(self) {
-        farver::get_channel(colour = c(self),
-                            channel = "h",
-                            space = "hsv")
+        farver::get_channel(colour = c(self), channel = "h", space = "hsv")
       },
       setter = function(self, value) {
-        S7::S7_data(self) <- farver::set_channel(c(self), value, channel = "h", space = "hsv")
+        S7::S7_data(self) <- farver::set_channel(
+          c(self),
+          value,
+          channel = "h",
+          space = "hsv"
+        )
         self
       }
     ),
@@ -121,7 +123,6 @@ class_color <- S7::new_class(
       class = S7::class_integer,
       getter = function(self) {
         farver::get_channel(c(self), channel = "alpha", space = "hsv")
-
       },
       setter = function(self, value) {
         S7::S7_data(self) <- farver::set_channel(
@@ -136,36 +137,45 @@ class_color <- S7::new_class(
     red = S7::new_property(
       class = S7::class_integer,
       getter = function(self) {
-        farver::get_channel(colour = c(self),
-                            channel = "r",
-                            space = "rgb")
+        farver::get_channel(colour = c(self), channel = "r", space = "rgb")
       },
       setter = function(self, value) {
-        S7::S7_data(self) <- farver::set_channel(c(self), value, channel = "r", space = "rgb")
+        S7::S7_data(self) <- farver::set_channel(
+          c(self),
+          value,
+          channel = "r",
+          space = "rgb"
+        )
         self
       }
     ),
     green = S7::new_property(
       class = S7::class_integer,
       getter = function(self) {
-        farver::get_channel(colour = c(self),
-                            channel = "g",
-                            space = "rgb")
+        farver::get_channel(colour = c(self), channel = "g", space = "rgb")
       },
       setter = function(self, value) {
-        S7::S7_data(self) <- farver::set_channel(c(self), value, channel = "g", space = "rgb")
+        S7::S7_data(self) <- farver::set_channel(
+          c(self),
+          value,
+          channel = "g",
+          space = "rgb"
+        )
         self
       }
     ),
     blue = S7::new_property(
       class = S7::class_integer,
       getter = function(self) {
-        farver::get_channel(colour = c(self),
-                            channel = "b",
-                            space = "rgb")
+        farver::get_channel(colour = c(self), channel = "b", space = "rgb")
       },
       setter = function(self, value) {
-        S7::S7_data(self) <- farver::set_channel(c(self), value, channel = "b", space = "rgb")
+        S7::S7_data(self) <- farver::set_channel(
+          c(self),
+          value,
+          channel = "b",
+          space = "rgb"
+        )
         self
       }
     ),
@@ -186,21 +196,21 @@ class_color <- S7::new_class(
     }),
     id = S7::class_character
   ),
-  constructor = function(color = character(0),
-                         hue = NULL,
-                         saturation = NULL,
-                         brightness = NULL,
-                         alpha = NULL,
-                         id = character(0)) {
-
+  constructor = function(
+    color = character(0),
+    hue = NULL,
+    saturation = NULL,
+    brightness = NULL,
+    alpha = NULL,
+    id = character(0)
+  ) {
     if (length(color) == 0) {
       decoded <- farver::decode_colour("red", alpha = TRUE, to = "hsv")
-      } else {
-        decoded <- farver::decode_colour(color, alpha = TRUE, to = "hsv")
-      }
+    } else {
+      decoded <- farver::decode_colour(color, alpha = TRUE, to = "hsv")
+    }
 
     d <- tibble::as_tibble(decoded) |> as.list()
-
 
     if (!is.null(hue)) {
       # Make sure hue is between 0 and 360
@@ -209,10 +219,9 @@ class_color <- S7::new_class(
       max_length <- purrr::map_int(d, length) |> max()
       if (max_length == 1 | max_length == length(hue) | length(hue) == 1) {
         d$h <- hue
-      }  else {
+      } else {
         stop("Hue must be of same length as color.")
       }
-
     }
 
     if (!is.null(saturation)) {
@@ -220,22 +229,29 @@ class_color <- S7::new_class(
       saturation <- ifelse(abs(saturation) > 1, 1, abs(saturation))
       # Make sure saturation is of same length as color
       max_length <- purrr::map_int(d, length) |> max()
-      if (max_length == 1 | max_length == length(saturation) | length(saturation) == 1) {
+      if (
+        max_length == 1 |
+          max_length == length(saturation) |
+          length(saturation) == 1
+      ) {
         d$s <- saturation
-      }  else {
+      } else {
         stop("Saturation must be of same length as color.")
       }
     }
-
 
     if (!is.null(brightness)) {
       # Make sure brightness is between 0 and 1
       brightness <- ifelse(abs(brightness) > 1, 1, abs(brightness))
       # Make sure brightness is of same length as color
       max_length <- purrr::map_int(d, length) |> max()
-      if (max_length == 1 | max_length == length(brightness) | length(brightness) == 1) {
+      if (
+        max_length == 1 |
+          max_length == length(brightness) |
+          length(brightness) == 1
+      ) {
         d$v <- brightness
-      }  else {
+      } else {
         stop("Brightness must be of same length as color.")
       }
     }
@@ -247,40 +263,42 @@ class_color <- S7::new_class(
       max_length <- purrr::map_int(d, length) |> max()
       if (max_length == 1 | max_length == length(alpha) | length(alpha) == 1) {
         d$alpha <- alpha
-      }  else {
+      } else {
         stop("Alpha must be of same length as color.")
       }
     }
 
     decoded <- tibble::as_tibble(d) |> as.matrix()
 
-
     S7::new_object(
       farver::encode_colour(
-        decoded[,c("h", "s", "v"),
-                drop = FALSE],
-        alpha = decoded[,"alpha"],
-        from = "hsv"),
-      id = id)
+        decoded[, c("h", "s", "v"), drop = FALSE],
+        alpha = decoded[, "alpha"],
+        from = "hsv"
+      ),
+      id = id
+    )
   }
 )
 
 class_color_or_character <- S7::new_union(class_color, S7::class_character)
 
 S7::method(str, class_color) <- function(
-    object,
-    nest.lev = 0,
-    additional = FALSE,
-    omit = omit_props(object, include = c(".data", "color"))) {
+  object,
+  nest.lev = 0,
+  additional = FALSE,
+  omit = omit_props(object, include = c(".data", "color"))
+) {
   str_properties(
     object,
     omit = omit,
-    nest.lev = nest.lev)
+    nest.lev = nest.lev
+  )
 }
 
 S7::method(`[`, class_color) <- function(x, i) {
   i <- character_index(i, x@id)
-  S7::S7_data(x) <-  c(x)[i]
+  S7::S7_data(x) <- c(x)[i]
   x
 }
 
@@ -330,6 +348,5 @@ latex_color <- function(x, color) {
   if (!S7::S7_inherits(color, class_color)) {
     color <- class_color(color)
   }
-  paste0("{",color@tex," ", x,"}")
+  paste0("{", color@tex, " ", x, "}")
 }
-

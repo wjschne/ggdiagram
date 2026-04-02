@@ -26,23 +26,23 @@
 #' distance(c1, c2)
 #' @export
 distance <- S7::new_generic(name = "distance", c("x", "y"))
-S7::method(distance, list(ob_point, ob_point)) <- function(x,y) {
+S7::method(distance, list(ob_point, ob_point)) <- function(x, y) {
   d <- (y - x)
   d@r
 }
-S7::method(distance, list(ob_point, S7::class_missing)) <- function(x,y) {
+S7::method(distance, list(ob_point, S7::class_missing)) <- function(x, y) {
   x@r
 }
-S7::method(distance, list(ob_point, ob_line)) <- function(x,y) {
+S7::method(distance, list(ob_point, ob_line)) <- function(x, y) {
   abs(y@a * x@x + y@b * x@y + y@c) / sqrt(y@a * y@a + y@b * y@b)
 }
-S7::method(distance, list(ob_line, ob_point)) <- function(x,y) {
+S7::method(distance, list(ob_line, ob_point)) <- function(x, y) {
   distance(y, x)
 }
-S7::method(distance, list(ob_segment, S7::class_missing)) <- function(x,y) {
+S7::method(distance, list(ob_segment, S7::class_missing)) <- function(x, y) {
   distance(x@p1, x@p2)
 }
-S7::method(distance, list(ob_circle, ob_circle)) <- function(x,y) {
+S7::method(distance, list(ob_circle, ob_circle)) <- function(x, y) {
   d <- distance(x@center, y@center) - x@radius - y@radius
   d[d < 0] <- 0
   d
@@ -58,22 +58,21 @@ S7::method(distance, list(ob_circle, ob_circle)) <- function(x,y) {
   #
   # abs(d@r)
 }
-S7::method(distance, list(ob_point, ob_circle)) <- function(x,y) {
+S7::method(distance, list(ob_point, ob_circle)) <- function(x, y) {
   d <- y@center - x
 
-    py <- y@point_at(radian(pi) + d@theta)
-    d <- py - x
+  py <- y@point_at(radian(pi) + d@theta)
+  d <- py - x
 
   abs(d@r)
 }
-S7::method(distance, list(ob_circle, ob_point)) <- function(x,y) {
+S7::method(distance, list(ob_circle, ob_point)) <- function(x, y) {
   distance(y, x)
 }
 
-S7::method(distance, list(centerpoint, centerpoint)) <- function(x,y) {
+S7::method(distance, list(centerpoint, centerpoint)) <- function(x, y) {
   s <- ob_segment(x@center, y@center)
   p1 <- intersection(x, s)
   p2 <- intersection(y, s)
-  distance(p1,p2)
-
+  distance(p1, p2)
 }

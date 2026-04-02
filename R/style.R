@@ -93,7 +93,7 @@ ob_style <- S7::new_class(
     arrowhead_length = class_numeric_or_unit,
     length_head = class_numeric_or_unit,
     length_fins = class_numeric_or_unit,
-    length_mid  = class_numeric_or_unit,
+    length_mid = class_numeric_or_unit,
     lineend = class_numeric_or_character,
     lineheight = S7::class_numeric,
     linejoin = class_numeric_or_character,
@@ -120,7 +120,6 @@ ob_style <- S7::new_class(
 
           self@vjust = polar2just(theta, multiplier, axis = "v")
           self@hjust = polar2just(theta, multiplier, axis = "h")
-
         }
         self@polar_just = numeric(0)
         self
@@ -139,59 +138,65 @@ ob_style <- S7::new_class(
     text.color = S7::class_character,
     vjust = prop_vjust
   ),
-  constructor = function(id = character(0),
-                         alpha = numeric(0),
-                         angle = numeric(0),
-                         arrow_head = list(),
-                         arrow_fins = list(),
-                         arrow_mid = list(),
-                         color = character(0),
-                         family = character(0),
-                         fill = character(0),
-                         fontface = character(0),
-                         hjust = numeric(0),
-                         justify = numeric(0),
-                         label.color = character(0),
-                         label.margin = list(),
-                         label.padding = list(),
-                         label.r = numeric(0),
-                         label.size = numeric(0),
-                         arrowhead_length = numeric(0),
-                         length_head = numeric(0),
-                         length_fins = numeric(0),
-                         length_mid  = numeric(0),
-                         lineend = numeric(0),
-                         lineheight = numeric(0),
-                         linejoin = numeric(0),
-                         linewidth_fins = numeric(0),
-                         linewidth_head = numeric(0),
-                         linewidth = numeric(0),
-                         linetype = numeric(0),
-                         n = numeric(0),
-                         nudge_x = numeric(0),
-                         nudge_y = numeric(0),
-                         polar_just = numeric(0),
-                         resect = numeric(0),
-                         resect_fins = numeric(0),
-                         resect_head = numeric(0),
-                         shape = numeric(0),
-                         size = numeric(0),
-                         size.unit = numeric(0),
-                         straight = logical(0),
-                         stroke = numeric(0),
-                         stroke_color = character(0),
-                         stroke_width = numeric(0),
-                         text.color = character(0),
-                         vjust = numeric(0),
-                         ...) {
+  constructor = function(
+    id = character(0),
+    alpha = numeric(0),
+    angle = numeric(0),
+    arrow_head = list(),
+    arrow_fins = list(),
+    arrow_mid = list(),
+    color = character(0),
+    family = character(0),
+    fill = character(0),
+    fontface = character(0),
+    hjust = numeric(0),
+    justify = numeric(0),
+    label.color = character(0),
+    label.margin = list(),
+    label.padding = list(),
+    label.r = numeric(0),
+    label.size = numeric(0),
+    arrowhead_length = numeric(0),
+    length_head = numeric(0),
+    length_fins = numeric(0),
+    length_mid = numeric(0),
+    lineend = numeric(0),
+    lineheight = numeric(0),
+    linejoin = numeric(0),
+    linewidth_fins = numeric(0),
+    linewidth_head = numeric(0),
+    linewidth = numeric(0),
+    linetype = numeric(0),
+    n = numeric(0),
+    nudge_x = numeric(0),
+    nudge_y = numeric(0),
+    polar_just = numeric(0),
+    resect = numeric(0),
+    resect_fins = numeric(0),
+    resect_head = numeric(0),
+    shape = numeric(0),
+    size = numeric(0),
+    size.unit = numeric(0),
+    straight = logical(0),
+    stroke = numeric(0),
+    stroke_color = character(0),
+    stroke_width = numeric(0),
+    text.color = character(0),
+    vjust = numeric(0),
+    ...
+  ) {
     id <- as.character(id)
     the_style <- rlang::list2(...)
     color <- as.character(the_style$colour %||% color)
     label.color <- as.character(the_style$label.colour %||% label.color)
     text.color <- as.character(the_style$text.colour %||% text.color)
     stroke_color <- as.character(the_style$stroke_colour %||% stroke_color)
-    if (is.logical(linetype)) linetype <- as.character(linetype)
-    if (is.logical(linewidth)) linewidth <- as.double(linetype)
+    if (is.logical(linetype)) {
+      linetype <- as.character(linetype)
+    }
+    if (is.logical(linewidth)) {
+      linewidth <- as.double(linetype)
+    }
 
     if (length(label.padding) > 0) {
       label.padding <- class_margin(label.padding)
@@ -201,9 +206,7 @@ ob_style <- S7::new_class(
       label.margin <- class_margin(label.margin)
     }
 
-
     if (length(polar_just) > 0) {
-
       if (S7::S7_inherits(polar_just, ob_angle) || is.numeric(polar_just)) {
         polar_just <- ob_polar(theta = degree(polar_just), r = 1.2)
       }
@@ -211,7 +214,6 @@ ob_style <- S7::new_class(
       vjust <- polar2just(polar_just@theta, polar_just@r, axis = "v")
       polar_just <- S7::class_missing
     }
-
 
     if (length(arrow_head) > 0) {
       arrow_head <- class_arrowhead(arrow_head)
@@ -225,7 +227,9 @@ ob_style <- S7::new_class(
       arrow_mid <- class_arrowhead(arrow_mid)
     }
 
-    if (is.character(angle)) angle <- degree(angle)
+    if (is.character(angle)) {
+      angle <- degree(angle)
+    }
 
     if (S7::S7_inherits(angle, ob_angle)) {
       angle <- c(angle) * 360
@@ -280,7 +284,7 @@ ob_style <- S7::new_class(
     non_empty_list <- get_non_empty_list(initial_list)
 
     if (length(non_empty_list) > 0) {
-      d <-  tibble::tibble(!!!non_empty_list)
+      d <- tibble::tibble(!!!non_empty_list)
     }
 
     S7::new_object(
@@ -330,24 +334,25 @@ ob_style <- S7::new_class(
       text.color = as.character(text.color),
       vjust = vjust
     )
+  }
+)
 
-  })
-
-S7::method(str, ob_style) <- function(object,
-                                      nest.lev = 0,
-                                      additional = FALSE,
-                                      omit = NULL) {
+S7::method(str, ob_style) <- function(
+  object,
+  nest.lev = 0,
+  additional = FALSE,
+  omit = NULL
+) {
   omit_names <- names(props(object))
-  omit <- omit %||% Filter(\(o_name) {
-    length(S7::prop(object, name = o_name)) == 0
-  }, omit_names)
+  omit <- omit %||%
+    Filter(
+      \(o_name) {
+        length(S7::prop(object, name = o_name)) == 0
+      },
+      omit_names
+    )
 
-
-  str_properties(object,
-                 omit = omit,
-                 nest.lev = nest.lev,
-                 additional = FALSE)
-
+  str_properties(object, omit = omit, nest.lev = nest.lev, additional = FALSE)
 }
 
 S7::method(print, ob_style) <- function(x, ...) {
@@ -355,7 +360,8 @@ S7::method(print, ob_style) <- function(x, ...) {
   invisible(x)
 }
 
-S7::method(`+`, list(ob_style, ob_style)) <- function(e1, e2) { # nocov start
+S7::method(`+`, list(ob_style, ob_style)) <- function(e1, e2) {
+  # nocov start
   pn <- S7::prop_names(e1)
   pnames <- pn[pn != "tibble"]
   for (p in pnames) {
@@ -367,20 +373,23 @@ S7::method(`+`, list(ob_style, ob_style)) <- function(e1, e2) { # nocov start
 } # nocov end
 
 
-
-S7::method(`+`, list(S7::class_missing, ob_style)) <- function(e1, e2) { # nocov start
+S7::method(`+`, list(S7::class_missing, ob_style)) <- function(e1, e2) {
+  # nocov start
   e2
 } # nocov end
 
-S7::method(`+`, list(ob_style, S7::class_missing)) <- function(e1, e2) { # nocov start
+S7::method(`+`, list(ob_style, S7::class_missing)) <- function(e1, e2) {
+  # nocov start
   e1
 } # nocov end
 
-S7::method(`+`, list(S7::class_any, ob_style)) <- function(e1, e2) { # nocov start
+S7::method(`+`, list(S7::class_any, ob_style)) <- function(e1, e2) {
+  # nocov start
   e2
 } # nocov end
 
-S7::method(`+`, list(ob_style, S7::class_any)) <- function(e1, e2) { # nocov start
+S7::method(`+`, list(ob_style, S7::class_any)) <- function(e1, e2) {
+  # nocov start
   e1
 } # nocov end
 
@@ -403,5 +412,4 @@ S7::method(as.geom, has_style) <- function(x, ...) {
     user_overrides = get_non_empty_props(ob_style(...)),
     aesthetics = x@aesthetics
   )
-
 }

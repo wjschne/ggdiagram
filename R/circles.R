@@ -10,13 +10,21 @@ cr_styles <- c(
 
 compass_props <- list(
   east = S7::new_property(getter = function(self) self@point_at("east")),
-  northeast = S7::new_property(getter = function(self) self@point_at("northeast")),
+  northeast = S7::new_property(getter = function(self) {
+    self@point_at("northeast")
+  }),
   north = S7::new_property(getter = function(self) self@point_at("north")),
-  northwest = S7::new_property(getter = function(self) self@point_at("northwest")),
+  northwest = S7::new_property(getter = function(self) {
+    self@point_at("northwest")
+  }),
   west = S7::new_property(getter = function(self) self@point_at("west")),
-  southwest = S7::new_property(getter = function(self) self@point_at("southwest")),
+  southwest = S7::new_property(getter = function(self) {
+    self@point_at("southwest")
+  }),
   south = S7::new_property(getter = function(self) self@point_at("south")),
-  southeast = S7::new_property(getter = function(self) self@point_at("southeast"))
+  southeast = S7::new_property(getter = function(self) {
+    self@point_at("southeast")
+  })
 )
 
 cr_props <- list(
@@ -28,14 +36,19 @@ cr_props <- list(
   # derived ----
   derived = list(
     area = S7::new_property(getter = function(self) {
-      pi * self@radius ^ 2
+      pi * self@radius^2
     }),
     bounding_box = S7::new_property(getter = function(self) {
       ob_rectangle(
-          southwest = ob_point(x = min(self@center@x - self@radius),
-                            y = min(self@center@y - self@radius)),
-          northeast = ob_point(x = max(self@center@x + self@radius),
-                            y = max(self@center@y + self@radius)))
+        southwest = ob_point(
+          x = min(self@center@x - self@radius),
+          y = min(self@center@y - self@radius)
+        ),
+        northeast = ob_point(
+          x = max(self@center@x + self@radius),
+          y = max(self@center@y + self@radius)
+        )
+      )
     }),
     circumference = S7::new_property(getter = function(self) {
       pi * self@radius * 2
@@ -56,15 +69,16 @@ cr_props <- list(
       d |>
         dplyr::mutate(group = factor(dplyr::row_number())) |>
         tidyr::uncount(.data$n, .remove = FALSE) |>
-        dplyr::mutate(theta = 2 * pi * (dplyr::row_number() - 1) / n,
-                      x = x + r * cos(theta),
-                      y = y + r * sin(theta),
-                      .by = group)
+        dplyr::mutate(
+          theta = 2 * pi * (dplyr::row_number() - 1) / n,
+          x = x + r * cos(theta),
+          y = y + r * sin(theta),
+          .by = group
+        )
     }),
     style = S7::new_property(
       getter = function(self) {
-        pr <- purrr::map(cr_styles,
-                         prop, object = self) |>
+        pr <- purrr::map(cr_styles, prop, object = self) |>
           `names<-`(cr_styles)
         rlang::inject(ob_style(!!!get_non_empty_list(pr)))
       },
@@ -88,7 +102,7 @@ cr_props <- list(
         linetype = self@linetype,
         n = self@n,
         id = self@id
-        )
+      )
       get_non_empty_tibble(d)
     })
   ),
@@ -104,9 +118,16 @@ cr_props <- list(
         dots <- rlang::list2(...)
         if (is.null(dots$radius)) {
           dots$radius <- self@radius
-          }
+        }
 
-        rlang::inject(ob_arc(self@center, start = start, end = end, type = type, style = self@style, !!!dots))
+        rlang::inject(ob_arc(
+          self@center,
+          start = start,
+          end = end,
+          type = type,
+          style = self@style,
+          !!!dots
+        ))
       }
     }),
     angle_at = S7::new_property(S7::class_function, getter = function(self) {
@@ -121,8 +142,12 @@ cr_props <- list(
     }),
     normal_at = S7::new_property(S7::class_function, getter = function(self) {
       \(theta = degree(0), distance = 1, ...) {
-        if (S7::S7_inherits(theta, ob_point)) theta <- projection(theta, self)@theta
-        if (!S7::S7_inherits(theta, ob_angle)) theta <- degree(theta)
+        if (S7::S7_inherits(theta, ob_point)) {
+          theta <- projection(theta, self)@theta
+        }
+        if (!S7::S7_inherits(theta, ob_angle)) {
+          theta <- degree(theta)
+        }
         self@center + ob_polar(theta, self@radius + distance, ...)
       }
     }),
@@ -130,7 +155,9 @@ cr_props <- list(
       class = S7::class_function,
       getter = function(self) {
         \(theta = degree(0), ...) {
-          if (!S7::S7_inherits(theta, ob_angle)) theta <- degree(theta)
+          if (!S7::S7_inherits(theta, ob_angle)) {
+            theta <- degree(theta)
+          }
           if (S7::S7_inherits(theta, ob_point)) {
             theta <- (projection(theta, self) - self@center)@theta
           }
@@ -141,7 +168,7 @@ cr_props <- list(
           ob_line(
             a = x1 - x,
             b = y1 - y,
-            c = x ^ 2 - (x1 * x) + y ^ 2 - (y1 * y) - self@radius ^ 2,
+            c = x^2 - (x1 * x) + y^2 - (y1 * y) - self@radius^2,
             style = self@style,
             ...
           )
@@ -155,9 +182,10 @@ cr_props <- list(
         \(theta = degree(0), ...) {
           if (!S7::S7_inherits(theta, ob_angle)) {
             theta <- degree(theta)
-            }
-          self@center + ob_polar(theta = theta, r = self@radius, style = self@style, ...)
           }
+          self@center +
+            ob_polar(theta = theta, r = self@radius, style = self@style, ...)
+        }
       }
     ),
     polar_line_at = S7::new_property(
@@ -165,29 +193,37 @@ cr_props <- list(
       getter = function(self) {
         \(x) {
           x0 <- x - self@center
-          ob_line(a = x0@x, b = x0@y, c = -self@radius ^ 2 - self@center@x * x0@x - self@center@y * x0@y)
+          ob_line(
+            a = x0@x,
+            b = x0@y,
+            c = -self@radius^2 - self@center@x * x0@x - self@center@y * x0@y
+          )
         }
-      })),
+      }
+    )
+  ),
   # info ----
   info = list(
-  aesthetics = S7::new_property(getter = function(self) {
-    class_aesthetics_list(
-      geom = ggforce::geom_circle,
-      mappable_bare = character(0),
-      mappable_identity = c(
-        "linewidth",
-        "linetype",
-        "alpha",
-        "color",
-        "fill"
-      ),
-      not_mappable = c("n"),
-      required_aes = c("x0", "y0", "r", "group"),
-      omit_names = c("linejoin", "rule", "id"),
-      inherit.aes = FALSE,
-      style = cr_styles
-    )}
-  )))
+    aesthetics = S7::new_property(getter = function(self) {
+      class_aesthetics_list(
+        geom = ggforce::geom_circle,
+        mappable_bare = character(0),
+        mappable_identity = c(
+          "linewidth",
+          "linetype",
+          "alpha",
+          "color",
+          "fill"
+        ),
+        not_mappable = c("n"),
+        required_aes = c("x0", "y0", "r", "group"),
+        omit_names = c("linejoin", "rule", "id"),
+        inherit.aes = FALSE,
+        style = cr_styles
+      )
+    })
+  )
+)
 
 # Circle----
 
@@ -228,21 +264,24 @@ ob_circle <- S7::new_class(
     !!!cr_props$derived,
     !!!compass_props,
     !!!cr_props$funs,
-    !!!cr_props$info),
-  constructor = function(center = ob_point(0,0),
-                         radius = 1,
-                         label = character(0),
-                         alpha = numeric(0),
-                         color = character(0),
-                         fill = character(0),
-                         linewidth = numeric(0),
-                         linetype = numeric(0),
-                         n = numeric(0),
-                         style = S7::class_missing,
-                         x = numeric(0),
-                         y = numeric(0),
-                         id = character(0),
-                         ...) {
+    !!!cr_props$info
+  ),
+  constructor = function(
+    center = ob_point(0, 0),
+    radius = 1,
+    label = character(0),
+    alpha = numeric(0),
+    color = character(0),
+    fill = character(0),
+    linewidth = numeric(0),
+    linetype = numeric(0),
+    n = numeric(0),
+    style = S7::class_missing,
+    x = numeric(0),
+    y = numeric(0),
+    id = character(0),
+    ...
+  ) {
     id <- as.character(id)
     c_style <- style +
       ob_style(
@@ -270,22 +309,24 @@ ob_circle <- S7::new_class(
     if (length(non_empty_list) > 0) {
       d <- dplyr::bind_cols(
         d,
-        tibble::tibble(!!!non_empty_list))
+        tibble::tibble(!!!non_empty_list)
+      )
     }
-
 
     center = set_props(center, x = d$x, y = d$y)
 
     if (S7::S7_inherits(label, ob_label)) {
-      if (all(label@center == ob_point(0,0))) {
+      if (all(label@center == ob_point(0, 0))) {
         label@center <- center
       }
     }
 
-    label <- centerpoint_label(label,
-                               center = center,
-                               d = d,
-                               shape_name = "ob_circle")
+    label <- centerpoint_label(
+      label,
+      center = center,
+      d = d,
+      shape_name = "ob_circle"
+    )
 
     # If there is one object but many labels, make multiple objects
     if (S7::S7_inherits(label, ob_label)) {
@@ -295,28 +336,27 @@ ob_circle <- S7::new_class(
       }
     }
 
-     S7::new_object(centerpoint(center = center,
-                                label = label),
-                 radius = d$radius,
-                 alpha = d[["alpha"]] %||% alpha,
-                 color = d[["color"]] %||% color ,
-                 fill = d[["fill"]]  %||% fill,
-                 linewidth = d[["linewidth"]]  %||% linewidth,
-                 linetype = d[["linetype"]]  %||% linetype,
-                 n = d[["n"]]  %||% n,
-                 id = d[["id"]] %||% id)
+    S7::new_object(
+      centerpoint(center = center, label = label),
+      radius = d$radius,
+      alpha = d[["alpha"]] %||% alpha,
+      color = d[["color"]] %||% color,
+      fill = d[["fill"]] %||% fill,
+      linewidth = d[["linewidth"]] %||% linewidth,
+      linetype = d[["linetype"]] %||% linetype,
+      n = d[["n"]] %||% n,
+      id = d[["id"]] %||% id
+    )
   }
 )
-
 
 S7::method(str, ob_circle) <- function(
   object,
   nest.lev = 0,
   additional = FALSE,
-  omit = omit_props(object, include = c("center","radius"))) {
-str_properties(object,
-                   omit = omit,
-                   nest.lev = nest.lev)
+  omit = omit_props(object, include = c("center", "radius"))
+) {
+  str_properties(object, omit = omit, nest.lev = nest.lev)
 }
 
 S7::method(get_tibble, ob_circle) <- function(x) {
@@ -332,47 +372,74 @@ S7::method(get_tibble_defaults, ob_circle) <- function(x) {
     lineend = "butt",
     linejoin = "round",
     linewidth = replace_na(ggforce::GeomCircle$default_aes$linewidth, 0.5),
-    linetype = replace_na(ggforce::GeomCircle$default_aes$default_aes$linetype, 1),
+    linetype = replace_na(
+      ggforce::GeomCircle$default_aes$default_aes$linetype,
+      1
+    ),
     n = 360
   )
-  get_tibble_defaults_helper(x, sp,required_aes = c("x0", "y0", "r", "n"))
+  get_tibble_defaults_helper(x, sp, required_aes = c("x0", "y0", "r", "n"))
 }
 
 S7::method(`[`, ob_circle) <- function(x, i) {
   i <- character_index(i, x@id)
-  z <- data2shape(x@tibble[i,], ob_circle)
+  z <- data2shape(x@tibble[i, ], ob_circle)
   z@label <- na2zero(x@label[i])
   z
 }
 
-S7::method(`==`, list(ob_circle, ob_circle)) <- function(e1, e2) { # nocov start
+S7::method(`==`, list(ob_circle, ob_circle)) <- function(e1, e2) {
+  # nocov start
   (e1@center == e2@center) & (e1@radius == e1@radius)
 } # nocov end
 
 # Place ----
 
-S7::method(place, list(ob_line, ob_circle)) <- function(x, from, where = "right", sep = 1) {
+S7::method(place, list(ob_line, ob_circle)) <- function(
+  x,
+  from,
+  where = "right",
+  sep = 1
+) {
   where <- degree(where)
   from@radius <- sep + from@radius
   from@tangent_at(where)
 }
 
-S7::method(ob_array, ob_circle) <- function(x, k = 2, sep = 1, where = "east", anchor = "center", ...) {
+S7::method(ob_array, ob_circle) <- function(
+  x,
+  k = 2,
+  sep = 1,
+  where = "east",
+  anchor = "center",
+  ...
+) {
+  sa <- ob_array_helper(
+    x = x,
+    k = k,
+    sep = sep,
+    where = where,
+    anchor = anchor,
+    ...
+  )
 
-  sa <- ob_array_helper(x = x, k = k, sep = sep, where = where, anchor = anchor, ...)
-
-  rlang::inject(ob_circle(center = sa$p_center,
-                        radius = x@radius,
-                        style = x@style,
-                        !!!sa$dots))
+  rlang::inject(ob_circle(
+    center = sa$p_center,
+    radius = x@radius,
+    style = x@style,
+    !!!sa$dots
+  ))
 }
 
 S7::method(equation, ob_circle) <- function(
-    x,
-    type = c("y", "general", "parametric"),
-    output = c("markdown", "latex"),
-    digits = 2) {
-  if (length(type) == 3) type <- "general"
+  x,
+  type = c("y", "general", "parametric"),
+  output = c("markdown", "latex"),
+  digits = 2
+) {
+  if (length(type) == 3) {
+    type <- "general"
+  }
   type <- match.arg(type)
   output <- match.arg(output)
   myrounder <- redefault(rounder, digits = digits, output = output)
@@ -383,36 +450,45 @@ S7::method(equation, ob_circle) <- function(
   mysine <- ifelse(output == "markdown", "sin", "\\sin")
   mycosine <- ifelse(output == "markdown", "cos", "\\cos")
 
-
   eq <- rep("", x@length)
 
   if (type == "general" || type == "y") {
     eq <- trimmer(paste0(
-      ifelse(x@center@x == 0,
-      paste0(mysuperscript(myemphasis("x"), "2")),
-      mysuperscript(paste0(
-        "(",
-        myemphasis("x"),
-        " ",
-        minus,
-        " ",
-        myrounder(x@center@x),
-        ")"
-    ), "2")),
-    " + ",
-    ifelse(x@center@y == 0,
-           paste0(mysuperscript(myemphasis("y"), "2")),
-           mysuperscript(paste0(
-             "(",
-             myemphasis("y"),
-             " ",
-             minus,
-             " ",
-             myrounder(x@center@y),
-             ")"
-           ), "2")),
-    " = ",
-    mysuperscript(myrounder(x@radius), "2")
+      ifelse(
+        x@center@x == 0,
+        paste0(mysuperscript(myemphasis("x"), "2")),
+        mysuperscript(
+          paste0(
+            "(",
+            myemphasis("x"),
+            " ",
+            minus,
+            " ",
+            myrounder(x@center@x),
+            ")"
+          ),
+          "2"
+        )
+      ),
+      " + ",
+      ifelse(
+        x@center@y == 0,
+        paste0(mysuperscript(myemphasis("y"), "2")),
+        mysuperscript(
+          paste0(
+            "(",
+            myemphasis("y"),
+            " ",
+            minus,
+            " ",
+            myrounder(x@center@y),
+            ")"
+          ),
+          "2"
+        )
+      ),
+      " = ",
+      mysuperscript(myrounder(x@radius), "2")
     ))
   }
 
@@ -421,23 +497,20 @@ S7::method(equation, ob_circle) <- function(
       ifelse(x@radius == 1, "", myrounder(x@radius)),
       mycosine,
       "(",
-      myemphasis("t"),")",
-      ifelse(x@center@x == 0,
-             "",
-             myrounder(x@center@x, add = TRUE)),
+      myemphasis("t"),
+      ")",
+      ifelse(x@center@x == 0, "", myrounder(x@center@x, add = TRUE)),
       linebreak,
       ifelse(x@radius == 1, "", myrounder(x@radius)),
       mysine,
       "(",
       myemphasis("t"),
       ")",
-      ifelse(x@center@y == 0,
-             "",
-             myrounder(x@center@y, add = TRUE))
+      ifelse(x@center@y == 0, "", myrounder(x@center@y, add = TRUE))
     )
   }
 
-eq
+  eq
 }
 
 #' Get a circle from 3 points
@@ -465,19 +538,18 @@ circle_from_3_points <- function(p1, p2 = NULL, p3 = NULL, ...) {
   }
 
   # Minor M11
-  m11 <- det(cbind(p@x, p@y, rep(1,3)))
-  if (m11 == 0) stop("Points on the same line cannot lie on a circle.")
+  m11 <- det(cbind(p@x, p@y, rep(1, 3)))
+  if (m11 == 0) {
+    stop("Points on the same line cannot lie on a circle.")
+  }
 
   # Minor m12
-  m12 <- det(cbind(p@x ^ 2 + p@y ^ 2, p@y, rep(1,3)))
+  m12 <- det(cbind(p@x^2 + p@y^2, p@y, rep(1, 3)))
   # Minor m13
-  m13 <- det(cbind(p@x ^ 2 + p@y ^ 2, p@x, rep(1,3)))
+  m13 <- det(cbind(p@x^2 + p@y^2, p@x, rep(1, 3)))
 
   x <- 0.5 * m12 / m11
   y <- -0.5 * m13 / m11
-  center <- ob_point(x,y)
+  center <- ob_point(x, y)
   ob_circle(center, radius = distance(center, p1), ...)
 }
-
-
-

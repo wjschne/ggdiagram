@@ -20,8 +20,6 @@ path_styles <- c(
   "stroke_width"
 )
 
-
-
 path_props <- list(
   # primary ----
   primary = list(
@@ -39,31 +37,32 @@ path_props <- list(
   # derived ----
   derived = list(
     bounding_box = S7::new_property(getter = function(self) {
-
       d_rect <- self@tibble |>
-        dplyr::summarise(xmin = min(x),
-                         xmax = max(x),
-                         ymin = min(y),
-                         ymax = max(y))
+        dplyr::summarise(
+          xmin = min(x),
+          xmax = max(x),
+          ymin = min(y),
+          ymax = max(y)
+        )
 
-      ob_rectangle(southwest = ob_point(d_rect$xmin, d_rect$ymin),
-                northeast = ob_point(d_rect$xmax, d_rect$ymax))
-
+      ob_rectangle(
+        southwest = ob_point(d_rect$xmin, d_rect$ymin),
+        northeast = ob_point(d_rect$xmax, d_rect$ymax)
+      )
     }),
     length = S7::new_property(
       getter = function(self) {
         if (inherits(self@p, "list")) {
           l <- length(self@p)
-        } else l <- 1
+        } else {
+          l <- 1
+        }
         l
       }
     ),
     style = S7::new_property(
       getter = function(self) {
-        pr <- purrr::map(path_styles,
-                         prop,
-                         object = self
-        ) |>
+        pr <- purrr::map(path_styles, prop, object = self) |>
           `names<-`(path_styles)
         rlang::inject(ob_style(!!!get_non_empty_list(pr)))
       },
@@ -77,7 +76,9 @@ path_props <- list(
     ),
     tibble = S7::new_property(getter = function(self) {
       p <- self@p
-      if (S7::S7_inherits(self@p, ob_point)) p <- list(p)
+      if (S7::S7_inherits(self@p, ob_point)) {
+        p <- list(p)
+      }
       d <- list(
         p = p,
         group = seq(1, self@length),
@@ -103,16 +104,17 @@ path_props <- list(
         id = self@id
       )
       get_non_empty_tibble(d)
-
     }),
     vertex_angle = S7::new_property(getter = function(self) {
       a <- purrr::map(self@p, \(pp) {
         if (pp@length > 3) {
-          aa <- purrr::map(seq(2,pp@length - 1), \(i) {
+          aa <- purrr::map(seq(2, pp@length - 1), \(i) {
             a1 <- (pp[i - 1] - pp[i])@theta
             a2 <- (pp[i + 1] - pp[i])@theta
             a21 <- a1 - a2
-            if (a21 < 0) a21 <- a21 + degree(360)
+            if (a21 < 0) {
+              a21 <- a21 + degree(360)
+            }
             a21
           }) |>
             bind()
@@ -120,9 +122,10 @@ path_props <- list(
           if (pp[1] == pp[pp@length]) {
             al1 <- (pp[pp@length - 1] - pp[1])@theta -
               (pp[2] - pp[1])@theta
-            if (al1 < 0) al1 <- al1 + degree(360)
-           aa <- bind(list(aa, al1))
-
+            if (al1 < 0) {
+              al1 <- al1 + degree(360)
+            }
+            aa <- bind(list(aa, al1))
           }
           aa
         }
@@ -147,49 +150,53 @@ path_props <- list(
     segments = S7::new_property(getter = function(self) {
       \(...) {
         purrr::map(self@p, \(s) ob_segment(s, style = self@style, ...)) |>
-                     bind()
+          bind()
       }
-
     })
   ),
   # info ----
-  info = list(aesthetics = S7::new_property(
-    getter = function(self) {
-      class_aesthetics_list(
-        geom = ggarrow::geom_arrow,
-        mappable_bare = character(0),
-        mappable_identity = c(
-          "color",
-          "linewidth",
-          "linetype",
-          "alpha"),
-        not_mappable = c(
-          "lineend",
-          "linejoin",
-          "arrow_head",
-          "arrow_fins",
-          "length",
-          "length_head",
-          "length_fins",
-          "length_mid",
-          "resect",
-          "resect_fins",
-          "resect_head",
-          "linemitre"
-        ),
-        required_aes = c(
-          "x",
-          "y",
-          "group"),
-        omit_names = c(
-          "linejoin",
-          "rule",
-          "label"),
-        inherit.aes = FALSE,
-        style = path_styles
-      )
-    }
-  ))
+  info = list(
+    aesthetics = S7::new_property(
+      getter = function(self) {
+        class_aesthetics_list(
+          geom = ggarrow::geom_arrow,
+          mappable_bare = character(0),
+          mappable_identity = c(
+            "color",
+            "linewidth",
+            "linetype",
+            "alpha"
+          ),
+          not_mappable = c(
+            "lineend",
+            "linejoin",
+            "arrow_head",
+            "arrow_fins",
+            "length",
+            "length_head",
+            "length_fins",
+            "length_mid",
+            "resect",
+            "resect_fins",
+            "resect_head",
+            "linemitre"
+          ),
+          required_aes = c(
+            "x",
+            "y",
+            "group"
+          ),
+          omit_names = c(
+            "linejoin",
+            "rule",
+            "label"
+          ),
+          inherit.aes = FALSE,
+          style = path_styles
+        )
+      }
+    )
+  )
 )
 
 # ob_path----
@@ -214,50 +221,51 @@ ob_path <- S7::new_class(
   parent = has_style,
   package = "ggdiagram",
   properties = rlang::list2(
-      !!!path_props$primary,
-      !!!path_props$extra,
-      !!!path_props$styles,
-      !!!path_props$derived,
-      !!!path_props$funs,
-      !!!path_props$info
+    !!!path_props$primary,
+    !!!path_props$extra,
+    !!!path_props$styles,
+    !!!path_props$derived,
+    !!!path_props$funs,
+    !!!path_props$info
   ),
-  constructor = function(p = S7::class_missing,
-                         label = character(0),
-                         label_sloped = TRUE,
-                         alpha = numeric(0),
-                         arrow_head = S7::class_missing,
-                         arrow_fins = S7::class_missing,
-                         arrowhead_length = numeric(0),
-                         length_head = numeric(0),
-                         length_fins = numeric(0),
-                         color = character(0),
-                         fill = character(0),
-                         lineend = numeric(0),
-                         linejoin = numeric(0),
-                         linewidth = numeric(0),
-                         linewidth_fins = numeric(0),
-                         linewidth_head = numeric(0),
-                         linetype = numeric(0),
-                         resect = numeric(0),
-                         resect_fins = numeric(0),
-                         resect_head = numeric(0),
-                         stroke_color = character(0),
-                         stroke_width = numeric(0),
-                         style = S7::class_missing,
-                         id = character(0),
-                         ...) {
-
+  constructor = function(
+    p = S7::class_missing,
+    label = character(0),
+    label_sloped = TRUE,
+    alpha = numeric(0),
+    arrow_head = S7::class_missing,
+    arrow_fins = S7::class_missing,
+    arrowhead_length = numeric(0),
+    length_head = numeric(0),
+    length_fins = numeric(0),
+    color = character(0),
+    fill = character(0),
+    lineend = numeric(0),
+    linejoin = numeric(0),
+    linewidth = numeric(0),
+    linewidth_fins = numeric(0),
+    linewidth_head = numeric(0),
+    linetype = numeric(0),
+    resect = numeric(0),
+    resect_fins = numeric(0),
+    resect_head = numeric(0),
+    stroke_color = character(0),
+    stroke_width = numeric(0),
+    style = S7::class_missing,
+    id = character(0),
+    ...
+  ) {
     id <- as.character(id)
 
     if (length(p) == 0) {
       stop("A path cannot have 0 points.")
-
     }
 
-    if (S7::S7_inherits(p, ob_point)) p <- list(p)
+    if (S7::S7_inherits(p, ob_point)) {
+      p <- list(p)
+    }
 
     p_style <- purrr::imap(p, \(x, idx) {
-
       if (x@length < 2) {
         stop(
           paste0(
@@ -278,7 +286,8 @@ ob_path <- S7::new_class(
 
     p_style <- bind(p_style)
 
-    path_style <- p_style + style +
+    path_style <- p_style +
+      style +
       ob_style(
         alpha = alpha,
         arrow_head = arrow_head,
@@ -303,12 +312,7 @@ ob_path <- S7::new_class(
       ) +
       ob_style(...)
 
-
     non_empty_list <- get_non_empty_props(path_style)
-
-
-
-
 
     d <- tibble::tibble(
       p = p
@@ -318,14 +322,20 @@ ob_path <- S7::new_class(
       d <- dplyr::bind_cols(d, tibble::tibble(!!!non_empty_list))
     }
 
-    if (is.character(label) || is.numeric(label) || S7::S7_inherits(label, ob_angle)) {
-      if (length(label)  > 0) {
+    if (
+      is.character(label) ||
+        is.numeric(label) ||
+        S7::S7_inherits(label, ob_angle)
+    ) {
+      if (length(label) > 0) {
         label = ob_label(label)
         label@style <- path_style + label@style
       }
     }
 
-    if (length(label) == 0) label = character(0)
+    if (length(label) == 0) {
+      label = character(0)
+    }
     # If there is one object but many labels, make multiple objects
     if (S7::S7_inherits(label, ob_label)) {
       if (label@length > 1 & nrow(d) == 1) {
@@ -334,38 +344,42 @@ ob_path <- S7::new_class(
       }
     }
 
-    S7::new_object(.parent = S7::S7_object(),
-               p =  d$p,
-               label = label,
-               label_sloped = label_sloped,
-               alpha = d[["alpha"]] %||% alpha,
-               arrow_head = d[["arrow_head"]] %||% arrow_head,
-               arrow_fins = d[["arrow_fins"]] %||% arrow_fins,
-               arrowhead_length = d[["arrowhead_length"]] %||% arrowhead_length,
-               length_head = d[["length_head"]] %||% length_head,
-               length_fins = d[["length_fins"]] %||% length_fins,
-               color = d[["color"]] %||% color,
-               fill = d[["fill"]] %||% fill,
-               lineend = d[["lineend"]] %||% lineend,
-               linejoin = d[["linejoin"]] %||% linejoin,
-               linewidth = d[["linewidth"]] %||% linewidth,
-               linewidth_fins = d[["linewidth_fins"]] %||% linewidth_fins,
-               linewidth_head = d[["linewidth_head"]] %||% linewidth_head,
-               linetype = d[["linetype"]] %||% linetype,
-               resect = d[["resect"]] %||% resect,
-               resect_fins = d[["resect_fins"]] %||% resect_fins,
-               resect_head = d[["resect_head"]] %||% resect_head,
-               stroke_color = d[["stroke_color"]] %||% stroke_color,
-               stroke_width = d[["stroke_width"]] %||% stroke_width,
-               id = d[["id"]] %||% id
+    S7::new_object(
+      .parent = S7::S7_object(),
+      p = d$p,
+      label = label,
+      label_sloped = label_sloped,
+      alpha = d[["alpha"]] %||% alpha,
+      arrow_head = d[["arrow_head"]] %||% arrow_head,
+      arrow_fins = d[["arrow_fins"]] %||% arrow_fins,
+      arrowhead_length = d[["arrowhead_length"]] %||% arrowhead_length,
+      length_head = d[["length_head"]] %||% length_head,
+      length_fins = d[["length_fins"]] %||% length_fins,
+      color = d[["color"]] %||% color,
+      fill = d[["fill"]] %||% fill,
+      lineend = d[["lineend"]] %||% lineend,
+      linejoin = d[["linejoin"]] %||% linejoin,
+      linewidth = d[["linewidth"]] %||% linewidth,
+      linewidth_fins = d[["linewidth_fins"]] %||% linewidth_fins,
+      linewidth_head = d[["linewidth_head"]] %||% linewidth_head,
+      linetype = d[["linetype"]] %||% linetype,
+      resect = d[["resect"]] %||% resect,
+      resect_fins = d[["resect_fins"]] %||% resect_fins,
+      resect_head = d[["resect_head"]] %||% resect_head,
+      stroke_color = d[["stroke_color"]] %||% stroke_color,
+      stroke_width = d[["stroke_width"]] %||% stroke_width,
+      id = d[["id"]] %||% id
     )
-  })
+  }
+)
 
 S7::method(get_tibble, ob_path) <- function(x) {
   x@tibble |>
-    dplyr::mutate(p = purrr::map(p, \(x) {
-      x@tibble |> dplyr::select(x,y)
-    })) |>
+    dplyr::mutate(
+      p = purrr::map(p, \(x) {
+        x@tibble |> dplyr::select(x, y)
+      })
+    ) |>
     tidyr::unnest(p)
 }
 
@@ -383,13 +397,12 @@ S7::method(as.geom, ob_path) <- function(x, ...) {
   gc <- make_geom_helper(
     d = d,
     user_overrides = overrides,
-    aesthetics = x@aesthetics)
+    aesthetics = x@aesthetics
+  )
 
   if (S7::S7_inherits(x@label, ob_label)) {
-    d <- tidyr::nest(d |> dplyr::select(x,y,group), .by = group) |>
-      dplyr::bind_cols(x@label@tibble |> dplyr::select(-c(x,y)))
-
-
+    d <- tidyr::nest(d |> dplyr::select(x, y, group), .by = group) |>
+      dplyr::bind_cols(x@label@tibble |> dplyr::select(-c(x, y)))
 
     if (!("hjust" %in% colnames(d))) {
       d <- dplyr::mutate(d, hjust = x@label@position)
@@ -409,11 +422,16 @@ S7::method(as.geom, ob_path) <- function(x, ...) {
       d <- dplyr::mutate(d, label.padding = unit(2, "pt"))
     }
 
-    d <- dplyr::mutate(d, label.padding = purrr::map_dbl(label.padding, \(lp) c(lp[1] / 96)))
+    d <- dplyr::mutate(
+      d,
+      label.padding = purrr::map_dbl(label.padding, \(lp) c(lp[1] / 96))
+    )
 
-
-
-    gl <- make_geom_helper(d, aesthetics = gtextcurve_aes, user_overrides = NULL)
+    gl <- make_geom_helper(
+      d,
+      aesthetics = gtextcurve_aes,
+      user_overrides = NULL
+    )
     gc <- list(gc, gl)
   }
   gc
@@ -422,8 +440,7 @@ S7::method(as.geom, ob_path) <- function(x, ...) {
 
 S7::method(`[`, ob_path) <- function(x, i) {
   i <- character_index(i, x@id)
-  z <- data2shape(x@tibble[i,], ob_path)
+  z <- data2shape(x@tibble[i, ], ob_path)
   z@label <- na2zero(x@label[i])
   z
 }
-

@@ -827,7 +827,6 @@ S7::method(place, list(ob_rectangle, ob_point)) <- function(
   x
 }
 
-
 S7::method(ob_array, ob_rectangle) <- function(
   x,
   k = 2,

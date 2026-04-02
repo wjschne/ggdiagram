@@ -20,115 +20,141 @@ abline_aesthetics_list <- class_aesthetics_list(
 )
 
 abline_aesthetics <-
-ln_props <- list(
-  # primary ----
-  primary = list(
-    # ax + by + c = 0
-    a = S7::new_property(class = S7::class_numeric, default = 0),
-    b = S7::new_property(class = S7::class_numeric, default = 0),
-    c = S7::new_property(class = S7::class_numeric, default = 0)
-  ),
-  styles = ob_style@properties[ln_styles],
-  # derived ----
-  derived = list(
-    slope = S7::new_property(
-      getter = function(self) {
-        -self@a / self@b
-      }
+  ln_props <- list(
+    # primary ----
+    primary = list(
+      # ax + by + c = 0
+      a = S7::new_property(class = S7::class_numeric, default = 0),
+      b = S7::new_property(class = S7::class_numeric, default = 0),
+      c = S7::new_property(class = S7::class_numeric, default = 0)
     ),
-    intercept = S7::new_property(
-      getter = function(self) {
-        -self@c / self@b
-      }
+    styles = ob_style@properties[ln_styles],
+    # derived ----
+    derived = list(
+      slope = S7::new_property(
+        getter = function(self) {
+          -self@a / self@b
+        }
+      ),
+      intercept = S7::new_property(
+        getter = function(self) {
+          -self@c / self@b
+        }
+      ),
+      xintercept = S7::new_property(
+        getter = function(self) {
+          -self@c / self@a
+        }
+      ),
+      angle = S7::new_property(
+        getter = function(self) {
+          degree(radian(atan(self@slope)))
+        }
+      ),
+      length = S7::new_property(
+        getter = function(self) {
+          length(self@a)
+        }
+      ),
+      style = S7::new_property(
+        getter = function(self) {
+          pr <- `names<-`(purrr::map(ln_styles, prop, object = self), ln_styles)
+          rlang::inject(ob_style(!!!get_non_empty_list(pr)))
+        },
+        setter = function(self, value) {
+          s <- self@style + value
+          s_list <- get_non_empty_props(s)
+          s_list <- s_list[names(s_list) %in% ln_styles]
+          self <- rlang::inject(S7::set_props(self, !!!s_list))
+          self
+        }
+      ),
+      tibble = S7::new_property(getter = function(self) {
+        d <- list(
+          slope = self@slope,
+          intercept = self@intercept,
+          xintercept = self@xintercept,
+          a = self@a,
+          b = self@b,
+          c = self@c,
+          alpha = self@alpha,
+          color = c(self@color),
+          lineend = self@lineend,
+          linejoin = self@linejoin,
+          linewidth = self@linewidth,
+          linetype = self@linetype,
+          id = self@id
+        )
+        get_non_empty_tibble(d)
+      })
     ),
-    xintercept = S7::new_property(
-      getter = function(self) {
-        -self@c / self@a
-      }
-    ),
-    angle = S7::new_property(
-      getter = function(self) {
-        degree(radian(atan(self@slope)))
-      }
-    ),
-    length = S7::new_property(
-      getter = function(self) {
-        length(self@a)
-      }
-    ),
-    style = S7::new_property(
-      getter = function(self) {
-        pr <- `names<-`(purrr::map(ln_styles,
-                                   prop, object = self), ln_styles)
-        rlang::inject(ob_style(!!!get_non_empty_list(pr)))
-      },
-      setter = function(self, value) {
-        s <- self@style + value
-        s_list <- get_non_empty_props(s)
-        s_list <- s_list[names(s_list) %in% ln_styles]
-        self <- rlang::inject(S7::set_props(self, !!!s_list))
-        self
+    # functions ----
+    funs = list(
+      equation = S7::new_property(S7::class_function, getter = function(self) {
+        \(
+          type = c("y", "general", "parametric"),
+          output = c("markdown", "latex"),
+          digits = 2
+        ) {
+          type <- match.arg(type)
+          output <- match.arg(output)
+          equation(self, type = type, output = output, digits = digits)
+        }
       }),
-    tibble = S7::new_property(getter = function(self) {
-      d <- list(
-        slope = self@slope,
-        intercept = self@intercept,
-        xintercept = self@xintercept,
-        a = self@a,
-        b = self@b,
-        c = self@c,
-        alpha = self@alpha,
-        color = c(self@color),
-        lineend = self@lineend,
-        linejoin = self@linejoin,
-        linewidth = self@linewidth,
-        linetype = self@linetype,
-        id = self@id
+      geom = S7::new_property(S7::class_function, getter = function(self) {
+        \(...) {
+          as.geom(self, ...)
+        }
+      }),
+      place = pr_place,
+      point_at_x = S7::new_property(
+        S7::class_function,
+        getter = function(self) {
+          \(x = 0, ...) {
+            if (any(self@b == 0)) {
+              stop("Not possible with verical lines")
+            }
+            ob_point(
+              x = x,
+              y = x * self@slope + self@intercept,
+              style = self@style,
+              ...
+            )
+          }
+        }
+      ),
+      point_at_y = S7::new_property(
+        S7::class_function,
+        getter = function(self) {
+          \(y = 0, ...) {
+            if (any(self@a == 0)) {
+              stop("Not possible with horizontal lines")
+            }
+            ob_point(
+              x = -1 * y * self@b / self@a - self@c / self@a,
+              y = y,
+              style = self@style,
+              ...
+            )
+          }
+        }
+      ),
+      projection = S7::new_property(
+        S7::class_function,
+        getter = function(self) {
+          \(ob_point, ...) {
+            projection(ob_point, self, ...)
+          }
+        }
       )
-      get_non_empty_tibble(d)
-    })
-  ),
-  # functions ----
-  funs = list(
-    equation = S7::new_property(S7::class_function, getter = function(self) {
-      \(type = c("y", "general", "parametric"), output = c("markdown", "latex"), digits = 2) {
-        type <- match.arg(type)
-        output <- match.arg(output)
-        equation(self, type = type, output = output, digits = digits)
-      }
-    }),
-    geom = S7::new_property(S7::class_function, getter = function(self) {
-      \(...) {
-        as.geom(self, ...)
-      }
-    }),
-    place = pr_place,
-    point_at_x = S7::new_property(S7::class_function, getter = function(self) {
-      \(x = 0, ...) {
-        if (any(self@b == 0)) stop("Not possible with verical lines")
-        ob_point(x = x, y = x * self@slope + self@intercept, style = self@style, ...)
-      }
-    }),
-    point_at_y = S7::new_property(S7::class_function, getter = function(self) {
-      \(y = 0, ...) {
-        if (any(self@a == 0)) stop("Not possible with horizontal lines")
-        ob_point(x = -1 * y * self@b / self@a - self@c / self@a, y = y, style = self@style, ...)
-      }
-    }),
-    projection = S7::new_property(S7::class_function, getter = function(self) {
-      \(ob_point, ...) {
-        projection(ob_point, self, ...)
-      }
-    })
-),
-# information ----
-info = list(
-  aesthetics = S7::new_property(getter = function(self) {
-    abline_aesthetics_list
-  }))
-
-)
-
+    ),
+    # information ----
+    info = list(
+      aesthetics = S7::new_property(getter = function(self) {
+        abline_aesthetics_list
+      })
+    )
+  )
 
 
 # ob_line----
@@ -157,34 +183,38 @@ ob_line <- S7::new_class(
     !!!ln_props$styles,
     !!!ln_props$derived,
     !!!ln_props$funs,
-    !!!ln_props$info),
-  constructor = function(slope = numeric(0),
-                         intercept = numeric(0),
-                         xintercept = numeric(0),
-                         a = numeric(0),
-                         b = numeric(0),
-                         c = numeric(0),
-                         alpha = numeric(0),
-                         color = character(0),
-                         lineend = numeric(0),
-                         linejoin = numeric(0),
-                         linewidth = numeric(0),
-                         linetype = numeric(0),
-                         style = S7::class_missing,
-                         id = character(0),
-                         ...) {
-
+    !!!ln_props$info
+  ),
+  constructor = function(
+    slope = numeric(0),
+    intercept = numeric(0),
+    xintercept = numeric(0),
+    a = numeric(0),
+    b = numeric(0),
+    c = numeric(0),
+    alpha = numeric(0),
+    color = character(0),
+    lineend = numeric(0),
+    linejoin = numeric(0),
+    linewidth = numeric(0),
+    linetype = numeric(0),
+    style = S7::class_missing,
+    id = character(0),
+    ...
+  ) {
     id <- as.character(id)
 
-    l_style <- style + ob_style(
-      alpha = alpha,
-      color = c(color),
-      lineend = lineend,
-      linejoin = linejoin,
-      linewidth = linewidth,
-      linetype = linetype,
-      id = id
-    ) + ob_style(...)
+    l_style <- style +
+      ob_style(
+        alpha = alpha,
+        color = c(color),
+        lineend = lineend,
+        linejoin = linejoin,
+        linewidth = linewidth,
+        linetype = linetype,
+        id = id
+      ) +
+      ob_style(...)
 
     d <- get_non_empty_tibble(list(
       slope = slope,
@@ -202,39 +232,40 @@ ob_line <- S7::new_class(
         dplyr::mutate(ab0 = (a == 0) & (b == 0) & (c != 0)) |>
         dplyr::pull("ab0") |>
         any()
-      if (check_ab0) stop("If a and b are 0, c must be 0.")
+      if (check_ab0) {
+        stop("If a and b are 0, c must be 0.")
+      }
 
-
-
-      if (length(slope) > 0 && all(slope != -b / a)) stop("Some slopes are inconsistent with a and b parameters.")
-      if (length(intercept) > 0 && all(intercept != -c / a)) stop("Some intercepts are inconsistent with b and c parameters.")
+      if (length(slope) > 0 && all(slope != -b / a)) {
+        stop("Some slopes are inconsistent with a and b parameters.")
+      }
+      if (length(intercept) > 0 && all(intercept != -c / a)) {
+        stop("Some intercepts are inconsistent with b and c parameters.")
+      }
 
       # Prevent a and b from being both negative
       ab_both_negative = -2 * ((d$a <= 0) & (d$b <= 0)) + 1
       d$a <- d$a * ab_both_negative
       d$b <- d$b * ab_both_negative
       d$c <- d$c * ab_both_negative
-
-
     } else if ("intercept" %in% d_names) {
       if (!("slope" %in% d_names)) {
         d$slope <- 0
       }
 
       if (any(is.infinite(d$slope)) || any(is.infinite(d$intercept))) {
-        stop("There is not enough information to make a line. Specify the x-intercept or the a,b,c parameters.")
+        stop(
+          "There is not enough information to make a line. Specify the x-intercept or the a,b,c parameters."
+        )
       }
 
       d$a <- d$slope * -1
       d$b <- 1
       d$c <- d$intercept * -1
-
     } else if (length(xintercept) == 1) {
-
       d$a <- 1
       d$b <- 0
       d$c <- d$xintercept * -1
-
     } else {
       d <- tibble::tibble(a = 0, b = 1, c = 0)
     }
@@ -242,33 +273,32 @@ ob_line <- S7::new_class(
     if (length(non_empty_list) > 0) {
       d <- dplyr::bind_cols(
         d,
-        tibble::tibble(!!!non_empty_list))
+        tibble::tibble(!!!non_empty_list)
+      )
     }
-    S7::new_object(S7::S7_object(),
-                      a = d$a,
-                      b = d$b,
-                      c = d$c,
-                      alpha = d[["alpha"]] %||% alpha,
-                      color = d[["color"]] %||% color ,
-                      lineend = d[["lineend"]]  %||% lineend,
-                      linejoin = d[["linejoin"]] %||% linejoin,
-                      linewidth = d[["linewidth"]] %||% linewidth,
-                      linetype = d[["linetype"]] %||% linetype,
-                   id = d[["id"]] %||% id)
-
+    S7::new_object(
+      S7::S7_object(),
+      a = d$a,
+      b = d$b,
+      c = d$c,
+      alpha = d[["alpha"]] %||% alpha,
+      color = d[["color"]] %||% color,
+      lineend = d[["lineend"]] %||% lineend,
+      linejoin = d[["linejoin"]] %||% linejoin,
+      linewidth = d[["linewidth"]] %||% linewidth,
+      linetype = d[["linetype"]] %||% linetype,
+      id = d[["id"]] %||% id
+    )
   }
 )
-
 
 S7::method(str, ob_line) <- function(
   object,
   nest.lev = 0,
   additional = FALSE,
-  omit = omit_props(object, include = c("slope","intercept", "xintercept"))) {
-str_properties(object,
-               omit = omit,
-               nest.lev = nest.lev,
-               additional = FALSE)
+  omit = omit_props(object, include = c("slope", "intercept", "xintercept"))
+) {
+  str_properties(object, omit = omit, nest.lev = nest.lev, additional = FALSE)
 }
 
 S7::method(get_tibble, ob_line) <- function(x) {
@@ -286,7 +316,10 @@ S7::method(get_tibble_defaults, ob_line) <- function(x) {
     linetype = 0.5
   )
   d <- get_tibble(x)
-  for (n in setdiff(colnames(d), c("slope", "intercept", "xintercept", "geom", "a", "b", "c"))) {
+  for (n in setdiff(
+    colnames(d),
+    c("slope", "intercept", "xintercept", "geom", "a", "b", "c")
+  )) {
     d[is.na(dplyr::pull(d, n)), n] <- S7::prop(sp, n)
   }
   d
@@ -311,21 +344,25 @@ S7::method(get_tibble_defaults, ob_line) <- function(x) {
 
 S7::method(as.geom, ob_line) <- function(x, ...) {
   overrides <- get_non_empty_props(ob_style(...))
-get_tibble_defaults(x) |>
-  tidyr::nest(.by = geom, .key = "d") |>
-  dplyr::mutate(a = ifelse(geom == "ab", c(abline_aesthetics_list), c(vline_aesthetics_list)),
-                output = purrr::map2(d,a,
-                                     make_geom_helper,
-                                     user_overrides = overrides)) |>
-  dplyr::pull(output)
+  get_tibble_defaults(x) |>
+    tidyr::nest(.by = geom, .key = "d") |>
+    dplyr::mutate(
+      a = ifelse(
+        geom == "ab",
+        c(abline_aesthetics_list),
+        c(vline_aesthetics_list)
+      ),
+      output = purrr::map2(d, a, make_geom_helper, user_overrides = overrides)
+    ) |>
+    dplyr::pull(output)
 }
 
 S7::method(equation, ob_line) <- function(
-    x,
-    type = c("y", "general", "parametric"),
-    output = c("markdown", "latex"),
-    digits = 2) {
-
+  x,
+  type = c("y", "general", "parametric"),
+  output = c("markdown", "latex"),
+  digits = 2
+) {
   type <- match.arg(type)
   output <- match.arg(output)
   myrounder <- redefault(rounder, digits = digits, output = output)
@@ -356,9 +393,9 @@ S7::method(equation, ob_line) <- function(
       myemphasis("x"),
       myrounder(
         x@intercept[x@a != 0 & x@b != 0],
-        add = TRUE)
+        add = TRUE
+      )
     ))
-
   } else if (type == "general") {
     eq <- trimmer(paste0(
       myrounder(x@a),
@@ -368,7 +405,6 @@ S7::method(equation, ob_line) <- function(
       myrounder(x@c, add = TRUE),
       " = 0"
     ))
-
   } else if (type == "parametric") {
     eq <- trimmer(paste0(
       emphasis("y", output),
@@ -397,12 +433,21 @@ S7::method(equation, ob_line) <- function(
 }
 
 
-
-S7::method(projection, list(ob_point, ob_line)) <- function(p,object, ...) {
-ab <- object@a * object@a + object@b * object@b
-xp <- (object@b * object@b * p@x - object@b * object@a * p@y - object@a * object@c) / ab
-yp <- (object@a * object@a * p@y - object@a * object@b * p@x - object@b * object@c) / ab
-ob_point(xp, yp, style = p@style, ...)
+S7::method(projection, list(ob_point, ob_line)) <- function(p, object, ...) {
+  ab <- object@a * object@a + object@b * object@b
+  xp <- (object@b *
+    object@b *
+    p@x -
+    object@b * object@a * p@y -
+    object@a * object@c) /
+    ab
+  yp <- (object@a *
+    object@a *
+    p@y -
+    object@a * object@b * p@x -
+    object@b * object@c) /
+    ab
+  ob_point(xp, yp, style = p@style, ...)
 }
 
 S7::method(`[`, ob_line) <- function(x, i) {
@@ -415,4 +460,3 @@ S7::method(`[`, ob_line) <- function(x, i) {
 S7::method(`==`, list(ob_line, ob_line)) <- function(e1, e2) {
   (e1@a == e2@a) & (e1@b == e2@b) & (e1@c == e2@c)
 }
-
