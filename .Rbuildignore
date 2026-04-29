@@ -23,3 +23,5 @@ vignettes/.quarto/
 logo.png
 ^CRAN-SUBMISSION$
 ^CODE_OF_CONDUCT\.md$
+^\.positai$
+^\.claude$

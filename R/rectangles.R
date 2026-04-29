@@ -415,6 +415,7 @@ rc_props <- list(
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to `style`
 #' @inherit ob_style params
 #' @slot xy returns a matrix of xy coordinates of `center` points
+#' @slot aesthetics A list of information about the objects's aesthetic properties
 #' @slot area returns rectangle area
 #' @slot bounding_box returns the `ob_rectangle` that contains all the rectangles in the object
 #' @slot perimeter returns the rectangle perimeter

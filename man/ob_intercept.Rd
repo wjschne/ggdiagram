@@ -70,6 +70,8 @@ Triangle polygons used in path diagrams.
 \describe{
 \item{\code{length}}{The number of polygons in the ob_polygon object}
 
+\item{\code{aesthetics}}{A list of information about the objects's aesthetic properties}
+
 \item{\code{tibble}}{Gets a tibble (data.frame) containing parameters and styles used by \code{ggplot2::geom_polygon}.}
 }}
 

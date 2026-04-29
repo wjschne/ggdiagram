@@ -112,7 +112,7 @@ abline_aesthetics <-
         getter = function(self) {
           \(x = 0, ...) {
             if (any(self@b == 0)) {
-              stop("Not possible with verical lines")
+              stop("Not possible with vertical lines")
             }
             ob_point(
               x = x,
@@ -142,8 +142,8 @@ abline_aesthetics <-
       projection = S7::new_property(
         S7::class_function,
         getter = function(self) {
-          \(ob_point, ...) {
-            projection(ob_point, self, ...)
+          \(p, ...) {
+            projection(p, self, ...)
           }
         }
       )
@@ -172,6 +172,14 @@ abline_aesthetics <-
 #' @param style an [ob_style] object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @inheritParams ob_style
+#' @slot point_at_x A function that finds the point on each line where x is equal to the `x` argument.
+#' @slot point_at_y A function that finds the point on each line where y is equal to the `y` argument.
+#' @slot angle The angle of the line
+#' @slot equation Returns a character string with the equation for the line
+#' @slot length The number of lines in the line object.
+#' @slot tibble Returns a tibble (data frame) with object parameters, one row for each line in the line object.
+#' @slot projection A function that returns the projected point from the point object specified in `p`.
+#' @slot info Returns a list of supported aesthetics.
 #' @export
 #' @returns ob_line object
 ob_line <- S7::new_class(

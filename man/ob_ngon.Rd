@@ -32,13 +32,13 @@ ob_ngon(
 
 \item{radius}{Distance from center to a vertex}
 
-\item{angle}{description}
+\item{angle}{Angle of rotation for ngon}
 
 \item{label}{A character, angle, or label object}
 
-\item{side_length}{Distance of each side}
+\item{side_length}{Distance of each side (can be used instead of radius to set size of ngon)}
 
-\item{apothem}{Distance from center to a side's midpoint}
+\item{apothem}{Distance from center to a side's midpoint (can be used instead of the radius to set size of ngon)}
 
 \item{vertex_radius}{A numeric or unit vector of length one, specifying the corner radius}
 
@@ -54,10 +54,6 @@ ob_ngon(
 
 \item{style}{Gets and sets the styles associated with \code{\link{ob_ngon}}}
 
-\item{x}{overrides x-coordinate in \code{center@x}}
-
-\item{y}{overrides y-coordinate in \code{center@y}}
-
 \item{id}{character string to identify object}
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> properties passed to style}
@@ -71,13 +67,21 @@ An ngon is a regular polygon, meaning that each side is of equal length. The \co
 \section{Slots}{
 
 \describe{
+\item{\code{aesthetics}}{A list of information about the objects's aesthetic properties}
+
 \item{\code{area}}{The area of the ngons in the \code{\link{ob_ngon}} object}
+
+\item{\code{bounding_box}}{a rectangle that contains all the ngons}
+
+\item{\code{circumscribed}}{Returns the circle that circumscribes the ngon.}
+
+\item{\code{inscribed}}{Returns the circle that inscribes the ngon.}
 
 \item{\code{length}}{The number of ngons in the \code{\link{ob_ngon}} object}
 
 \item{\code{normal_at}}{A function that finds a point that is perpendicular from the ngon and at a specified distance}
 
-\item{\code{perimeter}}{The length of all the side segments}
+\item{\code{perimeter}}{The length of the sum of all the side segments}
 
 \item{\code{point_at}}{A function that finds a point on the ngon at the specified angle.}
 
@@ -88,5 +92,52 @@ An ngon is a regular polygon, meaning that each side is of equal length. The \co
 \item{\code{tibble}}{Gets a tibble (data.frame) containing parameters and styles used by \code{ggforce::geom_shape}.}
 
 \item{\code{vertices}}{points on the regular polygon}
+
+\item{\code{east}}{right point (\code{\link{ob_point}})}
+
+\item{\code{north}}{top point (\code{\link{ob_point}})}
+
+\item{\code{west}}{left point (\code{\link{ob_point}})}
+
+\item{\code{south}}{top point (\code{\link{ob_point}})}
+
+\item{\code{northeast}}{upper right point (\code{\link{ob_point}})}
+
+\item{\code{northwest}}{upper left point (\code{\link{ob_point}})}
+
+\item{\code{southwest}}{lower left point (\code{\link{ob_point}})}
+
+\item{\code{southeast}}{lower right point (\code{\link{ob_point}})}
 }}
 
+\examples{
+ggdiagram() +
+  ob_ngon(center = ob_point(x = 3:8, y = 0),
+          n = 3:8,
+          radius = .4)
+
+# Size can be set with side_length instead of radius
+ggdiagram() +
+  ob_ngon(center = ob_point(x = 3:8, y = 0),
+          n = 3:8,
+          side_length = .4)
+
+# Size can be set with apothem (distance from center to side's midpoint)
+
+ggdiagram() +
+  ob_ngon(n = 4,
+          radius = 1,
+          fill = NA,
+          color = "blue") +
+  ob_ngon(n = 4,
+          apothem = 1,
+          fill = NA,
+          color = "red") +
+  ob_circle(radius = 1)
+
+# Getting the circles that inscribe and circumscribe the ngon
+ggdiagram() +
+  {x <- ob_ngon(fill = NA, color = "black")} +
+  x@inscribed |> set_props(color = "blue") +
+  x@circumscribed |> set_props(color = "red")
+}

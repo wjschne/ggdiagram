@@ -304,9 +304,17 @@ xy <- S7::new_class(
 # generics ----
 
 ## variance ----
-#' create double-headed arrow paths indicating variance
+#' Variance object
 #'
-#' @param x object
+#' @description
+#' Creates double-headed arrow paths indicating variance
+#'
+#' # Methods
+#' `ob_variance` is an S7 generic with methods available for the following classes:
+#'
+#' `r doclisting::methods_list("ob_variance", "ggdiagram")`
+#'
+#' @param x object of type `r doclisting::methods_inline("ob_variance", "ggdiagram")`
 #' @param where Location on object. Can be numeric (degrees), [degree], [radian], [turn], or named direction (e.g., "northwest", "east", "below", "left")
 #' @param theta angle width
 #' @param looseness distance of control points as a ratio of the distance to the object's center (e.g., in a circle of radius 1, looseness = 1.5 means that that the control points will be 1.5 units from the start and end points.)
@@ -334,7 +342,16 @@ ob_variance <- S7::new_generic(
 
 
 ## covariance ----
-#' create double-headed arrow paths indicating variance
+#' Covariance object
+#'
+#' @description Creates double-headed arrow paths indicating variance
+#'
+#' # Methods
+#' `ob_covariance` is an S7 generic with methods available for the following classes:
+#'
+#' `r doclisting::methods_list("ob_covariance", "ggdiagram")`
+#'
+#' @param x object of type `r doclisting::methods_inline("ob_covariance", "ggdiagram")`
 #'
 #' @param x object
 #' @param y object
@@ -365,8 +382,14 @@ ob_covariance <- S7::new_generic(
 )
 
 ## ob_array ----
-#' make an array of shapes along a line
+#' Object Arrays
 #'
+#' @description Make an array of shapes along a line
+#'
+#' # Methods
+#' `ob_array` is an S7 generic with methods available for the following classes:
+#'
+#' `r doclisting::methods_list("ob_array", "ggdiagram")`
 #' @param x shape
 #' @param k number of duplicate shapes to make
 #' @param sep separation distance between shapes

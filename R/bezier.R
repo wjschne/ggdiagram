@@ -127,7 +127,149 @@ bz_props <- list(
       \(position = .5, ...) {
         midpoint(self, position = position, ...)
       }
-    })
+    }),
+    point_at_x = S7::new_property(
+      S7::class_function,
+      getter = function(self) {
+        \(x = 0, ...) {
+          xx = x
+          first_pass <- get_tibble(self) |>
+            dplyr::left_join(self@tibble |> dplyr::select(group, n, p),
+                      by = dplyr::join_by(group)) |>
+            dplyr::mutate(t = purrr::map(n, \(nn) {
+              seq(0,1, length.out = nn)
+            })) |>
+            tidyr::unnest(c(p_unnest, t)) |>
+            dplyr::mutate(x1 = dplyr::lead(x),
+                          t1 = dplyr::lead(t),
+                          rowid = dplyr::row_number(),
+                          .by = group) |>
+            dplyr::filter(!is.na(x1)) |>
+            dplyr::filter(((x <= xx) & (x1 > xx)) | ((x > xx) & (x1 <= xx)) | ((x == xx) & ((rowid == 1) | (rowid == n - 1))))
+
+          if (nrow(first_pass) == 0) {
+            return(NULL)
+          }
+
+          second_pass <- first_pass |>
+            dplyr::mutate(group1 = dplyr::row_number(),
+                          .by = group) |>
+            dplyr::mutate(my_point = purrr::pmap(list(p = p,
+                                                      t = t,
+                                                      t1 = t1,
+                                                      n = n,
+                                                      rowid = rowid),
+                                                 \(p,t,t1, n, rowid) {
+                                     bezier::bezier(seq(t, t1, length.out = 100), p = p@xy) |>
+                                       `colnames<-`(c("x", "y")) |>
+                                       tibble::as_tibble() |>
+                                       dplyr::mutate(x1 = dplyr::lead(x)) |>
+                                       dplyr::filter(!is.na(x1)) |>
+                                       dplyr::filter(((x <= xx) & (x1 > xx)) | ((x > xx) & (x1 <= xx)) | ((x == xx) & ((rowid == 1) | (rowid == n - 1)))) |>
+                                       dplyr::select(-x1)
+
+                                   })) |>
+            dplyr::select(-x, -y) |>
+            tidyr::unnest(my_point) |>
+            dplyr::select(group, x, y) |>
+            tidyr::nest(.by = group) |>
+            dplyr::mutate(p = purrr::map(data, ggdiagram::data2shape, shape = ob_point)) |>
+            dplyr::mutate(n = map_int(data, nrow))
+
+          if (all(second_pass$n == 1)) {
+            bind(second_pass$p)
+          } else {
+            second_pass$p
+          }
+        }
+      }
+    ),
+    point_at_y = S7::new_property(
+      S7::class_function,
+      getter = function(self) {
+        \(y = 0, ...) {
+          yy = y
+          first_pass <- get_tibble(self) |>
+            dplyr::left_join(self@tibble |> dplyr::select(group, n, p),
+                             by = dplyr::join_by(group)) |>
+            dplyr::mutate(t = purrr::map(n, \(nn) {
+              seq(0,1, length.out = nn)
+            })) |>
+            tidyr::unnest(c(p_unnest, t)) |>
+            dplyr::mutate(y1 = dplyr::lead(y),
+                          t1 = dplyr::lead(t),
+                          rowid = dplyr::row_number(),
+                          .by = group) |>
+            dplyr::filter(!is.na(y1)) |>
+            dplyr::filter(((y <= yy) & (y1 > yy)) | ((y > yy) & (y1 <= yy)) | ((y == yy) & (rowid == 1)) | ((y1 == yy) & (rowid == n - 1)))
+
+          if (nrow(first_pass) == 0) {
+            return(NULL)
+          }
+
+          second_pass <- first_pass |>
+            dplyr::mutate(group1 = dplyr::row_number(),
+                          .by = group) |>
+            dplyr::mutate(my_point = purrr::pmap(list(p = p,
+                                                      t = t,
+                                                      t1 = t1,
+                                                      n = n,
+                                                      rowid = rowid),
+                                                 \(p,t,t1, n, rowid) {
+                                                   bezier::bezier(seq(t, t1, length.out = 100), p = p@xy) |>
+                                                     `colnames<-`(c("x", "y")) |>
+                                                     tibble::as_tibble() |>
+                                                     dplyr::mutate(y1 = dplyr::lead(y)) |>
+                                                     dplyr::filter(!is.na(y1)) |>
+                                                     dplyr::filter(((y <= yy) & (y1 > yy)) | ((y > yy) & (y1 <= yy)) | ((y == yy) & (rowid == 1)) | ((y1 == yy) & (rowid == n - 1))) |>
+                                                     dplyr::select(-y1)
+
+                                                 })) |>
+            dplyr::select(-x, -y) |>
+            tidyr::unnest(my_point) |>
+            dplyr::select(group, x, y) |>
+            tidyr::nest(.by = group) |>
+            dplyr::mutate(p = purrr::map(data, ggdiagram::data2shape, shape = ob_point)) |>
+            dplyr::mutate(n = map_int(data, nrow))
+
+          if (all(second_pass$n == 1)) {
+            bind(second_pass$p)
+          } else {
+            second_pass$p
+          }
+        }
+      }
+    ),
+    set_label_x = S7::new_property(
+      S7::class_function,
+      getter = function(self) {
+        \(position = .5, x = NULL) {
+          if (!S7::S7_inherits(self@label, ob_label)) {
+            stop("The ob_segment does not have a label.")
+          }
+          if (is.null(x)) {
+            x <- self[1]@midpoint(position)@x
+          }
+          self@label@center <- self@point_at_x(x)
+          self
+        }
+      }
+    ),
+    set_label_y = S7::new_property(
+      S7::class_function,
+      getter = function(self) {
+        \(position = 0.5, y = NULL) {
+          if (!S7::S7_inherits(self@label, ob_label)) {
+            stop("The ob_segment does not have a label.")
+          }
+          if (is.null(y)) {
+            y <- self[1]@midpoint(position)@y
+          }
+          self@label@center <- self@point_at_y(y)
+          self
+        }
+      }
+    )
   ),
   # info ----
   info = list(
@@ -196,9 +338,11 @@ bz_props <- list(
 #' @inherit ob_style params
 #' @slot geom A function that converts the object to a geom. Any additional parameters are passed to `ggarrow::geom_arrow`.
 #' @slot midpoint A function that selects 1 or more midpoints of the ob_bezier. The `position` argument can be between 0 and 1. Additional arguments are passed to `ob_point`.
-#' @slot aesthetics A list of information about the ob_bezier's aesthetic properties
+#' @slot aesthetics A list of information about the objects's aesthetic properties
+#' @slot set_label_x A function that sets labels to have the same x coordinate. The `position` argument can be between 0 and 1, indicating how far along on the first segment the x coordinate is selected. If the `x` argument is set, the `position` argument is overridden, and the x-coordinate is set directly.
+#' @slot set_label_y A function that sets labels to have the same y coordinate. The `position` argument can be between 0 and 1, indicating how far along on the first segment the y coordinate is selected. If the `y` argument is set, the `position` argument is overridden, and the y-coordinate is set directly.
 #' @examples
-#' control_points <- ob_point(c(0,1,2,4), c(0,4,0,0))
+#' control_points <- ob_point(c(0,1,2,4), c(0,4,0,1))
 #' ggdiagram() +
 #'   ob_bezier(control_points, color = "blue")
 ob_bezier <- S7::new_class(

@@ -192,10 +192,16 @@ ob_polygon_props <- list(
 #' @param p [`ob_point`] or list of [`ob_point`] objects
 #' @param label A character, angle, or [`ob_label`] object
 #' @param vertex_radius A numeric or unit vector of length one, specifying the corner radius
-#' @slot length The number of polygons in the ob_polygon object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @param style Gets and sets the styles associated with polygons
+#' @slot aesthetics A list of information about the objects's aesthetic properties
+#' @slot bounding_box a rectangle that contains all the polygons
+#' @slot geom A function that returns the output of [`ggforce::geom_shape`]
+#' @slot length The number of polygons in the ob_polygon object
+#' @slot point_at A function that finds a point on the polygon at the specified angle.
+#' @slot segment The segments of each polygon
 #' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by [`ggforce::geom_shape`].
+#' @slot center Points at the centroids of each polygon
 #' @inherit ob_style params
 ob_polygon <- S7::new_class(
   name = "ob_polygon",
@@ -692,6 +698,7 @@ S7::method(connect, list(ob_polygon, centerpoint)) <- function(
 #' @param y overrides x-coordinate in `center@y`
 #' @slot length The number of polygons in the ob_polygon object
 #' @param style Gets and sets the styles associated with polygons
+#' @slot aesthetics A list of information about the objects's aesthetic properties
 #' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggplot2::geom_polygon`.
 #' @inherit ob_style params
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
@@ -1356,25 +1363,66 @@ ob_ngon_props <- list(
 #' @param center point at center of the ngon
 #' @param n Number of sides
 #' @param radius Distance from center to a vertex
-#' @param side_length Distance of each side
-#' @param apothem Distance from center to a side's midpoint
-#' @param angle description
+#' @param side_length Distance of each side (can be used instead of radius to set size of ngon)
+#' @param apothem Distance from center to a side's midpoint (can be used instead of the radius to set size of ngon)
+#' @param angle Angle of rotation for ngon
 #' @param label A character, angle, or label object
 #' @param vertex_radius A numeric or unit vector of length one, specifying the corner radius
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @param style Gets and sets the styles associated with [`ob_ngon`]
+#' @slot aesthetics A list of information about the objects's aesthetic properties
 #' @slot area The area of the ngons in the [`ob_ngon`] object
+#' @slot bounding_box a rectangle that contains all the ngons
+#' @slot circumscribed Returns the circle that circumscribes the ngon.
+#' @slot inscribed Returns the circle that inscribes the ngon.
 #' @slot length The number of ngons in the [`ob_ngon`] object
 #' @slot normal_at A function that finds a point that is perpendicular from the ngon and at a specified distance
-#' @slot perimeter The length of all the side segments
+#' @slot perimeter The length of the sum of all the side segments
 #' @slot point_at A function that finds a point on the ngon at the specified angle.
 #' @slot segments side segments of the regular polygon
 #' @slot tangent_at A function that finds the tangent line at the specified angle.
 #' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggforce::geom_shape`.
 #' @slot vertices points on the regular polygon
-#' @param x overrides x-coordinate in `center@x`
-#' @param y overrides y-coordinate in `center@y`
+#' @slot east right point ([`ob_point`])
+#' @slot north top point ([`ob_point`])
+#' @slot west left point ([`ob_point`])
+#' @slot south top point ([`ob_point`])
+#' @slot northeast upper right point ([`ob_point`])
+#' @slot northwest upper left point ([`ob_point`])
+#' @slot southwest lower left point ([`ob_point`])
+#' @slot southeast lower right point ([`ob_point`])
 #' @inherit ob_style params
+#' @examples
+#' ggdiagram() +
+#'   ob_ngon(center = ob_point(x = 3:8, y = 0),
+#'           n = 3:8,
+#'           radius = .4)
+#'
+#' # Size can be set with side_length instead of radius
+#' ggdiagram() +
+#'   ob_ngon(center = ob_point(x = 3:8, y = 0),
+#'           n = 3:8,
+#'           side_length = .4)
+#'
+#' # Size can be set with apothem (distance from center to side's midpoint)
+#'
+#' ggdiagram() +
+#'   ob_ngon(n = 4,
+#'           radius = 1,
+#'           fill = NA,
+#'           color = "blue") +
+#'   ob_ngon(n = 4,
+#'           apothem = 1,
+#'           fill = NA,
+#'           color = "red") +
+#'   ob_circle(radius = 1)
+#'
+#' # Getting the circles that inscribe and circumscribe the ngon
+#' ggdiagram() +
+#'   {x <- ob_ngon(fill = NA, color = "black")} +
+#'   x@inscribed |> set_props(color = "blue") +
+#'   x@circumscribed |> set_props(color = "red")
+
 ob_ngon <- S7::new_class(
   name = "ob_ngon",
   parent = centerpoint,
@@ -1821,7 +1869,25 @@ S7::method(connect, list(centerpoint, ob_ngon)) <- function(
 #' @param radius Distance from center to a vertex
 #' @inherit ob_style params
 #' @inherit ob_polygon params
-#'
+#' @inherit ob_ngon params
+#' @slot aesthetics A list of information about the objects's aesthetic properties
+#' @slot arc_radius The radius of the arcs used to contruct the reuleaux object
+#' @slot arcs Returns the arcs of each reuleaux object
+#' @slot bounding_box a rectangle that contains all the reuleaux objects
+#' @slot central_angle The angle from the center to adjacent vertices of the reuleaux object
+#' @slot chord_length The length of each chord of the arcs used to contruct the reuleaux object
+#' @slot circumscribed Returns the circle that circumscribes the object
+#' @slot inscribed Returns the circle that inscribes the object
+#' @slot inscribed_angle The angle of the arcs used to construct the reuleaux object
+#' @slot vertices Returns the vertices of the reuleaux object
+#' @slot angle_at A function that finds the angle of the specified point in relation to the circle's center
+#' @slot circumference circumference of the reuleaux object
+#' @slot geom A function that converts the object to a geom. Any additional parameters are passed to `ggforce::geom_circle`.
+#' @slot length The number of circles in the circle object
+#' @slot normal_at A function that finds a point that is perpendicular from the circle and at a specified distance
+#' @slot point_at A function that finds a point on the circle at the specified angle.
+#' @slot polygon a tibble containing information to create all the polygon points in a reuleaux object
+#' @slot tangent_at A function that finds the tangent line at the specified angle.
 #' @export
 #' @returns ob_reuleaux object
 ob_reuleaux <- S7::new_class(
@@ -1848,9 +1914,9 @@ ob_reuleaux <- S7::new_class(
     ob_style@properties$linetype,
     ob_polygon@properties$style,
     arc_radius = S7::new_property(getter = \(self) {
-      self@chord_length *
-        sin((degree(180) - self@inscribed_angle) / 2) /
-        sin(self@inscribed_angle)
+        map_dbl(unbind(self), \(s) {
+          s@arcs[1]@radius
+        })
     }),
     arcs = S7::new_property(getter = \(self) {
       map_ob(self, \(s) {
@@ -1881,6 +1947,11 @@ ob_reuleaux <- S7::new_class(
           bind()
       })
     }),
+    bounding_box = S7::new_property(getter = \(self) {
+      map_ob(self, \(s) {
+        s@arcs
+      })@bounding_box
+    }),
     central_angle = S7::new_property(getter = \(self) {
       degree(360 / self@n)
     }),
@@ -1889,6 +1960,14 @@ ob_reuleaux <- S7::new_class(
     }),
     circumscribed = S7::new_property(getter = \(self) {
       ob_circle(self@center, radius = self@radius, style = self@style)
+    }),
+    circumference = S7::new_property(getter = \(self) {
+      map_dbl(unbind(self), \(s) {
+        sum(s@arcs@arc_length)
+      })
+    }),
+    inscribed = S7::new_property(getter = \(self) {
+      ob_circle(self@center, radius = distance(self@arcs[1]@midpoint(), self@center), style = self@style)
     }),
     inscribed_angle = S7::new_property(getter = \(self) {
       degree(180 / self@n)

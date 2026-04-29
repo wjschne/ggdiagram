@@ -55,6 +55,8 @@ If you wish to specify multiple polygons, you must supply a list of \code{\link{
 \describe{
 \item{\code{length}}{The number of polygons in the ob_polygon object}
 
+\item{\code{aesthetics}}{A list of information about the objects's aesthetic properties}
+
 \item{\code{tibble}}{Gets a tibble (data.frame) containing parameters and styles used by \code{\link[ggforce:geom_shape]{ggforce::geom_shape}}.}
 }}
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/a_early.R
 \name{ob_array}
 \alias{ob_array}
-\title{make an array of shapes along a line}
+\title{Object Arrays}
 \usage{
 ob_array(x, k = 2, sep = 1, where = "east", anchor = "center", ...)
 }
@@ -23,5 +23,16 @@ ob_array(x, k = 2, sep = 1, where = "east", anchor = "center", ...)
 An array of shapes of the same class as object passed to x
 }
 \description{
-make an array of shapes along a line
+Make an array of shapes along a line
 }
+\section{Methods}{
+\code{ob_array} is an S7 generic with methods available for the following classes:
+
+\itemize{
+\item \code{ggdiagram::ob_circle}
+\item \code{ggdiagram::ob_ellipse}
+\item \code{ggdiagram::ob_point}
+\item \code{ggdiagram::ob_rectangle}
+}
+}
+

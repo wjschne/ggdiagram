@@ -103,9 +103,9 @@ arc_props <- list(
       d_rect <- self@tibble |>
         dplyr::mutate(
           d = purrr::pmap(
-            list(x = x, y = y, r = r, start = start, end = end, n = n),
+            list(x = x, y = y, r = radius, start = start, end = end, n = n),
             \(x, y, r, start, end, n) {
-              theta <- seq(start, end, length.out = n)
+              theta <- degree(seq(start, end, length.out = n))
               d <- tibble::tibble(
                 x = x + cos(theta) * r,
                 y = y + sin(theta) * r

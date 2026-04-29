@@ -91,6 +91,8 @@ ob_rectangle class
 \describe{
 \item{\code{xy}}{returns a matrix of xy coordinates of \code{center} points}
 
+\item{\code{aesthetics}}{A list of information about the objects's aesthetic properties}
+
 \item{\code{area}}{returns rectangle area}
 
 \item{\code{bounding_box}}{returns the \code{ob_rectangle} that contains all the rectangles in the object}

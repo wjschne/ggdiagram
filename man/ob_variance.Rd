@@ -2,7 +2,7 @@
 % Please edit documentation in R/a_early.R, R/ellipses.R
 \name{ob_variance}
 \alias{ob_variance}
-\title{create double-headed arrow paths indicating variance}
+\title{Variance object}
 \usage{
 ob_variance(
   x,
@@ -16,7 +16,7 @@ ob_variance(
 )
 }
 \arguments{
-\item{x}{object}
+\item{x}{object of type \code{ggdiagram::centerpoint}}
 
 \item{where}{Location on object. Can be numeric (degrees), \link{degree}, \link{radian}, \link{turn}, or named direction (e.g., "northwest", "east", "below", "left")}
 
@@ -36,8 +36,16 @@ ob_variance(
 Returns an object of type \code{\link{ob_bezier}}
 }
 \description{
-create double-headed arrow paths indicating variance
+Creates double-headed arrow paths indicating variance
 }
+\section{Methods}{
+\code{ob_variance} is an S7 generic with methods available for the following classes:
+
+\itemize{
+\item \code{ggdiagram::centerpoint}
+}
+}
+
 \examples{
 theta <- degree(seq(0, 360 - 45, 45))
 ggdiagram() +

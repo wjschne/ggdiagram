@@ -2,7 +2,7 @@
 % Please edit documentation in R/a_early.R, R/ellipses.R
 \name{ob_covariance}
 \alias{ob_covariance}
-\title{create double-headed arrow paths indicating variance}
+\title{Covariance object}
 \usage{
 ob_covariance(
   x,
@@ -42,8 +42,17 @@ ob_covariance(
 An \code{\link{ob_bezier}} object
 }
 \description{
-create double-headed arrow paths indicating variance
+Creates double-headed arrow paths indicating variance
 }
+\section{Methods}{
+\code{ob_covariance} is an S7 generic with methods available for the following classes:
+
+\itemize{
+\item \code{ggdiagram::centerpoint,ggdiagram::centerpoint}
+\item \code{ggdiagram::ob_point,ggdiagram::ob_point}
+}
+}
+
 \examples{
 ggdiagram() +
   {x <- ob_circle(ob_point(c(-2, 2), 0))} +

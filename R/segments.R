@@ -148,12 +148,12 @@ sg_props <- list(
     set_label_x = S7::new_property(
       S7::class_function,
       getter = function(self) {
-        \(x = NULL) {
+        \(position = .5, x = NULL) {
           if (!S7::S7_inherits(self@label, ob_label)) {
             stop("The ob_segment does not have a label.")
           }
           if (is.null(x)) {
-            x <- self[1]@label@center@x
+            x <- self[1]@midpoint(position)@x
           }
           self@label@center <- self@line@point_at_x(x)
           self
@@ -163,12 +163,12 @@ sg_props <- list(
     set_label_y = S7::new_property(
       S7::class_function,
       getter = function(self) {
-        \(y = NULL) {
+        \(position = 0.5, y = NULL) {
           if (!S7::S7_inherits(self@label, ob_label)) {
             stop("The ob_segment does not have a label.")
           }
           if (is.null(y)) {
-            y <- self[1]@label@center@y
+            y <- self[1]@midpoint(position)@y
           }
           self@label@center <- self@line@point_at_y(y)
           self
@@ -238,6 +238,8 @@ sg_props <- list(
 #' @slot hatch A function that puts hatch (tally) marks on segments. Often used to indicate which segments have the same length. The `k` parameter controls how many hatch marks to display. The `height` parameter controls how long the hatch mark segment is. The `sep` parameter controls the separation between hatch marks when `k > 2`. Additional parameters sent to `ob_segment`.
 #' @slot midpoint A function that selects 1 or more midpoints of the ob_segment. The `position` argument can be between 0 and 1. Additional arguments are passed to `ob_point`.
 #' @slot nudge A function to move the segment by x and y units.
+#' @slot set_label_x A function that sets labels to have the same x coordinate. The `position` argument can be between 0 and 1, indicating how far along on the first segment the x coordinate is selected. If the `x` argument is set, the `position` argument is overridden, and the x-coordinate is set directly.
+#' @slot set_label_y A function that sets labels to have the same y coordinate. The `position` argument can be between 0 and 1, indicating how far along on the first segment the y coordinate is selected. If the `y` argument is set, the `position` argument is overridden, and the y-coordinate is set directly.
 #' @inherit ob_style params
 #' @export
 #' @returns ob_segment object

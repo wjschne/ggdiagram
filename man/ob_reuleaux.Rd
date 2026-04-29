@@ -56,3 +56,9 @@ ob_reuleaux object
 \description{
 Reuleaux polygon
 }
+\section{Slots}{
+
+\describe{
+\item{\code{aesthetics}}{A list of information about the objects's aesthetic properties}
+}}
+
