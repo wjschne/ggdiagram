@@ -44,7 +44,6 @@ apothem
 arcus
 arrowheadr
 bezier
-bezier's
 beziers
 bmatrix
 bolding
@@ -84,9 +83,11 @@ ngons
 picas
 pixelated
 purrr
+rbga
 resect
 resected
 reuleaux
+rgb
 roundedness
 sagitta
 semptools
@@ -102,6 +103,7 @@ underbrace
 vjust
 xdvir
 xelatex
+xy
 Ŷ
 Θ
 Λ

@@ -311,7 +311,7 @@ arc_props <- list(
       }
     }),
     angle_at = ob_circle@properties$angle_at,
-    autolabel = S7::new_property(S7::class_function, getter = function(self) {
+    auto_label = S7::new_property(S7::class_function, getter = function(self) {
       \(
         label = as.character(degree(self@theta)),
         position = .5,
@@ -366,6 +366,46 @@ arc_props <- list(
     normal_at = ob_circle@properties$normal_at,
     place = pr_place,
     point_at = ob_circle@properties$point_at,
+    set_label_x = S7::new_property(
+      S7::class_function,
+      getter = function(self) {
+        \(position = NULL, x = NULL) {
+          if (!S7::S7_inherits(self@label, ob_label)) {
+            stop("The ob_arc does not have a label.")
+          }
+          if (is.null(x)) {
+            if (is.null(position)) {
+              x <- self[1]@label@center@x
+            } else {
+              x <- self[1]@midpoint(position)@x
+            }
+
+          }
+          self@label@center <- intersection(self, ob_line(xintercept = x))
+          self
+        }
+      }
+    ),
+    set_label_y = S7::new_property(
+      S7::class_function,
+      getter = function(self) {
+        \(position = NULL, y = NULL) {
+          if (!S7::S7_inherits(self@label, ob_label)) {
+            stop("The ob_arc does not have a label.")
+          }
+          if (is.null(y)) {
+            if (is.null(position)) {
+              y <- self[1]@label@center@y
+            } else {
+              y <- self[1]@midpoint(position)@y
+            }
+
+          }
+          self@label@center <- intersection(self, ob_line(intercept = y))
+          self
+        }
+      }
+    ),
     tangent_at = ob_circle@properties$tangent_at
   ),
   # info ----
@@ -441,21 +481,26 @@ arc_props <- list(
 #' @param y x-coordinate of center point. If specified, overrides y-coordinate of `@center`.
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style object
 #' @inherit ob_style params
-#' @slot aesthetics A list of information about the arc's aesthetic properties
-#' @slot angle_at A function that finds the angle of the specified point in relation to the arc's center
-#' @slot apothem Distance from center to the chord's midpoint
-#' @slot arc_length Distance along arc from `start_point` to `end_point`
-#' @slot auto_label Places a label at the arc's midpoint
-#' @slot chord [`ob_segment`] from `start_point` to `end_point`
-#' @slot geom A function that converts the object to a geom. Any additional parameters are passed to [`ggarrow::geom_arrow`].
-#' @slot hatch A function that puts hatch (tally) marks on arcs. Often used to indicate which arcs have the same angle. The `k` parameter controls how many hatch marks to display. The `height` parameter controls how long the hatch mark segment is. The `sep` parameter controls the separation between hatch marks when `k > 2`. Additional parameters sent to [`ob_segment`].
-#' @slot length The number of arcs in the arc object
-#' @slot midpoint A function that selects 1 or more midpoints of the ob_arc. The `position` argument can be between 0 and 1. Additional arguments are passed to [`ob_point`].
-#' @slot point_at A function that finds a point on the arc at the specified angle.
-#' @slot sagitta [`ob_segment`] from `chord` midpoint to [`ob_arc`] midpoint
-#' @slot tangent_at A function that finds the tangent line at the specified angle.
-#' @slot theta interior angle (end - start)
-#' @slot tibble Gets a [tibble::tibble] or data.frame containing parameters and styles used by [`ggarrow::geom_arrow`].
+#' @prop aesthetics A list of information about the arc's aesthetic properties
+#' @prop angle_at A function that finds the angle of the specified point in relation to the arc's center
+#' @prop apothem Distance from center to the chord's midpoint
+#' @prop arc_length Distance along arc from `start_point` to `end_point`
+#' @prop auto_label Places an label at the arc's midpoint
+#' @prop bounding_box A rectangle that contains all the arcs
+#' @prop chord [`ob_segment`] from `start_point` to `end_point`
+#' @prop circle Circle object associated with the arc object
+#' @prop geom A function that converts the object to a geom. Any additional parameters are passed to [`ggarrow::geom_arrow`].
+#' @prop hatch A function that puts hatch (tally) marks on arcs. Often used to indicate which arcs have the same angle. The `k` parameter controls how many hatch marks to display. The `height` parameter controls how long the hatch mark segment is. The `sep` parameter controls the separation between hatch marks when `k > 2`. Additional parameters sent to [`ob_segment`].
+#' @prop length The number of arcs in the arc object
+#' @prop midpoint A function that selects 1 or more midpoints of the ob_arc. The `position` argument can be between 0 and 1. Additional arguments are passed to [`ob_point`].
+#' @prop point_at A function that finds a point on the arc at the specified angle.
+#' @prop polygon A tibble containing information to create all the polygon points in an arc
+#' @prop sagitta [`ob_segment`] from `chord` midpoint to [`ob_arc`] midpoint
+#' @prop set_label_x A function that sets labels to have the same x coordinate. The `position` argument can be between 0 and 1, indicating how far along on the first arc the x coordinate is selected. If the `x` argument is set, the `position` argument is overridden, and the x-coordinate is set directly.
+#' @prop set_label_y A function that sets labels to have the same y coordinate. The `position` argument can be between 0 and 1, indicating how far along on the first arc the y coordinate is selected. If the `y` argument is set, the `position` argument is overridden, and the y-coordinate is set directly.
+#' @prop tangent_at A function that finds the tangent line at the specified angle.
+#' @prop theta Interior angle (end - start)
+#' @prop tibble Gets a [tibble::tibble] or data.frame containing parameters and styles used by [`ggarrow::geom_arrow`].
 #' @export
 #' @returns ob_arc object
 #' @examples
@@ -850,6 +895,9 @@ S7::method(`[`, ob_arc) <- function(x, i) {
 #' ob_wedge
 #' @rdname ob_arc
 #' @export
+#' @examples
+#' ggdiagram() +
+#'   ob_wedge(end = degree(60))
 ob_wedge <- redefault(ob_arc, type = "wedge", color = NA, fill = "black")
 
 # ob_circular_segment ----
@@ -857,6 +905,15 @@ ob_wedge <- redefault(ob_arc, type = "wedge", color = NA, fill = "black")
 #' ob_circular_segment
 #' @rdname ob_arc
 #' @export
+#' @examples
+#' theta <- degree(seq(0,360, 60))
+#' ggdiagram() +
+#'   ob_circular_segment(
+#'     start = theta[1:6],
+#'     end = theta[2:7],
+#'     fill = hsv(h = seq(0,1, length.out = 7)[-7],
+#'                v = .8,
+#'                s = .5))
 ob_circular_segment <- redefault(
   ob_arc,
   type = "segment",

@@ -79,9 +79,9 @@ ob_style(
 
 \item{label.color}{Color of label outline.}
 
-\item{label.margin}{Amount of distance around label. A \link[grid:unit]{grid::unit} vector of length four. Usually created with \code{\link[ggplot2:element]{ggplot2::margin}}.}
+\item{label.margin}{Amount of distance around label. A \link[grid:unit]{grid::unit} vector of length four. Usually created with \code{\link[ggplot2:margin]{ggplot2::margin}}.}
 
-\item{label.padding}{Amount of padding around label. A \link[grid:unit]{grid::unit} vector of length four. Usually created with \code{\link[ggplot2:element]{ggplot2::margin}}.}
+\item{label.padding}{Amount of padding around label. A \link[grid:unit]{grid::unit} vector of length four. Usually created with \code{\link[ggplot2:margin]{ggplot2::margin}}.}
 
 \item{label.r}{Radius of rounded corners. Defaults to 0.15 lines.}
 

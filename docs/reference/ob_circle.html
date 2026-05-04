@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggdiagram</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -80,11 +80,11 @@
 
 
 <dl><dt id="arg-center">center<a class="anchor" aria-label="anchor" href="#arg-center"></a></dt>
-<dd><p>point at center of the circle</p></dd>
+<dd><p>Point at center of the circle</p></dd>
 
 
 <dt id="arg-radius">radius<a class="anchor" aria-label="anchor" href="#arg-radius"></a></dt>
-<dd><p>distance between center and edge circle</p></dd>
+<dd><p>Distance between center and edge circle</p></dd>
 
 
 <dt id="arg-label">label<a class="anchor" aria-label="anchor" href="#arg-label"></a></dt>
@@ -112,11 +112,11 @@
 
 
 <dt id="arg-n">n<a class="anchor" aria-label="anchor" href="#arg-n"></a></dt>
-<dd><p>number of points in circle (default = 360)</p></dd>
+<dd><p>Number of points in circle (default = 360)</p></dd>
 
 
 <dt id="arg-style">style<a class="anchor" aria-label="anchor" href="#arg-style"></a></dt>
-<dd><p>an ob_style object</p></dd>
+<dd><p>An ob_style object</p></dd>
 
 
 <dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
@@ -140,55 +140,99 @@
     <p>ob_circle object</p>
     </div>
     <div class="section level2">
-    <h2 id="slots">Slots<a class="anchor" aria-label="anchor" href="#slots"></a></h2>
+    <h2 id="additional-properties">Additional properties<a class="anchor" aria-label="anchor" href="#additional-properties"></a></h2>
 
 
-<dl><dt><code>aesthetics</code></dt>
+<dl><dt><code>@aesthetics</code></dt>
 <dd><p>A list of information about the circle's aesthetic properties</p></dd>
 
 
-<dt><code>angle_at</code></dt>
+<dt><code>@angle_at</code></dt>
 <dd><p>A function that finds the angle of the specified point in relation to the circle's center</p></dd>
 
 
-<dt><code>area</code></dt>
+<dt><code>@arc</code></dt>
+<dd><p>A function that creates an arc object with the same center as the circle object. Must specify the <code>start</code> angle and the <code>end</code> angle. In addition, any of the parameters of <code>ob_arc</code> can be applied.</p></dd>
+
+
+<dt><code>@area</code></dt>
 <dd><p>area of the circle</p></dd>
 
 
-<dt><code>bounding_box</code></dt>
-<dd><p>a rectangle that contains all the circles</p></dd>
+<dt><code>@bounding_box</code></dt>
+<dd><p>A rectangle that contains all the circles</p></dd>
 
 
-<dt><code>circumference</code></dt>
-<dd><p>circumference of the circle</p></dd>
+<dt><code>@circumference</code></dt>
+<dd><p>Circumference of the circle</p></dd>
 
 
-<dt><code>geom</code></dt>
+<dt><code>@diameter</code></dt>
+<dd><p>The diameter of the circle</p></dd>
+
+
+<dt><code>@geom</code></dt>
 <dd><p>A function that converts the object to a geom. Any additional parameters are passed to <code><a href="https://ggforce.data-imaginist.com/reference/geom_circle.html" class="external-link">ggforce::geom_circle</a></code>.</p></dd>
 
 
-<dt><code>length</code></dt>
+<dt><code>@length</code></dt>
 <dd><p>The number of circles in the circle object</p></dd>
 
 
-<dt><code>normal_at</code></dt>
+<dt><code>@normal_at</code></dt>
 <dd><p>A function that finds a point that is perpendicular from the circle and at a specified distance</p></dd>
 
 
-<dt><code>point_at</code></dt>
-<dd><p>A function that finds a point on the circle at the specified angle.</p></dd>
+<dt><code>@point_at</code></dt>
+<dd><p>A function that finds a point on the circle at the specified angle</p></dd>
 
 
-<dt><code>polygon</code></dt>
-<dd><p>a tibble containing information to create all the polygon points in a circle.</p></dd>
+<dt><code>@polar_line_at</code></dt>
+<dd><p>A function that creates an <code>ob_line</code> that passes through the circle's center and the point specified in <code>x</code></p></dd>
 
 
-<dt><code>tangent_at</code></dt>
-<dd><p>A function that finds the tangent line at the specified angle.</p></dd>
+<dt><code>@polygon</code></dt>
+<dd><p>A tibble containing information to create all the polygon points in a circle</p></dd>
 
 
-<dt><code>tibble</code></dt>
-<dd><p>Gets a tibble (data.frame) containing parameters and styles used by <code>ggforce::geom_cirlce</code>.</p></dd>
+<dt><code>@tangent_at</code></dt>
+<dd><p>A function that finds the tangent line at the specified angle</p></dd>
+
+
+<dt><code>@tibble</code></dt>
+<dd><p>Gets a tibble (data.frame) containing parameters and styles used by <code><a href="https://ggforce.data-imaginist.com/reference/geom_circle.html" class="external-link">ggforce::geom_circle</a></code></p></dd>
+
+
+<dt><code>@east</code></dt>
+<dd><p><code><a href="ob_point.html">ob_point</a></code> at rightmost point of circle</p></dd>
+
+
+<dt><code>@north</code></dt>
+<dd><p><code><a href="ob_point.html">ob_point</a></code> at highest point of circle</p></dd>
+
+
+<dt><code>@west</code></dt>
+<dd><p><code><a href="ob_point.html">ob_point</a></code> at leftmost point of circle</p></dd>
+
+
+<dt><code>@south</code></dt>
+<dd><p><code><a href="ob_point.html">ob_point</a></code> at lowest point of circle</p></dd>
+
+
+<dt><code>@northeast</code></dt>
+<dd><p><code><a href="ob_point.html">ob_point</a></code> at top-right point of circle</p></dd>
+
+
+<dt><code>@northwest</code></dt>
+<dd><p><code><a href="ob_point.html">ob_point</a></code> at top-left point of circle</p></dd>
+
+
+<dt><code>@southwest</code></dt>
+<dd><p><code><a href="ob_point.html">ob_point</a></code> at bottom-left point of circle</p></dd>
+
+
+<dt><code>@southeast</code></dt>
+<dd><p><code><a href="ob_point.html">ob_point</a></code> at bottom-right point of circle</p></dd>
 
 
 </dl></div>
@@ -214,7 +258,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

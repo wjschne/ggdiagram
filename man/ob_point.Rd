@@ -67,30 +67,6 @@ Points are specified with x and y coordinates.
 
 Polar points are ordinary points but are specified with an angle (theta) and a radial distance (r)
 }
-\section{Slots}{
-
-\describe{
-\item{\code{auto_label}}{Gets x and y coordinates and makes a label \code{"(x,y)"}}
-
-\item{\code{geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggplot2::geom_point}.}
-
-\item{\code{length}}{The number of points in the ob_point object}
-
-\item{\code{tibble}}{Gets a \code{\link[tibble:tibble]{tibble::tibble}} containing parameters and styles used by \code{\link[ggplot2:geom_point]{ggplot2::geom_point}}.}
-
-\item{\code{xy}}{Gets a 2-column matrix of the x and y coordinates of the ob_point object.}
-
-\item{\code{centroid}}{ob_point at the average of the x and y values}
-
-\item{\code{bounding_box}}{ob_rectangle that contains all the points in the object}
-
-\item{\code{place}}{function to place point in relation to other objects}
-
-\item{\code{label}}{function to create ob_label for points in the object}
-
-\item{\code{aesthetics}}{returns class_aesthetics for ob_point}
-}}
-
 \examples{
 ggdiagram() +
   ob_point(1:5, 1:5) +
@@ -100,3 +76,27 @@ ggdiagram() +
   ob_polar(degree(seq(0, 330, 30)), r = 2) +
   ggplot2::theme_minimal()
 }
+\section{Additional properties}{
+
+\describe{
+\item{\code{@auto_label}}{Gets x and y coordinates and makes a label \code{"(x,y)"}}
+
+\item{\code{@geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggplot2::geom_point}.}
+
+\item{\code{@length}}{The number of points in the ob_point object}
+
+\item{\code{@tibble}}{Gets a \code{\link[tibble:tibble]{tibble::tibble}} containing parameters and styles used by \code{\link[ggplot2:geom_point]{ggplot2::geom_point}}.}
+
+\item{\code{@xy}}{Gets a 2-column matrix of the x and y coordinates of the ob_point object.}
+
+\item{\code{@centroid}}{ob_point at the average of the x and y values}
+
+\item{\code{@bounding_box}}{ob_rectangle that contains all the points in the object}
+
+\item{\code{@place}}{function to place point in relation to other objects}
+
+\item{\code{@label}}{function to create ob_label for points in the object}
+
+\item{\code{@aesthetics}}{returns class_aesthetics for ob_point}
+}}
+

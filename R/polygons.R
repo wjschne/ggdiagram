@@ -194,14 +194,14 @@ ob_polygon_props <- list(
 #' @param vertex_radius A numeric or unit vector of length one, specifying the corner radius
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @param style Gets and sets the styles associated with polygons
-#' @slot aesthetics A list of information about the objects's aesthetic properties
-#' @slot bounding_box a rectangle that contains all the polygons
-#' @slot geom A function that returns the output of [`ggforce::geom_shape`]
-#' @slot length The number of polygons in the ob_polygon object
-#' @slot point_at A function that finds a point on the polygon at the specified angle.
-#' @slot segment The segments of each polygon
-#' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by [`ggforce::geom_shape`].
-#' @slot center Points at the centroids of each polygon
+#' @prop aesthetics A list of information about the object's aesthetic properties
+#' @prop bounding_box a rectangle that contains all the polygons
+#' @prop geom A function that returns the output of [`ggforce::geom_shape`]
+#' @prop length The number of polygons in the ob_polygon object
+#' @prop point_at A function that finds a point on the polygon at the specified angle.
+#' @prop segment The segments of each polygon
+#' @prop tibble Gets a tibble (data.frame) containing parameters and styles used by [`ggforce::geom_shape`].
+#' @prop center Points at the centroids of each polygon
 #' @inherit ob_style params
 ob_polygon <- S7::new_class(
   name = "ob_polygon",
@@ -696,10 +696,10 @@ S7::method(connect, list(ob_polygon, centerpoint)) <- function(
 #' @param right Right vertex of triangle
 #' @param x overrides x-coordinate in `center@x`
 #' @param y overrides x-coordinate in `center@y`
-#' @slot length The number of polygons in the ob_polygon object
+#' @prop length The number of polygons in the ob_polygon object
 #' @param style Gets and sets the styles associated with polygons
-#' @slot aesthetics A list of information about the objects's aesthetic properties
-#' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggplot2::geom_polygon`.
+#' @prop aesthetics A list of information about the object's aesthetic properties
+#' @prop tibble Gets a tibble (data.frame) containing parameters and styles used by `ggplot2::geom_polygon`.
 #' @inherit ob_style params
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @export
@@ -1368,29 +1368,31 @@ ob_ngon_props <- list(
 #' @param angle Angle of rotation for ngon
 #' @param label A character, angle, or label object
 #' @param vertex_radius A numeric or unit vector of length one, specifying the corner radius
+#' @param x x-coordinate of center point. If specified, overrides x-coordinate of `@center`.
+#' @param y x-coordinate of center point. If specified, overrides y-coordinate of `@center`.
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @param style Gets and sets the styles associated with [`ob_ngon`]
-#' @slot aesthetics A list of information about the objects's aesthetic properties
-#' @slot area The area of the ngons in the [`ob_ngon`] object
-#' @slot bounding_box a rectangle that contains all the ngons
-#' @slot circumscribed Returns the circle that circumscribes the ngon.
-#' @slot inscribed Returns the circle that inscribes the ngon.
-#' @slot length The number of ngons in the [`ob_ngon`] object
-#' @slot normal_at A function that finds a point that is perpendicular from the ngon and at a specified distance
-#' @slot perimeter The length of the sum of all the side segments
-#' @slot point_at A function that finds a point on the ngon at the specified angle.
-#' @slot segments side segments of the regular polygon
-#' @slot tangent_at A function that finds the tangent line at the specified angle.
-#' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggforce::geom_shape`.
-#' @slot vertices points on the regular polygon
-#' @slot east right point ([`ob_point`])
-#' @slot north top point ([`ob_point`])
-#' @slot west left point ([`ob_point`])
-#' @slot south top point ([`ob_point`])
-#' @slot northeast upper right point ([`ob_point`])
-#' @slot northwest upper left point ([`ob_point`])
-#' @slot southwest lower left point ([`ob_point`])
-#' @slot southeast lower right point ([`ob_point`])
+#' @prop aesthetics A list of information about the object's aesthetic properties
+#' @prop area The area of the ngons in the [`ob_ngon`] object
+#' @prop bounding_box a rectangle that contains all the ngons
+#' @prop circumscribed Returns the circle that circumscribes the ngon.
+#' @prop inscribed Returns the circle that inscribes the ngon.
+#' @prop length The number of ngons in the [`ob_ngon`] object
+#' @prop normal_at A function that finds a point that is perpendicular from the ngon and at a specified distance
+#' @prop perimeter The length of the sum of all the side segments
+#' @prop point_at A function that finds a point on the ngon at the specified angle.
+#' @prop segments side segments of the regular polygon
+#' @prop tangent_at A function that finds the tangent line at the specified angle.
+#' @prop tibble Gets a tibble (data.frame) containing parameters and styles used by `ggforce::geom_shape`.
+#' @prop vertices points on the regular polygon
+#' @prop east right point ([`ob_point`])
+#' @prop north top point ([`ob_point`])
+#' @prop west left point ([`ob_point`])
+#' @prop south top point ([`ob_point`])
+#' @prop northeast upper right point ([`ob_point`])
+#' @prop northwest upper left point ([`ob_point`])
+#' @prop southwest lower left point ([`ob_point`])
+#' @prop southeast lower right point ([`ob_point`])
 #' @inherit ob_style params
 #' @examples
 #' ggdiagram() +
@@ -1867,29 +1869,34 @@ S7::method(connect, list(centerpoint, ob_ngon)) <- function(
 #' @param center [`ob_point`] at center of the rectangle
 #' @param n Number of sides. True Reuleaux polygons have an odd number of sides, but Reauleaux-like shapes with an even number of sides are possible.
 #' @param radius Distance from center to a vertex
+#' @param angle Angle of the object's rotation
 #' @inherit ob_style params
 #' @inherit ob_polygon params
 #' @inherit ob_ngon params
-#' @slot aesthetics A list of information about the objects's aesthetic properties
-#' @slot arc_radius The radius of the arcs used to contruct the reuleaux object
-#' @slot arcs Returns the arcs of each reuleaux object
-#' @slot bounding_box a rectangle that contains all the reuleaux objects
-#' @slot central_angle The angle from the center to adjacent vertices of the reuleaux object
-#' @slot chord_length The length of each chord of the arcs used to contruct the reuleaux object
-#' @slot circumscribed Returns the circle that circumscribes the object
-#' @slot inscribed Returns the circle that inscribes the object
-#' @slot inscribed_angle The angle of the arcs used to construct the reuleaux object
-#' @slot vertices Returns the vertices of the reuleaux object
-#' @slot angle_at A function that finds the angle of the specified point in relation to the circle's center
-#' @slot circumference circumference of the reuleaux object
-#' @slot geom A function that converts the object to a geom. Any additional parameters are passed to `ggforce::geom_circle`.
-#' @slot length The number of circles in the circle object
-#' @slot normal_at A function that finds a point that is perpendicular from the circle and at a specified distance
-#' @slot point_at A function that finds a point on the circle at the specified angle.
-#' @slot polygon a tibble containing information to create all the polygon points in a reuleaux object
-#' @slot tangent_at A function that finds the tangent line at the specified angle.
+#' @prop aesthetics A list of information about the object's aesthetic properties
+#' @prop angle_at A function that finds the angle of the specified point in relation to the circle's center
+#' @prop arc_at A function that finds the arc at a specified angle
+#' @prop arc_radius The radius of the arcs used to construct the reuleaux object
+#' @prop arcs Returns the arcs of each reuleaux object
+#' @prop bounding_box a rectangle that contains all the reuleaux objects
+#' @prop central_angle The angle from the center to adjacent vertices of the reuleaux object
+#' @prop chord_length The length of each chord of the arcs used to construct the reuleaux object
+#' @prop circumference circumference of the reuleaux object
+#' @prop circumscribed Returns the circle that circumscribes the object
+#' @prop geom A function that converts the object to a geom. Any additional parameters are passed to `ggforce::geom_shape`.
+#' @prop inscribed Returns the circle that inscribes the object
+#' @prop inscribed_angle The angle of the arcs used to construct the reuleaux object
+#' @prop length The number of circles in the circle object
+#' @prop normal_at A function that finds a point that is perpendicular from the circle and at a specified distance
+#' @prop point_at A function that finds a point on the circle at the specified angle.
+#' @prop polygon a tibble containing information to create all the polygon points in a reuleaux object
+#' @prop tangent_at A function that finds the tangent line at the specified angle.
+#' @prop vertices Returns the vertices of the reuleaux object
 #' @export
 #' @returns ob_reuleaux object
+#' @examples
+#' ggdiagram() +
+#'   ob_reuleaux(n = 3, fill = "royalblue", color = NA)
 ob_reuleaux <- S7::new_class(
   name = "ob_reuleaux",
   parent = centerpoint,

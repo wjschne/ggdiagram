@@ -50,13 +50,23 @@ A polygon is specified with an \code{\link{ob_point}} that contains at least 3 p
 \details{
 If you wish to specify multiple polygons, you must supply a list of \code{\link{ob_point}} objects. When plotted, the ob_polygon function uses the \code{\link[ggforce:geom_shape]{ggforce::geom_shape}} function to create the geom.
 }
-\section{Slots}{
+\section{Additional properties}{
 
 \describe{
-\item{\code{length}}{The number of polygons in the ob_polygon object}
+\item{\code{@aesthetics}}{A list of information about the object's aesthetic properties}
 
-\item{\code{aesthetics}}{A list of information about the objects's aesthetic properties}
+\item{\code{@bounding_box}}{a rectangle that contains all the polygons}
 
-\item{\code{tibble}}{Gets a tibble (data.frame) containing parameters and styles used by \code{\link[ggforce:geom_shape]{ggforce::geom_shape}}.}
+\item{\code{@geom}}{A function that returns the output of \code{\link[ggforce:geom_shape]{ggforce::geom_shape}}}
+
+\item{\code{@length}}{The number of polygons in the ob_polygon object}
+
+\item{\code{@point_at}}{A function that finds a point on the polygon at the specified angle.}
+
+\item{\code{@segment}}{The segments of each polygon}
+
+\item{\code{@tibble}}{Gets a tibble (data.frame) containing parameters and styles used by \code{\link[ggforce:geom_shape]{ggforce::geom_shape}}.}
+
+\item{\code{@center}}{Points at the centroids of each polygon}
 }}
 

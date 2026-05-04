@@ -95,26 +95,34 @@ The ob_bezier is specified with an ob_point object that contains at least 2 poin
 \details{
 If you wish to specify multiple bezier curves, you must supply a list of ob_point objects. When plotted, the ob_bezier function uses the bezier::bezier function to create the point coordinates of the curve and the ggarrow::geom_arrow function to create the geom.
 }
-\section{Slots}{
-
-\describe{
-\item{\code{length}}{The number of curves in the ob_bezier object}
-
-\item{\code{tibble}}{Gets a tibble (data.frame) containing parameters and styles used by \code{ggarrow::geom_arrow}.}
-
-\item{\code{geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggarrow::geom_arrow}.}
-
-\item{\code{midpoint}}{A function that selects 1 or more midpoints of the ob_bezier. The \code{position} argument can be between 0 and 1. Additional arguments are passed to \code{ob_point}.}
-
-\item{\code{aesthetics}}{A list of information about the objects's aesthetic properties}
-
-\item{\code{set_label_x}}{A function that sets labels to have the same x coordinate. The \code{position} argument can be between 0 and 1, indicating how far along on the first segment the x coordinate is selected. If the \code{x} argument is set, the \code{position} argument is overridden, and the x-coordinate is set directly.}
-
-\item{\code{set_label_y}}{A function that sets labels to have the same y coordinate. The \code{position} argument can be between 0 and 1, indicating how far along on the first segment the y coordinate is selected. If the \code{y} argument is set, the \code{position} argument is overridden, and the y-coordinate is set directly.}
-}}
-
 \examples{
 control_points <- ob_point(c(0,1,2,4), c(0,4,0,1))
 ggdiagram() +
   ob_bezier(control_points, color = "blue")
 }
+\section{Additional properties}{
+
+\describe{
+\item{\code{@aesthetics}}{A list of information about the object's aesthetic properties}
+
+\item{\code{@bounding_box}}{A rectangle that contains all the bezier curves}
+
+\item{\code{@geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggarrow::geom_arrow}.}
+
+\item{\code{@length}}{The number of curves in the ob_bezier object}
+
+\item{\code{@midpoint}}{A function that selects 1 or more midpoints of the ob_bezier. The \code{position} argument can be between 0 and 1. Additional arguments are passed to \code{ob_point}.}
+
+\item{\code{@path}}{A path object consisting of the control points}
+
+\item{\code{@point_at_x}}{A function that finds the point on each curve where x is equal to the \code{x} argument.}
+
+\item{\code{@point_at_y}}{A function that finds the point on each curve where y is equal to the \code{y} argument.}
+
+\item{\code{@set_label_x}}{A function that sets labels to have the same x coordinate. The \code{position} argument can be between 0 and 1, indicating how far along on the first curve the x coordinate is selected. If the \code{x} argument is set, the \code{position} argument is overridden, and the x-coordinate is set directly.}
+
+\item{\code{@set_label_y}}{A function that sets labels to have the same y coordinate. The \code{position} argument can be between 0 and 1, indicating how far along on the first curve the y coordinate is selected. If the \code{y} argument is set, the \code{position} argument is overridden, and the y-coordinate is set directly.}
+
+\item{\code{@tibble}}{Gets a tibble (data.frame) containing parameters and styles used by \code{ggarrow::geom_arrow}.}
+}}
+

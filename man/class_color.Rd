@@ -32,16 +32,6 @@ class_color object
 \description{
 Useful for manipulating colors in R.
 }
-\section{Slots}{
-
-\describe{
-\item{\code{transparentize}}{function to return the color with a new transparency (i.e., alpha)}
-
-\item{\code{lighten}}{function to return a lighter color}
-
-\item{\code{darken}}{function to return a darker color}
-}}
-
 \examples{
 mycolor <- class_color("blue")
 mycolor
@@ -54,3 +44,23 @@ mycolor@lighten(.5)
 # Darken color
 mycolor@darken(.5)
 }
+\section{Additional properties}{
+
+\describe{
+\item{\code{@transparentize}}{function to return the color with a new transparency (i.e., alpha)}
+
+\item{\code{@lighten}}{function to return a lighter color}
+
+\item{\code{@darken}}{function to return a darker color}
+
+\item{\code{@red}}{Gets or sets red component of rgb color}
+
+\item{\code{@green}}{Gets or sets green component of rgb color}
+
+\item{\code{@blue}}{Gets or sets blue component of rgb color}
+
+\item{\code{@mean}}{Averages the rbga components of the colors}
+
+\item{\code{@tex}}{Gets the TeX code for the color}
+}}
+

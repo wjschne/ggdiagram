@@ -25,7 +25,7 @@ ggdiagram(
 
 \item{rect_linewidth}{line width of rectangles}
 
-\item{theme_function}{A complete \link[ggplot2:ggtheme]{ggplot2 theme} function (e.g., \link[ggplot2:ggtheme]{ggplot2::theme_minimal}). Defaults to \link[ggplot2:ggtheme]{ggplot2::theme_void}}
+\item{theme_function}{A complete \link[ggplot2:theme_minimal]{ggplot2 theme} function (e.g., \link[ggplot2:theme_minimal]{ggplot2::theme_minimal}). Defaults to \link[ggplot2:theme_void]{ggplot2::theme_void}}
 
 \item{...}{<\code{\link[rlang:dyn-dots]{dynamic-dots}}> Arguments sent to \link[ggplot2:theme]{ggplot2::theme}}
 }

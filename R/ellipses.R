@@ -328,14 +328,23 @@ el_props <- list(
 #' @param angle ellipse rotation. *Settable.*
 #' @param label A character, angle, or label object
 #' @param n number of points in ellipse (default = 360). *Settable.*
-#' @slot length Gets the number of ellipses
-#' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggforce::geom_ellipse`.
-#' @slot geom A function that converts the object to a geom. Any additional parameters are passed to `ggforce::geom_ellipse`.
-#' @slot normal_at A function that finds a point perpendicular to the ellipse at angle `theta` at the specified `distance`. The `definitional` parameter is passed to the `point_at` function. If a point is supplied instead of an angle, the point is projected onto the ellipse and then the normal is calculated found from the projected point.
-#' @slot point_at A function that finds a point on the ellipse at an angle `theta`. If `definitional` is `FALSE` (default), then `theta` is interpreted as an angle. If `TRUE`, then `theta` is the parameter in the definition of the ellipse in polar coordinates.
-#' @slot tangent_at A function that finds a tangent line on the ellipse. Uses `point_at` to find the tangent point at angle `theta` and then returns the tangent line at that point. If a point is supplied instead of an angle, the point is projected onto the ellipse and then the tangent line is found from there.
 #' @param x x-coordinate of center point. If specified, overrides x-coordinate of `@center`.
 #' @param y x-coordinate of center point. If specified, overrides y-coordinate of `@center`.
+#' @prop aesthetics A list of information about the object's aesthetic properties
+#' @prop angle_at A function that finds the angle of the specified point in relation to the ellipse's center
+#' @prop area area of the ellipse
+#' @prop bounding_box a rectangle that contains all the ellipses
+#' @prop focus_1 left focus point of the ellipse
+#' @prop focus_2 right focus point of the ellipse
+#' @prop geom A function that converts the object to a geom. Any additional parameters are passed to `ggforce::geom_ellipse`.
+#' @prop length Gets the number of ellipses
+#' @prop normal_at A function that finds a point perpendicular to the ellipse at angle `theta` at the specified `distance`. The `definitional` parameter is passed to the `point_at` function. If a point is supplied instead of an angle, the point is projected onto the ellipse and then the normal is calculated found from the projected point.
+#' @prop perimeter returns the ellipse's perimeter
+#' @prop point_at A function that finds a point on the ellipse at an angle `theta`. If `definitional` is `FALSE` (default), then `theta` is interpreted as an angle. If `TRUE`, then `theta` is the parameter in the definition of the ellipse in polar coordinates.
+#' @prop polar_line_at A function that creates an `ob_line` that passes through the ellipse's center and the point specified in `x`.
+#' @prop polygon a tibble containing information to create all the polygon points in ellipse.
+#' @prop tangent_at A function that finds a tangent line on the ellipse. Uses `point_at` to find the tangent point at angle `theta` and then returns the tangent line at that point. If a point is supplied instead of an angle, the point is projected onto the ellipse and then the tangent line is found from there.
+#' @prop tibble Gets a tibble (data.frame) containing parameters and styles used by `ggforce::geom_ellipse`.
 #' @inherit ob_style params
 #' @param style gets and sets style parameters
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style object
@@ -608,8 +617,21 @@ S7::method(connect, list(centerpoint, centerpoint)) <- function(
   )
 
   if (S7::S7_inherits(s, ob_arc)) {
-    i_from <- map_ob(s, \(sss) intersection(sss, from))
-    i_to <- map_ob(s, \(sss) intersection(sss, to))
+
+    if (s@length == from@length) {
+      i_from <- purrr::map2(unbind(s), unbind(from), intersection) |> bind()
+    } else {
+      i_from <- map_ob(s, \(sss) intersection(sss, from))
+    }
+
+    if (s@length == to@length) {
+      i_to <- purrr::map2(unbind(s), unbind(to), intersection) |> bind()
+    } else {
+      i_to <- map_ob(s, \(sss) intersection(sss, to))
+    }
+
+
+
 
     ss <- s@circle@angle_at(i_from)
     ee <- s@circle@angle_at(i_to)

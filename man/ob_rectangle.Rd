@@ -54,7 +54,7 @@ ob_rectangle(
 
 \item{southeast}{lower right point (\code{\link{ob_point}})}
 
-\item{angle}{angle of text}
+\item{angle}{Rectangle rotation. \emph{Settable.}}
 
 \item{vertex_radius}{A numeric or unit vector of length one, specifying the corner radius for rounded corners}
 
@@ -86,33 +86,35 @@ ob_rectangle(
 \description{
 ob_rectangle class
 }
-\section{Slots}{
-
-\describe{
-\item{\code{xy}}{returns a matrix of xy coordinates of \code{center} points}
-
-\item{\code{aesthetics}}{A list of information about the objects's aesthetic properties}
-
-\item{\code{area}}{returns rectangle area}
-
-\item{\code{bounding_box}}{returns the \code{ob_rectangle} that contains all the rectangles in the object}
-
-\item{\code{perimeter}}{returns the rectangle perimeter}
-
-\item{\code{side}}{returns the east, north, west, and south \code{ob_segment} of the rectangles}
-
-\item{\code{length}}{returns the number of rectangles in the object}
-
-\item{\code{geom}}{a function that returns a \code{ggforce::geom_shape} object}
-
-\item{\code{normal_at}}{A function that finds a point perpendicular to the rectangle at angle \code{theta} at the specified distance.}
-
-\item{\code{point_at}}{A function that finds a point on the rectangle at an angle \code{theta}}
-
-\item{\code{tangent_at}}{A function that finds a tangent line on the retangle. Uses point_at to find the tangent point at angle theta and then returns the tangent line at that point. If a point is supplied instead of an angle, the point is projected onto the ellipse and then the tangent line is found from there.}
-}}
-
 \examples{
 ggdiagram() +
   ob_rectangle(center = ob_point(0,0), width = 3, height = 2)
 }
+\section{Additional properties}{
+
+\describe{
+\item{\code{@xy}}{returns a matrix of xy coordinates of \code{center} points}
+
+\item{\code{@aesthetics}}{A list of information about the object's aesthetic properties}
+
+\item{\code{@area}}{returns rectangle area}
+
+\item{\code{@bounding_box}}{returns the \code{ob_rectangle} that contains all the rectangles in the object}
+
+\item{\code{@perimeter}}{returns the rectangle perimeter}
+
+\item{\code{@side}}{returns the east, north, west, and south \code{ob_segment} of the rectangles}
+
+\item{\code{@length}}{returns the number of rectangles in the object}
+
+\item{\code{@geom}}{a function that returns a \code{ggforce::geom_shape} object}
+
+\item{\code{@normal_at}}{A function that finds a point perpendicular to the rectangle at angle \code{theta} at the specified distance.}
+
+\item{\code{@point_at}}{A function that finds a point on the rectangle at an angle \code{theta}}
+
+\item{\code{@tangent_at}}{A function that finds a tangent line on the rectangle. Uses point_at to find the tangent point at angle theta and then returns the tangent line at that point. If a point is supplied instead of an angle, the point is projected onto the ellipse and then the tangent line is found from there.}
+
+\item{\code{@tibble}}{Gets a tibble (data.frame) containing parameters and styles used by \code{ggforce::geom_shape}}
+}}
+

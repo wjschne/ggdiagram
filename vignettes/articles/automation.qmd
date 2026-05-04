@@ -25,6 +25,7 @@ library(ggplot2)
 library(dplyr)
 library(ggtext)
 library(ggarrow)
+library(lavaan)
 
 my_font <- "Roboto Condensed"
 
@@ -69,7 +70,7 @@ c(p1,p2)
 ```
 # Binding lists of objects into a single object
 
-The `bind` function will take a list of the ggdiagram objects and a create single object. If all objects in the list are of a single type (e.g., `ob_point`), `bind` will return an object of that type. If the objects are of multiple types, `bind` will bind each type of object separately and return a `ob_shape_list`.
+The `bind` function will take a list of the ggdiagram objects and a create single object. If all objects in the list are of a single type (e.g., `ob_point`), `bind` will return an object of that type. If the objects are of multiple types, `bind` will bind each type of object separately and return an `ob_shape_list`.
 
 ```{r}
 #| label: bindp
@@ -127,7 +128,7 @@ The `unbind` function will perform the opposite operation as `bind`. It converts
 unbind(p)
 ```
 
-The `unbind` function is needed when we want to loop through each element using `lapply` or `purrr::map`. Here we have two points and we want to put six points the both. We want to connect each element of one column to each element of the other column. Note that the output of `lapply` or `purrr::map` is a list. To make the list something that ggplot2 can plot, we can bind the list into a single object.
+The `unbind` function is needed when we want to loop through each element using `lapply` or `purrr::map`. In @fig-unbind, we have three points arranged in an equilateral triangle. We `unbind` the points so that we can use `map` to place three points around each point. Each point is then plotted as triangles. To make the list something that ggplot2 can plot, we can `bind` the list into a single object.
 
 ```{r}
 #| label: fig-unbind
@@ -156,7 +157,7 @@ ggdiagram() +
   scale_x_continuous(NULL, expand = expansion(.15))
 ```
 
-Alternatively, we can convert each list item into a geom with `as.geom`.
+Alternatively, we can convert each list item into a geom with `as.geom` as in @fig-unbindgeom.
 
 ```{r}
 #| label: fig-unbindgeom
@@ -236,7 +237,7 @@ ggdiagram() +
 
 ```
 
-In a more practical example, every variable in the left column is connected to every variable on the right.
+In a more practical example, every variable in the left column of @fig-bindt1t2 is connected to every variable on the right.
 
 ```{r}
 #| label: fig-bindt1t2
@@ -268,7 +269,7 @@ p[1]
 ```
 
 
-The strategic use of subsetting can make otherwise repetitive tasks much less tedious. In @fig-c12 we connect a ring of 12 circles with one command rather than 12.
+The strategic use of subsetting can make otherwise repetitive tasks much less tedious. In @fig-c12, we connect a ring of 12 circles with one command rather than 12.
 
 ```{r}
 #| label: fig-c12
@@ -503,7 +504,7 @@ walk(d$id, \(v) {
     s[v] <<- place(s[v], 
                    s[children]@bounding_box@north, 
                    "above", 
-                   sep = 3)
+                   sep = 4)
   }
   
 })
@@ -522,7 +523,7 @@ e <- d %>%
     connect(from = s[id], 
             to = s[children], 
             # to_offset = ob_point(0,4),
-            label = ob_label(ll, angle = 0, position = .48), 
+            label = ob_label(ll, angle = 0, position = .47), 
             label_sloped = F,
             resect = 1, 
             color = class_color(data$fill)@lighten(.8)

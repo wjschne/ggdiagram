@@ -112,7 +112,7 @@ S7::method(intersection, list(ob_segment, ob_line)) <- function(x, y, ...) {
   intersection(y, x, ...)
 }
 
-S7::method(intersection, list(ob_line, ob_circle)) <- function(x, y, ...) {
+intersect1line1circle <- function(x, y, ...) {
   # https://cp-algorithms.com/geometry/circle-line-intersection.html
   c0 <- ob_circle(center = ob_point(0, 0), radius = y@radius)
   A <- x@a
@@ -139,6 +139,14 @@ S7::method(intersection, list(ob_line, ob_circle)) <- function(x, y, ...) {
   }
   p
 }
+
+S7::method(intersection, list(ob_line, ob_circle)) <- function(x, y, ...) {
+  purrr::map2(unbind(x), unbind(y), \(xx, yy) {
+    intersect1line1circle(xx, yy, ...)
+  }) |>
+    bind()
+}
+
 
 S7::method(intersection, list(ob_circle, ob_line)) <- function(x, y, ...) {
   intersection(y, x, ...)
@@ -616,7 +624,7 @@ S7::method(intersection, list(ob_point, ob_circle)) <- function(x, y, ...) {
   intersection(y, x)
 }
 
-S7::method(intersection, list(ob_arc, ob_point)) <- function(x, y, ...) {
+insection1arc1point <- function(x,y, ...) {
   xy <- intersection(x@circle, y)
 
   if (length(xy) > 0) {
@@ -635,6 +643,25 @@ S7::method(intersection, list(ob_arc, ob_point)) <- function(x, y, ...) {
   } else {
     list()
   }
+}
+
+S7::method(intersection, list(ob_arc, ob_point)) <- function(x, y, ...) {
+
+  if (x@length == y@length || x@length == 1 || y@length == 1) {
+    purrr::map2(unbind(x), unbind(y), \(xx, yy) {
+      insection1arc1point(xx, yy, ...)
+    }) |>
+      bind()
+  } else {
+    # Handle cases where lengths are not equal
+    # For example, compute intersections for each pair of arc and point
+    map_ob(x, \(xx) {
+      map_ob(y, \(yy) {
+        insection1arc1point(xx, yy, ...)
+      })
+    })
+  }
+
 }
 
 S7::method(intersection, list(ob_point, ob_arc)) <- function(x, y, ...) {
@@ -725,4 +752,13 @@ S7::method(intersection, list(ob_line, ob_path)) <- function(
   ...
 ) {
   intersection(y, x, ...)
+}
+
+
+S7::method(intersection, list(ob_line, ob_arc)) <- function(x, y, ...) {
+  intersection(intersection(x, y@circle), y, ...)
+}
+
+S7::method(intersection, list(ob_arc, ob_line)) <- function(x, y, ...) {
+  intersection(x, intersection(x@circle, y), ...)
 }

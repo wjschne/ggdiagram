@@ -74,11 +74,11 @@ ob_latex object
 \description{
 make a latex equation
 }
-\section{Slots}{
+\section{Additional properties}{
 
 \describe{
-\item{\code{rectangle}}{gets or sets rectangle that contains the image}
+\item{\code{@rectangle}}{gets or sets rectangle that contains the image}
 
-\item{\code{image}}{raster bitmap}
+\item{\code{@image}}{raster bitmap}
 }}
 

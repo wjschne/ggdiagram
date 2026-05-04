@@ -148,17 +148,17 @@ pt_props <- list(
 #' @param r Radius = Distance from the origin to the ob_point
 #' @param theta Angle of the vector from the origin to the [`ob_point`]
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to `style`
-#' @slot auto_label Gets x and y coordinates and makes a label `"(x,y)"`
-#' @slot geom A function that converts the object to a geom. Any additional parameters are passed to `ggplot2::geom_point`.
-#' @slot length The number of points in the ob_point object
+#' @prop auto_label Gets x and y coordinates and makes a label `"(x,y)"`
+#' @prop geom A function that converts the object to a geom. Any additional parameters are passed to `ggplot2::geom_point`.
+#' @prop length The number of points in the ob_point object
 #' @param style Gets and sets the styles associated with points
-#' @slot tibble Gets a [`tibble::tibble`] containing parameters and styles used by [`ggplot2::geom_point`].
-#' @slot xy Gets a 2-column matrix of the x and y coordinates of the ob_point object.
-#' @slot centroid ob_point at the average of the x and y values
-#' @slot bounding_box ob_rectangle that contains all the points in the object
-#' @slot place function to place point in relation to other objects
-#' @slot label function to create ob_label for points in the object
-#' @slot aesthetics returns class_aesthetics for ob_point
+#' @prop tibble Gets a [`tibble::tibble`] containing parameters and styles used by [`ggplot2::geom_point`].
+#' @prop xy Gets a 2-column matrix of the x and y coordinates of the ob_point object.
+#' @prop centroid ob_point at the average of the x and y values
+#' @prop bounding_box ob_rectangle that contains all the points in the object
+#' @prop place function to place point in relation to other objects
+#' @prop label function to create ob_label for points in the object
+#' @prop aesthetics returns class_aesthetics for ob_point
 #' @inherit ob_style params
 #' @export
 #' @returns ob_point object
@@ -435,6 +435,7 @@ purrr::walk(list(`+`, `-`, `*`, `/`, `^`), \(.f) {
     e2
   } # nocov end
 
+
   S7::method(.f, list(ob_point, S7::class_numeric)) <- function(e1, e2) {
     # nocov start
     e1@x <- .f(e1@x, e2)
@@ -628,6 +629,7 @@ S7::method(connect, list(ob_point, ob_point)) <- function(
       arc_bend > 0 & theta_end < theta_start
     ] +
       turn(1)
+
     s <- ob_arc(
       center = center,
       radius = cc@radius,

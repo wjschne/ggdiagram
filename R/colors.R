@@ -2,14 +2,19 @@
 #'
 #' Useful for manipulating colors in R.
 #' @param color character (R color or hex code)
-#' @slot transparentize function to return the color with a new transparency (i.e., alpha)
-#' @slot lighten function to return a lighter color
-#' @slot darken function to return a darker color
+#' @prop transparentize function to return the color with a new transparency (i.e., alpha)
+#' @prop lighten function to return a lighter color
+#' @prop darken function to return a darker color
 #' @param hue get or set the hue of a color (i.e., the h in the hsv model)
 #' @param saturation get or set the saturation of a color (i.e., the s in the hsv model)
 #' @param brightness get or set the brightness of a color (i.e., the v in the hsv model)
 #' @param alpha get or set the transparency of a color
 #' @param id character identifier
+#' @prop red Gets or sets red component of rgb color
+#' @prop green Gets or sets green component of rgb color
+#' @prop blue Gets or sets blue component of rgb color
+#' @prop mean Averages the rbga components of the colors
+#' @prop tex Gets the TeX code for the color
 #' @export
 #' @returns class_color object
 #' @examples

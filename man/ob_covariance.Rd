@@ -16,6 +16,20 @@ ob_covariance(
   resect = 2,
   ...
 )
+
+## S7 method for classes <ggdiagram::centerpoint>, <ggdiagram::centerpoint>
+ob_covariance(
+  x,
+  y,
+  where = NULL,
+  bend = 0,
+  looseness = 1,
+  arrow_head = the$arrow_head,
+  length_head = 7,
+  length_fins = 7,
+  resect = 2,
+  ...
+)
 }
 \arguments{
 \item{x}{object}

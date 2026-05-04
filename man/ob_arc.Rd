@@ -192,40 +192,6 @@ ob_arc object
 \description{
 Create arcs and wedges
 }
-\section{Slots}{
-
-\describe{
-\item{\code{aesthetics}}{A list of information about the arc's aesthetic properties}
-
-\item{\code{angle_at}}{A function that finds the angle of the specified point in relation to the arc's center}
-
-\item{\code{apothem}}{Distance from center to the chord's midpoint}
-
-\item{\code{arc_length}}{Distance along arc from \code{start_point} to \code{end_point}}
-
-\item{\code{auto_label}}{Places a label at the arc's midpoint}
-
-\item{\code{chord}}{\code{\link{ob_segment}} from \code{start_point} to \code{end_point}}
-
-\item{\code{geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{\link[ggarrow:geom_arrow]{ggarrow::geom_arrow}}.}
-
-\item{\code{hatch}}{A function that puts hatch (tally) marks on arcs. Often used to indicate which arcs have the same angle. The \code{k} parameter controls how many hatch marks to display. The \code{height} parameter controls how long the hatch mark segment is. The \code{sep} parameter controls the separation between hatch marks when \code{k > 2}. Additional parameters sent to \code{\link{ob_segment}}.}
-
-\item{\code{length}}{The number of arcs in the arc object}
-
-\item{\code{midpoint}}{A function that selects 1 or more midpoints of the ob_arc. The \code{position} argument can be between 0 and 1. Additional arguments are passed to \code{\link{ob_point}}.}
-
-\item{\code{point_at}}{A function that finds a point on the arc at the specified angle.}
-
-\item{\code{sagitta}}{\code{\link{ob_segment}} from \code{chord} midpoint to \code{\link{ob_arc}} midpoint}
-
-\item{\code{tangent_at}}{A function that finds the tangent line at the specified angle.}
-
-\item{\code{theta}}{interior angle (end - start)}
-
-\item{\code{tibble}}{Gets a \link[tibble:tibble]{tibble::tibble} or data.frame containing parameters and styles used by \code{\link[ggarrow:geom_arrow]{ggarrow::geom_arrow}}.}
-}}
-
 \examples{
 # 90-degree arc
 ggdiagram() +
@@ -234,4 +200,58 @@ ggdiagram() +
     start = degree(0),
     end = degree(90)
  )
+ggdiagram() +
+  ob_wedge(end = degree(60))
+theta <- degree(seq(0,360, 60))
+ggdiagram() +
+  ob_circular_segment(
+    start = theta[1:6],
+    end = theta[2:7],
+    fill = hsv(h = seq(0,1, length.out = 7)[-7],
+               v = .8,
+               s = .5))
 }
+\section{Additional properties}{
+
+\describe{
+\item{\code{@aesthetics}}{A list of information about the arc's aesthetic properties}
+
+\item{\code{@angle_at}}{A function that finds the angle of the specified point in relation to the arc's center}
+
+\item{\code{@apothem}}{Distance from center to the chord's midpoint}
+
+\item{\code{@arc_length}}{Distance along arc from \code{start_point} to \code{end_point}}
+
+\item{\code{@auto_label}}{Places an label at the arc's midpoint}
+
+\item{\code{@bounding_box}}{A rectangle that contains all the arcs}
+
+\item{\code{@chord}}{\code{\link{ob_segment}} from \code{start_point} to \code{end_point}}
+
+\item{\code{@circle}}{Circle object associated with the arc object}
+
+\item{\code{@geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{\link[ggarrow:geom_arrow]{ggarrow::geom_arrow}}.}
+
+\item{\code{@hatch}}{A function that puts hatch (tally) marks on arcs. Often used to indicate which arcs have the same angle. The \code{k} parameter controls how many hatch marks to display. The \code{height} parameter controls how long the hatch mark segment is. The \code{sep} parameter controls the separation between hatch marks when \code{k > 2}. Additional parameters sent to \code{\link{ob_segment}}.}
+
+\item{\code{@length}}{The number of arcs in the arc object}
+
+\item{\code{@midpoint}}{A function that selects 1 or more midpoints of the ob_arc. The \code{position} argument can be between 0 and 1. Additional arguments are passed to \code{\link{ob_point}}.}
+
+\item{\code{@point_at}}{A function that finds a point on the arc at the specified angle.}
+
+\item{\code{@polygon}}{A tibble containing information to create all the polygon points in an arc}
+
+\item{\code{@sagitta}}{\code{\link{ob_segment}} from \code{chord} midpoint to \code{\link{ob_arc}} midpoint}
+
+\item{\code{@set_label_x}}{A function that sets labels to have the same x coordinate. The \code{position} argument can be between 0 and 1, indicating how far along on the first arc the x coordinate is selected. If the \code{x} argument is set, the \code{position} argument is overridden, and the x-coordinate is set directly.}
+
+\item{\code{@set_label_y}}{A function that sets labels to have the same y coordinate. The \code{position} argument can be between 0 and 1, indicating how far along on the first arc the y coordinate is selected. If the \code{y} argument is set, the \code{position} argument is overridden, and the y-coordinate is set directly.}
+
+\item{\code{@tangent_at}}{A function that finds the tangent line at the specified angle.}
+
+\item{\code{@theta}}{Interior angle (end - start)}
+
+\item{\code{@tibble}}{Gets a \link[tibble:tibble]{tibble::tibble} or data.frame containing parameters and styles used by \code{\link[ggarrow:geom_arrow]{ggarrow::geom_arrow}}.}
+}}
+

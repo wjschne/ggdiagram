@@ -169,17 +169,18 @@ abline_aesthetics <-
 #' @param slope coefficient in y = slope * x + intercept
 #' @param intercept value of y when x is 0
 #' @param xintercept value of x when y is 0
+#' @inheritParams ob_style
 #' @param style an [ob_style] object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
-#' @inheritParams ob_style
-#' @slot point_at_x A function that finds the point on each line where x is equal to the `x` argument.
-#' @slot point_at_y A function that finds the point on each line where y is equal to the `y` argument.
-#' @slot angle The angle of the line
-#' @slot equation Returns a character string with the equation for the line
-#' @slot length The number of lines in the line object.
-#' @slot tibble Returns a tibble (data frame) with object parameters, one row for each line in the line object.
-#' @slot projection A function that returns the projected point from the point object specified in `p`.
-#' @slot info Returns a list of supported aesthetics.
+#' @prop aesthetics A list of information about the circle's aesthetic properties
+#' @prop angle The angle of the line
+#' @prop equation Returns a character string with the equation for the line
+#' @prop geom A function that converts the object to a geom. Any additional parameters are passed to `ggplot2::geom_line`.
+#' @prop length The number of lines in the line object
+#' @prop point_at_x A function that finds the point on each line where x is equal to the `x` argument
+#' @prop point_at_y A function that finds the point on each line where y is equal to the `y` argument
+#' @prop projection A function that returns the projected point from the point object specified in `p`
+#' @prop tibble Returns a tibble (data frame) with object parameters, one row for each line in the line object
 #' @export
 #' @returns ob_line object
 ob_line <- S7::new_class(

@@ -228,27 +228,38 @@ cr_props <- list(
 # Circle----
 
 #' ob_circle class
-#' @param center point at center of the circle
-#' @param radius distance between center and edge circle
+#' @param center Point at center of the circle
+#' @param radius Distance between center and edge circle
 #' @param label A character, angle, or label object
 #' @param x x-coordinate of center point. If specified, overrides x-coordinate of `@center`.
 #' @param y x-coordinate of center point. If specified, overrides y-coordinate of `@center`.
-#' @param n number of points in circle (default = 360)
-#' @param style an ob_style object
+#' @param n Number of points in circle (default = 360)
+#' @param style An ob_style object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style object
 #' @inherit ob_style params
-#' @slot aesthetics A list of information about the circle's aesthetic properties
-#' @slot angle_at A function that finds the angle of the specified point in relation to the circle's center
-#' @slot area area of the circle
-#' @slot bounding_box a rectangle that contains all the circles
-#' @slot circumference circumference of the circle
-#' @slot geom A function that converts the object to a geom. Any additional parameters are passed to `ggforce::geom_circle`.
-#' @slot length The number of circles in the circle object
-#' @slot normal_at A function that finds a point that is perpendicular from the circle and at a specified distance
-#' @slot point_at A function that finds a point on the circle at the specified angle.
-#' @slot polygon a tibble containing information to create all the polygon points in a circle.
-#' @slot tangent_at A function that finds the tangent line at the specified angle.
-#' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggforce::geom_cirlce`.
+#' @prop aesthetics A list of information about the circle's aesthetic properties
+#' @prop angle_at A function that finds the angle of the specified point in relation to the circle's center
+#' @prop arc A function that creates an arc object with the same center as the circle object. Must specify the `start` angle and the `end` angle. In addition, any of the parameters of `ob_arc` can be applied.
+#' @prop area area of the circle
+#' @prop bounding_box A rectangle that contains all the circles
+#' @prop circumference Circumference of the circle
+#' @prop diameter The diameter of the circle
+#' @prop geom A function that converts the object to a geom. Any additional parameters are passed to `ggforce::geom_circle`.
+#' @prop length The number of circles in the circle object
+#' @prop normal_at A function that finds a point that is perpendicular from the circle and at a specified distance
+#' @prop point_at A function that finds a point on the circle at the specified angle
+#' @prop polar_line_at A function that creates an `ob_line` that passes through the circle's center and the point specified in `x`
+#' @prop polygon A tibble containing information to create all the polygon points in a circle
+#' @prop tangent_at A function that finds the tangent line at the specified angle
+#' @prop tibble Gets a tibble (data.frame) containing parameters and styles used by `ggforce::geom_circle`
+#' @prop east [`ob_point`] at rightmost point of circle
+#' @prop north [`ob_point`] at highest point of circle
+#' @prop west [`ob_point`] at leftmost point of circle
+#' @prop south [`ob_point`] at lowest point of circle
+#' @prop northeast [`ob_point`] at top-right point of circle
+#' @prop northwest [`ob_point`] at top-left point of circle
+#' @prop southwest [`ob_point`] at bottom-left point of circle
+#' @prop southeast [`ob_point`] at bottom-right point of circle
 #' @export
 #' @returns ob_circle object
 #' @examples

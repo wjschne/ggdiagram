@@ -215,10 +215,15 @@ lb_props <- list(
 #' @param plot_point plot center [ob_point] (default = FALSE)
 #' @param spacing letter spacing for labels used with ob_path and ob_bezier
 #' @param position position (0 to 1). Used to position a label on an [ob_segment], [ob_arc], [ob_path], or [ob_bezier]
-#' @param x x-coordinate of center point. If specified, overrides x-coordinate of `@center`.
-#' @param y x-coordinate of center point. If specified, overrides y-coordinate of `@center`.
+#' @param x x-coordinate of center point. If specified, overrides x-coordinate of `@center`
+#' @param y x-coordinate of center point. If specified, overrides y-coordinate of `@center`
 #' @inherit ob_style params
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
+#' @prop aesthetics A list of information about the label's aesthetic properties
+#' @prop auto_label Places a label of the xy coordinates (e.g., `(0, 1)`)
+#' @prop geom A function that converts the object to a geom. Any additional parameters are passed to `ggtext::geom_richtext`.
+#' @prop tibble Gets a tibble (data.frame) containing parameters and styles used by `ggtext::geom_richtext`
+#' @prop xy Gets a 2-column matrix of the x and y coordinates of the label's `center`
 #' @export
 #' @returns ob_label object
 ob_label <- S7::new_class(

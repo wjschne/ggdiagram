@@ -13,6 +13,6 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{S7}{\code{\link[S7]{prop}}, \code{\link[S7]{props}}, \code{\link[S7:props]{set_props}}}
+  \item{S7}{\code{\link[S7:prop]{prop()}}, \code{\link[S7:props]{props()}}, \code{\link[S7:set_props]{set_props()}}}
 }}
 

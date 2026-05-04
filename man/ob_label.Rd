@@ -58,9 +58,9 @@ ob_label(
 
 \item{label.color}{Color of label outline.}
 
-\item{label.margin}{Amount of distance around label. A \link[grid:unit]{grid::unit} vector of length four. Usually created with \code{\link[ggplot2:element]{ggplot2::margin}}.}
+\item{label.margin}{Amount of distance around label. A \link[grid:unit]{grid::unit} vector of length four. Usually created with \code{\link[ggplot2:margin]{ggplot2::margin}}.}
 
-\item{label.padding}{Amount of padding around label. A \link[grid:unit]{grid::unit} vector of length four. Usually created with \code{\link[ggplot2:element]{ggplot2::margin}}.}
+\item{label.padding}{Amount of padding around label. A \link[grid:unit]{grid::unit} vector of length four. Usually created with \code{\link[ggplot2:margin]{ggplot2::margin}}.}
 
 \item{label.r}{Radius of rounded corners. Defaults to 0.15 lines.}
 
@@ -90,9 +90,9 @@ ob_label(
 
 \item{spacing}{letter spacing for labels used with ob_path and ob_bezier}
 
-\item{x}{x-coordinate of center point. If specified, overrides x-coordinate of \verb{@center}.}
+\item{x}{x-coordinate of center point. If specified, overrides x-coordinate of \verb{@center}}
 
-\item{y}{x-coordinate of center point. If specified, overrides y-coordinate of \verb{@center}.}
+\item{y}{x-coordinate of center point. If specified, overrides y-coordinate of \verb{@center}}
 
 \item{id}{character string to identify object}
 
@@ -104,3 +104,17 @@ ob_label object
 \description{
 ob_label class
 }
+\section{Additional properties}{
+
+\describe{
+\item{\code{@aesthetics}}{A list of information about the label's aesthetic properties}
+
+\item{\code{@auto_label}}{Places a label of the xy coordinates (e.g., \verb{(0, 1)})}
+
+\item{\code{@geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggtext::geom_richtext}.}
+
+\item{\code{@tibble}}{Gets a tibble (data.frame) containing parameters and styles used by \code{ggtext::geom_richtext}}
+
+\item{\code{@xy}}{Gets a 2-column matrix of the x and y coordinates of the label's \code{center}}
+}}
+

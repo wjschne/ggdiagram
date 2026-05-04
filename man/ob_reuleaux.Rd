@@ -28,7 +28,7 @@ ob_reuleaux(
 
 \item{radius}{Distance from center to a vertex}
 
-\item{angle}{angle of text}
+\item{angle}{Angle of the object's rotation}
 
 \item{label}{A character, angle, or \code{\link{ob_label}} object}
 
@@ -56,9 +56,49 @@ ob_reuleaux object
 \description{
 Reuleaux polygon
 }
-\section{Slots}{
+\examples{
+ggdiagram() +
+  ob_reuleaux(n = 3, fill = "royalblue", color = NA)
+}
+\section{Additional properties}{
 
 \describe{
-\item{\code{aesthetics}}{A list of information about the objects's aesthetic properties}
+\item{\code{@aesthetics}}{A list of information about the object's aesthetic properties}
+
+\item{\code{@angle_at}}{A function that finds the angle of the specified point in relation to the circle's center}
+
+\item{\code{@arc_at}}{A function that finds the arc at a specified angle}
+
+\item{\code{@arc_radius}}{The radius of the arcs used to construct the reuleaux object}
+
+\item{\code{@arcs}}{Returns the arcs of each reuleaux object}
+
+\item{\code{@bounding_box}}{a rectangle that contains all the reuleaux objects}
+
+\item{\code{@central_angle}}{The angle from the center to adjacent vertices of the reuleaux object}
+
+\item{\code{@chord_length}}{The length of each chord of the arcs used to construct the reuleaux object}
+
+\item{\code{@circumference}}{circumference of the reuleaux object}
+
+\item{\code{@circumscribed}}{Returns the circle that circumscribes the object}
+
+\item{\code{@geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggforce::geom_shape}.}
+
+\item{\code{@inscribed}}{Returns the circle that inscribes the object}
+
+\item{\code{@inscribed_angle}}{The angle of the arcs used to construct the reuleaux object}
+
+\item{\code{@length}}{The number of circles in the circle object}
+
+\item{\code{@normal_at}}{A function that finds a point that is perpendicular from the circle and at a specified distance}
+
+\item{\code{@point_at}}{A function that finds a point on the circle at the specified angle.}
+
+\item{\code{@polygon}}{a tibble containing information to create all the polygon points in a reuleaux object}
+
+\item{\code{@tangent_at}}{A function that finds the tangent line at the specified angle.}
+
+\item{\code{@vertices}}{Returns the vertices of the reuleaux object}
 }}
 

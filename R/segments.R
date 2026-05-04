@@ -148,12 +148,17 @@ sg_props <- list(
     set_label_x = S7::new_property(
       S7::class_function,
       getter = function(self) {
-        \(position = .5, x = NULL) {
+        \(position = NULL, x = NULL) {
           if (!S7::S7_inherits(self@label, ob_label)) {
             stop("The ob_segment does not have a label.")
           }
           if (is.null(x)) {
-            x <- self[1]@midpoint(position)@x
+            if (is.null(position)) {
+              x <- self[1]@label@center@x
+            } else {
+              x <- self[1]@midpoint(position)@x
+            }
+
           }
           self@label@center <- self@line@point_at_x(x)
           self
@@ -163,12 +168,17 @@ sg_props <- list(
     set_label_y = S7::new_property(
       S7::class_function,
       getter = function(self) {
-        \(position = 0.5, y = NULL) {
+        \(position = NULL, y = NULL) {
           if (!S7::S7_inherits(self@label, ob_label)) {
             stop("The ob_segment does not have a label.")
           }
           if (is.null(y)) {
-            y <- self[1]@midpoint(position)@y
+            if (is.null(position)) {
+              y <- self[1]@label@center@y
+            } else {
+              y <- self[1]@midpoint(position)@y
+            }
+
           }
           self@label@center <- self@line@point_at_y(y)
           self
@@ -233,14 +243,20 @@ sg_props <- list(
 #' @param y overrides the x-coordinate of p2
 #' @param yend overrides the y-coordinate of p2
 #' @param style a style list
-#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
-#' @slot geom A function that converts the object to a geom. Any additional parameters are passed to `ggarrow::geom_arrow_segment`.
-#' @slot hatch A function that puts hatch (tally) marks on segments. Often used to indicate which segments have the same length. The `k` parameter controls how many hatch marks to display. The `height` parameter controls how long the hatch mark segment is. The `sep` parameter controls the separation between hatch marks when `k > 2`. Additional parameters sent to `ob_segment`.
-#' @slot midpoint A function that selects 1 or more midpoints of the ob_segment. The `position` argument can be between 0 and 1. Additional arguments are passed to `ob_point`.
-#' @slot nudge A function to move the segment by x and y units.
-#' @slot set_label_x A function that sets labels to have the same x coordinate. The `position` argument can be between 0 and 1, indicating how far along on the first segment the x coordinate is selected. If the `x` argument is set, the `position` argument is overridden, and the x-coordinate is set directly.
-#' @slot set_label_y A function that sets labels to have the same y coordinate. The `position` argument can be between 0 and 1, indicating how far along on the first segment the y coordinate is selected. If the `y` argument is set, the `position` argument is overridden, and the y-coordinate is set directly.
 #' @inherit ob_style params
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
+#' @prop aesthetics A list of information about the segment's aesthetic properties
+#' @prop bounding_box a rectangle that contains all the segments
+#' @prop distance Distance between segment endpoints
+#' @prop geom A function that converts the object to a geom. Any additional parameters are passed to `ggarrow::geom_arrow_segment`.
+#' @prop hatch A function that puts hatch (tally) marks on segments. Often used to indicate which segments have the same length. The `k` parameter controls how many hatch marks to display. The `height` parameter controls how long the hatch mark segment is. The `sep` parameter controls the separation between hatch marks when `k > 2`. Additional parameters sent to `ob_segment`.
+#' @prop length The number of segments in the segment object
+#' @prop line The line object associated with the segment
+#' @prop midpoint A function that selects 1 or more midpoints of the ob_segment. The `position` argument can be between 0 and 1. Additional arguments are passed to `ob_point`.
+#' @prop nudge A function to move the segment by x and y units.
+#' @prop set_label_x A function that sets labels to have the same x coordinate. The `position` argument can be between 0 and 1, indicating how far along on the first segment the x coordinate is selected. If the `x` argument is set, the `position` argument is overridden, and the x-coordinate is set directly.
+#' @prop set_label_y A function that sets labels to have the same y coordinate. The `position` argument can be between 0 and 1, indicating how far along on the first segment the y coordinate is selected. If the `y` argument is set, the `position` argument is overridden, and the y-coordinate is set directly.
+#' @prop tibble Gets a tibble (data.frame) containing parameters and styles used by `ggarrow::geom_arrow_segment`
 #' @export
 #' @returns ob_segment object
 ob_segment <- S7::new_class(

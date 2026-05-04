@@ -38,14 +38,6 @@ Creates an angle in the metric of radians, degrees, and turns.
 \details{
 Angles turns can be any real number, but degrees are displayed as values between -360 and +360, and radians are between -2pi and +2pi.
 }
-\section{Slots}{
-
-\describe{
-\item{\code{positive}}{if angle is negative, adds a full turn to ensure the angle is positive}
-
-\item{\code{negative}}{if angle is positive, subtracts a full turn to ensure the angle is negative}
-}}
-
 \examples{
 # Three Different ways to make a right angle
 ## 90 degrees
@@ -75,3 +67,13 @@ sin(degree(30))
 cos(degree(30))
 tan(degree(30))
 }
+\section{Additional properties}{
+
+\describe{
+\item{\code{@positive}}{if angle is negative, adds a full turn to ensure the angle is positive}
+
+\item{\code{@negative}}{if angle is positive, subtracts a full turn to ensure the angle is negative}
+
+\item{\code{@upright}}{Converts angle to an "upright" position so that text is never upside down (i.e., 91--270 degrees is flipped to )}
+}}
+

@@ -65,13 +65,13 @@ ob_polygon object
 \description{
 Triangle polygons used in path diagrams.
 }
-\section{Slots}{
+\section{Additional properties}{
 
 \describe{
-\item{\code{length}}{The number of polygons in the ob_polygon object}
+\item{\code{@length}}{The number of polygons in the ob_polygon object}
 
-\item{\code{aesthetics}}{A list of information about the objects's aesthetic properties}
+\item{\code{@aesthetics}}{A list of information about the object's aesthetic properties}
 
-\item{\code{tibble}}{Gets a tibble (data.frame) containing parameters and styles used by \code{ggplot2::geom_polygon}.}
+\item{\code{@tibble}}{Gets a tibble (data.frame) containing parameters and styles used by \code{ggplot2::geom_polygon}.}
 }}
 

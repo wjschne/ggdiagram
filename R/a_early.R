@@ -333,6 +333,7 @@ ob_variance <- S7::new_generic(
     bend = 0,
     looseness = 1,
     arrow_head = the$arrow_head,
+    arrow_fins = the$arrow_head,
     resect = 2,
     ...
   ) {
@@ -384,7 +385,8 @@ ob_covariance <- S7::new_generic(
 ## ob_array ----
 #' Object Arrays
 #'
-#' @description Make an array of shapes along a line
+#' @description
+#' Make an array of shapes along a line
 #'
 #' # Methods
 #' `ob_array` is an S7 generic with methods available for the following classes:
@@ -420,9 +422,8 @@ ob_array <- S7::new_generic(
 bind <- S7::new_generic(name = "bind", dispatch_args = "x")
 
 S7::method(bind, S7::class_list) <- function(x, ...) {
-  all_angles <- all(sapply(lapply(x, class), function(xx) {
-    "ob_angle" %in% xx
-  }))
+
+  all_angles <- all(purrr::map_lgl(x, S7::S7_inherits, class = ob_angle))
   if (all_angles) {
     if (length(x) == 0) {
       return(degree())
@@ -520,6 +521,9 @@ S7::method(bind, ob_shape_list) <- function(x, ...) {
     csl[[1]]
   }
 }
+
+
+
 
 ## unbind ----
 

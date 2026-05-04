@@ -107,25 +107,24 @@ path_props <- list(
     }),
     vertex_angle = S7::new_property(getter = function(self) {
       a <- purrr::map(self@p, \(pp) {
-        if (pp@length > 3) {
+        if (pp@length > 2) {
+
           aa <- purrr::map(seq(2, pp@length - 1), \(i) {
+
             a1 <- (pp[i - 1] - pp[i])@theta
             a2 <- (pp[i + 1] - pp[i])@theta
             a21 <- a1 - a2
-            if (a21 < 0) {
-              a21 <- a21 + degree(360)
-            }
-            a21
-          }) |>
-            bind()
+            a21@positive
+
+          }) %>% bind()
+
+
 
           if (pp[1] == pp[pp@length]) {
-            al1 <- (pp[pp@length - 1] - pp[1])@theta -
+            a11 <- (pp[pp@length - 1] - pp[1])@theta -
               (pp[2] - pp[1])@theta
-            if (al1 < 0) {
-              al1 <- al1 + degree(360)
-            }
-            aa <- bind(list(aa, al1))
+            a11@positive
+            aa <- bind(list(aa, a11))
           }
           aa
         }
@@ -211,11 +210,22 @@ path_props <- list(
 #' @param p [`ob_point`] or list of [`ob_point`]s
 #' @param label A character, angle, or [`ob_label`] object
 #' @param style Gets and sets the styles associated with paths
-#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
-#' @slot length The number of paths in the [`ob_path`] object
-#' @slot tibble Gets a [`tibble::tibble`] containing parameters and styles used by [`ggarrow::geom_arrow`].
 #' @inherit ob_style params
 #' @inherit ob_bezier params
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
+#' @prop aesthetics A list of information about the path's aesthetic properties
+#' @prop bounding_box A rectangle that contains all the paths
+#' @prop geom A function that converts the object to a geom. Any additional parameters are passed to `ggarrow::geom_arrow`.
+#' @prop length The number of paths in the [`ob_path`] object
+#' @prop midpoint A function that selects 1 or more midpoints of the ob_segment. The `position` argument can be between 0 and 1. Additional arguments are passed to `ob_point`.
+#' @prop tibble Gets a [`tibble::tibble`] containing parameters and styles used by [`ggarrow::geom_arrow`].
+#' @prop segments Gets the segments from the path
+#' @prop vertex_angle Gets angles at each vertex
+#' @examples
+#' ggdiagram() +
+#'  ob_path(list(ob_point(c(0, 0, 4), c(0, 1, 4)),
+#'               ob_point(c(1, 2, 5, 6), c(0, 1, 2, 0))), color = c("red", "blue"),
+#'               label = c("red", "blue"))
 ob_path <- S7::new_class(
   name = "ob_path",
   parent = has_style,

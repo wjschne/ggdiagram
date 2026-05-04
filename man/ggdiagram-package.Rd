@@ -21,5 +21,10 @@ Useful links:
 \author{
 \strong{Maintainer}: W. Joel Schneider \email{w.joel.schneider@gmail.com} (\href{https://orcid.org/0000-0002-8393-5316}{ORCID})
 
+Authors:
+\itemize{
+  \item W. Joel Schneider \email{w.joel.schneider@gmail.com} (\href{https://orcid.org/0000-0002-8393-5316}{ORCID})
+}
+
 }
 \keyword{internal}

@@ -92,11 +92,29 @@ An \code{\link{ob_path}} is specified with an \code{\link{ob_point}} object that
 \details{
 If you wish to specify multiple paths, you must supply a list of \code{\link{ob_point}} objects. When plotted, the \code{\link{ob_path}} function uses the ggarrow::geom_arrow function to create the geom.
 }
-\section{Slots}{
+\examples{
+ggdiagram() +
+ ob_path(list(ob_point(c(0, 0, 4), c(0, 1, 4)),
+              ob_point(c(1, 2, 5, 6), c(0, 1, 2, 0))), color = c("red", "blue"),
+              label = c("red", "blue"))
+}
+\section{Additional properties}{
 
 \describe{
-\item{\code{length}}{The number of paths in the \code{\link{ob_path}} object}
+\item{\code{@aesthetics}}{A list of information about the path's aesthetic properties}
 
-\item{\code{tibble}}{Gets a \code{\link[tibble:tibble]{tibble::tibble}} containing parameters and styles used by \code{\link[ggarrow:geom_arrow]{ggarrow::geom_arrow}}.}
+\item{\code{@bounding_box}}{A rectangle that contains all the paths}
+
+\item{\code{@geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggarrow::geom_arrow}.}
+
+\item{\code{@length}}{The number of paths in the \code{\link{ob_path}} object}
+
+\item{\code{@midpoint}}{A function that selects 1 or more midpoints of the ob_segment. The \code{position} argument can be between 0 and 1. Additional arguments are passed to \code{ob_point}.}
+
+\item{\code{@tibble}}{Gets a \code{\link[tibble:tibble]{tibble::tibble}} containing parameters and styles used by \code{\link[ggarrow:geom_arrow]{ggarrow::geom_arrow}}.}
+
+\item{\code{@segments}}{Gets the segments from the path}
+
+\item{\code{@vertex_angle}}{Gets angles at each vertex}
 }}
 

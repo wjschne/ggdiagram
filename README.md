@@ -82,7 +82,8 @@ ggdiagram() +
 <div id="fig-example">
 
 <img src="man/figures/README-fig-example-1.png" style="width:100.0%"
-data-fig-alt="Diagram of a circle on the left  and a square on the right  with an arrow connecting the two shapes." />
+data-fig-alt="Diagram of a circle on the left  and a square on the right  with an arrow connecting the two shapes."
+alt="Diagram of a circle on the left  and a square on the right  with an arrow connecting the two shapes." />
 
 Figure 1: Connecting a circle and a square with an arrow.
 

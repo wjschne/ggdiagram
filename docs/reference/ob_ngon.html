@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggdiagram</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -96,7 +96,7 @@
 
 
 <dt id="arg-angle">angle<a class="anchor" aria-label="anchor" href="#arg-angle"></a></dt>
-<dd><p>description</p></dd>
+<dd><p>Angle of rotation for ngon</p></dd>
 
 
 <dt id="arg-label">label<a class="anchor" aria-label="anchor" href="#arg-label"></a></dt>
@@ -104,11 +104,11 @@
 
 
 <dt id="arg-side-length">side_length<a class="anchor" aria-label="anchor" href="#arg-side-length"></a></dt>
-<dd><p>Distance of each side</p></dd>
+<dd><p>Distance of each side (can be used instead of radius to set size of ngon)</p></dd>
 
 
 <dt id="arg-apothem">apothem<a class="anchor" aria-label="anchor" href="#arg-apothem"></a></dt>
-<dd><p>Distance from center to a side's midpoint</p></dd>
+<dd><p>Distance from center to a side's midpoint (can be used instead of the radius to set size of ngon)</p></dd>
 
 
 <dt id="arg-vertex-radius">vertex_radius<a class="anchor" aria-label="anchor" href="#arg-vertex-radius"></a></dt>
@@ -140,11 +140,11 @@
 
 
 <dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>overrides x-coordinate in <code>center@x</code></p></dd>
+<dd><p>x-coordinate of center point. If specified, overrides x-coordinate of <code>@center</code>.</p></dd>
 
 
 <dt id="arg-y">y<a class="anchor" aria-label="anchor" href="#arg-y"></a></dt>
-<dd><p>overrides y-coordinate in <code>center@y</code></p></dd>
+<dd><p>x-coordinate of center point. If specified, overrides y-coordinate of <code>@center</code>.</p></dd>
 
 
 <dt id="arg-id">id<a class="anchor" aria-label="anchor" href="#arg-id"></a></dt>
@@ -160,47 +160,132 @@
     <p><code>ob_ngon</code> object</p>
     </div>
     <div class="section level2">
-    <h2 id="slots">Slots<a class="anchor" aria-label="anchor" href="#slots"></a></h2>
+    <h2 id="additional-properties">Additional properties<a class="anchor" aria-label="anchor" href="#additional-properties"></a></h2>
 
 
-<dl><dt><code>area</code></dt>
+<dl><dt><code>@aesthetics</code></dt>
+<dd><p>A list of information about the object's aesthetic properties</p></dd>
+
+
+<dt><code>@area</code></dt>
 <dd><p>The area of the ngons in the <code>ob_ngon</code> object</p></dd>
 
 
-<dt><code>length</code></dt>
+<dt><code>@bounding_box</code></dt>
+<dd><p>a rectangle that contains all the ngons</p></dd>
+
+
+<dt><code>@circumscribed</code></dt>
+<dd><p>Returns the circle that circumscribes the ngon.</p></dd>
+
+
+<dt><code>@inscribed</code></dt>
+<dd><p>Returns the circle that inscribes the ngon.</p></dd>
+
+
+<dt><code>@length</code></dt>
 <dd><p>The number of ngons in the <code>ob_ngon</code> object</p></dd>
 
 
-<dt><code>normal_at</code></dt>
+<dt><code>@normal_at</code></dt>
 <dd><p>A function that finds a point that is perpendicular from the ngon and at a specified distance</p></dd>
 
 
-<dt><code>perimeter</code></dt>
-<dd><p>The length of all the side segments</p></dd>
+<dt><code>@perimeter</code></dt>
+<dd><p>The length of the sum of all the side segments</p></dd>
 
 
-<dt><code>point_at</code></dt>
+<dt><code>@point_at</code></dt>
 <dd><p>A function that finds a point on the ngon at the specified angle.</p></dd>
 
 
-<dt><code>segments</code></dt>
+<dt><code>@segments</code></dt>
 <dd><p>side segments of the regular polygon</p></dd>
 
 
-<dt><code>tangent_at</code></dt>
+<dt><code>@tangent_at</code></dt>
 <dd><p>A function that finds the tangent line at the specified angle.</p></dd>
 
 
-<dt><code>tibble</code></dt>
+<dt><code>@tibble</code></dt>
 <dd><p>Gets a tibble (data.frame) containing parameters and styles used by <code><a href="https://ggforce.data-imaginist.com/reference/geom_shape.html" class="external-link">ggforce::geom_shape</a></code>.</p></dd>
 
 
-<dt><code>vertices</code></dt>
+<dt><code>@vertices</code></dt>
 <dd><p>points on the regular polygon</p></dd>
+
+
+<dt><code>@east</code></dt>
+<dd><p>right point (<code><a href="ob_point.html">ob_point</a></code>)</p></dd>
+
+
+<dt><code>@north</code></dt>
+<dd><p>top point (<code><a href="ob_point.html">ob_point</a></code>)</p></dd>
+
+
+<dt><code>@west</code></dt>
+<dd><p>left point (<code><a href="ob_point.html">ob_point</a></code>)</p></dd>
+
+
+<dt><code>@south</code></dt>
+<dd><p>top point (<code><a href="ob_point.html">ob_point</a></code>)</p></dd>
+
+
+<dt><code>@northeast</code></dt>
+<dd><p>upper right point (<code><a href="ob_point.html">ob_point</a></code>)</p></dd>
+
+
+<dt><code>@northwest</code></dt>
+<dd><p>upper left point (<code><a href="ob_point.html">ob_point</a></code>)</p></dd>
+
+
+<dt><code>@southwest</code></dt>
+<dd><p>lower left point (<code><a href="ob_point.html">ob_point</a></code>)</p></dd>
+
+
+<dt><code>@southeast</code></dt>
+<dd><p>lower right point (<code><a href="ob_point.html">ob_point</a></code>)</p></dd>
 
 
 </dl></div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="ggdiagram.html">ggdiagram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">ob_ngon</span><span class="op">(</span>center <span class="op">=</span> <span class="fu"><a href="ob_point.html">ob_point</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">8</span>, y <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>          n <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">8</span>,</span></span>
+<span class="r-in"><span>          radius <span class="op">=</span> <span class="fl">.4</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="ob_ngon-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Size can be set with side_length instead of radius</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="ggdiagram.html">ggdiagram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">ob_ngon</span><span class="op">(</span>center <span class="op">=</span> <span class="fu"><a href="ob_point.html">ob_point</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">8</span>, y <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>          n <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">8</span>,</span></span>
+<span class="r-in"><span>          side_length <span class="op">=</span> <span class="fl">.4</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="ob_ngon-2.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Size can be set with apothem (distance from center to side's midpoint)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="ggdiagram.html">ggdiagram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">ob_ngon</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">4</span>,</span></span>
+<span class="r-in"><span>          radius <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>          fill <span class="op">=</span> <span class="cn">NA</span>,</span></span>
+<span class="r-in"><span>          color <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu">ob_ngon</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">4</span>,</span></span>
+<span class="r-in"><span>          apothem <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>          fill <span class="op">=</span> <span class="cn">NA</span>,</span></span>
+<span class="r-in"><span>          color <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="ob_circle.html">ob_circle</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="ob_ngon-3.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Getting the circles that inscribe and circumscribe the ngon</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="ggdiagram.html">ggdiagram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="op">{</span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">ob_ngon</span><span class="op">(</span>fill <span class="op">=</span> <span class="cn">NA</span>, color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="va">x</span><span class="op">@</span><span class="va">inscribed</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rconsortium.github.io/S7/reference/props.html" class="external-link">set_props</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>  <span class="va">x</span><span class="op">@</span><span class="va">circumscribed</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rconsortium.github.io/S7/reference/props.html" class="external-link">set_props</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="ob_ngon-4.png" alt="" width="700" height="433"></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 
@@ -210,7 +295,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

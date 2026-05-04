@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggdiagram</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -344,7 +344,7 @@ Figure 2: 30° + 60° = 90°
 <span><span class="co">#&gt; [1] ".30"</span></span></code></pre></div>
 </div>
 <p>When degrees are outside the range of ±360, they recalculate:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msup><mn>80</mn><mo>∘</mo></msup><mo>+</mo><msup><mn>300</mn><mo>∘</mo></msup></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msup><mn>380</mn><mo>∘</mo></msup></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msup><mn>380</mn><mo>∘</mo></msup><mo>−</mo><msup><mn>360</mn><mo>∘</mo></msup></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msup><mn>20</mn><mo>∘</mo></msup></mtd></mtr></mtable><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msup><mn>80</mn><mo>∘</mo></msup><mo>+</mo><msup><mn>300</mn><mo>∘</mo></msup></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msup><mn>380</mn><mo>∘</mo></msup></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msup><mn>380</mn><mo>∘</mo></msup><mo>−</mo><msup><mn>360</mn><mo>∘</mo></msup></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msup><mn>20</mn><mo>∘</mo></msup></mtd></mtr></mtable><annotation encoding="application/x-tex">
 \begin{aligned}
 80^{\circ} + 300^\circ &amp;= 380^\circ\\
 &amp;= 380^\circ-360^\circ\\
@@ -369,7 +369,7 @@ Figure 3: 80° + 300° = 380° = 20°
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">80</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">300</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "20°"</span></span></code></pre></div>
 </div>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msup><mn>20</mn><mo>∘</mo></msup><mo>−</mo><msup><mn>40</mn><mo>∘</mo></msup></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>−</mi><msup><mn>20</mn><mo>∘</mo></msup></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msup><mn>340</mn><mo>∘</mo></msup></mtd></mtr></mtable><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><msup><mn>20</mn><mo>∘</mo></msup><mo>−</mo><msup><mn>40</mn><mo>∘</mo></msup></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>−</mi><msup><mn>20</mn><mo>∘</mo></msup></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msup><mn>340</mn><mo>∘</mo></msup></mtd></mtr></mtable><annotation encoding="application/x-tex">
 \begin{aligned}
 20^\circ - 40^\circ &amp;= -20^\circ\\&amp;=340^\circ
 \end{aligned}
@@ -399,7 +399,7 @@ Figure 4: 40° − 60° = −20°
 <code class="sourceCode R"><span><span class="fl">2</span> <span class="op">*</span> <span class="fu"><a href="../reference/ob_angle.html">degree</a></span><span class="op">(</span><span class="fl">20</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "40°"</span></span></code></pre></div>
 </div>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mn>2</mn><mo>⋅</mo><mn>180</mn></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msup><mn>360</mn><mo>∘</mo></msup></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msup><mn>0</mn><mo>∘</mo></msup></mtd></mtr></mtable><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mn>2</mn><mo>⋅</mo><mn>180</mn></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msup><mn>360</mn><mo>∘</mo></msup></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><msup><mn>0</mn><mo>∘</mo></msup></mtd></mtr></mtable><annotation encoding="application/x-tex">
 \begin{aligned}
 2\cdot180 &amp;= 360^\circ\\&amp;=0^\circ
 \end{aligned}
@@ -675,7 +675,7 @@ Figure 5: Trigonometric functions
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

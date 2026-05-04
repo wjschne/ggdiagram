@@ -23,8 +23,9 @@ num2turn <- function(x, object_name) {
 #' @param radian radians
 #' @param degree degrees
 #' @param turn proportion of full turns of a circle (1 turn = 2 * pi radians)
-#' @slot positive if angle is negative, adds a full turn to ensure the angle is positive
-#' @slot negative if angle is positive, subtracts a full turn to ensure the angle is negative
+#' @prop positive if angle is negative, adds a full turn to ensure the angle is positive
+#' @prop negative if angle is positive, subtracts a full turn to ensure the angle is negative
+#' @prop upright Converts angle to an "upright" position so that text is never upside down (i.e., 91--270 degrees is flipped to )
 #' @export
 #' @returns ob_angle
 #' @examples
@@ -99,6 +100,13 @@ ob_angle <- new_class(
       trn <- rep(0, length(c(self)))
       trn[self@turn > 0] <- floor(c(self))[self@turn > 0] + 1
       turn(-abs(trn)) + self
+    }),
+    upright = new_property(getter = \(self) {
+      p <- c(self@positive)
+      p[p > .25 & p <= .75] <- p[p > .25 & p <= .75] + .5
+      S7::convert(ob_angle(p)@positive, S7::S7_class(self))
+
+
     })
   ),
   constructor = function(

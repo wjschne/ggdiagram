@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggdiagram</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -129,15 +129,39 @@
     <p>If you wish to specify multiple polygons, you must supply a list of <code><a href="ob_point.html">ob_point</a></code> objects. When plotted, the ob_polygon function uses the <code><a href="https://ggforce.data-imaginist.com/reference/geom_shape.html" class="external-link">ggforce::geom_shape</a></code> function to create the geom.</p>
     </div>
     <div class="section level2">
-    <h2 id="slots">Slots<a class="anchor" aria-label="anchor" href="#slots"></a></h2>
+    <h2 id="additional-properties">Additional properties<a class="anchor" aria-label="anchor" href="#additional-properties"></a></h2>
 
 
-<dl><dt><code>length</code></dt>
+<dl><dt><code>@aesthetics</code></dt>
+<dd><p>A list of information about the object's aesthetic properties</p></dd>
+
+
+<dt><code>@bounding_box</code></dt>
+<dd><p>a rectangle that contains all the polygons</p></dd>
+
+
+<dt><code>@geom</code></dt>
+<dd><p>A function that returns the output of <code><a href="https://ggforce.data-imaginist.com/reference/geom_shape.html" class="external-link">ggforce::geom_shape</a></code></p></dd>
+
+
+<dt><code>@length</code></dt>
 <dd><p>The number of polygons in the ob_polygon object</p></dd>
 
 
-<dt><code>tibble</code></dt>
+<dt><code>@point_at</code></dt>
+<dd><p>A function that finds a point on the polygon at the specified angle.</p></dd>
+
+
+<dt><code>@segment</code></dt>
+<dd><p>The segments of each polygon</p></dd>
+
+
+<dt><code>@tibble</code></dt>
 <dd><p>Gets a tibble (data.frame) containing parameters and styles used by <code><a href="https://ggforce.data-imaginist.com/reference/geom_shape.html" class="external-link">ggforce::geom_shape</a></code>.</p></dd>
+
+
+<dt><code>@center</code></dt>
+<dd><p>Points at the centroids of each polygon</p></dd>
 
 
 </dl></div>
@@ -151,7 +175,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

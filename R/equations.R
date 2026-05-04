@@ -6,14 +6,14 @@
 #' @param width width (specify width or height but not both)
 #' @param height height (specify width or height but not both)
 #' @param hjust horizontal adjustment. 0 means left justified, 1 means right justified, 0.5 means centered
-#' @slot rectangle gets or sets rectangle that contains the image
+#' @prop rectangle gets or sets rectangle that contains the image
 #' @param aspect_ratio alters the aspect ratio of the image
 #' @param color set color of equation text
 #' @param fill set color of background rectangle
 #' @param density image quality (dots per inch)
 #' @param latex_packages load latex packages
 #' @param preamble additional latex commands to load in preamble
-#' @slot image raster bitmap
+#' @prop image raster bitmap
 #' @param border border space (in points) around image
 #' @param family font family (installed on system) of plain text
 #' @param math_mode include dollar signs automatically. Set to `FALSE` when the latex command is not in math mode

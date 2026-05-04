@@ -1,0 +1,280 @@
+# ggdiagram
+
+The ggdiagram package takes an object-oriented approach to making
+diagrams and plots the results using
+[ggplot2](https://ggplot2.tidyverse.org/).
+
+My motivation in making ggdiagram was to find a way to approach the
+functionality of [TikZ](https://tikz.dev/) but with the flexibility and
+convenience of R. The ggdiagram package is built atop
+[S7](https://rconsortium.github.io/S7/) and is integrated with
+[ggplot2](https://ggplot2.tidyverse.org/), making heavy use of
+[ggtext](https://wilkelab.org/ggtext/),
+[ggforce](https://ggforce.data-imaginist.com/), and
+[ggarrow](https://teunbrand.github.io/ggarrow/).
+
+The ggdiagram package is not a replacement for the standard ggplot2
+functions. The underlying *grammar* of ggplot2 is well designed for
+visualizing data. The ggdiagram functions are best suited for creating a
+small number of visual objects that interrelate. If anything, they can
+be thought of as extensions of
+[`ggplot2::annotate`](https://ggplot2.tidyverse.org/reference/annotate.html).
+
+## Installation
+
+To install the published version from CRAN:
+
+``` r
+
+install.packages("ggdiagram")
+```
+
+You can install the development version of ggdiagram from R-universe
+like so:
+
+``` r
+
+install.packages("ggdiagram", repos = "https://wjschne.r-universe.dev")
+```
+
+## Example
+
+In [Figure 1](#fig-example), we create a circle object with `ob_circle`
+and a rectangle object with `ob_rectangle`, placing the rectangle such
+that there is .5 units of separation between the two objects.
+
+The `ggdiagram` function is a a wrapper for `ggplot`, that sets some
+defaults (e.g., `theme_void`, `coord_equal`, fonts, line size, etc.).
+
+The `ob_*` functions have methods such that they can be added to any
+ggplot. Under the hood, they are first converted to an appropriate geom
+and then added to the ggplot object. In this case, an `ob_circle` is
+converted to a `ggforce:geom_circle`, and an `ob_rectangle` is converted
+to a
+[`ggforce::geom_shape`](https://ggforce.data-imaginist.com/reference/geom_shape.html).
+
+The `connect` function connects the circle and rectangle at their edges
+with an arrow (drawn with
+[`ggarrow::geom_arrow_segment`](https://teunbrand.github.io/ggarrow/reference/geom_arrow_segment.html)).
+
+``` r
+
+library(ggdiagram)
+c1 <- ob_circle(radius = 1 / sqrt(pi)) 
+r2 <- ob_rectangle() |>
+  place(from = c1,
+        where = "right", 
+        sep = .5)
+
+ggdiagram() +
+  c1 +
+  r2 +
+  connect(c1, r2, resect = 1) 
+```
+
+![Diagram of a circle on the left and a square on the right with an
+arrow connecting the two
+shapes.](reference/figures/README-fig-example-1.png)
+
+Figure 1: Connecting a circle and a square with an arrow.
+
+# Package index
+
+## Shapes
+
+Functions for creating shape objects
+
+- [`ob_arc()`](https://wjschne.github.io/ggdiagram/reference/ob_arc.md)
+  [`ob_wedge()`](https://wjschne.github.io/ggdiagram/reference/ob_arc.md)
+  [`ob_circular_segment()`](https://wjschne.github.io/ggdiagram/reference/ob_arc.md)
+  : ob_arc class
+- [`ob_bezier()`](https://wjschne.github.io/ggdiagram/reference/ob_bezier.md)
+  : The ob_bezier (i.e., bezier curve) class
+- [`ob_circle()`](https://wjschne.github.io/ggdiagram/reference/ob_circle.md)
+  : ob_circle class
+- [`ob_covariance()`](https://wjschne.github.io/ggdiagram/reference/ob_covariance.md)
+  : Covariance object
+- [`ob_ellipse()`](https://wjschne.github.io/ggdiagram/reference/ob_ellipse.md)
+  : ob_ellipse class
+- [`ob_intercept()`](https://wjschne.github.io/ggdiagram/reference/ob_intercept.md)
+  : ob_intercept
+- [`ob_label()`](https://wjschne.github.io/ggdiagram/reference/ob_label.md)
+  : ob_label class
+- [`ob_latex()`](https://wjschne.github.io/ggdiagram/reference/ob_latex.md)
+  : ob_latex class
+- [`ob_line()`](https://wjschne.github.io/ggdiagram/reference/ob_line.md)
+  : ob_line class
+- [`ob_ngon()`](https://wjschne.github.io/ggdiagram/reference/ob_ngon.md)
+  : The ob_ngon (regular polygon) class
+- [`ob_path()`](https://wjschne.github.io/ggdiagram/reference/ob_path.md)
+  : The ob_path class
+- [`ob_point()`](https://wjschne.github.io/ggdiagram/reference/ob_point.md)
+  [`ob_polar()`](https://wjschne.github.io/ggdiagram/reference/ob_point.md)
+  : ob_point
+- [`ob_polygon()`](https://wjschne.github.io/ggdiagram/reference/ob_polygon.md)
+  : The ob_polygon class
+- [`ob_rectangle()`](https://wjschne.github.io/ggdiagram/reference/ob_rectangle.md)
+  : ob_rectangle class
+- [`ob_reuleaux()`](https://wjschne.github.io/ggdiagram/reference/ob_reuleaux.md)
+  : Reuleaux polygon
+- [`ob_segment()`](https://wjschne.github.io/ggdiagram/reference/ob_segment.md)
+  : ob_segment class
+- [`ob_variance()`](https://wjschne.github.io/ggdiagram/reference/ob_variance.md)
+  : Variance object
+
+## Alter shapes
+
+Functions that alter shapes
+
+- [`nudge()`](https://wjschne.github.io/ggdiagram/reference/nudge.md) :
+  Move an object
+- [`place()`](https://wjschne.github.io/ggdiagram/reference/place.md) :
+  Place an object a specified distance from another object
+- [`resect()`](https://wjschne.github.io/ggdiagram/reference/resect.md)
+  : resect
+- [`rotate()`](https://wjschne.github.io/ggdiagram/reference/rotate.md)
+  : Rotate an object in 2 dimensions
+
+## Get information about shapes
+
+Functions that compute information about shapes
+
+- [`circle_from_3_points()`](https://wjschne.github.io/ggdiagram/reference/circle_from_3_points.md)
+  : Get a circle from 3 points
+- [`connect()`](https://wjschne.github.io/ggdiagram/reference/connect.md)
+  : Arrow connect one shape to another
+- [`distance()`](https://wjschne.github.io/ggdiagram/reference/distance.md)
+  : Calculate distance between 2 points
+- [`get_tibble()`](https://wjschne.github.io/ggdiagram/reference/get_tibble.md)
+  [`get_tibble_defaults()`](https://wjschne.github.io/ggdiagram/reference/get_tibble.md)
+  : Get object data with styles in a tibble
+- [`intersection()`](https://wjschne.github.io/ggdiagram/reference/intersection.md)
+  : intersection of 2 objects (e.g., lines)
+- [`intersection_angle()`](https://wjschne.github.io/ggdiagram/reference/intersection_angle.md)
+  : Compute the angle of the intersection of two objects
+- [`inside()`](https://wjschne.github.io/ggdiagram/reference/inside.md)
+  : is an ob_point inside a shape ?
+- [`midpoint()`](https://wjschne.github.io/ggdiagram/reference/midpoint.md)
+  : Get one or more points at positions from 0 to 1
+- [`` `%|-%` ``](https://wjschne.github.io/ggdiagram/reference/perpendicular_point.md)
+  [`` `%-|%` ``](https://wjschne.github.io/ggdiagram/reference/perpendicular_point.md)
+  : Find point perpendicular to 2 points
+- [`projection()`](https://wjschne.github.io/ggdiagram/reference/projection.md)
+  : Find projection of a point on an object (e.g., line or segment)
+
+## Automation
+
+Functions for working with many shapes
+
+- [`bind()`](https://wjschne.github.io/ggdiagram/reference/bind.md) :
+  bind method
+- [`data2shape()`](https://wjschne.github.io/ggdiagram/reference/data2shape.md)
+  : Make shapes from data
+- [`map_ob()`](https://wjschne.github.io/ggdiagram/reference/map_ob.md)
+  : map_ob
+- [`ob_array()`](https://wjschne.github.io/ggdiagram/reference/ob_array.md)
+  : Object Arrays
+- [`ob_shape_list()`](https://wjschne.github.io/ggdiagram/reference/ob_shape_list.md)
+  : ob_shape_list
+- [`ob_style()`](https://wjschne.github.io/ggdiagram/reference/ob_style.md)
+  : ob_style class
+- [`redefault()`](https://wjschne.github.io/ggdiagram/reference/redefault.md)
+  : Make a variant of a function with alternate defaults
+- [`unbind()`](https://wjschne.github.io/ggdiagram/reference/unbind.md)
+  : unbind
+
+## Angles
+
+Functions about angles
+
+- [`ob_angle()`](https://wjschne.github.io/ggdiagram/reference/ob_angle.md)
+  [`degree()`](https://wjschne.github.io/ggdiagram/reference/ob_angle.md)
+  [`radian()`](https://wjschne.github.io/ggdiagram/reference/ob_angle.md)
+  [`turn()`](https://wjschne.github.io/ggdiagram/reference/ob_angle.md)
+  : ob_angle
+- [`intersection_angle()`](https://wjschne.github.io/ggdiagram/reference/intersection_angle.md)
+  : Compute the angle of the intersection of two objects
+
+## Color
+
+Functions about colors
+
+- [`class_color()`](https://wjschne.github.io/ggdiagram/reference/class_color.md)
+  : color class
+- [`latex_color()`](https://wjschne.github.io/ggdiagram/reference/latex_color.md)
+  : Surround TeX expression with a color command
+- [`mean_color()`](https://wjschne.github.io/ggdiagram/reference/mean_color.md)
+  : Average across colors
+
+## Labels
+
+Functions making and altering labels
+
+- [`equation()`](https://wjschne.github.io/ggdiagram/reference/equation.md)
+  : equation
+- [`label_object()`](https://wjschne.github.io/ggdiagram/reference/label_object.md)
+  : Automatic label for objects
+- [`ob_label()`](https://wjschne.github.io/ggdiagram/reference/ob_label.md)
+  : ob_label class
+- [`ob_latex()`](https://wjschne.github.io/ggdiagram/reference/ob_latex.md)
+  : ob_latex class
+- [`polar2just()`](https://wjschne.github.io/ggdiagram/reference/polar2just.md)
+  : Convert hjust and vjust parameters from polar coordinates
+- [`round_probability()`](https://wjschne.github.io/ggdiagram/reference/round_probability.md)
+  : Probability rounding
+- [`signs_centered()`](https://wjschne.github.io/ggdiagram/reference/signs_centered.md)
+  : Centering signed numbers
+- [`subscript()`](https://wjschne.github.io/ggdiagram/reference/subscript.md)
+  [`superscript()`](https://wjschne.github.io/ggdiagram/reference/subscript.md)
+  : Create subscripts
+
+## Arrowheads
+
+Functions for getting and setting the default arrowhead
+
+- [`arrowhead()`](https://wjschne.github.io/ggdiagram/reference/arrowhead.md)
+  [`set_default_arrowhead()`](https://wjschne.github.io/ggdiagram/reference/arrowhead.md)
+  : Return default arrowhead
+
+## Plotting functions
+
+Functions for plotting
+
+- [`ggdiagram()`](https://wjschne.github.io/ggdiagram/reference/ggdiagram.md)
+  : ggdiagram function
+- [`as.geom()`](https://wjschne.github.io/ggdiagram/reference/as.geom.md)
+  : as.geom function
+
+## Other functions
+
+Helper functions
+
+- [`get_depth()`](https://wjschne.github.io/ggdiagram/reference/get_depth.md)
+  : Function to calculate hierarchy depth in lavaan models
+
+# Articles
+
+### All vignettes
+
+- [Angles](https://wjschne.github.io/ggdiagram/articles/angles.md):
+- [Arcs and
+  Wedges](https://wjschne.github.io/ggdiagram/articles/arcwedges.md):
+- [Repetition and
+  Automation](https://wjschne.github.io/ggdiagram/articles/automation.md):
+- [Bézier
+  Curves](https://wjschne.github.io/ggdiagram/articles/bezier.md):
+- [Path
+  Diagrams](https://wjschne.github.io/ggdiagram/articles/causalpaths.md):
+- [Circles](https://wjschne.github.io/ggdiagram/articles/circles.md):
+- [Colors](https://wjschne.github.io/ggdiagram/articles/colors.md):
+- [Ellipses](https://wjschne.github.io/ggdiagram/articles/ellipses.md):
+- [Equations with
+  LaTeX](https://wjschne.github.io/ggdiagram/articles/equations.md):
+- [Using
+  ggdiagram](https://wjschne.github.io/ggdiagram/articles/ggdiagram.md):
+- [Lines](https://wjschne.github.io/ggdiagram/articles/lines.md):
+- [Paths](https://wjschne.github.io/ggdiagram/articles/paths.md):
+- [Points](https://wjschne.github.io/ggdiagram/articles/points.md):
+- [Polygons](https://wjschne.github.io/ggdiagram/articles/polygons.md):
+- [Rectangles](https://wjschne.github.io/ggdiagram/articles/rectangles.md):
+- [Segments](https://wjschne.github.io/ggdiagram/articles/segments.md):

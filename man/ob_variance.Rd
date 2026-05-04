@@ -11,6 +11,20 @@ ob_variance(
   bend = 0,
   looseness = 1,
   arrow_head = the$arrow_head,
+  arrow_fins = the$arrow_head,
+  resect = 2,
+  ...
+)
+
+## S7 method for class <ggdiagram::centerpoint>
+ob_variance(
+  x,
+  where = "north",
+  theta = 50,
+  bend = 0,
+  looseness = 1,
+  arrow_head = the$arrow_head,
+  arrow_fins = the$arrow_head,
   resect = 2,
   ...
 )
@@ -27,6 +41,8 @@ ob_variance(
 \item{looseness}{distance of control points as a ratio of the distance to the object's center (e.g., in a circle of radius 1, looseness = 1.5 means that that the control points will be 1.5 units from the start and end points.)}
 
 \item{arrow_head}{A 2-column matrix of polygon points}
+
+\item{arrow_fins}{A 2-column matrix of polygon points}
 
 \item{resect}{A numeric(1) denoting millimeters or \link[grid:unit]{grid::unit} to shorten the arrow head and fins.}
 

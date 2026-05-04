@@ -22,9 +22,9 @@ ob_circle(
 )
 }
 \arguments{
-\item{center}{point at center of the circle}
+\item{center}{Point at center of the circle}
 
-\item{radius}{distance between center and edge circle}
+\item{radius}{Distance between center and edge circle}
 
 \item{label}{A character, angle, or label object}
 
@@ -38,9 +38,9 @@ ob_circle(
 
 \item{linetype}{type of lines}
 
-\item{n}{number of points in circle (default = 360)}
+\item{n}{Number of points in circle (default = 360)}
 
-\item{style}{an ob_style object}
+\item{style}{An ob_style object}
 
 \item{x}{x-coordinate of center point. If specified, overrides x-coordinate of \verb{@center}.}
 
@@ -56,35 +56,57 @@ ob_circle object
 \description{
 ob_circle class
 }
-\section{Slots}{
-
-\describe{
-\item{\code{aesthetics}}{A list of information about the circle's aesthetic properties}
-
-\item{\code{angle_at}}{A function that finds the angle of the specified point in relation to the circle's center}
-
-\item{\code{area}}{area of the circle}
-
-\item{\code{bounding_box}}{a rectangle that contains all the circles}
-
-\item{\code{circumference}}{circumference of the circle}
-
-\item{\code{geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggforce::geom_circle}.}
-
-\item{\code{length}}{The number of circles in the circle object}
-
-\item{\code{normal_at}}{A function that finds a point that is perpendicular from the circle and at a specified distance}
-
-\item{\code{point_at}}{A function that finds a point on the circle at the specified angle.}
-
-\item{\code{polygon}}{a tibble containing information to create all the polygon points in a circle.}
-
-\item{\code{tangent_at}}{A function that finds the tangent line at the specified angle.}
-
-\item{\code{tibble}}{Gets a tibble (data.frame) containing parameters and styles used by \code{ggforce::geom_cirlce}.}
-}}
-
 \examples{
 # specify center point and radius
 ob_circle(center = ob_point(0,0), radius = 6)
 }
+\section{Additional properties}{
+
+\describe{
+\item{\code{@aesthetics}}{A list of information about the circle's aesthetic properties}
+
+\item{\code{@angle_at}}{A function that finds the angle of the specified point in relation to the circle's center}
+
+\item{\code{@arc}}{A function that creates an arc object with the same center as the circle object. Must specify the \code{start} angle and the \code{end} angle. In addition, any of the parameters of \code{ob_arc} can be applied.}
+
+\item{\code{@area}}{area of the circle}
+
+\item{\code{@bounding_box}}{A rectangle that contains all the circles}
+
+\item{\code{@circumference}}{Circumference of the circle}
+
+\item{\code{@diameter}}{The diameter of the circle}
+
+\item{\code{@geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggforce::geom_circle}.}
+
+\item{\code{@length}}{The number of circles in the circle object}
+
+\item{\code{@normal_at}}{A function that finds a point that is perpendicular from the circle and at a specified distance}
+
+\item{\code{@point_at}}{A function that finds a point on the circle at the specified angle}
+
+\item{\code{@polar_line_at}}{A function that creates an \code{ob_line} that passes through the circle's center and the point specified in \code{x}}
+
+\item{\code{@polygon}}{A tibble containing information to create all the polygon points in a circle}
+
+\item{\code{@tangent_at}}{A function that finds the tangent line at the specified angle}
+
+\item{\code{@tibble}}{Gets a tibble (data.frame) containing parameters and styles used by \code{ggforce::geom_circle}}
+
+\item{\code{@east}}{\code{\link{ob_point}} at rightmost point of circle}
+
+\item{\code{@north}}{\code{\link{ob_point}} at highest point of circle}
+
+\item{\code{@west}}{\code{\link{ob_point}} at leftmost point of circle}
+
+\item{\code{@south}}{\code{\link{ob_point}} at lowest point of circle}
+
+\item{\code{@northeast}}{\code{\link{ob_point}} at top-right point of circle}
+
+\item{\code{@northwest}}{\code{\link{ob_point}} at top-left point of circle}
+
+\item{\code{@southwest}}{\code{\link{ob_point}} at bottom-left point of circle}
+
+\item{\code{@southeast}}{\code{\link{ob_point}} at bottom-right point of circle}
+}}
+

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggdiagram</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -200,11 +200,11 @@
 
 
 <dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>x-coordinate of center point. If specified, overrides x-coordinate of <code>@center</code>.</p></dd>
+<dd><p>x-coordinate of center point. If specified, overrides x-coordinate of <code>@center</code></p></dd>
 
 
 <dt id="arg-y">y<a class="anchor" aria-label="anchor" href="#arg-y"></a></dt>
-<dd><p>x-coordinate of center point. If specified, overrides y-coordinate of <code>@center</code>.</p></dd>
+<dd><p>x-coordinate of center point. If specified, overrides y-coordinate of <code>@center</code></p></dd>
 
 
 <dt id="arg-id">id<a class="anchor" aria-label="anchor" href="#arg-id"></a></dt>
@@ -219,6 +219,31 @@
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>ob_label object</p>
     </div>
+    <div class="section level2">
+    <h2 id="additional-properties">Additional properties<a class="anchor" aria-label="anchor" href="#additional-properties"></a></h2>
+
+
+<dl><dt><code>@aesthetics</code></dt>
+<dd><p>A list of information about the label's aesthetic properties</p></dd>
+
+
+<dt><code>@auto_label</code></dt>
+<dd><p>Places a label of the xy coordinates (e.g., <code>(0, 1)</code>)</p></dd>
+
+
+<dt><code>@geom</code></dt>
+<dd><p>A function that converts the object to a geom. Any additional parameters are passed to <code><a href="https://wilkelab.org/ggtext/reference/geom_richtext.html" class="external-link">ggtext::geom_richtext</a></code>.</p></dd>
+
+
+<dt><code>@tibble</code></dt>
+<dd><p>Gets a tibble (data.frame) containing parameters and styles used by <code><a href="https://wilkelab.org/ggtext/reference/geom_richtext.html" class="external-link">ggtext::geom_richtext</a></code></p></dd>
+
+
+<dt><code>@xy</code></dt>
+<dd><p>Gets a 2-column matrix of the x and y coordinates of the label's <code>center</code></p></dd>
+
+
+</dl></div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
@@ -229,7 +254,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

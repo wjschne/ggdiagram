@@ -59,23 +59,25 @@ ob_line object
 \description{
 Creates a line
 }
-\section{Slots}{
+\section{Additional properties}{
 
 \describe{
-\item{\code{point_at_x}}{A function that finds the point on each line where x is equal to the \code{x} argument.}
+\item{\code{@aesthetics}}{A list of information about the circle's aesthetic properties}
 
-\item{\code{point_at_y}}{A function that finds the point on each line where y is equal to the \code{y} argument.}
+\item{\code{@angle}}{The angle of the line}
 
-\item{\code{angle}}{The angle of the line}
+\item{\code{@equation}}{Returns a character string with the equation for the line}
 
-\item{\code{equation}}{Returns a character string with the equation for the line}
+\item{\code{@geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggplot2::geom_line}.}
 
-\item{\code{length}}{The number of lines in the line object.}
+\item{\code{@length}}{The number of lines in the line object}
 
-\item{\code{tibble}}{Returns a tibble (data frame) with object parameters, one row for each line in the line object.}
+\item{\code{@point_at_x}}{A function that finds the point on each line where x is equal to the \code{x} argument}
 
-\item{\code{projection}}{A function that returns the projected point from the point object specified in \code{p}.}
+\item{\code{@point_at_y}}{A function that finds the point on each line where y is equal to the \code{y} argument}
 
-\item{\code{info}}{Returns a list of supported aesthetics.}
+\item{\code{@projection}}{A function that returns the projected point from the point object specified in \code{p}}
+
+\item{\code{@tibble}}{Returns a tibble (data frame) with object parameters, one row for each line in the line object}
 }}
 

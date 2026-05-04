@@ -20,7 +20,7 @@ find_side <- function(theta, width = 1, height = 1) {
 #' @keywords internal
 #' @noRd
 rectangle_side <- S7::new_class(
-  name = "retangle_side",
+  name = "rectangle_side",
   package = "ggdiagram",
   properties = list(
     east = ob_segment,
@@ -408,23 +408,25 @@ rc_props <- list(
 #' @param southwest lower left point ([`ob_point`])
 #' @param southeast lower right point ([`ob_point`])
 #' @param label A character, angle, or [`ob_label`] object
+#' @param angle Rectangle rotation. *Settable.*
 #' @param x overrides x-coordinate in `center@x`
 #' @param y overrides y-coordinate in `center@x`
 #' @param vertex_radius A numeric or unit vector of length one, specifying the corner radius for rounded corners
 #' @param style a style object
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to `style`
 #' @inherit ob_style params
-#' @slot xy returns a matrix of xy coordinates of `center` points
-#' @slot aesthetics A list of information about the objects's aesthetic properties
-#' @slot area returns rectangle area
-#' @slot bounding_box returns the `ob_rectangle` that contains all the rectangles in the object
-#' @slot perimeter returns the rectangle perimeter
-#' @slot side returns the east, north, west, and south `ob_segment` of the rectangles
-#' @slot length returns the number of rectangles in the object
-#' @slot geom a function that returns a `ggforce::geom_shape` object
-#' @slot normal_at A function that finds a point perpendicular to the rectangle at angle `theta` at the specified distance.
-#' @slot point_at A function that finds a point on the rectangle at an angle `theta`
-#' @slot tangent_at A function that finds a tangent line on the retangle. Uses point_at to find the tangent point at angle theta and then returns the tangent line at that point. If a point is supplied instead of an angle, the point is projected onto the ellipse and then the tangent line is found from there.
+#' @prop xy returns a matrix of xy coordinates of `center` points
+#' @prop aesthetics A list of information about the object's aesthetic properties
+#' @prop area returns rectangle area
+#' @prop bounding_box returns the `ob_rectangle` that contains all the rectangles in the object
+#' @prop perimeter returns the rectangle perimeter
+#' @prop side returns the east, north, west, and south `ob_segment` of the rectangles
+#' @prop length returns the number of rectangles in the object
+#' @prop geom a function that returns a `ggforce::geom_shape` object
+#' @prop normal_at A function that finds a point perpendicular to the rectangle at angle `theta` at the specified distance.
+#' @prop point_at A function that finds a point on the rectangle at an angle `theta`
+#' @prop tangent_at A function that finds a tangent line on the rectangle. Uses point_at to find the tangent point at angle theta and then returns the tangent line at that point. If a point is supplied instead of an angle, the point is projected onto the ellipse and then the tangent line is found from there.
+#' @prop tibble Gets a tibble (data.frame) containing parameters and styles used by `ggforce::geom_shape`
 #' @export
 #' @returns [`ob_rectangle`] object
 #'

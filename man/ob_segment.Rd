@@ -101,19 +101,31 @@ ob_segment object
 \description{
 ob_segment class
 }
-\section{Slots}{
+\section{Additional properties}{
 
 \describe{
-\item{\code{geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggarrow::geom_arrow_segment}.}
+\item{\code{@aesthetics}}{A list of information about the segment's aesthetic properties}
 
-\item{\code{hatch}}{A function that puts hatch (tally) marks on segments. Often used to indicate which segments have the same length. The \code{k} parameter controls how many hatch marks to display. The \code{height} parameter controls how long the hatch mark segment is. The \code{sep} parameter controls the separation between hatch marks when \code{k > 2}. Additional parameters sent to \code{ob_segment}.}
+\item{\code{@bounding_box}}{a rectangle that contains all the segments}
 
-\item{\code{midpoint}}{A function that selects 1 or more midpoints of the ob_segment. The \code{position} argument can be between 0 and 1. Additional arguments are passed to \code{ob_point}.}
+\item{\code{@distance}}{Distance between segment endpoints}
 
-\item{\code{nudge}}{A function to move the segment by x and y units.}
+\item{\code{@geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggarrow::geom_arrow_segment}.}
 
-\item{\code{set_label_x}}{A function that sets labels to have the same x coordinate. The \code{position} argument can be between 0 and 1, indicating how far along on the first segment the x coordinate is selected. If the \code{x} argument is set, the \code{position} argument is overridden, and the x-coordinate is set directly.}
+\item{\code{@hatch}}{A function that puts hatch (tally) marks on segments. Often used to indicate which segments have the same length. The \code{k} parameter controls how many hatch marks to display. The \code{height} parameter controls how long the hatch mark segment is. The \code{sep} parameter controls the separation between hatch marks when \code{k > 2}. Additional parameters sent to \code{ob_segment}.}
 
-\item{\code{set_label_y}}{A function that sets labels to have the same y coordinate. The \code{position} argument can be between 0 and 1, indicating how far along on the first segment the y coordinate is selected. If the \code{y} argument is set, the \code{position} argument is overridden, and the y-coordinate is set directly.}
+\item{\code{@length}}{The number of segments in the segment object}
+
+\item{\code{@line}}{The line object associated with the segment}
+
+\item{\code{@midpoint}}{A function that selects 1 or more midpoints of the ob_segment. The \code{position} argument can be between 0 and 1. Additional arguments are passed to \code{ob_point}.}
+
+\item{\code{@nudge}}{A function to move the segment by x and y units.}
+
+\item{\code{@set_label_x}}{A function that sets labels to have the same x coordinate. The \code{position} argument can be between 0 and 1, indicating how far along on the first segment the x coordinate is selected. If the \code{x} argument is set, the \code{position} argument is overridden, and the x-coordinate is set directly.}
+
+\item{\code{@set_label_y}}{A function that sets labels to have the same y coordinate. The \code{position} argument can be between 0 and 1, indicating how far along on the first segment the y coordinate is selected. If the \code{y} argument is set, the \code{position} argument is overridden, and the y-coordinate is set directly.}
+
+\item{\code{@tibble}}{Gets a tibble (data.frame) containing parameters and styles used by \code{ggarrow::geom_arrow_segment}}
 }}
 

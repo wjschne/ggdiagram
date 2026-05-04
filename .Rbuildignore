@@ -25,3 +25,4 @@ logo.png
 ^CODE_OF_CONDUCT\.md$
 ^\.positai$
 ^\.claude$
+^revdep$

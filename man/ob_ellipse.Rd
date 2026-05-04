@@ -68,25 +68,43 @@ ob_ellipse object
 \description{
 Makes ellipses and superellipses
 }
-\section{Slots}{
-
-\describe{
-\item{\code{length}}{Gets the number of ellipses}
-
-\item{\code{tibble}}{Gets a tibble (data.frame) containing parameters and styles used by \code{ggforce::geom_ellipse}.}
-
-\item{\code{geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggforce::geom_ellipse}.}
-
-\item{\code{normal_at}}{A function that finds a point perpendicular to the ellipse at angle \code{theta} at the specified \code{distance}. The \code{definitional} parameter is passed to the \code{point_at} function. If a point is supplied instead of an angle, the point is projected onto the ellipse and then the normal is calculated found from the projected point.}
-
-\item{\code{point_at}}{A function that finds a point on the ellipse at an angle \code{theta}. If \code{definitional} is \code{FALSE} (default), then \code{theta} is interpreted as an angle. If \code{TRUE}, then \code{theta} is the parameter in the definition of the ellipse in polar coordinates.}
-
-\item{\code{tangent_at}}{A function that finds a tangent line on the ellipse. Uses \code{point_at} to find the tangent point at angle \code{theta} and then returns the tangent line at that point. If a point is supplied instead of an angle, the point is projected onto the ellipse and then the tangent line is found from there.}
-}}
-
 \examples{
 # specify center point and semi-major axes
 e <- ob_ellipse(center = ob_point(0,0), a = 2, b = 3)
 ggdiagram() +
   e
 }
+\section{Additional properties}{
+
+\describe{
+\item{\code{@aesthetics}}{A list of information about the object's aesthetic properties}
+
+\item{\code{@angle_at}}{A function that finds the angle of the specified point in relation to the ellipse's center}
+
+\item{\code{@area}}{area of the ellipse}
+
+\item{\code{@bounding_box}}{a rectangle that contains all the ellipses}
+
+\item{\code{@focus_1}}{left focus point of the ellipse}
+
+\item{\code{@focus_2}}{right focus point of the ellipse}
+
+\item{\code{@geom}}{A function that converts the object to a geom. Any additional parameters are passed to \code{ggforce::geom_ellipse}.}
+
+\item{\code{@length}}{Gets the number of ellipses}
+
+\item{\code{@normal_at}}{A function that finds a point perpendicular to the ellipse at angle \code{theta} at the specified \code{distance}. The \code{definitional} parameter is passed to the \code{point_at} function. If a point is supplied instead of an angle, the point is projected onto the ellipse and then the normal is calculated found from the projected point.}
+
+\item{\code{@perimeter}}{returns the ellipse's perimeter}
+
+\item{\code{@point_at}}{A function that finds a point on the ellipse at an angle \code{theta}. If \code{definitional} is \code{FALSE} (default), then \code{theta} is interpreted as an angle. If \code{TRUE}, then \code{theta} is the parameter in the definition of the ellipse in polar coordinates.}
+
+\item{\code{@polar_line_at}}{A function that creates an \code{ob_line} that passes through the ellipse's center and the point specified in \code{x}.}
+
+\item{\code{@polygon}}{a tibble containing information to create all the polygon points in ellipse.}
+
+\item{\code{@tangent_at}}{A function that finds a tangent line on the ellipse. Uses \code{point_at} to find the tangent point at angle \code{theta} and then returns the tangent line at that point. If a point is supplied instead of an angle, the point is projected onto the ellipse and then the tangent line is found from there.}
+
+\item{\code{@tibble}}{Gets a tibble (data.frame) containing parameters and styles used by \code{ggforce::geom_ellipse}.}
+}}
+

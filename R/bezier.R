@@ -243,12 +243,17 @@ bz_props <- list(
     set_label_x = S7::new_property(
       S7::class_function,
       getter = function(self) {
-        \(position = .5, x = NULL) {
+        \(position = NULL, x = NULL) {
           if (!S7::S7_inherits(self@label, ob_label)) {
             stop("The ob_segment does not have a label.")
           }
           if (is.null(x)) {
-            x <- self[1]@midpoint(position)@x
+            if (is.null(position)) {
+              x <- self[1]@label@center@x
+            } else {
+              x <- self[1]@midpoint(position)@x
+            }
+
           }
           self@label@center <- self@point_at_x(x)
           self
@@ -258,12 +263,17 @@ bz_props <- list(
     set_label_y = S7::new_property(
       S7::class_function,
       getter = function(self) {
-        \(position = 0.5, y = NULL) {
+        \(position = NULL, y = NULL) {
           if (!S7::S7_inherits(self@label, ob_label)) {
             stop("The ob_segment does not have a label.")
           }
           if (is.null(y)) {
-            y <- self[1]@midpoint(position)@y
+            if (is.null(position)) {
+              y <- self[1]@label@center@y
+            } else {
+              y <- self[1]@midpoint(position)@y
+            }
+
           }
           self@label@center <- self@point_at_y(y)
           self
@@ -331,16 +341,20 @@ bz_props <- list(
 #' @param p ob_point or list of ob_points
 #' @param label A character, angle, or label object
 #' @param label_sloped A logical value indicating whether the label should be sloped with the curve
-#' @slot length The number of curves in the ob_bezier object
-#' @param ... <[`dynamic-dots`][rlang::dyn-dots]>  properties passed to style
-#' @param style Gets and sets the styles associated with ob_beziers
-#' @slot tibble Gets a tibble (data.frame) containing parameters and styles used by `ggarrow::geom_arrow`.
 #' @inherit ob_style params
-#' @slot geom A function that converts the object to a geom. Any additional parameters are passed to `ggarrow::geom_arrow`.
-#' @slot midpoint A function that selects 1 or more midpoints of the ob_bezier. The `position` argument can be between 0 and 1. Additional arguments are passed to `ob_point`.
-#' @slot aesthetics A list of information about the objects's aesthetic properties
-#' @slot set_label_x A function that sets labels to have the same x coordinate. The `position` argument can be between 0 and 1, indicating how far along on the first segment the x coordinate is selected. If the `x` argument is set, the `position` argument is overridden, and the x-coordinate is set directly.
-#' @slot set_label_y A function that sets labels to have the same y coordinate. The `position` argument can be between 0 and 1, indicating how far along on the first segment the y coordinate is selected. If the `y` argument is set, the `position` argument is overridden, and the y-coordinate is set directly.
+#' @param style Gets and sets the styles associated with ob_beziers
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]>  properties passed to style
+#' @prop aesthetics A list of information about the object's aesthetic properties
+#' @prop bounding_box A rectangle that contains all the bezier curves
+#' @prop geom A function that converts the object to a geom. Any additional parameters are passed to `ggarrow::geom_arrow`.
+#' @prop length The number of curves in the ob_bezier object
+#' @prop midpoint A function that selects 1 or more midpoints of the ob_bezier. The `position` argument can be between 0 and 1. Additional arguments are passed to `ob_point`.
+#' @prop path A path object consisting of the control points
+#' @prop point_at_x A function that finds the point on each curve where x is equal to the `x` argument.
+#' @prop point_at_y A function that finds the point on each curve where y is equal to the `y` argument.
+#' @prop set_label_x A function that sets labels to have the same x coordinate. The `position` argument can be between 0 and 1, indicating how far along on the first curve the x coordinate is selected. If the `x` argument is set, the `position` argument is overridden, and the x-coordinate is set directly.
+#' @prop set_label_y A function that sets labels to have the same y coordinate. The `position` argument can be between 0 and 1, indicating how far along on the first curve the y coordinate is selected. If the `y` argument is set, the `position` argument is overridden, and the y-coordinate is set directly.
+#' @prop tibble Gets a tibble (data.frame) containing parameters and styles used by `ggarrow::geom_arrow`.
 #' @examples
 #' control_points <- ob_point(c(0,1,2,4), c(0,4,0,1))
 #' ggdiagram() +
