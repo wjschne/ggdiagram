@@ -381,6 +381,7 @@ arc_props <- list(
             }
 
           }
+          self@label_sloped = FALSE
           self@label@center <- intersection(self, ob_line(xintercept = x))
           self
         }
@@ -401,6 +402,7 @@ arc_props <- list(
             }
 
           }
+          self@label_sloped = FALSE
           self@label@center <- intersection(self, ob_line(intercept = y))
           self
         }

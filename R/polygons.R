@@ -1317,14 +1317,11 @@ ob_ngon_props <- list(
             theta <- degree(theta)
           }
 
-          p <- purrr::map(unbind(self), \(s) {
-            s_radius <- ob_segment(
-              s@center,
-              s@center + ob_polar(theta = theta, r = s@radius + 1)
-            )
-            intersection(s_radius, s@segments)[1]
-          }) |>
-            bind()
+          p <- map_ob(self, \(s) {
+            # Used equation from https://math.stackexchange.com/questions/41940/is-there-an-equation-to-describe-regular-polygons/41954#41954
+            r <- cos(pi / s@n) / cos(theta - (pi / s@n) * (2 * floor(s@n * theta / (2 * pi)) + 1))
+            s@center + ob_polar(r = r, theta = theta)
+          })
           rlang::inject(set_props(p, !!!st))
         }
       }
@@ -2157,6 +2154,8 @@ ob_reuleaux <- S7::new_class(
 
 
 S7::method(get_tibble, ob_reuleaux) <- function(x) {
+  # TODO: Use parametric  equations instead
+  # https://tpfto.wordpress.com/2011/09/15/parametric-equations-for-regular-and-reuleaux-polygons/
   d <- x@tibble
   if ("radius" %in% colnames(d)) {
     d <- dplyr::rename(d, r = radius)

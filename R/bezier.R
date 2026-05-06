@@ -174,7 +174,7 @@ bz_props <- list(
             dplyr::select(group, x, y) |>
             tidyr::nest(.by = group) |>
             dplyr::mutate(p = purrr::map(data, ggdiagram::data2shape, shape = ob_point)) |>
-            dplyr::mutate(n = map_int(data, nrow))
+            dplyr::mutate(n = purrr::map_int(data, nrow))
 
           if (all(second_pass$n == 1)) {
             bind(second_pass$p)
@@ -230,7 +230,7 @@ bz_props <- list(
             dplyr::select(group, x, y) |>
             tidyr::nest(.by = group) |>
             dplyr::mutate(p = purrr::map(data, ggdiagram::data2shape, shape = ob_point)) |>
-            dplyr::mutate(n = map_int(data, nrow))
+            dplyr::mutate(n = purrr::map_int(data, nrow))
 
           if (all(second_pass$n == 1)) {
             bind(second_pass$p)
