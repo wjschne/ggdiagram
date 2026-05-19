@@ -14,7 +14,7 @@ ob_bezier(
   p = S7::class_missing,
   label = character(0),
   label_sloped = TRUE,
-  n = 100,
+  n = 101,
   alpha = numeric(0),
   arrow_head = S7::class_missing,
   arrow_fins = S7::class_missing,
@@ -44,7 +44,10 @@ ob_bezier(
 
 - p:
 
-  ob_point or list of ob_points
+  [`ob_point`](https://wjschne.github.io/ggdiagram/reference/ob_point.md)
+  or list of
+  [`ob_point`](https://wjschne.github.io/ggdiagram/reference/ob_point.md)
+  objects
 
 - label:
 

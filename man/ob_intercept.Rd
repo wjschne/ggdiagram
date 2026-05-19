@@ -8,18 +8,15 @@ ob_intercept(
   center = ob_point(0, 0),
   width = 1,
   label = character(0),
-  top = S7::class_missing,
-  left = S7::class_missing,
-  right = S7::class_missing,
   vertex_radius = numeric(0),
   alpha = numeric(0),
   color = character(0),
   fill = character(0),
   linewidth = numeric(0),
   linetype = numeric(0),
+  style = S7::class_missing,
   x = numeric(0),
   y = numeric(0),
-  style = S7::class_missing,
   id = character(0),
   ...
 )
@@ -30,12 +27,6 @@ ob_intercept(
 \item{width}{length of side}
 
 \item{label}{A character, angle, or \code{\link{ob_label}} object}
-
-\item{top}{Top vertex of triangle}
-
-\item{left}{Left vertex of triangle}
-
-\item{right}{Right vertex of triangle}
 
 \item{vertex_radius}{A numeric or unit vector of length one, specifying the vertex radius}
 
@@ -49,11 +40,11 @@ ob_intercept(
 
 \item{linetype}{type of lines}
 
+\item{style}{Gets and sets the styles associated with polygons}
+
 \item{x}{overrides x-coordinate in \code{center@x}}
 
 \item{y}{overrides x-coordinate in \code{center@y}}
-
-\item{style}{Gets and sets the styles associated with polygons}
 
 \item{id}{character string to identify object}
 
@@ -68,6 +59,12 @@ Triangle polygons used in path diagrams.
 \section{Additional properties}{
 
 \describe{
+\item{\code{@top}}{Top vertex of triangle}
+
+\item{\code{@left}}{Left vertex of triangle}
+
+\item{\code{@right}}{Right vertex of triangle}
+
 \item{\code{@length}}{The number of polygons in the ob_polygon object}
 
 \item{\code{@aesthetics}}{A list of information about the object's aesthetic properties}

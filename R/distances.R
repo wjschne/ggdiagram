@@ -46,17 +46,6 @@ S7::method(distance, list(ob_circle, ob_circle)) <- function(x, y) {
   d <- distance(x@center, y@center) - x@radius - y@radius
   d[d < 0] <- 0
   d
-  # d <- (y@center - x@center)
-  #
-  #   if (x@radius + y@radius > distance(d)) {
-  #     d <- ob_point(0,0)
-  #   } else {
-  #     px <- x@point_at(d@theta)
-  #     py <- x@point_at(d@theta + pi)
-  #     d <- py - px
-  #   }
-  #
-  # abs(d@r)
 }
 S7::method(distance, list(ob_point, ob_circle)) <- function(x, y) {
   d <- y@center - x
@@ -71,8 +60,31 @@ S7::method(distance, list(ob_circle, ob_point)) <- function(x, y) {
 }
 
 S7::method(distance, list(centerpoint, centerpoint)) <- function(x, y) {
-  s <- ob_segment(x@center, y@center)
-  p1 <- intersection(x, s)
-  p2 <- intersection(y, s)
-  distance(p1, p2)
+ d <- distance(connect(x,y, resect = 0))
+ xy_intersect <- purrr::map2_lgl(unbind(x),unbind(y), \(xx,yy) {intersection(xx,yy)@length > 0})
+ d[xy_intersect] <- 0
+ d
 }
+
+S7::method(distance, list(ob_point, ob_segment)) <- function(x, y) {
+  purrr::map2_dbl(unbind(x),unbind(y), \(xx, yy) {
+    if (distance(yy) == 0) {
+      return(distance(xx,yy@p1))
+    }
+    y21 <- yy@p2 - yy@p1
+    xy1 <- xx - yy@p1
+
+    # Projection parameter
+    t <- (xy1 %*% y21) / (y21 %*% y21)
+
+    m <- yy@midpoint(position = max(c(0, min(c(t, 1)))))
+    distance(xx, m)
+  })
+}
+
+S7::method(distance, list(ob_segment, ob_point)) <- function(x, y) {
+  distance(y, x)
+}
+
+
+

@@ -244,5 +244,7 @@ test_that("point misc", {
   p <- ob_point(1:3, 4:6, id = letters[1:3])
   expect_identical(p["b"], p[2])
 
+  expect_error(ob_point(id = "a")["b"], "There are no objects with an id equal to the value specified.")
+
 
 })

@@ -151,7 +151,7 @@ arc_props <- list(
     }),
     length = S7::new_property(
       getter = \(self) {
-        length(self@radius)
+        nrow(self@tibble)
       }
     ),
     end_point = S7::new_property(
@@ -160,18 +160,17 @@ arc_props <- list(
       },
       setter = \(self, value) {
         if (S7::S7_inherits(value, ob_point)) {
-          if (value@length == self@length) {
-            self@center <- value - self@center
+          if (value@length == self@length || value@length == 1 || self@length == 1) {
+            self@center <- self@center + value - self@end_point
+
           } else {
             stop(paste0(
-              "The number of points in end_point  (",
-              start_point@length,
+              "The number of points in end_point (",
+              value@length,
               ") differs from the number of ",
               self@type,
-              ,
               "s (",
               self@length,
-              ,
               ")."
             ))
           }
@@ -200,7 +199,7 @@ arc_props <- list(
               if (TYPE == "wedge") {
                 dd <- dplyr::bind_rows(
                   dd,
-                  tibble(x = X, y = Y)
+                  tibble::tibble(x = X, y = Y)
                 )
               }
               dd
@@ -217,12 +216,12 @@ arc_props <- list(
       },
       setter = function(self, value) {
         if (S7::S7_inherits(value, ob_point)) {
-          if (value@length == self@length) {
-            self@center <- value - self@center
+          if (value@length == self@length || value@length == 1 || self@length == 1) {
+            self@center <- self@center + value - self@start_point
           } else {
             stop(paste0(
-              "The number of points in start_point  (",
-              start_point@length,
+              "The number of points in start_point (",
+              value@length,
               ") differs from the number of ",
               self@type,
               "s (",
@@ -299,6 +298,9 @@ arc_props <- list(
           stroke_width = self@stroke_width,
           type = self@type
         )
+      }
+      if (length(self@center@x) == 0) {
+        d$type <- character(0)
       }
       get_non_empty_tibble(d)
     })
@@ -563,6 +565,8 @@ ob_arc <- S7::new_class(
   ) {
     id <- as.character(id)
 
+    type <- match.arg(type, c("arc", "wedge", "segment"))
+
     if (!S7::S7_inherits(start, ob_angle)) {
       start <- degree(start)
     }
@@ -689,6 +693,7 @@ ob_arc <- S7::new_class(
             label@vjust <- polar2just(m, 1.4, axis = "v")
           } else {
             if (all(length(label@hjust) == 0)) {
+
               label@hjust <- 0.5
             }
 
@@ -804,7 +809,7 @@ S7::method(as.geom, ob_arc) <- function(x, ...) {
         )
 
       if (!("hjust" %in% colnames(d))) {
-        d <- dplyr::mutate(d, hjust = x@label@position)
+        d <- dplyr::mutate(d, hjust = x@label@position) # nocov
       }
 
       d <- tidyr::unnest(d, data)
@@ -818,7 +823,7 @@ S7::method(as.geom, ob_arc) <- function(x, ...) {
       }
 
       if (!("label.padding" %in% colnames(d))) {
-        d <- dplyr::mutate(d, label.padding = unit(2, "pt"))
+        d <- dplyr::mutate(d, label.padding = ggplot2::unit(2, "pt")) # nocov
       }
 
       d <- dplyr::mutate(

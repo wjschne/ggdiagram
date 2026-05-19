@@ -9,18 +9,15 @@ ob_intercept(
   center = ob_point(0, 0),
   width = 1,
   label = character(0),
-  top = S7::class_missing,
-  left = S7::class_missing,
-  right = S7::class_missing,
   vertex_radius = numeric(0),
   alpha = numeric(0),
   color = character(0),
   fill = character(0),
   linewidth = numeric(0),
   linetype = numeric(0),
+  style = S7::class_missing,
   x = numeric(0),
   y = numeric(0),
-  style = S7::class_missing,
   id = character(0),
   ...
 )
@@ -42,18 +39,6 @@ ob_intercept(
   A character, angle, or
   [`ob_label`](https://wjschne.github.io/ggdiagram/reference/ob_label.md)
   object
-
-- top:
-
-  Top vertex of triangle
-
-- left:
-
-  Left vertex of triangle
-
-- right:
-
-  Right vertex of triangle
 
 - vertex_radius:
 
@@ -79,6 +64,10 @@ ob_intercept(
 
   type of lines
 
+- style:
+
+  Gets and sets the styles associated with polygons
+
 - x:
 
   overrides x-coordinate in `center@x`
@@ -86,10 +75,6 @@ ob_intercept(
 - y:
 
   overrides x-coordinate in `center@y`
-
-- style:
-
-  Gets and sets the styles associated with polygons
 
 - id:
 
@@ -105,6 +90,18 @@ ob_intercept(
 ob_polygon object
 
 ## Additional properties
+
+- `@top`:
+
+  Top vertex of triangle
+
+- `@left`:
+
+  Left vertex of triangle
+
+- `@right`:
+
+  Right vertex of triangle
 
 - `@length`:
 

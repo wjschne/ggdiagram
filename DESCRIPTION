@@ -90,4 +90,5 @@ Collate:
     'intersections.R'
     'inside.R'
     'rotate.R'
+    'rescale.R'
     'zzz.R'

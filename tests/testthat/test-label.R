@@ -43,6 +43,8 @@ test_that(desc = "label", {
   l@label.padding <- ggdiagram:::class_margin(1)
   expect_no_error(get_tibble(l))
 
+
+
   expect_no_error(as.geom(ob_label("A", plot_point = TRUE), size = 12))
 
   expect_identical(ggdiagram::label_object(l), "(0,0)")
@@ -193,6 +195,15 @@ b <- ob_point(1,c(0,1))
 ab_seg <- connect(a, b, label = c("1","2"))@set_label_x(.2)
 expect_all_equal(ab_seg@label@center@x, ab_seg@label@center@x[1])
 
+ab_seg2 <- connect(a, b, label = c("1","2"))
+ab_seg3 <- connect(a, b, label = c("1","2"))@set_label_x()
+expect_equal(ab_seg2@label@center@x, ab_seg3@label@center@x)
+
+
+ab_seg4 <- connect(a, b[2], label = c("2"))@set_label_y()
+expect_equal(ab_seg2[2]@label@center@y, ab_seg4@label@center@y)
+
+
 # arc
 ab_arc <- connect(a, b, label = c("1","2"), arc_bend = .5)@set_label_x(.2)
 expect_all_equal(ab_arc@label@center@x, ab_arc@label@center@x[1])
@@ -201,3 +212,10 @@ expect_all_equal(ab_arc@label@center@x, ab_arc@label@center@x[1])
 ab_bez <- connect(a, b, label = c("1","2"), to_offset = ob_point(1, 1))@set_label_x(.2)
 expect_all_equal(ab_bez@label@center@x, ab_bez@label@center@x[1])
 })
+
+
+test_that("Return empty string",{
+    l <- ob_label(c("A", NA))
+    l[1] <- ob_label(NA)
+    expect_equal(l, character(0))
+  })

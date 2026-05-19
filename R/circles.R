@@ -155,12 +155,15 @@ cr_props <- list(
       class = S7::class_function,
       getter = function(self) {
         \(theta = degree(0), ...) {
-          if (!S7::S7_inherits(theta, ob_angle)) {
-            theta <- degree(theta)
-          }
+
           if (S7::S7_inherits(theta, ob_point)) {
             theta <- (projection(theta, self) - self@center)@theta
           }
+
+          if (!S7::S7_inherits(theta, ob_angle)) {
+            theta <- degree(theta)
+          }
+
           x <- self@center@x
           y <- self@center@y
           x1 <- cos(theta) * self@radius + self@center@x
@@ -400,9 +403,8 @@ S7::method(`[`, ob_circle) <- function(x, i) {
 }
 
 S7::method(`==`, list(ob_circle, ob_circle)) <- function(e1, e2) {
-  # nocov start
-  (e1@center == e2@center) & (e1@radius == e1@radius)
-} # nocov end
+  (e1@center == e2@center) & (e1@radius == e1@radius) # nocov
+}
 
 # Place ----
 

@@ -213,7 +213,7 @@ ob_latex <- S7::new_class(
         if (tinytex::is_tinytex()) {
           try(tinytex::xelatex(f_tex))
         } else {
-          try(shell(paste0("xelatex ", f_tex)))
+          try(shell(paste0("xelatex ", f_tex))) # nocov
         }
       }
 
@@ -318,7 +318,7 @@ S7::method(as.geom, ob_latex) <- function(x, ...) {
 }
 
 S7::method(`+`, list(class_gg, ob_latex)) <- function(e1, e2) {
-  e1 + as.geom(e2)
+  e1 + as.geom(e2) # nocov
 }
 
 

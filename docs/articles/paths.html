@@ -248,8 +248,8 @@ Figure 4: Multiple paths
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggdiagram.html">ggdiagram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/ob_path.html">ob_path</a></span><span class="op">(</span><span class="va">p_curve</span><span class="op">)</span><span class="op">@</span><span class="va">segments</span><span class="op">(</span></span>
-<span>    color <span class="op">=</span> <span class="fu">viridis</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">viridis</a></span><span class="op">(</span><span class="va">p_curve</span><span class="op">@</span><span class="va">length</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/ob_path.html">ob_path</a></span><span class="op">(</span><span class="va">p_curve</span><span class="op">)</span><span class="op">@</span><span class="va">segment</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rconsortium.github.io/S7/reference/props.html" class="external-link">set_props</a></span><span class="op">(</span>color <span class="op">=</span> <span class="fu">viridis</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">viridis</a></span><span class="op">(</span><span class="va">p_curve</span><span class="op">@</span><span class="va">length</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure><p><img src="paths_files/figure-html/segmentgradient-1.png" width="672"></p>

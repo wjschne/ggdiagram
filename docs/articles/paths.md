@@ -152,8 +152,8 @@ segments.
 ``` r
 
 ggdiagram() +
-  ob_path(p_curve)@segments(
-    color = viridis::viridis(p_curve@length - 1))
+  ob_path(p_curve)@segment |> 
+  set_props(color = viridis::viridis(p_curve@length - 1))
 ```
 
 ![](paths_files/figure-html/segmentgradient-1.png)

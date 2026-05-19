@@ -130,6 +130,8 @@ Functions that alter shapes
   Move an object
 - [`place()`](https://wjschne.github.io/ggdiagram/reference/place.md) :
   Place an object a specified distance from another object
+- [`rescale()`](https://wjschne.github.io/ggdiagram/reference/rescale.md)
+  : Rescale an object in 2 dimensions
 - [`resect()`](https://wjschne.github.io/ggdiagram/reference/resect.md)
   : resect
 - [`rotate()`](https://wjschne.github.io/ggdiagram/reference/rotate.md)
@@ -171,7 +173,9 @@ Functions for working with many shapes
 - [`data2shape()`](https://wjschne.github.io/ggdiagram/reference/data2shape.md)
   : Make shapes from data
 - [`map_ob()`](https://wjschne.github.io/ggdiagram/reference/map_ob.md)
-  : map_ob
+  : Map over a ggdiagram object
+- [`map2_ob()`](https://wjschne.github.io/ggdiagram/reference/map2_ob.md)
+  : Map over two ggdiagram objects
 - [`ob_array()`](https://wjschne.github.io/ggdiagram/reference/ob_array.md)
   : Object Arrays
 - [`ob_shape_list()`](https://wjschne.github.io/ggdiagram/reference/ob_shape_list.md)

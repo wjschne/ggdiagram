@@ -71,11 +71,7 @@ lb_props <- list(
     auto_label = S7::new_property(getter = function(self) {
       label_object(self@center)
     }),
-    length = S7::new_property(
-      getter = function(self) {
-        length(self@label)
-      }
-    ),
+    length = pt_props$derived$length,
     style = S7::new_property(
       getter = function(self) {
         pr <- `names<-`(purrr::map(lb_styles, prop, object = self), lb_styles)
@@ -116,6 +112,7 @@ lb_props <- list(
         nudge_x = self@nudge_x,
         nudge_y = self@nudge_y,
         polar_just = self@polar_just,
+        position = self@position,
         straight = self@straight,
         size = self@size,
         text.color = self@text.color,
@@ -511,7 +508,8 @@ S7::method(`+`, list(centerpoint, ob_point)) <- function(e1, e2) {
     e1@label@center <- e1@label@center + e2
   }
   e1
-} # nocov end
+  # nocov end
+}
 
 S7::method(`-`, list(centerpoint, ob_point)) <- function(e1, e2) {
   # nocov start
@@ -520,7 +518,8 @@ S7::method(`-`, list(centerpoint, ob_point)) <- function(e1, e2) {
     e1@label@center <- e1@label@center - e2
   }
   e1
-} # nocov end
+  # nocov end
+}
 
 S7::method(`+`, list(ob_point, centerpoint)) <- function(e1, e2) {
   # nocov start
@@ -529,7 +528,8 @@ S7::method(`+`, list(ob_point, centerpoint)) <- function(e1, e2) {
     e2@label@center <- e2@label@center + e1
   }
   e2
-} # nocov end
+  # nocov end
+}
 
 S7::method(`-`, list(ob_point, centerpoint)) <- function(e1, e2) {
   # nocov start
@@ -538,7 +538,8 @@ S7::method(`-`, list(ob_point, centerpoint)) <- function(e1, e2) {
     e2@label@center <- e2@label@center - e1
   }
   e2
-} # nocov end
+  # nocov end
+}
 
 S7::method(`%|-%`, list(centerpoint, ob_point)) <- function(e1, e2) {
   `%|-%`(e1@center, e2)
@@ -574,26 +575,7 @@ S7::method(str, ob_label) <- function(
 }
 
 S7::method(get_tibble, ob_label) <- function(x) {
-  d <- x@tibble
-  if (!is.null(d$label.margin)) {
-    d$label.margin <- purrr::map(d$label.margin, \(m) {
-      if (S7::S7_inherits(m, class_margin)) {
-        m <- S7::S7_data(m)
-      }
-      m
-    })
-  }
-
-  if (!is.null(d$label.padding)) {
-    d$label.padding <- purrr::map(d$label.padding, \(m) {
-      if (S7::S7_inherits(m, class_margin)) {
-        m <- S7::S7_data(m)
-      }
-      m
-    })
-  }
-
-  d
+  x@tibble
 }
 
 S7::method(get_tibble_defaults, ob_label) <- function(x) {
@@ -671,7 +653,12 @@ S7::method(`[`, ob_label) <- function(x, i) {
   i <- character_index(i, x@id)
   d <- x@tibble |>
     dplyr::bind_rows(dplyr::filter(value@tibble, FALSE))
-  d[i, ] <- value@tibble
+
+  v <- value@tibble |>
+    dplyr::bind_rows(dplyr::filter(d, FALSE)) |>
+    dplyr::select(colnames(d))
+
+  d[i, ] <- v
 
   if (all(is.na(d$label))) {
     return(character(0))
@@ -700,23 +687,7 @@ centerpoint_label <- function(label, center, d, shape_name = "shape", ...) {
     label <- ob_label(label = label, center = center, fill = NA, ...)
   }
 
-  if (length(label) > 0) {
-    if (nrow(d) > 1) {
-      if (!(label@length == 1 || label@length == nrow(d))) {
-        stop(
-          paste0(
-            "Label length is ",
-            label@length,
-            ". It must be either of length 1 or compatible with the length of the ",
-            shape_name,
-            " (length = ",
-            nrow(d),
-            ")."
-          )
-        )
-      }
-    }
-  } else {
+  if (length(label) == 0) {
     label <- character(0)
   }
   label

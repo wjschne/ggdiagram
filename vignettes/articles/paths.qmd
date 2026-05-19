@@ -169,7 +169,7 @@ It is possible to create color gradients along a path using the paths' segments.
 
 ```{r segmentgradient}
 ggdiagram() +
-  ob_path(p_curve)@segments(
-    color = viridis::viridis(p_curve@length - 1))
+  ob_path(p_curve)@segment |> 
+  set_props(color = viridis::viridis(p_curve@length - 1))
 ```
 

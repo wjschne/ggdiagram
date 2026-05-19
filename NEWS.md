@@ -1,9 +1,14 @@
 # ggdiagram 0.2.0 _2026-05-04_
 
-* Better documentation of objects.
+* Better documentation of objects (used Posit Assistant to identify undocumented properties).
+* More complete set of tests (used Posit Assistant to generate many of them)
 * `ob_angle` objects (i.e., `degree`, `radian`, and `turn`) gain an `@upright` slot useful for preventing angled text from being upside down.
 * `ob_reuleaux` and `ob_ngon` gain additional function slots similar to those of `ob_circle`.
 * `ob_segment`, `ob_bezier`, and `connect` can set label positions with equal x and y coordinates via the `@set_label_x` and `@set_label_y` property functions.
+* Added `map2_ob` function to map over 2 ggdiagram objects
+* Added `rescale` function to resize ggdiagram objects
+* Made `ob_intercept` a special case of `ob_ngon`.
+* Breaking change: Renamed all instances of `@segments` to `@segment` for the sake of consistency.
 
 # ggdiagram 0.1.3 _2025-10-15_
 

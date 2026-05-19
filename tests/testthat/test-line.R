@@ -8,6 +8,8 @@ test_that("default constructor is horizontal line y = 0", {
   expect_equal(l@a, 0)
   expect_equal(l@b, 1)
   expect_equal(l@c, 0)
+  expect_no_error(l@aesthetics)
+
 })
 
 test_that("slope and intercept getters", {
@@ -47,6 +49,8 @@ test_that("style getter and setter", {
   expect_identical(l@style@color, "red")
   l@style <- ob_style(color = "blue")
   expect_identical(l@color, "blue")
+  l@color <- NA_character_
+  expect_no_error(get_tibble_defaults(l))
 })
 
 test_that("equation y-form", {
@@ -131,6 +135,9 @@ test_that(desc = "lines", {
   expect_identical(v1, ob_line(xintercept = 1))
   h1 <- ob_line(a = 0, b = 1, c = -1)
   expect_identical(h1, ob_line(intercept = 1))
+
+  expect_no_error(ob_line() == ob_line())
+
   expect_error(ob_line(
     a = 1,
     b = 1,
@@ -148,6 +155,12 @@ test_that(desc = "lines", {
   )
   expect_error(ob_line(a = 0, b = 0, c = 3), regexp = "If a and b are 0, c must be 0\\.")
   expect_error(ob_line(intercept = 1, a = 2, b = 3, c = -1), regexp = "Some intercepts are inconsistent with b and c parameters\\.")
-  ob_line()@a
+
 
 })
+
+
+test_that("Equality operator", {
+ expect_true(ob_line(xintercept = 1) == ob_line(a = 1, b = 0, c = -1))
+})
+

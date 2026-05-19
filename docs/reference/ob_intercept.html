@@ -61,18 +61,15 @@
 <span>  center <span class="op">=</span> <span class="fu"><a href="ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,</span>
 <span>  width <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
-<span>  top <span class="op">=</span> <span class="fu">S7</span><span class="fu">::</span><span class="va"><a href="https://rconsortium.github.io/S7/reference/class_missing.html" class="external-link">class_missing</a></span>,</span>
-<span>  left <span class="op">=</span> <span class="fu">S7</span><span class="fu">::</span><span class="va"><a href="https://rconsortium.github.io/S7/reference/class_missing.html" class="external-link">class_missing</a></span>,</span>
-<span>  right <span class="op">=</span> <span class="fu">S7</span><span class="fu">::</span><span class="va"><a href="https://rconsortium.github.io/S7/reference/class_missing.html" class="external-link">class_missing</a></span>,</span>
 <span>  vertex_radius <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  alpha <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  linewidth <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  linetype <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  style <span class="op">=</span> <span class="fu">S7</span><span class="fu">::</span><span class="va"><a href="https://rconsortium.github.io/S7/reference/class_missing.html" class="external-link">class_missing</a></span>,</span>
 <span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
-<span>  style <span class="op">=</span> <span class="fu">S7</span><span class="fu">::</span><span class="va"><a href="https://rconsortium.github.io/S7/reference/class_missing.html" class="external-link">class_missing</a></span>,</span>
 <span>  id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -92,18 +89,6 @@
 
 <dt id="arg-label">label<a class="anchor" aria-label="anchor" href="#arg-label"></a></dt>
 <dd><p>A character, angle, or <code><a href="ob_label.html">ob_label</a></code> object</p></dd>
-
-
-<dt id="arg-top">top<a class="anchor" aria-label="anchor" href="#arg-top"></a></dt>
-<dd><p>Top vertex of triangle</p></dd>
-
-
-<dt id="arg-left">left<a class="anchor" aria-label="anchor" href="#arg-left"></a></dt>
-<dd><p>Left vertex of triangle</p></dd>
-
-
-<dt id="arg-right">right<a class="anchor" aria-label="anchor" href="#arg-right"></a></dt>
-<dd><p>Right vertex of triangle</p></dd>
 
 
 <dt id="arg-vertex-radius">vertex_radius<a class="anchor" aria-label="anchor" href="#arg-vertex-radius"></a></dt>
@@ -130,16 +115,16 @@
 <dd><p>type of lines</p></dd>
 
 
+<dt id="arg-style">style<a class="anchor" aria-label="anchor" href="#arg-style"></a></dt>
+<dd><p>Gets and sets the styles associated with polygons</p></dd>
+
+
 <dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>overrides x-coordinate in <code>center@x</code></p></dd>
 
 
 <dt id="arg-y">y<a class="anchor" aria-label="anchor" href="#arg-y"></a></dt>
 <dd><p>overrides x-coordinate in <code>center@y</code></p></dd>
-
-
-<dt id="arg-style">style<a class="anchor" aria-label="anchor" href="#arg-style"></a></dt>
-<dd><p>Gets and sets the styles associated with polygons</p></dd>
 
 
 <dt id="arg-id">id<a class="anchor" aria-label="anchor" href="#arg-id"></a></dt>
@@ -158,7 +143,19 @@
     <h2 id="additional-properties">Additional properties<a class="anchor" aria-label="anchor" href="#additional-properties"></a></h2>
 
 
-<dl><dt><code>@length</code></dt>
+<dl><dt><code>@top</code></dt>
+<dd><p>Top vertex of triangle</p></dd>
+
+
+<dt><code>@left</code></dt>
+<dd><p>Left vertex of triangle</p></dd>
+
+
+<dt><code>@right</code></dt>
+<dd><p>Right vertex of triangle</p></dd>
+
+
+<dt><code>@length</code></dt>
 <dd><p>The number of polygons in the ob_polygon object</p></dd>
 
 

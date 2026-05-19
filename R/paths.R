@@ -27,7 +27,16 @@ path_props <- list(
       if (inherits(value, "list")) {
         allsameclass(value, "ob_point")
       }
-    })
+    }, setter = function(self, value) {
+      if (S7::S7_inherits(value, ob_point)) {
+        self@p <- list(value)
+      } else if (inherits(value, "list")) {
+        self@p <- value
+      } else {
+        stop("Control points must be an ob_point object or a list of ob_point objects.")
+      }
+      return(self)
+    } )
   ),
   extra = list(
     label = label_or_character_or_angle,
@@ -37,7 +46,7 @@ path_props <- list(
   # derived ----
   derived = list(
     bounding_box = S7::new_property(getter = function(self) {
-      d_rect <- self@tibble |>
+      d_rect <- get_tibble(self) |>
         dplyr::summarise(
           xmin = min(x),
           xmax = max(x),
@@ -50,16 +59,7 @@ path_props <- list(
         northeast = ob_point(d_rect$xmax, d_rect$ymax)
       )
     }),
-    length = S7::new_property(
-      getter = function(self) {
-        if (inherits(self@p, "list")) {
-          l <- length(self@p)
-        } else {
-          l <- 1
-        }
-        l
-      }
-    ),
+    length = pt_props$derived$length,
     style = S7::new_property(
       getter = function(self) {
         pr <- purrr::map(path_styles, prop, object = self) |>
@@ -76,12 +76,8 @@ path_props <- list(
     ),
     tibble = S7::new_property(getter = function(self) {
       p <- self@p
-      if (S7::S7_inherits(self@p, ob_point)) {
-        p <- list(p)
-      }
       d <- list(
         p = p,
-        group = seq(1, self@length),
         alpha = self@alpha,
         arrow_head = self@arrow_head,
         arrow_fins = self@arrow_fins,
@@ -103,7 +99,8 @@ path_props <- list(
         stroke_width = self@stroke_width,
         id = self@id
       )
-      get_non_empty_tibble(d)
+      get_non_empty_tibble(d) |>
+        dplyr::mutate(group = dplyr::row_number())
     }),
     vertex_angle = S7::new_property(getter = function(self) {
       a <- purrr::map(self@p, \(pp) {
@@ -146,11 +143,11 @@ path_props <- list(
     midpoint = S7::new_property(S7::class_function, getter = function(self) {
       \(position = .5, ...) midpoint(self, position = position, ...)
     }),
-    segments = S7::new_property(getter = function(self) {
-      \(...) {
-        purrr::map(self@p, \(s) ob_segment(s, style = self@style, ...)) |>
+    segment = S7::new_property(getter = function(self) {
+
+        purrr::map(self@p, \(s) ob_segment(s, style = self@style)) |>
           bind()
-      }
+
     })
   ),
   # info ----
@@ -207,7 +204,7 @@ path_props <- list(
 #' If you wish to specify multiple paths, you must supply a list of [`ob_point`] objects. When plotted, the [`ob_path`] function uses the ggarrow::geom_arrow function to create the geom.
 #' @export
 #' @returns ob_path object
-#' @param p [`ob_point`] or list of [`ob_point`]s
+#' @param p [`ob_point`] or list of [`ob_point`] objects
 #' @param label A character, angle, or [`ob_label`] object
 #' @param style Gets and sets the styles associated with paths
 #' @inherit ob_style params
@@ -414,7 +411,9 @@ S7::method(as.geom, ob_path) <- function(x, ...) {
       dplyr::bind_cols(x@label@tibble |> dplyr::select(-c(x, y)))
 
     if (!("hjust" %in% colnames(d))) {
-      d <- dplyr::mutate(d, hjust = x@label@position)
+      pos <- x@label@position
+      pos[is.na(pos)] <- .5
+      d <- dplyr::mutate(d, hjust = pos)
     }
 
     d <- tidyr::unnest(d, data)
@@ -427,14 +426,15 @@ S7::method(as.geom, ob_path) <- function(x, ...) {
       d <- dplyr::mutate(d, boxcolour = NA)
     }
 
-    if (!("label.padding" %in% colnames(d))) {
-      d <- dplyr::mutate(d, label.padding = unit(2, "pt"))
+    if ("label.padding" %in% colnames(d)) {
+      d <- dplyr::mutate(
+        d,
+        label.padding = purrr::map_dbl(label.padding, \(lp) c(lp[1] / 96))
+      )
+
     }
 
-    d <- dplyr::mutate(
-      d,
-      label.padding = purrr::map_dbl(label.padding, \(lp) c(lp[1] / 96))
-    )
+
 
     gl <- make_geom_helper(
       d,
@@ -452,4 +452,60 @@ S7::method(`[`, ob_path) <- function(x, i) {
   z <- data2shape(x@tibble[i, ], ob_path)
   z@label <- na2zero(x@label[i])
   z
+}
+
+S7::method(str, ob_path) <- function(
+    object,
+    nest.lev = 0,
+    additional = TRUE,
+    omit = omit_props(object, include = c(""))
+) {
+  str_properties(
+    object,
+    omit = omit,
+    nest.lev = nest.lev,
+    additional = additional
+  )
+  purrr::walk(object@p, \(o) {
+    str_properties(
+      o,
+      omit = omit_props(
+        o,
+        include = c("x", "y")
+      ),
+      nest.lev = 2,
+      additional = TRUE
+    )
+  })
+}
+
+S7::method(midpoint, list(ob_path, S7::class_missing)) <- function(
+    x,
+    y,
+    position = .5,
+    ...
+) {
+  purrr::map2(unbind(x), position, \(xx, pos) {
+    if (pos < 0 || pos > 1) {
+      ob_point(NA_real_, NA_real_, ...)
+    } else {
+      total_distance <- sum(xx@segment@distance)
+      mid_distance <- total_distance * pos
+      tibble::tibble(s = unbind(xx@segment)) |>
+        dplyr::mutate(d = purrr::map_dbl(s, distance),
+                      end_cd = cumsum(d),
+                      end_cp = end_cd / max(end_cd),
+                      start_cd = dplyr::lag(end_cd, default = 0),
+                      start_cp = dplyr::lag(end_cp, default = 0)) |>
+        dplyr::select(s, d, start_cd, end_cd, start_cp, end_cp) |>
+        dplyr::filter(pos >= start_cp & pos <= end_cp) |>
+        dplyr::slice(1) |>
+        dplyr::mutate(md = mid_distance - start_cd,
+                      mp = md / d,
+                      m = purrr::map(s, midpoint, position = mp)) |>
+        dplyr::pull(m)
+    }
+
+  }) |>
+    bind()
 }

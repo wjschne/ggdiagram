@@ -25,11 +25,7 @@ bz_styles <- c(
 bz_props <- list(
   # primary ----
   primary = list(
-    p = S7::new_property(class = point_or_list, validator = function(value) {
-      if (inherits(value, "list")) {
-        allsameclass(value, "ob_point")
-      }
-    })
+    p = path_props$primary$p
   ),
   extra = list(
     label = label_or_character_or_angle,
@@ -55,12 +51,7 @@ bz_props <- list(
     }),
     length = S7::new_property(
       getter = function(self) {
-        if (inherits(self@p, "list")) {
-          l <- length(self@p)
-        } else {
-          l <- 1
-        }
-        l
+        length(self@p)
       }
     ),
     path = S7::new_property(getter = function(self) {
@@ -85,9 +76,6 @@ bz_props <- list(
     ),
     tibble = S7::new_property(getter = function(self) {
       p <- self@p
-      if (S7::S7_inherits(self@p, ob_point)) {
-        p <- list(p)
-      }
       d <- list(
         p = p,
         group = seq(1, self@length),
@@ -249,13 +237,23 @@ bz_props <- list(
           }
           if (is.null(x)) {
             if (is.null(position)) {
-              x <- self[1]@label@center@x
-            } else {
-              x <- self[1]@midpoint(position)@x
+              position <- .5
             }
-
+            x <- self[1]@midpoint(position)@x
           }
-          self@label@center <- self@point_at_x(x)
+          lc <- map2_ob(self, x, \(s, xx) {
+            pp <- s@point_at_x(xx)
+            if (is.null(pp)) {
+              pp <- ob_point(NA_real_, NA_real_)
+            } else {
+              pp <- bind(pp)
+            }
+            pp[1]
+          })
+
+          self@label_sloped = FALSE
+          self@label@position = NA_real_
+          self@label@center <- lc
           self
         }
       }
@@ -269,13 +267,25 @@ bz_props <- list(
           }
           if (is.null(y)) {
             if (is.null(position)) {
-              y <- self[1]@label@center@y
-            } else {
-              y <- self[1]@midpoint(position)@y
+              position <- .5
             }
-
+              y <- self[1]@midpoint(position)@y
           }
-          self@label@center <- self@point_at_y(y)
+
+          lc <- map2_ob(self, y, \(s, yy) {
+            pp <- s@point_at_y(yy)
+            if (is.null(pp)) {
+              pp <- ob_point(NA_real_, NA_real_)
+            } else {
+              pp <- bind(pp)
+            }
+            pp[1]
+          })
+
+          self@label_sloped = FALSE
+          self@label@position = NA_real_
+          self@label@center <- lc
+
           self
         }
       }
@@ -338,7 +348,7 @@ bz_props <- list(
 #' If you wish to specify multiple bezier curves, you must supply a list of ob_point objects. When plotted, the ob_bezier function uses the bezier::bezier function to create the point coordinates of the curve and the ggarrow::geom_arrow function to create the geom.
 #' @export
 #' @returns ob_bezier object
-#' @param p ob_point or list of ob_points
+#' @param p [`ob_point`] or list of [`ob_point`] objects
 #' @param label A character, angle, or label object
 #' @param label_sloped A logical value indicating whether the label should be sloped with the curve
 #' @inherit ob_style params
@@ -375,7 +385,7 @@ ob_bezier <- S7::new_class(
     p = S7::class_missing,
     label = character(0),
     label_sloped = TRUE,
-    n = 100,
+    n = 101,
     alpha = numeric(0),
     arrow_head = S7::class_missing,
     arrow_fins = S7::class_missing,
@@ -413,7 +423,7 @@ ob_bezier <- S7::new_class(
           "Each item in list p must be an ob_point object of length 2 or more."
         )
       }
-      if (pp@length < 1) {
+      if (pp@length < 2) {
         stop(
           "Each item in list p must be an ob_point object of length 2 or more."
         )
@@ -454,9 +464,6 @@ ob_bezier <- S7::new_class(
 
     non_empty_list <- get_non_empty_props(bz_style)
 
-    if (S7::S7_inherits(p, ob_point)) {
-      p <- list(p)
-    }
     d <- tibble::tibble(
       p = p
     )
@@ -617,9 +624,7 @@ S7::method(as.geom, ob_bezier) <- function(x, ...) {
         d_label <- dplyr::mutate(d_label, boxcolour = NA)
       }
 
-      if (!("label.padding" %in% colnames(d_label))) {
-        d_label <- dplyr::mutate(d_label, label.padding = unit(2, "pt"))
-      } else {
+      if ("label.padding" %in% colnames(d_label)) {
         d_label <- dplyr::mutate(
           d_label,
           label.padding = purrr::map(label.padding, 1),
@@ -633,30 +638,38 @@ S7::method(as.geom, ob_bezier) <- function(x, ...) {
         user_overrides = NULL
       )
     } else {
+
       dpos <- tibble::tibble(group = unique(d$group), pos = x@label@position)
 
-      d_l <- dplyr::select(x@label@tibble, -c(x, y))
 
-      d_label <- tidyr::unnest(d, p_unnest) |>
-        dplyr::select(x, y, group) |>
-        dplyr::left_join(dpos, by = "group") |>
-        dplyr::mutate(x0 = dplyr::lag(x), y0 = dplyr::lag(y), .by = group) |>
-        dplyr::filter(!is.na(x0)) |>
-        dplyr::mutate(
-          dist_xy = sqrt((x - x0)^2 + (y - y0)^2),
-          p = cumsum(dist_xy) / sum(dist_xy),
-          p0 = dplyr::lag(p, default = 0),
-          .by = group
-        ) |>
-        dplyr::filter(p0 <= pos, pos <= p) |>
-        dplyr::filter(p0 == min(p0), .by = group) |>
-        dplyr::mutate(
-          ppos = (pos - p0) / (p - p0),
-          xpos = x0 + (x - x0) * ppos,
-          ypos = y0 + (y - y0) * ppos
-        ) |>
-        dplyr::select(group, x = xpos, y = ypos) |>
-        dplyr::bind_cols(d_l)
+
+      if (is.na(x@label@position)) {
+        d_label <- x@label@tibble
+      } else {
+        d_l <- dplyr::select(x@label@tibble, -c(x, y))
+
+        d_label <- tidyr::unnest(d, p_unnest) |>
+          dplyr::select(x, y, group) |>
+          dplyr::left_join(dpos, by = "group") |>
+          dplyr::mutate(x0 = dplyr::lag(x), y0 = dplyr::lag(y), .by = group) |>
+          dplyr::filter(!is.na(x0)) |>
+          dplyr::mutate(
+            dist_xy = sqrt((x - x0)^2 + (y - y0)^2),
+            p = cumsum(dist_xy) / sum(dist_xy),
+            p0 = dplyr::lag(p, default = 0),
+            .by = group
+          ) |>
+          dplyr::filter(p0 <= pos, pos <= p) |>
+          dplyr::filter(p0 == min(p0), .by = group) |>
+          dplyr::mutate(
+            ppos = (pos - p0) / (p - p0),
+            xpos = x0 + (x - x0) * ppos,
+            ypos = y0 + (y - y0) * ppos
+          ) |>
+          dplyr::select(group, x = xpos, y = ypos) |>
+          dplyr::bind_cols(d_l)
+
+      }
 
       if ("size" %in% colnames(d_label)) {
         d_label <- dplyr::mutate(d_label, size = size / ggplot2::.pt)
@@ -687,8 +700,15 @@ S7::method(midpoint, list(ob_bezier, S7::class_missing)) <- function(
   position = .5,
   ...
 ) {
-  purrr::map(x@p, \(xx) {
-    ob_point(bezier::bezier(t = position, p = xx@xy), ...)
+  purrr::map2(x@p, position, \(xx, pos) {
+    if (pos < 0 || pos > 1) {
+      ob_point(NA_real_, NA_real_, ...)
+    } else {
+      ob_point(bezier::bezier(t = pos, p = xx@xy), ...)
+    }
+
   }) |>
     bind()
 }
+
+

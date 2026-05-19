@@ -30,6 +30,7 @@ reference:
     contents:
       - nudge
       - place
+      - rescale
       - resect
       - rotate
   - title: "Get information about shapes"
@@ -51,6 +52,7 @@ reference:
       - bind
       - data2shape
       - map_ob
+      - map2_ob
       - ob_array
       - ob_shape_list
       - ob_style

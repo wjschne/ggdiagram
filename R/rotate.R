@@ -97,26 +97,27 @@ S7::method(rotate, list(centerpoint, ob_angle_or_numeric)) <- function(
   rlang::inject(set_props(x, !!!s))
 }
 
-# # Rotate ob_ellipse
-# S7::method(rotate, list(ob_ellipse, ob_angle_or_numeric)) <- function(x, theta, origin = ob_point(0, 0), ...) {
-#   if (!S7::S7_inherits(theta, ob_angle)) {
-#     theta <- degree(theta)
-#   }
-#
-#   x@center <- rotate(x@center, theta, origin = origin, ...)
-#   x@angle <- x@angle + theta
-#   s <- rlang::list2(...)
-#   rlang::inject(set_props(x, !!!s))
-# }
-# Rotate rectangle
-# S7::method(rotate, list(ob_rectangle, ob_angle_or_numeric)) <- function(x, theta, origin = ob_point(0, 0), ...) {
-#
-#   x@center <- rotate(x@center, theta, origin = origin, ...)
-#
-#   ob_point(c(
-#     rotate(ob_point(x@northeast), theta),
-#     rotate(ob_point(x@northwest), theta),
-#     rotate(ob_point(x@southwest), theta),
-#     rotate(ob_point(x@southeast), theta)
-#     ), ...)
-# }
+## Rotate polygon ----
+S7::method(rotate, list(ob_point_list, ob_angle_or_numeric)) <- function(
+    x,
+    theta,
+    origin = ob_point(0, 0),
+    ...) {
+  if (!S7::S7_inherits(theta, ob_angle)) {
+    theta <- degree(theta)
+  }
+  x <- purrr::pmap(list(
+    xx = unbind(x),
+    th = unbind(theta),
+    o = unbind(origin)
+  ), \(xx, th, o) {
+    xx@p <- map_ob(xx@p, \(pp) {
+      rotate(x = pp, theta = th, origin = o)
+    })
+    xx
+  }) |>
+    bind()
+
+  s <- rlang::list2(...)
+  rlang::inject(set_props(x, !!!s))
+}

@@ -319,12 +319,13 @@ S7::method(get_tibble_defaults, ob_line) <- function(x) {
   sp <- ob_style(
     alpha = 1,
     color = "black",
-    lineend = "black",
-    linejoin = 16,
+    lineend = "butt",
+    linejoin = "round",
     linewidth = 0.5,
-    linetype = 0.5
+    linetype = 1L
   )
   d <- get_tibble(x)
+
   for (n in setdiff(
     colnames(d),
     c("slope", "intercept", "xintercept", "geom", "a", "b", "c")
@@ -332,24 +333,9 @@ S7::method(get_tibble_defaults, ob_line) <- function(x) {
     d[is.na(dplyr::pull(d, n)), n] <- S7::prop(sp, n)
   }
   d
-}
 
-# v_line_helper <- function(d, ...) {
-#
-#
-#   make_geom_helper(
-#     d = d,
-#     user_overrides = get_non_empty_props(ob_style(...)),
-#     aesthetics = vline_aesthetics
-#   )
-# }
-# ab_line_helper <- function(d, ...) {
-#   make_geom_helper(
-#     d = d,
-#     aesthetics = abline_aesthetics,
-#     user_overrides = get_non_empty_props(ob_style(...))
-#   )
-# }
+
+}
 
 S7::method(as.geom, ob_line) <- function(x, ...) {
   overrides <- get_non_empty_props(ob_style(...))
@@ -467,5 +453,20 @@ S7::method(`[`, ob_line) <- function(x, i) {
 }
 
 S7::method(`==`, list(ob_line, ob_line)) <- function(e1, e2) {
-  (e1@a == e2@a) & (e1@b == e2@b) & (e1@c == e2@c)
+  # nocov start
+  tol <- 1e-9
+  tibble::tibble(a1 = e1@a,
+                 b1 = e1@b,
+                 c1 = e1@c,
+                 a2 = e2@a,
+                 b2 = e2@b,
+                 c2 = e2@c) |>
+    dplyr::mutate(cond1 = abs(a1 * b2 - a2 * b1) < tol,
+                  cond2 = abs(a1 * c2 - a2 * c1) < tol,
+                  cond3 = abs(b1 * c2 - b2 * c1) < tol,
+                  isequal = cond1 & cond2 & cond3) |>
+    dplyr::pull(isequal)
+  # nocov end
 }
+
+

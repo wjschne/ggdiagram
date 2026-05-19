@@ -1,5 +1,6 @@
 
-
+library(testthat)
+library(ggdiagram)
 
 
 test_that("constructor", {
@@ -117,122 +118,6 @@ test_that("adding", {
   expect_identical(p2 - 2, ob_point(1, 2))
   expect_identical(2 - p2, ob_point(-1, -2))
   expect_identical(s1 + s2, nudge(s1, s2))
-})
-
-
-
-
-
-
-test_that("distances", {
-  p0 <- ob_point(0, 3)
-  p1 <- ob_point(1, 1)
-  p2 <- ob_point(4, 5)
-  n1 <- ob_label(p1, label = "A")
-  n2 <- ob_label(p2, label = "B")
-  s1 <- ob_segment(p1, p2)
-  c1 <- ob_circle(p1, radius = 1)
-  c2 <- ob_circle(p2, radius = 2)
-  expect_equal(distance(p0), 3)
-  expect_equal(distance(p1, p2), 5)
-  expect_equal(distance(s1), 5)
-  expect_equal(distance(c1, c2), 2)
-  expect_equal(distance(c1, c1), 0)
-})
-
-
-
-
-
-
-test_that("intersection", {
-  s1 <- ob_segment(ob_point(0, 1), ob_point(1, 0))
-  s2 <- ob_segment(ob_point(0, 0), ob_point(1, 1))
-  s3 <- ob_segment(ob_point(0.1, .1), ob_point(.9, .9))
-  s4 <- ob_segment(ob_point(1, 1), ob_point(2, 2))
-  p1 <- ob_point(.5, .5)
-  expect_equal(intersection(s1, s2), p1)
-  expect_equal(intersection(s1@line, s2), p1)
-  expect_equal(intersection(s1, s2@line), p1)
-  expect_equal(intersection(s1, s3), p1)
-  expect_equal(intersection(s1, s4), list())
-  expect_equal(intersection(s1@line, s4@line), p1)
-  c1 <- ob_circle(center = ob_point(1, 1), radius = 1)
-  l1 <- ob_line(intercept = 1)
-  p1 <- ob_point(0, 1)
-  p2 <- ob_point(2, 1)
-  expect_equal(intersection(l1, c1), bind(c(p2, p1)))
-  expect_equal(intersection(c1, l1), bind(c(p2, p1)))
-  expect_equal(intersection(ob_line(intercept = 2), c1), ob_point(1, 2))
-  l1 <- ob_line(xintercept = 1)
-  p1 <- ob_point(1, 0)
-  p2 <- ob_point(1, 2)
-  expect_equal(intersection(l1, c1), bind(c(p1, p2)))
-  expect_equal(intersection(c1, l1), bind(c(p1, p2)))
-  expect_equal(intersection(ob_line(xintercept = 2), c1), ob_point(2, 1))
-  l1 <- ob_line(slope = 1, intercept = 2 * sin(degree(45)))
-  c1 <- ob_circle(ob_point(0, 0), radius = 1)
-  # intersect at tangent
-  expect_equal(intersection(l1, c1), S7::convert(ob_polar(
-    theta = radian(radian = pi * 3 / 4), r = 1
-  ), ob_point))
-  l1 <- ob_line(slope = .5, intercept = 0)
-  c1 <- ob_circle(ob_point(0, 0), radius = 1)
-  expect_equal(intersection(l1, c1), bind(c(
-    ob_point(x = cos(atan(.5)), y = sin(atan(.5))), ob_point(x = -cos(atan(.5)), y = -sin(atan(.5)))
-  )))
-  e1 <- ob_ellipse(a = 1, b = 2)
-
-  s5 <- ob_segment(ob_point(-2, -2), ob_point(2, 2))
-  # intersection(s2, e1)
-  # intersection(s5, e1)
-  #   intersection(ob_segment(ob_point(0,0), ob_point(2,0)), ob_segment(ob_point(0,1), ob_point(2,1)))
-  #
-  #   intersection(ob_segment(ob_point(1,0), ob_point(1,2)), ob_segment(ob_point(0,1), ob_point(2,1)))
-  #   intersection(ob_segment(ob_point(1,0), ob_point(1,2)), ob_segment(ob_point(1,1), ob_point(1,2)))
-  #   intersection(ob_line(1,intercept = 0), ob_rectangle(ob_point(0,0), width = 2, height = 2))
-  #   intersection(ob_segment(ob_point(0,-3), ob_point(0,10)), ob_rectangle(center = ob_point(0,0), width = 2, height = 2))
-  # x <- ob_segment(ob_point(1,0), ob_point(1,2))
-  # y <- ob_segment(ob_point(1,1), ob_point(1,2))
-})
-
-
-
-
-test_that("rotate", {
-  # rotate a line with an angle
-  expect_identical(rotate(ob_line(xintercept = 2), turn(turn = .5)), ob_line(xintercept = -2))
-  # rotate a line with a numeric radian
-  expect_equal(rotate(ob_line(xintercept = 2), turn(turn = .5)), rotate(ob_line(xintercept = 2), pi))
-
-  # rotate a ob_point
-  expect_equal(rotate(ob_point(1, 0), turn(turn = .5)), ob_point(-1, 0))
-
-  # rotate a segment
-  expect_equal(rotate(ob_segment(ob_point(0, 1), ob_point(1, 0)), theta = turn(.5)),
-               ob_segment(ob_point(0, -1), ob_point(-1, 0)))
-
-  # rotate a circle
-  expect_equal(rotate(x = ob_circle(ob_point(1, 2)), theta = turn(.25)), ob_circle(ob_point(-2, 1)))
-
-  expect_equal(rotate(x = ob_circle(ob_point(1, 2), n = 50), theta = turn(.25)),
-               ob_circle(ob_point(-2, 1), n = 50))
-
-  # rotate an ellipse
-  expect_equal(rotate(
-    x = ob_ellipse(
-      center = ob_point(1, 2),
-      a = 2,
-      b = 1
-    ),
-    theta = turn(.25)
-  ),
-  ob_ellipse(
-    ob_point(-2, 1),
-    a = 2,
-    b = 1,
-    angle = turn(.25)
-  ))
 })
 
 test_that("resect", {

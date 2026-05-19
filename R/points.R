@@ -29,7 +29,7 @@ pt_props <- list(
     }),
     length = S7::new_property(
       getter = function(self) {
-        length(self@x)
+        nrow(self@tibble)
       }
     ),
     r = S7::new_property(
@@ -441,13 +441,15 @@ purrr::walk(list(`+`, `-`, `*`, `/`, `^`), \(.f) {
     e1@x <- .f(e1@x, e2)
     e1@y <- .f(e1@y, e2)
     e1
-  } # nocov end
+    # nocov end
+  }
   S7::method(.f, list(S7::class_numeric, ob_point)) <- function(e1, e2) {
     # nocov start
     e2@x <- .f(e1, e2@x)
     e2@y <- .f(e1, e2@y)
     e2
-  } # nocov end
+    # nocov end
+  }
 })
 
 S7::method(midpoint, list(ob_point, ob_point)) <- function(
@@ -463,8 +465,9 @@ S7::method(midpoint, list(ob_point, ob_point)) <- function(
 
 S7::method(`%*%`, list(ob_point, ob_point)) <- function(x, y) {
   # nocov start
-  x@xy[1, , drop = TRUE] %*% y@xy[1, , drop = TRUE]
-} # nocov end
+  x@xy %*% t(y@xy)
+  # nocov end
+}
 
 # Perpendicular ----
 
@@ -530,7 +533,15 @@ S7::method(label_object, ob_point) <- function(object, accuracy = .1) {
 
 S7::method(`[`, ob_point) <- function(x, i) {
   i <- character_index(i, x@id)
-  data2shape(x@tibble[i, ], ob_point)
+  d <- x@tibble[i, ]
+
+  if (nrow(d) == 0) {
+    ob_point(double(0), double(0))
+  } else {
+    data2shape(x@tibble[i, ], ob_point)
+  }
+
+
 }
 
 #' @export
@@ -608,7 +619,7 @@ S7::method(connect, list(ob_point, ob_point)) <- function(
     )
   } else if (!is.null(arc_bend)) {
     if (any(arc_bend == 0)) {
-      stop("An arc cannot have an arc_bend of 0.")
+      stop(paste0("An arc cannot have an arc_bend of 0."))
     }
     m <- midpoint(from, to)
     chord_distance <- distance(from, to)
@@ -876,4 +887,15 @@ S7::method(ob_covariance, list(ob_point, ob_point)) <- function(
     resect = resect,
     !!!dots
   ))
+}
+
+S7::method(unique, ob_point) <- function(x, incomparables = FALSE, ...) {
+  d <- x@tibble %>%
+    unique()
+  if (nrow(d) == 0L) {
+    ob_point(double(0), double(0))
+  } else {
+    data2shape(d, S7::S7_class(x))
+  }
+
 }

@@ -33,7 +33,7 @@ ob_path(
 )
 }
 \arguments{
-\item{p}{\code{\link{ob_point}} or list of \code{\link{ob_point}}s}
+\item{p}{\code{\link{ob_point}} or list of \code{\link{ob_point}} objects}
 
 \item{label}{A character, angle, or \code{\link{ob_label}} object}
 

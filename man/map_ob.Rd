@@ -2,7 +2,7 @@
 % Please edit documentation in R/a_early.R
 \name{map_ob}
 \alias{map_ob}
-\title{map_ob}
+\title{Map over a ggdiagram object}
 \usage{
 map_ob(.x, .f, ..., .progress = FALSE)
 }

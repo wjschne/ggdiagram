@@ -15,6 +15,9 @@ test_that(desc = "circle", {
   expect_no_error(c1@normal_at(4))
   expect_no_error(c1@normal_at(ob_point(3,4)))
   expect_no_error(c1@tangent_at(4))
+  expect_equal(c1@tangent_at(0)@xintercept, 3)
+  expect_no_error(c1@tangent_at(ob_point(5,5)))
+  expect_equal(c1@tangent_at(ob_point(5,0))@xintercept, 3)
   expect_no_error(c1@point_at(4))
   expect_no_error(capture.output(print(c1), file = nullfile()))
   expect_no_error(place(ob_line(3,4), c1))
@@ -42,6 +45,7 @@ test_that(desc = "circle", {
 
   c1 <- ob_circle(label = ob_label("A"))
   c2 <- ob_circle(x = 1, y = 1, label = ob_label("A"))
+  expect_equal(c1@xy[1,1], c(x = 0))
   expect_no_error(as.geom(c1))
   expect_identical(c1 + ob_point(), c1)
   expect_identical(c1 - ob_point(), c1)
@@ -153,3 +157,6 @@ test_that("subsetting circles", {
   expect_equal(x@tibble, x2@tibble)
 
 })
+
+
+

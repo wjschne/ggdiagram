@@ -688,3 +688,4 @@ S7::method(equation, ob_segment) <- function(
     digits = digits
   )
 }
+

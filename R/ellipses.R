@@ -79,11 +79,7 @@ el_props <- list(
       y <- sqrt(abs(ab_df)) * -1
       self@center + ob_point(x, y)
     }),
-    length = S7::new_property(
-      getter = function(self) {
-        length(self@a)
-      }
-    ),
+    length = pt_props$derived$length,
     perimeter = S7::new_property(getter = function(self) {
       # Ramanujan's approximation
       # https://www.johndcook.com/blog/2024/09/22/ellipse-perimeter-approx/
@@ -500,6 +496,7 @@ S7::method(projection, list(ob_point, centerpoint)) <- function(
 }
 
 S7::method(get_tibble, ob_ellipse) <- function(x) {
+  # gets data ready for ggforce::geom_ellipse, which expects angles to be in radians, not degrees
   d <- x@tibble
   if ("angle" %in% colnames(d)) {
     d$angle <- pi * d$angle / 180
@@ -987,37 +984,42 @@ S7::method(connect, list(S7::class_list, centerpoint)) <- function(
   id = character(0),
   ...
 ) {
-  purrr::map(unbind(from), \(xx) {
-    connect(
-      xx,
-      to,
-      label = label,
-      arc_bend = arc_bend,
-      from_offset = from_offset,
-      to_offset = to_offset,
-      alpha = alpha,
-      arrow_head = arrow_head,
-      arrow_fins = arrow_fins,
-      arrowhead_length = arrowhead_length,
-      length_head = length_head,
-      length_fins = length_fins,
-      color = color,
-      lineend = lineend,
-      linejoin = linejoin,
-      linewidth = linewidth,
-      linewidth_fins = linewidth_fins,
-      linewidth_head = linewidth_head,
-      linetype = linetype,
-      resect = resect,
-      resect_fins = resect_fins,
-      resect_head = resect_head,
-      stroke_color = stroke_color,
-      stroke_width = stroke_width,
-      style = style,
-      label_sloped = label_sloped,
-      id = id,
-      ...
-    )
+  purrr::map(from, \(xx) {
+    if (S7::S7_inherits(xx, shape)) {
+      connect(
+        xx,
+        to,
+        label = label,
+        arc_bend = arc_bend,
+        from_offset = from_offset,
+        to_offset = to_offset,
+        alpha = alpha,
+        arrow_head = arrow_head,
+        arrow_fins = arrow_fins,
+        arrowhead_length = arrowhead_length,
+        length_head = length_head,
+        length_fins = length_fins,
+        color = color,
+        lineend = lineend,
+        linejoin = linejoin,
+        linewidth = linewidth,
+        linewidth_fins = linewidth_fins,
+        linewidth_head = linewidth_head,
+        linetype = linetype,
+        resect = resect,
+        resect_fins = resect_fins,
+        resect_head = resect_head,
+        stroke_color = stroke_color,
+        stroke_width = stroke_width,
+        style = style,
+        label_sloped = label_sloped,
+        id = id,
+        ...
+      )
+    } else {
+      stop("List must contain shape objects.")
+    }
+
   }) |>
     bind()
 }
@@ -1343,14 +1345,18 @@ S7::method(ob_array, ob_ellipse) <- function(
 `[<-.ggdiagram::shape` <- function(x, i, value) {
   .fn <- S7::S7_class(x)
   if (!S7::S7_inherits(value, .fn)) {
-    stop("Replacement value must be of the same type")
+    stop("Replacement value must be of the same type.")
   }
 
   i <- character_index(i, x@id)
 
   d <- x@tibble |>
     dplyr::bind_rows(dplyr::filter(value@tibble, FALSE))
-  d[i, ] <- value@tibble
+
+  dv <- value@tibble |>
+    dplyr::bind_rows(dplyr::filter(d, FALSE)) |>
+    dplyr::select(dplyr::any_of(colnames(d)))
+  d[i, ] <- dv
 
   z <- data2shape(d, S7::S7_class(x))
   z@label <- x@label
@@ -1370,6 +1376,7 @@ S7::method(ob_array, ob_ellipse) <- function(
   }
 
   z@label[i] <- value@label
+
   if (S7::S7_inherits(z@label, ob_label)) {
     z@label@center <- z@center
   }

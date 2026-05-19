@@ -335,7 +335,7 @@ rc_props <- list(
           ) |>
             get_non_empty_tibble()
 
-          d <- tibble::tibble(
+          tibble::tibble(
             x0 = self@center@x,
             y0 = self@center@y,
             width = self@width,
@@ -364,9 +364,6 @@ rc_props <- list(
             tidyr::nest(.by = c(group, angle, x0, y0)) |>
             dplyr::mutate(
               data = purrr::map2(data, angle, \(dd, aa) {
-                if (is.na(aa)) {
-                  aa <- 0
-                }
                 as.matrix(dd) |>
                   rotate2columnmatrix(aa) |>
                   `colnames<-`(c("x", "y")) |>
@@ -378,9 +375,9 @@ rc_props <- list(
             dplyr::select(group, x, y) |>
             tidyr::nest(.by = group) |>
             dplyr::bind_cols(dl) |>
-            tidyr::unnest(data)
-
-          data2shape(d, ob_point)
+            tidyr::unnest(data) |>
+            dplyr::filter(!(is.na(x) | is.na(y))) |>
+            data2shape(ob_point)
         }
       }
     )

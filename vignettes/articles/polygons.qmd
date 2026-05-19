@@ -197,7 +197,7 @@ bp +
   ) +
   ob_segment(
     ng@center,
-    ng@segments[1]@midpoint(),
+    ng@segment[1]@midpoint(),
     color = "white",
     label = ob_label(
       paste0("Apothem = ", round(ng@apothem, 2)),
@@ -208,8 +208,8 @@ bp +
   ) +
   ob_label(paste0("Side = ",
                   round(ng@side_length, 2)),
-           ng@segments[1]@midpoint(),
-           angle = ng@segments[1]@line@angle,
+           ng@segment[1]@midpoint(),
+           angle = ng@segment[1]@line@angle,
            vjust = -0.2,
            family = my_font)
 ```

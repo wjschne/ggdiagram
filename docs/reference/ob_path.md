@@ -43,7 +43,8 @@ ob_path(
 
   [`ob_point`](https://wjschne.github.io/ggdiagram/reference/ob_point.md)
   or list of
-  [`ob_point`](https://wjschne.github.io/ggdiagram/reference/ob_point.md)s
+  [`ob_point`](https://wjschne.github.io/ggdiagram/reference/ob_point.md)
+  objects
 
 - label:
 
@@ -218,6 +219,5 @@ ggarrow::geom_arrow function to create the geom.
 ``` r
 ggdiagram() +
  ob_path(list(ob_point(c(0, 0, 4), c(0, 1, 4)),
-              ob_point(c(1, 2, 5, 6), c(0, 1, 2, 0))), color = c("red", "blue"),
-              label = c("red", "blue"))
+              ob_point(c(1, 2, 5, 6), c(0, 1, 2, 0))), color = c("red", "blue"))
 ```

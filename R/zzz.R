@@ -1,5 +1,5 @@
 .onLoad <- function(...) {
-  suppressMessages(S7::methods_register())
+  suppressMessages(S7::methods_register()) # nocov
 }
 
 # enable usage of <S7_object>@name in package code

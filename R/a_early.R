@@ -8,7 +8,8 @@ do_nothing <- function(x) {
     p4 <- bezier::bezier(t = .5, p = c(0, 0, 1, 1))
     p5 <- tinter::tinter("red")
   }
-} # nocov end
+  # nocov end
+}
 
 #' @export
 #' @importFrom S7 prop
@@ -240,7 +241,7 @@ ob_shape_list <- S7::new_class(
   S7::class_list,
   validator = function(self) {
     if (!all(purrr::map_lgl(self, S7::S7_inherits, class = has_style))) {
-      "All objects must be ggdiagram objects that can be converted to geoms"
+      "All objects must be ggdiagram objects that can be converted to geoms."
     }
   }
 )
@@ -293,6 +294,48 @@ S7::method(`[`, shape) <- function(x, i) {
   z@label <- na2zero(x@label[i])
   z
 }
+
+S7::method(unique, shape) <- function(x, incomparables = FALSE, ...) {
+  d <- x@tibble
+  if (S7::prop_exists(x, "label")) {
+    if (length(x@label) > 0) {
+      if (S7::S7_inherits(x@label, ob_label)) {
+        l <- unbind(x@label)
+
+          d <- d %>%
+            dplyr::mutate(label = l)
+
+
+      }
+
+    }
+  }
+  ud <- d %>%
+    unique()
+
+  u <- ud
+  u$label <- NULL
+
+
+
+  u <- data2shape(u, S7::S7_class(x))
+
+  if ("label" %in% colnames(ud)) {
+    if (all(purrr::map_lgl(ud$label, S7::S7_inherits, class = ob_label))) {
+      u@label <- bind(ud$label)
+    }
+
+    }
+
+  u
+
+}
+
+S7::method(unique, ob_shape_list) <- function(x, incomparables = FALSE, ...) {
+  purrr::map(x, unique) |>
+    ob_shape_list()
+}
+
 
 xy <- S7::new_class(
   name = "xy",
@@ -421,12 +464,14 @@ ob_array <- S7::new_generic(
 #' @returns a bound object of same class as x (or list of objects if x contains objects of different types)
 bind <- S7::new_generic(name = "bind", dispatch_args = "x")
 
+S7::method(bind, shape) <- function(x, ...) {x}
+
 S7::method(bind, S7::class_list) <- function(x, ...) {
 
   all_angles <- all(purrr::map_lgl(x, S7::S7_inherits, class = ob_angle))
   if (all_angles) {
     if (length(x) == 0) {
-      return(degree())
+      return(degree()) # nocov
     }
     trns <- unlist(x)
     if (S7::S7_inherits(x[[1]], turn)) {
@@ -470,6 +515,7 @@ S7::method(bind, S7::class_list) <- function(x, ...) {
     ob_ngon = ob_ngon,
     ob_path = ob_path,
     ob_point = ob_point,
+    ob_polygon = ob_polygon,
     ob_rectangle = ob_rectangle,
     ob_reuleaux = ob_reuleaux,
     ob_segment = ob_segment,
@@ -496,7 +542,7 @@ S7::method(bind, S7::class_list) <- function(x, ...) {
       o@label <- bind(x_label)
     }
   }
-  o
+  if (nrow(d) == 0) o[0] else o
 }
 
 
@@ -512,6 +558,9 @@ S7::method(bind, ob_shape_list) <- function(x, ...) {
     ) |>
       bind()
   })
+
+  # Remove length 0
+  csl[names(Filter(function(o) length(o) == 0, csl))] <- NULL
 
   if (length(csl) > 1) {
     csl_names <- purrr::map_chr(csl, \(xx) S7::S7_class(xx)@name)
@@ -537,14 +586,17 @@ S7::method(bind, ob_shape_list) <- function(x, ...) {
 unbind <- S7::new_generic("unbind", dispatch_args = "x")
 
 S7::method(unbind, has_style) <- function(x) {
-  purrr::map(seq(1, x@length), \(i) x[i])
+  if (x@length == 0) return(c(x))
+  purrr::map(seq_len(x@length), \(i) x[i])
 }
 
 S7::method(unbind, ob_shape_list) <- function(x) {
   as.list(x)
 }
 
-#' map_ob
+
+
+#' Map over a ggdiagram object
 #'
 #' A wrapper for [purrr::map]. It takes a ggdiagram object with multiple elements, applies a function to each element within the object, and returns a ggdiagram object
 #' @param .x a ggdiagram object
@@ -558,7 +610,40 @@ map_ob <- function(.x, .f, ..., .progress = FALSE) {
   if (S7::S7_inherits(.x, has_style) | S7::S7_inherits(.x, ob_angle)) {
     .x <- unbind(.x)
   }
+  if (S7::S7_inherits(.x, ob_shape_list)) {
+    .x <- c(.x)
+  }
   purrr::map(.x, .f, ..., .progress = .progress) |>
+    bind()
+}
+
+#' Map over two ggdiagram objects
+#'
+#' A wrapper for [purrr::map2]. It takes two ggdiagram objects with multiple elements, applies a function to each element within the objects, and returns a ggdiagram object
+#' @param .x a ggdiagram object
+#' @param .y a ggdiagram object
+#' @param .f a function that returns a ggdiagram object
+#' @param ... <[`dynamic-dots`][rlang::dyn-dots]> arguments passed to .f
+#' @param .progress display progress if TRUE
+#'
+#' @returns a ggdiagram object
+#' @export
+map2_ob <- function(.x, .y, .f, ..., .progress = FALSE) {
+  if (S7::S7_inherits(.x, has_style) | S7::S7_inherits(.x, ob_angle)) {
+    .x <- unbind(.x)
+  }
+  if (S7::S7_inherits(.y, has_style) | S7::S7_inherits(.y, ob_angle)) {
+    .y <- unbind(.y)
+  }
+
+  if (S7::S7_inherits(.x, ob_shape_list)) {
+    .x <- c(.x)
+  }
+
+  if (S7::S7_inherits(.y, ob_shape_list)) {
+    .y <- c(.y)
+  }
+  purrr::map2(.x, .y, .f, ..., .progress = .progress) |>
     bind()
 }
 
@@ -573,26 +658,26 @@ str <- S7::new_external_generic(
 
 ## plus----
 S7::method(`+`, list(S7::class_any, S7::class_any)) <- function(e1, e2) {
-  .Primitive("+")(e1, e2)
+  .Primitive("+")(e1, e2) # nocov
 }
 
 S7::method(`+`, list(S7::class_character, S7::class_character)) <- function(
   e1,
   e2
 ) {
-  paste0(e1, e2)
+  paste0(e1, e2) # nocov
 }
 S7::method(`+`, list(S7::class_numeric, S7::class_character)) <- function(
   e1,
   e2
 ) {
-  paste0(e1, e2)
+  paste0(e1, e2) # nocov
 }
 S7::method(`+`, list(S7::class_character, S7::class_numeric)) <- function(
   e1,
   e2
 ) {
-  paste0(e1, e2)
+  paste0(e1, e2)# nocov
 }
 
 ## get_tibble----
@@ -605,8 +690,14 @@ get_tibble <- S7::new_generic("get_tibble", "x", fun = function(x) {
   S7::S7_dispatch()
 })
 S7::method(get_tibble, S7::class_list) <- function(x) {
-  purrr::map_df(S7::S7_data(x), get_tibble)
+  purrr::map_df(x, get_tibble)
 }
+
+S7::method(get_tibble, ob_shape_list) <- function(x) {
+  purrr::map(S7::S7_data(x), get_tibble)
+}
+
+
 
 # Resect ----
 #' resect
@@ -635,6 +726,12 @@ get_tibble_defaults <- S7::new_generic(
 S7::method(get_tibble_defaults, S7::class_any) <- function(x) {
   get_tibble(x)
 }
+
+# length shape ----
+S7::method(length, shape) <- function(x) {
+  x@length
+}
+
 
 
 #' Move an object
@@ -719,7 +816,6 @@ redefault <- function(.f, ...) {
 #' @keywords internal
 #' @noRd
 cardinalpoint <- function(x) {
-  .namedpositions
   if (!all(x %in% names(.namedpositions))) {
     stop(paste0(
       "Position must be an angle, numeric, or one of these named positions:\n",
@@ -775,14 +871,18 @@ get_tibble_defaults_helper <- function(
   }
 
   for (n in setdiff(colnames(d), required_aes)) {
-    d_prop <- S7::prop(default_style, n)
-    if (!(is.null(d_prop) || identical(d_prop, list()))) {
-      d_prop <- ifelse(is.vector(d_prop), d_prop, c(d_prop))
-      missings <- is.na(`[[`(d, n))
-      if (!all(missings) && any(missings)) {
-        d[missings, n] <- d_prop
+    if (S7::prop_exists(default_style, n)) {
+      d_prop <- S7::prop(default_style, n)
+      if (!(is.null(d_prop) || identical(d_prop, list()))) {
+        d_prop <- ifelse(is.vector(d_prop), d_prop, c(d_prop))
+        missings <- is.na(`[[`(d, n))
+        if (!all(missings) && any(missings)) {
+          d[missings, n] <- d_prop
+        }
       }
+
     }
+
   }
   d
 }
@@ -885,9 +985,7 @@ ob_array_helper <- function(
       )
     }
 
-    if (x@label@length == k) {
-      l <- ob_label(x@label@label, style = x@style, center = p_center)
-    }
+
   }
 
   if (is.null(dots$label)) {
@@ -1087,23 +1185,6 @@ round_probability <- function(
 }
 
 
-# https://github.com/RConsortium/S7/issues/370
-#' @keywords internal
-#' @noRd
-prop_integer_coerce <- function(name) {
-  S7::new_property(
-    name = name,
-    class = S7::class_integer,
-    setter = function(self, value) {
-      if (rlang::is_integerish(value)) {
-        value <- as.integer(value)
-      }
-      S7::prop(self, name) <- value
-      self
-    }
-  )
-}
-
 #' @keywords internal
 #' @noRd
 .simpleCap <- function(x) {
@@ -1119,6 +1200,63 @@ prop_integer_coerce <- function(name) {
   ub <- apply(b, 1, max)
   lb <- apply(b, 1, min)
   (x >= lb) & (x <= ub)
+}
+
+
+#' Finds the "previous" (lag) or "next" (lead) values in a vector or object with values at the end of the vector recycled to the beginning.
+#'
+#' @param x A vector or ggdiagram object
+#' @param n Positive integer of length 1, giving the number of positions to lag or lead by
+#'
+#' @returns A vector with the same type and size as x but with elements shifted and cycled by n.
+#' @export
+#'
+#' @examples
+#' lead_cycle(1:5)
+#' lead_cycle(1:5, 2)
+#' lag_cycle(1:5)
+#' lag_cycle(1:5, 2)
+#' octagon <- ob_ngon(n = 8)
+#' vertices <- octagon@vertices
+#' ggdiagram() +
+#'   vertices +
+#'   connect(vertices, lead_cycle(vertices),  resect = 2) +
+#'   connect(vertices, lag_cycle(vertices, n = 2),  resect = 2) +
+#'   connect(vertices, lead_cycle(vertices, n = 3),  resect = 2)
+lead_cycle <- function(x, n = 1L) {
+  k <- length(x)
+  if (k < 2) {
+    return(k)
+  }
+
+  ni <- as.integer(n)
+
+  if (!((ni == n) && n > 0 && n < k)) {
+    stop("n must be a positive integer less than length of x.")
+  }
+
+
+
+  x[c(seq(ni + 1,k), seq(1, ni))]
+}
+
+#' @rdname lead_cycle
+#' @export
+lag_cycle <- function(x, n = 1L) {
+  k <- length(x)
+  if (k < 2) {
+    return(k)
+  }
+
+  ni <- as.integer(n)
+
+  if (!((ni == n) && n > 0 && n < k)) {
+    stop("n must be a positive integer less than length of x.")
+  }
+
+
+
+  x[c(seq(k - ni + 1, k), seq(1, k - ni))]
 }
 
 
@@ -1148,16 +1286,16 @@ S7::method(as.geom, ob_shape_list) <- function(x, ...) {
 }
 
 S7::method(`+`, list(class_gg, has_style)) <- function(e1, e2) {
-  e1 + as.geom(e2)
+  e1 + as.geom(e2) # nocov
 }
 
 S7::method(`+`, list(class_gg, ob_shape_list)) <- function(e1, e2) {
-  e1 + as.geom(e2)
+  e1 + as.geom(e2) # nocov
 }
 
 S7::method(update_ggplot, list(has_style, class_ggplot)) <-
   function(object, plot, ...) {
-    plot + as.geom(object)
+    plot + as.geom(object) # nocov
   }
 
 #' @noRd
@@ -1205,7 +1343,7 @@ make_geom_helper <- function(d = NULL, aesthetics, user_overrides, ...) {
   # make geom for each row in d_nested
   purrr::pmap(d_all, \(data, unmappable) {
     if ("p_unnest" %in% colnames(data)) {
-      data <- tidyr::unnest(data = data, .data$p_unnest)
+      data <- tidyr::unnest(data = data, "p_unnest")
     }
 
     # make list of not mapped arguments
@@ -1220,7 +1358,7 @@ make_geom_helper <- function(d = NULL, aesthetics, user_overrides, ...) {
 
     not_mapped <- purrr::map2(not_mapped, names(not_mapped), \(x, name) {
       if (name %in% d_unit_names) {
-        x <- grid::unit(x, d_unit_types[name])
+        x <- grid::unit(x, d_unit_types[name]) # nocov
       }
       x
     })

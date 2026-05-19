@@ -1,4 +1,4 @@
-# map_ob
+# Map over a ggdiagram object
 
 A wrapper for
 [purrr::map](https://purrr.tidyverse.org/reference/map.html). It takes a

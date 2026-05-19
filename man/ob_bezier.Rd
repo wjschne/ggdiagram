@@ -8,7 +8,7 @@ ob_bezier(
   p = S7::class_missing,
   label = character(0),
   label_sloped = TRUE,
-  n = 100,
+  n = 101,
   alpha = numeric(0),
   arrow_head = S7::class_missing,
   arrow_fins = S7::class_missing,
@@ -34,7 +34,7 @@ ob_bezier(
 )
 }
 \arguments{
-\item{p}{ob_point or list of ob_points}
+\item{p}{\code{\link{ob_point}} or list of \code{\link{ob_point}} objects}
 
 \item{label}{A character, angle, or label object}
 

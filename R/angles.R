@@ -200,12 +200,15 @@ turn <- S7::new_class(
 # arithmetic ----
 purrr::walk(list(`+`, `-`, `*`, `/`, `^`), \(.f) {
   S7::method(.f, list(ob_angle, ob_angle)) <- function(e1, e2) {
+    # nocov start
     d <- .f(c(e1), c(e2))
     S7::S7_data(e2) <- d
     e2
+    # nocov end
   }
 
   S7::method(.f, list(ob_angle, S7::class_numeric)) <- function(e1, e2) {
+    # nocov start
     d <- num2turn(
       .f(
         S7::prop(
@@ -219,9 +222,11 @@ purrr::walk(list(`+`, `-`, `*`, `/`, `^`), \(.f) {
 
     S7::S7_data(e1) <- d
     e1
+    # nocov end
   }
 
   S7::method(.f, list(S7::class_numeric, ob_angle)) <- function(e1, e2) {
+    # nocov start
     d <- num2turn(
       .f(
         e1,
@@ -235,35 +240,31 @@ purrr::walk(list(`+`, `-`, `*`, `/`, `^`), \(.f) {
 
     S7::S7_data(e2) <- d
     e2
+    # nocov end
   }
 })
 
 # equality ----
 S7::method(`==`, list(ob_angle, ob_angle)) <- function(e1, e2) {
-  # nocov start
-  abs(c(e1) - c(e2)) <= .Machine$double.eps
-} # nocov end
+  abs(c(e1) - c(e2)) <= .Machine$double.eps # nocov
+}
 
 S7::method(`==`, list(ob_angle, S7::class_numeric)) <- function(e1, e2) {
-  # nocov start
-  abs(c(e1) - num2turn(e2, e1)) <= .Machine$double.eps
-} # nocov end
+  abs(c(e1) - num2turn(e2, e1)) <= .Machine$double.eps # nocov
+}
 
 S7::method(`==`, list(S7::class_numeric, ob_angle)) <- function(e1, e2) {
-  # nocov start
-  abs(num2turn(e1, e2) - c(e2)) <= .Machine$double.eps
-} # nocov end
+  abs(num2turn(e1, e2) - c(e2)) <= .Machine$double.eps # nocov
+}
 
 
 S7::method(`!=`, list(ob_angle, ob_angle)) <- function(e1, e2) {
-  # nocov start
-  abs(c(e1) - c(e2)) > .Machine$double.eps
-} # nocov end
+  abs(c(e1) - c(e2)) > .Machine$double.eps # nocov
+}
 
 purrr::walk(
   list(`<`, `<=`, `>`, `>=`),
-  \(.f) {
-    # nocov start
+  \(.f) { # nocov start
     S7::method(.f, list(ob_angle, ob_angle)) <- function(e1, e2) {
       .f(c(e1), c(e2))
     }
@@ -273,7 +274,7 @@ purrr::walk(
     S7::method(.f, list(S7::class_numeric, ob_angle)) <- function(e1, e2) {
       .f(num2turn(e1, e2), c(e2))
     }
-  } # nocov end
+  }  # nocov end
 )
 
 # Trigonometry ----
@@ -342,6 +343,11 @@ S7::method(as.character, ob_angle) <- function(
   digits = NULL,
   type = NULL
 ) {
+  # underlying data
+  d <- c(x)
+  if (length(d) == 0) {
+    return(character(0))
+  }
   if (!is.null(type)) {
     if (type == "degree" || type == "ggdiagram::degree") {
       x <- degree(x)
@@ -390,6 +396,8 @@ S7::method(as.character, ob_angle) <- function(
       "\u00B0"
     )
   }
+  # Handle missing data
+  x[is.na(d)] <- NA_character_
 
   x
 }
@@ -405,6 +413,8 @@ S7::method(unbind, ob_angle) <- function(x) {
   purrr::map(seq(length(c(x))), \(i) x[i])
 }
 
+S7::method(bind, ob_angle) <- function(x, ...) {x}
+
 #' @export
 `[<-.ggdiagram::ob_angle` <- function(x, i, value) {
   d <- c(x)
@@ -412,3 +422,5 @@ S7::method(unbind, ob_angle) <- function(x) {
   S7::S7_data(x) <- d
   x
 }
+
+

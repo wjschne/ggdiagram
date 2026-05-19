@@ -28,6 +28,10 @@ test_that("trig functions work with ob_angle", {
   expect_equal(tan(turn(.5)), tanpi(1))
 })
 
+test_that("cardinal point", {
+  expect_identical(ob_angle(.25), ob_angle("north"))
+})
+
 test_that("equality with ob_angle", {
   tidyr::crossing(tibble::tibble(
     .f = list(degree, radian, turn, ob_angle),
@@ -169,6 +173,7 @@ test_that("as.character with type argument converts units", {
   expect_identical(as.character(degree(90), type = "radian"), "0.5\u03C0")
   expect_identical(as.character(degree(90), type = "turn"), ".25")
   expect_identical(as.character(turn(0.5), type = "degree"), "180\u00B0")
+  expect_identical(as.character(radian()), character(0))
 })
 
 test_that("trig at specific values", {
@@ -180,6 +185,7 @@ test_that("trig at specific values", {
 test_that("!= operator", {
   expect_true(degree(90) != degree(45))
   expect_false(degree(90) != degree(90))
+  bind(degree(0))
 })
 
 test_that("str and print no error", {
@@ -187,4 +193,16 @@ test_that("str and print no error", {
   expect_no_error(capture.output(str(radian(pi))))
   expect_no_error(capture.output(str(turn(0.5))))
   expect_no_error(capture.output(print(degree(45))))
+})
+
+test_that("bind angles", {
+  expect_true(S7::S7_inherits(bind(list(turn(0), degree(60))), turn), TRUE)
+  expect_true(S7::S7_inherits(bind(list(radian(0), degree(60))), radian), TRUE)
+  expect_true(S7::S7_inherits(bind(list(degree(0), radian(60))), degree), TRUE)
+  length(radian())
+  bind(list(radian()))
+  unlist(list(radian()))
+  radian(numeric(0) * pi * 2)
+  expect_true(S7::S7_inherits(bind(list(degree(0), radian(60))), degree), TRUE)
+
 })

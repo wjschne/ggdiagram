@@ -360,8 +360,7 @@ S7::method(print, ob_style) <- function(x, ...) {
   invisible(x)
 }
 
-S7::method(`+`, list(ob_style, ob_style)) <- function(e1, e2) {
-  # nocov start
+S7::method(`+`, list(ob_style, ob_style)) <- function(e1, e2) { # nocov start
   pn <- S7::prop_names(e1)
   pnames <- pn[pn != "tibble"]
   for (p in pnames) {
@@ -374,24 +373,20 @@ S7::method(`+`, list(ob_style, ob_style)) <- function(e1, e2) {
 
 
 S7::method(`+`, list(S7::class_missing, ob_style)) <- function(e1, e2) {
-  # nocov start
-  e2
-} # nocov end
+  e2 # nocov
+}
 
 S7::method(`+`, list(ob_style, S7::class_missing)) <- function(e1, e2) {
-  # nocov start
-  e1
-} # nocov end
+  e1 # nocov
+}
 
 S7::method(`+`, list(S7::class_any, ob_style)) <- function(e1, e2) {
-  # nocov start
-  e2
-} # nocov end
+  e2 # nocov
+}
 
 S7::method(`+`, list(ob_style, S7::class_any)) <- function(e1, e2) {
-  # nocov start
-  e1
-} # nocov end
+  e1 # nocov
+}
 
 S7::method(get_tibble, ob_style) <- function(x) {
   d <- get_non_empty_props(x)
