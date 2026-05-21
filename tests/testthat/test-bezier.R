@@ -216,18 +216,7 @@ test_that("from and to offset with direction words", {
   expect_no_error(bz2@point_at_x(0))
 
   bz <- connect(ob_point(), ob_point(1,0), from_offset = "south", to_offset = "south", label = "a")
-  # ggdiagram() +
-    # ob_segment(ob_point(c(1,-1), c(1,-1))) +
-    # ob_line(slope = 2, intercept = 0, color = "black", linewidth = 1) +
-    # bz@set_label_y() +
-    # bz@set_label_y(position = .1) +
-    # bz@set_label_x() +
-    # bz@set_label_x(position = .1) +
-    # bz@set_label_x(x = .1) +
-    # bz@set_label_y(y = .1) +
-    # bz@set_label_x(position = -1) +
-    # theme_minimal()
-# bz@midpoint()@y
+
   # No values
   expect_no_error(bz@set_label_x())
   expect_no_error(bz@set_label_y())

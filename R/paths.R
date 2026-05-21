@@ -60,6 +60,12 @@ path_props <- list(
       )
     }),
     length = pt_props$derived$length,
+    segment = S7::new_property(getter = function(self) {
+
+      purrr::map(self@p, \(s) ob_segment(s, style = self@style)) |>
+        bind()
+
+    }),
     style = S7::new_property(
       getter = function(self) {
         pr <- purrr::map(path_styles, prop, object = self) |>
@@ -142,12 +148,6 @@ path_props <- list(
     }),
     midpoint = S7::new_property(S7::class_function, getter = function(self) {
       \(position = .5, ...) midpoint(self, position = position, ...)
-    }),
-    segment = S7::new_property(getter = function(self) {
-
-        purrr::map(self@p, \(s) ob_segment(s, style = self@style)) |>
-          bind()
-
     })
   ),
   # info ----

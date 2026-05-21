@@ -1,83 +1,3 @@
-# ggdiagram
-
-The ggdiagram package takes an object-oriented approach to making
-diagrams and plots the results using
-[ggplot2](https://ggplot2.tidyverse.org/).
-
-My motivation in making ggdiagram was to find a way to approach the
-functionality of [TikZ](https://tikz.dev/) but with the flexibility and
-convenience of R. The ggdiagram package is built atop
-[S7](https://rconsortium.github.io/S7/) and is integrated with
-[ggplot2](https://ggplot2.tidyverse.org/), making heavy use of
-[ggtext](https://wilkelab.org/ggtext/),
-[ggforce](https://ggforce.data-imaginist.com/), and
-[ggarrow](https://teunbrand.github.io/ggarrow/).
-
-The ggdiagram package is not a replacement for the standard ggplot2
-functions. The underlying *grammar* of ggplot2 is well designed for
-visualizing data. The ggdiagram functions are best suited for creating a
-small number of visual objects that interrelate. If anything, they can
-be thought of as extensions of
-[`ggplot2::annotate`](https://ggplot2.tidyverse.org/reference/annotate.html).
-
-## Installation
-
-To install the published version from CRAN:
-
-``` r
-
-install.packages("ggdiagram")
-```
-
-You can install the development version of ggdiagram from R-universe
-like so:
-
-``` r
-
-install.packages("ggdiagram", repos = "https://wjschne.r-universe.dev")
-```
-
-## Example
-
-In [Figure 1](#fig-example), we create a circle object with `ob_circle`
-and a rectangle object with `ob_rectangle`, placing the rectangle such
-that there is .5 units of separation between the two objects.
-
-The `ggdiagram` function is a a wrapper for `ggplot`, that sets some
-defaults (e.g., `theme_void`, `coord_equal`, fonts, line size, etc.).
-
-The `ob_*` functions have methods such that they can be added to any
-ggplot. Under the hood, they are first converted to an appropriate geom
-and then added to the ggplot object. In this case, an `ob_circle` is
-converted to a `ggforce:geom_circle`, and an `ob_rectangle` is converted
-to a
-[`ggforce::geom_shape`](https://ggforce.data-imaginist.com/reference/geom_shape.html).
-
-The `connect` function connects the circle and rectangle at their edges
-with an arrow (drawn with
-[`ggarrow::geom_arrow_segment`](https://teunbrand.github.io/ggarrow/reference/geom_arrow_segment.html)).
-
-``` r
-
-library(ggdiagram)
-c1 <- ob_circle(radius = 1 / sqrt(pi)) 
-r2 <- ob_rectangle() |>
-  place(from = c1,
-        where = "right", 
-        sep = .5)
-
-ggdiagram() +
-  c1 +
-  r2 +
-  connect(c1, r2, resect = 1) 
-```
-
-![Diagram of a circle on the left and a square on the right with an
-arrow connecting the two
-shapes.](reference/figures/README-fig-example-1.png)
-
-Figure 1: Connecting a circle and a square with an arrow.
-
 # Package index
 
 ## Shapes
@@ -130,8 +50,6 @@ Functions that alter shapes
   Move an object
 - [`place()`](https://wjschne.github.io/ggdiagram/reference/place.md) :
   Place an object a specified distance from another object
-- [`rescale()`](https://wjschne.github.io/ggdiagram/reference/rescale.md)
-  : Rescale an object in 2 dimensions
 - [`resect()`](https://wjschne.github.io/ggdiagram/reference/resect.md)
   : resect
 - [`rotate()`](https://wjschne.github.io/ggdiagram/reference/rotate.md)
@@ -173,9 +91,7 @@ Functions for working with many shapes
 - [`data2shape()`](https://wjschne.github.io/ggdiagram/reference/data2shape.md)
   : Make shapes from data
 - [`map_ob()`](https://wjschne.github.io/ggdiagram/reference/map_ob.md)
-  : Map over a ggdiagram object
-- [`map2_ob()`](https://wjschne.github.io/ggdiagram/reference/map2_ob.md)
-  : Map over two ggdiagram objects
+  : map_ob
 - [`ob_array()`](https://wjschne.github.io/ggdiagram/reference/ob_array.md)
   : Object Arrays
 - [`ob_shape_list()`](https://wjschne.github.io/ggdiagram/reference/ob_shape_list.md)
@@ -255,34 +171,3 @@ Helper functions
 
 - [`get_depth()`](https://wjschne.github.io/ggdiagram/reference/get_depth.md)
   : Function to calculate hierarchy depth in lavaan models
-- [`lead_cycle()`](https://wjschne.github.io/ggdiagram/reference/lead_cycle.md)
-  [`lag_cycle()`](https://wjschne.github.io/ggdiagram/reference/lead_cycle.md)
-  : Finds the "previous" (lag) or "next" (lead) values in a vector or
-  object with values at the end of the vector recycled to the beginning.
-
-# Articles
-
-### All vignettes
-
-- [Angles](https://wjschne.github.io/ggdiagram/articles/angles.md):
-- [Arcs and
-  Wedges](https://wjschne.github.io/ggdiagram/articles/arcwedges.md):
-- [Repetition and
-  Automation](https://wjschne.github.io/ggdiagram/articles/automation.md):
-- [Bézier
-  Curves](https://wjschne.github.io/ggdiagram/articles/bezier.md):
-- [Path
-  Diagrams](https://wjschne.github.io/ggdiagram/articles/causalpaths.md):
-- [Circles](https://wjschne.github.io/ggdiagram/articles/circles.md):
-- [Colors](https://wjschne.github.io/ggdiagram/articles/colors.md):
-- [Ellipses](https://wjschne.github.io/ggdiagram/articles/ellipses.md):
-- [Equations with
-  LaTeX](https://wjschne.github.io/ggdiagram/articles/equations.md):
-- [Using
-  ggdiagram](https://wjschne.github.io/ggdiagram/articles/ggdiagram.md):
-- [Lines](https://wjschne.github.io/ggdiagram/articles/lines.md):
-- [Paths](https://wjschne.github.io/ggdiagram/articles/paths.md):
-- [Points](https://wjschne.github.io/ggdiagram/articles/points.md):
-- [Polygons](https://wjschne.github.io/ggdiagram/articles/polygons.md):
-- [Rectangles](https://wjschne.github.io/ggdiagram/articles/rectangles.md):
-- [Segments](https://wjschne.github.io/ggdiagram/articles/segments.md):

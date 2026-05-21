@@ -1,5 +1,5 @@
 # from S7
-obj_type <- function(x) {
+obj_type <- function(x) { # nocov start
   if (identical(x, quote(expr = ))) {
     "missing"
   } else if (S7::S7_inherits(x)) {
@@ -11,9 +11,9 @@ obj_type <- function(x) {
   } else {
     "base"
   }
-}
+} # nocov end
 
-obj_desc <- function(x) {
+obj_desc <- function(x) { # nocov start
   switch(
     obj_type(x),
     missing = "MISSING",
@@ -22,7 +22,7 @@ obj_desc <- function(x) {
     S4 = paste0("S4<", class(x), ">"),
     S7 = paste0("<", class(x)[[1]], ">")
   )
-}
+} # nocov end
 
 # from S7 internals
 str_function <- function(object, ..., nest.lev = 0) {
@@ -60,7 +60,7 @@ str_nest <- function(
   }
 }
 
-omit_props <- function(object, include = character(0), omit = character(0)) {
+omit_props <- function(object, include = character(0), omit = character(0)) { # nocov start
   if (length(include) > 0) {
     setdiff(
       names(S7::S7_class(object)@properties),
@@ -74,7 +74,7 @@ omit_props <- function(object, include = character(0), omit = character(0)) {
   } else {
     character(0)
   }
-}
+} # nocov end
 
 str_properties <- function(
   object,

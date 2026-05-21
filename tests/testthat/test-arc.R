@@ -33,6 +33,13 @@ test_that("ob_arc construction", {
 
   # style args
   expect_no_error(ob_arc(color = "red", linewidth = 1.5))
+
+  # empty arc
+  ea <- ob_arc(center = ob_point(double(0), double(0)))
+  expect_length(ea, 0)
+  expect_identical(list(ea), unbind(ea))
+
+
 })
 
 # angle input types ----

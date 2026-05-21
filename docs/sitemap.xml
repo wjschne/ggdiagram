@@ -22,6 +22,7 @@
 <url><loc>https://wjschne.github.io/ggdiagram/CONTRIBUTING.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/index.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/LICENSE.html</loc></url>
+<url><loc>https://wjschne.github.io/ggdiagram/news/index (EDU-WJOELS-MOB's conflicted copy 2026-05-18).html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/news/index.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/arrowhead.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/as.geom.html</loc></url>
@@ -37,13 +38,16 @@
 <url><loc>https://wjschne.github.io/ggdiagram/reference/get_tibble.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ggdiagram-package.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ggdiagram.html</loc></url>
+<url><loc>https://wjschne.github.io/ggdiagram/reference/index (EDU-WJOELS-MOB's conflicted copy 2026-05-18).html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/index.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/inside.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/intersection.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/intersection_angle.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/label_object.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/latex_color.html</loc></url>
+<url><loc>https://wjschne.github.io/ggdiagram/reference/lead_cycle.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/map2_ob.html</loc></url>
+<url><loc>https://wjschne.github.io/ggdiagram/reference/map_ob (EDU-WJOELS-MOB's conflicted copy 2026-05-18).html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/map_ob.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/mean_color.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/midpoint.html</loc></url>
@@ -51,15 +55,18 @@
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_angle.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_arc.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_array.html</loc></url>
+<url><loc>https://wjschne.github.io/ggdiagram/reference/ob_bezier (EDU-WJOELS-MOB's conflicted copy 2026-05-18).html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_bezier.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_circle.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_covariance.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_ellipse.html</loc></url>
+<url><loc>https://wjschne.github.io/ggdiagram/reference/ob_intercept (EDU-WJOELS-MOB's conflicted copy 2026-05-18).html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_intercept.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_label.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_latex.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_line.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_ngon.html</loc></url>
+<url><loc>https://wjschne.github.io/ggdiagram/reference/ob_path (EDU-WJOELS-MOB's conflicted copy 2026-05-18).html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_path.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_point.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ob_polygon.html</loc></url>

@@ -55,7 +55,8 @@ Suggests:
     spelling,
     testthat (>= 3.0.0),
     tidyverse,
-    viridis
+    viridis,
+    withr
 VignetteBuilder: 
     knitr,
     quarto

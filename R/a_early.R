@@ -1225,13 +1225,13 @@ round_probability <- function(
 #'   connect(vertices, lead_cycle(vertices, n = 3),  resect = 2)
 lead_cycle <- function(x, n = 1L) {
   k <- length(x)
-  if (k < 2) {
-    return(k)
+  if (k < 2L) {
+    return(x)
   }
 
   ni <- as.integer(n)
 
-  if (!((ni == n) && n > 0 && n < k)) {
+  if (!((ni == n) && ni > 0L && ni < k)) {
     stop("n must be a positive integer less than length of x.")
   }
 
@@ -1245,12 +1245,12 @@ lead_cycle <- function(x, n = 1L) {
 lag_cycle <- function(x, n = 1L) {
   k <- length(x)
   if (k < 2) {
-    return(k)
+    return(x)
   }
 
   ni <- as.integer(n)
 
-  if (!((ni == n) && n > 0 && n < k)) {
+  if (!((ni == n) && ni > 0 && ni < k)) {
     stop("n must be a positive integer less than length of x.")
   }
 

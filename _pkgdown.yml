@@ -95,3 +95,5 @@ reference:
     desc: "Helper functions"
     contents:
       - get_depth
+      - lead_cycle
+      - lag_cycle

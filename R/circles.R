@@ -64,7 +64,7 @@ cr_props <- list(
     polygon = S7::new_property(getter = function(self) {
       d <- self@tibble
       if (!("n" %in% colnames(d))) {
-        d$n <- 360
+        d$n <- 360L
       }
       d |>
         dplyr::mutate(group = factor(dplyr::row_number())) |>
@@ -390,7 +390,7 @@ S7::method(get_tibble_defaults, ob_circle) <- function(x) {
       ggforce::GeomCircle$default_aes$default_aes$linetype,
       1
     ),
-    n = 360
+    n = 360L
   )
   get_tibble_defaults_helper(x, sp, required_aes = c("x0", "y0", "r", "n"))
 }

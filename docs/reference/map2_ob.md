@@ -1,9 +1,9 @@
 # Map over two ggdiagram objects
 
 A wrapper for
-[purrr::map](https://purrr.tidyverse.org/reference/map.html). It takes a
-ggdiagram object with multiple elements, applies a function to each
-element within the object, and returns a ggdiagram object
+[purrr::map2](https://purrr.tidyverse.org/reference/map2.html). It takes
+two ggdiagram objects with multiple elements, applies a function to each
+element within the objects, and returns a ggdiagram object
 
 ## Usage
 

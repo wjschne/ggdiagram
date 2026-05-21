@@ -71,13 +71,14 @@ arc_props <- list(
     type = S7::new_property(
       class = S7::class_character,
       validator = function(value) {
-        if (length(value) != 1) {
-          return("The type property must be of length 1.")
+          if (length(value) != 1) {
+            return("The type property must be of length 1.")
+          }
+          if (!(value %in% c("arc", "wedge", "segment"))) {
+            'The type property must be "arc", "wedge", or "segment".'
+          }
+
         }
-        if (!(value %in% c("arc", "wedge", "segment"))) {
-          'The type property must be "arc", "wedge", or "segment".'
-        }
-      }
     )
   ),
   # derived ----
@@ -183,7 +184,7 @@ arc_props <- list(
     polygon = S7::new_property(getter = function(self) {
       d <- self@tibble
       if (!("n" %in% colnames(d))) {
-        d$n <- 360
+        d$n <- 360L
       }
       d |>
         dplyr::mutate(group = factor(dplyr::row_number())) |>
@@ -536,7 +537,7 @@ ob_arc <- S7::new_class(
     label_sloped = FALSE,
     start_point = S7::class_missing,
     end_point = S7::class_missing,
-    n = 360,
+    n = 360L,
     type = "arc",
     alpha = numeric(0),
     arrow_head = list(),
@@ -564,8 +565,6 @@ ob_arc <- S7::new_class(
     ...
   ) {
     id <- as.character(id)
-
-    type <- match.arg(type, c("arc", "wedge", "segment"))
 
     if (!S7::S7_inherits(start, ob_angle)) {
       start <- degree(start)
@@ -869,7 +868,7 @@ S7::method(get_tibble_defaults, ob_arc) <- function(x) {
     linewidth_head = replace_na(ggarrow::GeomArrow$default_aes$linewidth, 1),
     linewidth_fins = replace_na(ggarrow::GeomArrow$default_aes$linewidth, 1),
     linetype = replace_na(ggarrow::GeomArrow$default_aes$linetype, 1),
-    n = 360
+    n = 360L
   )
   get_tibble_defaults_helper(
     x,

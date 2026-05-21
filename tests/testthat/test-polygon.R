@@ -6,6 +6,9 @@ library(ggdiagram)
 # construction ----
 test_that("ob_polygon construction", {
   pts <- ob_point(c(0, 1, 0.5), c(0, 0, 1))
+  pg <- ob_polygon(pts)
+  expect_no_error(pg@p <- pts)
+  expect_no_error(pg@style <- ob_style(color = "red"))
   expect_no_error(ob_polygon(pts))
   expect_s3_class(ob_polygon(pts), "ggdiagram::ob_polygon")
 
@@ -29,7 +32,6 @@ test_that("ob_polygon construction", {
   expect_identical(pg@point_at(-90), ob_point(.5,0))
   expect_identical(ob_polygon(pts, label = ob_label("a", fill = "red"))@label@fill, "red")
   expect_identical(ob_polygon(pts, label = ob_label(c("a", "b")))@length, 2L)
-
 
 })
 
@@ -72,11 +74,9 @@ test_that("ob_polygon bounding_box", {
 test_that("ob_polygon segment", {
   pts <- ob_point(c(0, 2, 1), c(0, 0, 2))
   poly <- ob_polygon(pts)
-  segs <- poly@segment
-  expect_type(segs, "list")
-  expect_length(segs, 1)
-  s <- segs[[1]]
+  s <- poly@segment
   expect_s3_class(s, "ggdiagram::ob_segment")
+
   # triangle -> 3 segments, closing loop: p1 starts at first vertex, p2 ends back at first vertex
   expect_equal(s@length, 3)
   expect_equal(s@p1@x[[1]], pts@x[[1]], tolerance = 1e-10)
@@ -104,6 +104,9 @@ test_that("ob_polygon style", {
   poly_s <- ob_polygon(pts, style = ob_style(color = "green", fill = "yellow"))
   expect_equal(poly_s@color, "green")
   expect_equal(poly_s@fill,  "yellow")
+
+  poly_s@style <- ob_style(color = "blue")
+  expect_identical(poly_s@color, "blue")
 })
 
 # label ----
@@ -187,7 +190,6 @@ test_that("ob_polygon connect", {
   pg2 <- ob_polygon(pts + ob_point(3,0))
   expect_no_error(connect(pg1, pg2))
 
-  ggdiagram() + pg1 + pg2 + connect(pg1, pg2)
   expect_no_error(connect(ob_point(3,2), pg1))
   expect_no_error(connect(pg1, ob_point(3,2)))
   expect_no_error(connect(pg1, ob_circle(ob_point(3,2))))
@@ -215,6 +217,12 @@ test_that("ob_ngon construction", {
   expect_equal(ng2@center@y, 2)
   expect_equal(ng2@n,      6)
   expect_equal(ng2@radius, 3)
+
+  expect_identical(ob_ngon(x = 3)@center@x, 3)
+  expect_identical(ob_ngon(y = 3)@center@y, 3)
+  ng3 <- ob_ngon(label = ob_label(letters[1:2]))
+  expect_length(ng3, 2)
+  expect_no_error(as.geom(ng3))
 })
 
 # x/y override ----
@@ -363,16 +371,26 @@ test_that("ob_ngon angle_at", {
   expect_equal(sq@angle_at(ob_point(1, 0))@degree,  0,  tolerance = 1e-10)
   expect_equal(sq@angle_at(ob_point(0, 1))@degree,  90, tolerance = 1e-10)
   expect_equal(sq@angle_at(ob_point(-1, 0))@degree, 180, tolerance = 1e-10)
+
+
+
 })
 
 # normal_at ----
 test_that("ob_ngon normal_at", {
-  sq <- ob_ngon(n = 4, radius = 1, angle = 0)
+  sq <- ob_ngon(n = 4, radius = 1, angle = 0, color = "black", fill = NA)
   # normal at 0 deg: point on edge + unit vector away from center
-  n_pt <- sq@normal_at(degree(0))
+  n_pt <- sq@normal_at(degree(45))
   expect_s3_class(n_pt, "ggdiagram::ob_point")
   # should be to the right of the polygon boundary
   expect_gt(n_pt@x, 1 - 1e-6)
+  p <- ob_point(3, 0)
+
+  expect_s3_class(sq@normal_at(p), "ggdiagram::ob_point")
+  expect_identical(sq@normal_at(degree(45)), sq@normal_at(45))
+
+  expect_true(S7::S7_inherits(sq@tangent_at(p)), ob_line)
+  expect_true(S7::S7_inherits(sq@tangent_at(45)), ob_line)
 })
 
 # tangent_at ----
@@ -398,6 +416,9 @@ test_that("ob_ngon style", {
   expect_s3_class(sty, "ggdiagram::ob_style")
   expect_equal(sty@color, "red")
   expect_equal(sty@fill,  "blue")
+
+  ng@style <- ob_style(color = "green")
+  expect_identical(ng@color, "green")
 })
 
 # label ----
@@ -490,6 +511,18 @@ test_that("ob_ngon vectorised construction", {
   expect_equal(ng_v@n,      c(3, 4, 5))
   expect_equal(ng_v@radius, c(1, 1.5, 2))
   expect_equal(ng_v@center@x, c(0, 2, 4))
+})
+
+# connect ngons
+
+test_that("ob_ngon connection", {
+  ng1 <- ob_ngon(n = 4)
+  ng2 <- ob_ngon(x = 5, n = 6)
+  expect_identical(connect(ng1, ng2)@p2@x, 4)
+  expect_identical(connect(ob_point(1,0), ng2)@p2@x, 4)
+  expect_identical(connect(ng1, ob_point(4,0))@p1@x, 1)
+  expect_identical(connect(ng1, ob_circle(x = 4, y = 0))@p2@x, 3)
+  expect_identical(connect(ob_circle(x = -4, y = 0), ng1)@p2@x, -1)
 })
 
 
@@ -606,8 +639,13 @@ test_that("ob_reuleaux construction", {
 
   # custom
   rel2 <- ob_reuleaux(n = 3, radius = 2)
+
   expect_equal(rel2@n,      3L)
   expect_equal(rel2@radius, 2)
+  expect_error(ob_reuleaux(vertex_radius = c(1,2)), "The vertex_radius property must be of length 1.")
+  expect_no_error(get_tibble(ob_reuleaux(vertex_radius = 1)))
+
+  expect_no_error(as.geom(ob_reuleaux()))
 })
 
 # angles ----
@@ -619,6 +657,16 @@ test_that("ob_reuleaux central and inscribed angles", {
   rel3 <- ob_reuleaux(n = 3)
   expect_equal(rel3@central_angle@degree, 120, tolerance = 1e-10)
   expect_equal(rel3@inscribed_angle@degree, 60, tolerance = 1e-10)
+
+  expect_equal(rel3@angle_at(ob_point(0, 3)), radian(0.5 * pi))
+  expect_no_error(rel3@normal_at(30))
+  expect_no_error(rel3@normal_at(ob_point(3,3)))
+  expect_no_error(rel3@normal_at(degree(30)))
+  expect_equal(rel3@point_at(90), ob_point(0, 1), tolerance = 1e-06)
+
+  rel4 <- ob_reuleaux(n = 3, label = ob_label(c("hello", "goodbye")), vertex_radius = 2, angle = -10)
+  expect_identical(rel4@label@label, c("hello", "goodbye"))
+
 })
 
 # arcs ----
@@ -630,6 +678,8 @@ test_that("ob_reuleaux arcs", {
 
   rel3 <- ob_reuleaux(n = 3)
   expect_equal(rel3@arcs@length, 3)
+
+  rel@arc_at(60)
 })
 
 # arc_radius ----
@@ -700,5 +750,6 @@ test_that("ob_reuleaux bounding_box", {
 
 # geom ----
 test_that("ob_reuleaux geom via as.geom", {
-  expect_no_error(as.geom(ob_reuleaux()))
+  expect_no_error(as.geom(ob_reuleaux(label = ob_label("hello"))))
+  expect_no_error(ob_reuleaux()@geom())
 })

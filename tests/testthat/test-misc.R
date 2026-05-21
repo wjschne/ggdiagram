@@ -92,13 +92,28 @@ test_that("bind", {
 test_that("ob_shape_list", {
   expect_no_error(ob_shape_list(list(ob_point(), ob_circle())))
   expect_error(ob_shape_list(list(3)), "All objects must be ggdiagram objects that can be converted to geoms.")
-  expect_no_error(get_tibble(ob_shape_list(list(ob_point(), ob_circle()))))
-  expect_identical(length(bind(ob_shape_list(list(ob_point(), ob_point(1,1), ob_circle())))), 2L)
+  sl <- ob_shape_list(list(ob_point(), ob_circle()))
+  expect_no_error(get_tibble(sl))
+  expect_length(bind(ob_shape_list(list(ob_point(), ob_point(1,1), ob_circle()))), 2L)
   expect_no_error(get_tibble(list(ob_point(), ob_circle())))
 
-  expect_no_error(as.geom(ob_shape_list(list(ob_point(), ob_circle()))))
+  expect_no_error(as.geom(sl))
 
-  expect_identical(bind(ob_shape_list(list(ob_point(), ob_point())))@length, 2L)
+  # Binding a uniform shape list is now ob_point
+  expect_true(S7::S7_inherits(bind(ob_shape_list(list(ob_point(), ob_point())))), ob_point)
+
+  # map_ob with shape list
+
+  sl <- map_ob(sl,\(x) {
+    S7::set_props(x, color = "blue")
+  })
+  sl <- map2_ob(sl, sl, \(x, y) {
+    S7::set_props(x, color = "blue")
+  })
+
+  expect_identical(sl$ob_point@color, "blue")
+
+
 
 
 })
@@ -155,6 +170,30 @@ test_that("unique", {
   expect_identical(unique(bind(c(c1,c1))), c1)
   c2 <- ob_circle(label = NA_character_)
   expect_equal(unique(bind(c(c2,c2))), c2)
+})
+
+test_that("lead and lag cycle", {
+  expect_identical(lead_cycle(1:3), c(2L, 3L, 1L))
+  expect_identical(lag_cycle(1:3), c(3L, 1L, 2L))
+
+  # too short to cycle
+  expect_identical(lead_cycle(1), 1)
+  expect_identical(lead_cycle(integer(0)), integer(0))
+  expect_identical(lag_cycle(1), 1)
+  expect_identical(lag_cycle(integer(0)), integer(0))
+
+  # n too high
+  expect_error(lead_cycle(1:2, n = 2), "n must be a positive integer less than length of x.")
+  expect_error(lag_cycle(1:2, n = 2), "n must be a positive integer less than length of x.")
+
+  # n non-integer
+  expect_error(lead_cycle(1:2, n = 2.1), "n must be a positive integer less than length of x.")
+  expect_error(lag_cycle(1:2, n = 2.1), "n must be a positive integer less than length of x.")
+
+  # n negative
+  expect_error(lead_cycle(1:2, n = -1), "n must be a positive integer less than length of x.")
+  expect_error(lag_cycle(1:2, n = -1), "n must be a positive integer less than length of x.")
+
 })
 
 

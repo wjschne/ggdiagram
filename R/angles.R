@@ -410,7 +410,7 @@ S7::method(`[`, ob_angle) <- function(x, i) {
 
 # unbind ----
 S7::method(unbind, ob_angle) <- function(x) {
-  purrr::map(seq(length(c(x))), \(i) x[i])
+  purrr::map(seq_len(length(x)), \(i) x[i])
 }
 
 S7::method(bind, ob_angle) <- function(x, ...) {x}

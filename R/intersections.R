@@ -38,6 +38,7 @@ S7::method(intersection_angle, list(ob_segment, ob_line)) <- function(x, y) {
 # intersection helpers ----
 
 ob_arc_or_bezier <- S7::new_union(ob_arc, ob_bezier)
+segmented <- S7::new_union(ob_path, ob_ngon, ob_polygon)
 
 #' @keywords internal
 arc_overlap <- function(x, y) {
@@ -51,19 +52,19 @@ arc_overlap <- function(x, y) {
     start_2 = y@start@degree,
     end_2 = y@end@degree
   ) |>
-    dplyr::mutate(min_1 = min(start_1, end_1),
-                  max_1 = max(start_1, end_1),
-                  min_2 = min(start_2, end_2),
-                  max_2 = max(start_2, end_2),
-                  max_start = max(min_1, min_2),
-                  min_end = min(max_1, max_2)) |>
-    dplyr::filter(max_start <= min_end,
-                  x1 == x2,
-                  y1 == y2) |>
-    dplyr::select(x = x1,
-                  y = y2,
-                  start = max_start,
-                  end = min_end) |>
+    dplyr::mutate(min_1 = min(.data$start_1, .data$end_1),
+                  max_1 = max(.data$start_1, .data$end_1),
+                  min_2 = min(.data$start_2, .data$end_2),
+                  max_2 = max(.data$start_2, .data$end_2),
+                  max_start = max(.data$min_1, .data$min_2),
+                  min_end = min(.data$max_1, .data$max_2)) |>
+    dplyr::filter(.data$max_start <= .data$min_end,
+                  .data$x1 == .data$x2,
+                  .data$y1 == .data$y2) |>
+    dplyr::select(x = .data$x1,
+                  y = .data$y2,
+                  start = .data$max_start,
+                  end = .data$min_end) |>
     data2shape(ob_arc)
 
 }
@@ -217,11 +218,12 @@ intersection1point1bezier <- function(
 
 #' @keywords internal
 find_theta_on_object <- function(x, y, theta1, theta2, i1, i2, iteration = 1) {
+
   if (i1 == 0) {
     return(theta1)
   }
   if (iteration == 6) {
-    return(theta1)
+    return(theta1) # nocov
   }
 
 
@@ -240,7 +242,7 @@ find_theta_on_object <- function(x, y, theta1, theta2, i1, i2, iteration = 1) {
       ) |>
       dplyr::filter(!is.na(.data$th2)) |>
       dplyr::filter(i1 == 0 | i1 == -i2) |>
-      dplyr::rename(theta1 = th1, theta2 = th2) |>
+      dplyr::rename(theta1 = .data$th1, theta2 = .data$th2) |>
       dplyr::slice(1)
   }) %>%
     purrr::pmap_dbl(find_theta_on_object)
@@ -342,6 +344,10 @@ S7::method(intersection, list(ob_point, ob_rectangle)) <- function(x, y, ...) {
     bind()
 }
 
+
+
+
+
 S7::method(intersection, list(ob_point, ob_bezier)) <- function(x, y, ...) {
   p <- map2_ob(x,y, \(xx, yy) {
     intersection1point1bezier(xx, yy)
@@ -352,8 +358,17 @@ S7::method(intersection, list(ob_point, ob_bezier)) <- function(x, y, ...) {
 
 }
 
-S7::method(intersection, list(ob_bezier, ob_point)) <- function(x, y, ...) {
-  intersection(y, x, ...)
+S7::method(intersection, list(ob_point, segmented)) <- function(x, y, ...) {
+  p <- map2_ob(x,y, \(xx, yy) {
+    map_ob(yy@segment, \(s) {
+      intersection(xx, s)
+    })
+  }) |>
+    unique()
+
+  s <- rlang::list2(...)
+  rlang::inject(set_props(p, !!!s))
+
 }
 
 ## line by x ----
@@ -361,6 +376,8 @@ S7::method(intersection, list(ob_bezier, ob_point)) <- function(x, y, ...) {
 S7::method(intersection, list(ob_line, ob_point)) <- function(x, y, ...) {
   intersection(y, x, ...)
 }
+
+
 
 S7::method(intersection, list(ob_line, ob_line)) <- function(x, y, ...) {
   map2_ob(x,y, \(xx, yy) {
@@ -414,7 +431,7 @@ S7::method(intersection, list(ob_line, ob_rectangle)) <- function(x, y, ...) {
     bind()
 }
 
-S7::method(intersection, list(ob_line, ob_path)) <- function(
+S7::method(intersection, list(ob_line, segmented)) <- function(
     x,
     y,
     ...
@@ -554,19 +571,34 @@ S7::method(intersection, list(ob_segment, ob_segment)) <- function(x, y, ...) {
 }
 
 S7::method(intersection, list(ob_segment, ob_circle)) <- function(x, y, ...) {
-  p <- intersection(x@line, y, ...)
-  betweenx <- .between(p@x, x@p1@x, x@p2@x)
-  p[betweenx]
+  map2_ob(x,y,\(xx, yy) {
+    p <- intersection(xx@line, yy, ...)
+    map_ob(p, \(pp) {
+      intersection(pp, xx)
+    })
+  }) |>
+    unique()
+
 }
 
 S7::method(intersection, list(ob_segment, ob_arc)) <- function(x, y, ...) {
-  p <- intersection(x@line, y, ...)
-  betweenx <- .between(p@x, x@p1@x, x@p2@x)
-  p[betweenx]
+  map2_ob(x,y,\(xx, yy) {
+    p <- intersection(xx@line, yy, ...)
+    map_ob(p, \(pp) {
+      intersection(pp, xx)
+    })
+  }) |>
+    unique()
 }
 
 S7::method(intersection, list(ob_segment, ob_ellipse)) <- function(x, y, ...) {
-  intersection(intersection(x@line, y), x, ...)
+  map2_ob(x,y,\(xx, yy) {
+    p <- intersection(xx@line, yy, ...)
+    map_ob(p, \(pp) {
+      intersection(pp, xx)
+    })
+  }) |>
+    unique()
 }
 
 S7::method(intersection, list(ob_segment, ob_rectangle)) <- function(
@@ -587,16 +619,8 @@ S7::method(intersection, list(ob_segment, ob_rectangle)) <- function(
 }
 
 
-S7::method(intersection, list(ob_segment, ob_polygon)) <- function(x, y, ...) {
-  intersection(y, x, ...)@tibble %>%
-    unique() %>%
-    data2shape(ob_point)
-}
-
-S7::method(intersection, list(ob_segment, ob_ngon)) <- function(x, y, ...) {
-  intersection(x, y@segment, ...)@tibble %>%
-    unique() %>%
-    data2shape(ob_point)
+S7::method(intersection, list(ob_segment, segmented)) <- function(x, y, ...) {
+  intersection(y, x, ...)
 }
 
 ## circle by x ----
@@ -675,7 +699,16 @@ S7::method(intersection, list(ob_arc, ob_point)) <- function(x, y, ...) {
 }
 
 S7::method(intersection, list(ob_arc, ob_line)) <- function(x, y, ...) {
-  intersection(x, intersection(x@circle, y), ...)
+  map2_ob(x, y, \(xx, yy) {
+    p <- intersection(xx@circle, yy)
+    map_ob(p, \(pp) {
+      intersection(xx, pp , ...)
+    })
+
+  }) |>
+    unique()
+
+
 }
 
 S7::method(intersection, list(ob_arc, ob_segment)) <- function(x, y, ...) {
@@ -698,7 +731,7 @@ S7::method(intersection, list(ob_arc, ob_arc)) <- function(x, y, ...) {
       a <- arc_overlap(xx,yy)
       # What if the overlap is a single point?
       if (a@length == 0) {
-        point(double(0), double(0))
+        ob_point(double(0), double(0))
       } else {
         if (all(a@start == a@end)) {
           a@point_at(a@start)
@@ -759,51 +792,6 @@ S7::method(intersection, list(ob_rectangle, ob_segment)) <- function(
 
 
 
-
-
-
-
-## polygon by x ----
-
-
-S7::method(intersection, list(ob_polygon, ob_segment)) <- function(x, y, ...) {
-  p <- map2_ob(x,y, \(xx, yy) {
-    purrr::map(xx@segment, \(s) {
-      intersection(s, yy)}) %>%
-      bind() %>%
-        unique()
-  })
-
-  s <- rlang::list2(...)
-  rlang::inject(set_props(p, !!!s))
-
-  }
-
-
-
-## ngon by x ----
-
-
-S7::method(intersection, list(ob_ngon, ob_segment)) <- function(x, y, ...) {
-  intersection(x@segment, y, ...)@tibble %>%
-    unique() %>%
-    data2shape(ob_point)
-}
-
-## path by x ----
-
-S7::method(intersection, list(ob_path, ob_line)) <- function(
-    x,
-    y,
-    ...
-) {
-  purrr::map(unbind(x), \(p) {
-    intersection(p@segment, y)
-  }) |>
-    bind()
-}
-
-
 ## centerpoint by x ----
 
 S7::method(intersection, list(centerpoint, ob_arc)) <- function(x, y, ...) {
@@ -825,7 +813,7 @@ S7::method(intersection, list(centerpoint, centerpoint)) <- function(
       i2 = lead_cycle(i1),
       iteration = 0
     ) |>
-      dplyr::filter(i1 == 0 | i1 == -i2) %>%
+      dplyr::filter(i1 == 0 | i1  == -i2) %>%
       purrr::pmap_dbl(find_theta_on_object)
 
     if (length(th) == 0) {
@@ -840,39 +828,40 @@ S7::method(intersection, list(centerpoint, centerpoint)) <- function(
 
 ## arc or bezier by x ----
 
+S7::method(intersection, list(ob_bezier, ob_point)) <- function(x, y, ...) {
+  intersection(y, x, ...)
+}
+
 S7::method(intersection, list(ob_arc_or_bezier, centerpoint)) <- function(
   x,
   y,
   ...
 ) {
-  if (x@n == 360) {
-    x@n <- 3600
-  }
+
   d_x <- x@polygon |>
     tidyr::nest(.by = group)
 
-  d_y <- tibble::tibble(group = factor(seq(y@length)), e = unbind(y))
+
+
+  d_y <- tibble::tibble(group = factor(seq(y@length)),
+                        e = unbind(y))
 
   if (x@length == 1 & y@length > 1) {
     d_x <- d_x |>
       dplyr::mutate(k = y@length) |>
-      dplyr::uncount(k)
+      tidyr::uncount(k)
   }
 
   if (y@length == 1 & x@length > 1) {
     d_y <- d_y |>
       dplyr::mutate(k = x@length) |>
-      dplyr::uncount(k)
+      tidyr::uncount(k)
   }
 
-  if (nrow(d_x) != nrow(d_y)) {
+    if (nrow(d_x) != nrow(d_y)) {
     stop(
       paste0(
-        "Objects have incompatible lengths. x has ",
-        x@length,
-        " arcs, and y has ",
-        y@length,
-        " ellipses."
+        "Objects have incompatible lengths."
       )
     )
   }
@@ -887,14 +876,44 @@ S7::method(intersection, list(ob_arc_or_bezier, centerpoint)) <- function(
     ) |>
     dplyr::select(-e) |>
     tidyr::unnest(c(data, p)) |>
-    dplyr::filter(abs(p - dplyr::lag(p)) == 2 | p == 0) |>
+    dplyr::filter(abs(p - dplyr::lag(p)) == 2 | p == 0, .by =  group) |>
     dplyr::select(-p, -group) |>
     data2shape(ob_point)
 }
 
+## segmented by x ----
+
+S7::method(intersection, list(segmented, ob_point)) <- function(x, y, ...) {
+  intersection(y, x, ...)
+
+}
+
+S7::method(intersection, list(segmented, ob_line)) <- function(
+    x,
+    y,
+    ...
+) {
+  p <- map2_ob(x,y, \(xx, yy) {
+    map_ob(xx@segment, \(s) {
+      intersection(s, yy)}) %>%
+      bind()
+  }) |>
+    unique()
+}
 
 
+S7::method(intersection, list(segmented, ob_segment)) <- function(x, y, ...) {
+  p <- map2_ob(x,y, \(xx, yy) {
+    map_ob(xx@segment, \(s) {
+      intersection(s, yy)}) %>%
+      bind()
+  }) |>
+    unique()
 
+  s <- rlang::list2(...)
+  rlang::inject(set_props(p, !!!s))
+
+}
 
 
 

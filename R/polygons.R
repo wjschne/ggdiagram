@@ -43,7 +43,7 @@ ob_polygon_props <- list(
       }
 
       if (S7::S7_inherits(value, ob_point)) {
-        value <- list(value)
+        value <- list(value) # nocov
       }
 
       chk_points <- purrr::imap_chr(value, \(x, idx) {
@@ -115,7 +115,8 @@ ob_polygon_props <- list(
         purrr::map(\(pp) {
           k <- pp@length
           ob_segment(pp[c(1:k, 1)])
-        })
+        }) |>
+        bind()
     }),
     style = S7::new_property(
       getter = function(self) {
@@ -730,7 +731,7 @@ ob_ngon_props <- list(
     }),
     length = S7::new_property(
       getter = function(self) {
-        self@center@length
+        nrow(self@tibble)
       }
     ),
     perimeter = S7::new_property(getter = \(self) {
@@ -804,26 +805,29 @@ ob_ngon_props <- list(
       S7::class_function,
       getter = function(self) {
         \(theta = degree(0), distance = 1, ...) {
+
           if (S7::S7_inherits(theta, ob_point)) {
-            theta <- projection(theta, self)@theta
-          }
-          if (!S7::S7_inherits(theta, ob_angle)) {
-            theta <- degree(theta)
+            pr <- projection(theta, self)
+            cpr <- pr - self@center
+            theta <- cpr@theta
+
           }
 
           if (!S7::S7_inherits(theta, ob_angle)) {
             theta <- degree(theta)
           }
+
           p <- purrr::map2(unbind(self), unbind(theta), \(s, th) {
             th_p <- th@turn - s@angle@turn
             th_n <- 1 / s@n
             th_r <- th_p / th_n
             th_floor <- floor(th_r)
+
             th_normal <- turn(
               th_floor * th_n + ifelse(th_floor == th_r, 0, th_n / 2)
-            ) +
-              s@angle
-            s@point_at(th) + ob_polar(th_normal, distance)
+            ) + s@angle
+
+            s@point_at(th) + ob_polar(theta = th_normal, r = distance)
           }) |>
             bind()
           st <- rlang::list2(...)
@@ -1172,7 +1176,7 @@ S7::method(connect, list(ob_ngon, ob_ngon)) <- function(
   id = character(0),
   ...
 ) {
-  s <- ob_segment(from@center, y@center)
+  s <- ob_segment(from@center, to@center)
   connect(
     intersection(from, s),
     intersection(to, s),
@@ -1741,7 +1745,7 @@ ob_reuleaux <- S7::new_class(
       getter = function(self) {
         \(theta = degree(0), ...) {
           if (!S7::S7_inherits(theta, ob_angle)) {
-            theta <- degree
+            theta <- degree(theta)
           }
           s <- ob_segment(self@center, self@circumscribed@point_at(theta))
           a <- self@arc_at(theta)@circle
@@ -1873,7 +1877,7 @@ S7::method(get_tibble, ob_reuleaux) <- function(x) {
             start1 <- (p_start - p_opposite)@theta
             end1 <- (p_end - p_opposite)@theta
             if (start1 > end1) {
-              end1 <- end1 + turn(1)
+              end1 <- end1 + turn(1) # nocov
             }
             ob_arc(
               center = p_opposite + ob_point(x, y),

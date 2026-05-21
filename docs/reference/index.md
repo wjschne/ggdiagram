@@ -175,3 +175,7 @@ Helper functions
 
 - [`get_depth()`](https://wjschne.github.io/ggdiagram/reference/get_depth.md)
   : Function to calculate hierarchy depth in lavaan models
+- [`lead_cycle()`](https://wjschne.github.io/ggdiagram/reference/lead_cycle.md)
+  [`lag_cycle()`](https://wjschne.github.io/ggdiagram/reference/lead_cycle.md)
+  : Finds the "previous" (lag) or "next" (lead) values in a vector or
+  object with values at the end of the vector recycled to the beginning.

@@ -118,11 +118,14 @@ test_that("intersection: point × circle — symmetric dispatch", {
 
 test_that("intersection: arc × point — point on arc", {
   arc <- ob_arc(center = ob_point(0, 0), radius = 1, start = 0, end = 90)
-  p   <- ob_point(cos(pi / 4), sin(pi / 4))  # 45°, on arc
+  p <- ob_point(cos(pi / 4), sin(pi / 4))  # 45°, on arc
   r <- intersection(arc, p)
   expect_s3_class(r, "ggdiagram::ob_point")
   expect_equal(r@x, cos(pi / 4), tolerance = 1e-6)
   expect_equal(r@y, sin(pi / 4), tolerance = 1e-6)
+  p <- ob_point(1,1)
+  r <- intersection(arc, p)
+  expect_identical(r, ep)
 })
 
 test_that("intersection: arc × point — start endpoint is on arc", {
@@ -201,13 +204,35 @@ test_that("intersection: line × line — crossing lines", {
   p <- ob_point(0,0)
   b <- ob_bezier(p = ob_point(c(0,0,1,1), c(0,1,1,0)))
   pb <- intersection(p, b)
+  pb2 <- intersection(b, p)
   expect_identical(p, pb)
+  expect_identical(pb, pb2)
   intersection(b@midpoint(), b)
-  ggdiagram() + b + p + b@midpoint()
-
   intersection1point1bezier(b@midpoint(), b, samples = 1000)
 
 })
+
+# point-segmented ----
+
+test_that("intersection: point × segmented", {
+  p <- ob_point(0,0)
+  pp <- ob_path(p = ob_point(c(0,0,1,1), c(0,1,1,0)))
+  ppb <- intersection(p, pp)
+  ppb2 <- intersection(pp, p)
+  expect_identical(p, ppb)
+  expect_identical(ppb, ppb2)
+  expect_identical(pp@midpoint(), ob_point(0.5, 1))
+
+  pg <- ob_polygon(p = pp@p)
+  ppg <- intersection(p, pg)
+  expect_identical(p, ppg)
+
+  ng <- ob_ngon(n = 6)
+  p <- ng@vertices
+  expect_identical(p, intersection(p, ng))
+
+})
+
 
 # line-line ----
 
@@ -290,7 +315,6 @@ test_that("intersection: line by circle", {
 
   l1 <- ob_line(slope = .5, intercept = 0)
   c1 <- ob_circle(ob_point(0, 0), radius = 1)
-  ggdiagram() + c1 + l1
     expect_equal(intersection(l1, c1), bind(c(
     ob_point(x = cos(atan(.5)), y = sin(atan(.5))), ob_point(x = -cos(atan(.5)), y = -sin(atan(.5))) # 2 points at sloped line intersection
   )))
@@ -337,6 +361,26 @@ test_that("line × circle — no intersection", {
   l    <- ob_line(slope = 0, intercept = 2)  # y = 2, above unit circle
   circ <- ob_circle(radius = 1)
   expect_identical(intersection(l, circ)@length, 0L)
+})
+
+# line-arc ----
+
+test_that("intersection: arc × line — line crosses arc once", {
+  arc <- ob_arc(center = ob_point(0, 0), radius = 1, start = 0, end = 180)
+  l   <- ob_line(slope = Inf, xintercept = 0.5)  # x = 0.5 (vertical)
+  r <- intersection(arc, l)
+  expect_s3_class(r, "ggdiagram::ob_point")
+  expect_equal(r@length, 1)
+  expect_equal(r@x, 0.5, tolerance = 1e-6)
+  expect_gt(r@y, 0)  # on the upper arc
+})
+
+test_that("intersection: line × arc — symmetric dispatch", {
+  arc <- ob_arc(center = ob_point(0, 0), radius = 1, start = 0, end = 180)
+  l   <- ob_line(slope = Inf, xintercept = 0.5)
+  r1 <- intersection(arc, l)
+  r2 <- intersection(l, arc)
+  expect_equal(r1@x, r2@x, tolerance = 1e-6)
 })
 
 # line-ellipse ----
@@ -418,8 +462,6 @@ test_that("intersection: segment × segment — crossing segments", {
   s3 <- ob_segment(ob_point(0.1, .1), ob_point(.9, .9))
   s4 <- ob_segment(ob_point(1, 1), ob_point(2, 2))
   p1 <- ob_point(.5, .5)
-  ggdiagram() + s1 + s2 + s3 + s4 + p1
-  ggdiagram() + s1  + s4
   expect_equal(intersection(s1, s2), p1) # normal intersection
   expect_equal(intersection(s1@line, s2), p1) # intersects at line
   expect_equal(intersection(s1, s2@line), p1) # intersects at line
@@ -490,7 +532,6 @@ test_that("intersection: segment × segment — endpoint on segment", {
   # overlapping segments plus a point
   x <- ob_segment(ob_point(-1, 0), ob_point(1:2, c(0,5)))
   y <- ob_segment(ob_point(-1, 0), ob_point(2, 0))
-  ggdiagram() + x + y
   s <- intersection(x, y)
   expect_identical(
     s,
@@ -555,6 +596,21 @@ test_that("intersection: circle × segment — symmetric dispatch", {
   expect_equal(sort(p1@x), sort(p2@x), tolerance = 1e-10)
 })
 
+# segment-arc ----
+
+test_that("intersection: segment × arc", {
+  s    <- ob_segment(ob_point(0, 0), ob_point(2, 0))  # starts inside unit circle
+  a <- ob_arc(start = 90, end = -90)
+  p <- intersection(s, a)
+  expect_equal(p@length, 1)
+  expect_equal(p@x, 1, tolerance = 1e-10)
+  expect_equal(p@y, 0, tolerance = 1e-10)
+  p <- intersection(a, s)
+  expect_equal(p@length, 1)
+  expect_equal(p@x, 1, tolerance = 1e-10)
+  expect_equal(p@y, 0, tolerance = 1e-10)
+})
+
 
 # segment-ellipse ----
 
@@ -564,11 +620,9 @@ test_that("intersection: segment × ellipse — chord through center", {
   p <- intersection(s, ell)
   expect_length(p, 2)
   expect_equal(sort(p@x), c(-2, 2), tolerance = 1e-3) # 2 points
-  ggdiagram() + ell + s + p
 
   e1 <- ob_ellipse(a = 1, b = 2)
   s5 <- ob_segment(ob_point(-2, -2), ob_point(2, 2))
-  ggdiagram() + e1 + s5
   expect_length(intersection(s5, e1), 2)
 
 })
@@ -637,64 +691,133 @@ test_that("intersection: circle × circle — two unit circles at distance 1", {
 })
 
 
+# circle-arc ----
 
-
-
-# arc-line ----
-
-test_that("intersection: arc × line — line crosses arc once", {
-  arc <- ob_arc(center = ob_point(0, 0), radius = 1, start = 0, end = 180)
-  l   <- ob_line(slope = Inf, xintercept = 0.5)  # x = 0.5 (vertical)
-  r <- intersection(arc, l)
-  expect_s3_class(r, "ggdiagram::ob_point")
-  expect_equal(r@length, 1)
-  expect_equal(r@x, 0.5, tolerance = 1e-6)
-  expect_gt(r@y, 0)  # on the upper arc
+test_that("intersection: circle × arc", {
+  c1 <- ob_circle(center = ob_point(0, 0), radius = 1)
+  a1 <- ob_arc(center = ob_point(2, 0),
+               start = 0,
+               end = 180)
+  ggdiagram() + c1 + a1
+  expect_identical(intersection(c1, a1), ob_point(1, 0))
 })
-
-test_that("intersection: line × arc — symmetric dispatch", {
-  arc <- ob_arc(center = ob_point(0, 0), radius = 1, start = 0, end = 180)
-  l   <- ob_line(slope = Inf, xintercept = 0.5)
-  r1 <- intersection(arc, l)
-  r2 <- intersection(l, arc)
-  expect_equal(r1@x, r2@x, tolerance = 1e-6)
-})
-
-
-# arc-circle ----
 
 test_that("intersection: arc × circle — upper half-arc crosses shifted circle", {
   arc  <- ob_arc(center = ob_point(0, 0), radius = 1, start = 0, end = 90)
   circ <- ob_circle(center = ob_point(1, 0), radius = 1)
   # Circles intersect at (0.5, ±sqrt(3)/2); only (0.5, sqrt(3)/2) is in [0,90°]
-  r <- intersection(arc, circ)
-  expect_s3_class(r, "ggdiagram::ob_point")
-  expect_equal(r@x, 0.5,            tolerance = 1e-4)
-  expect_equal(r@y, sqrt(3) / 2,    tolerance = 1e-4)
+  r1 <- intersection(arc, circ)
+  expect_s3_class(r1, "ggdiagram::ob_point")
+  expect_equal(r1@x, 0.5,            tolerance = 1e-4)
+  expect_equal(r1@y, sqrt(3) / 2,    tolerance = 1e-4)
+  # symmetric dispatch
+  r2 <- intersection(circ, arc)
+  expect_identical(r1, r2)
 })
 
-test_that("intersection: circle × arc — symmetric dispatch", {
+
+test_that("intersection: circle × arc — same center, same radius", {
   arc  <- ob_arc(center = ob_point(0, 0), radius = 1, start = 0, end = 90)
-  circ <- ob_circle(center = ob_point(1, 0), radius = 1)
+  circ <- ob_circle(center = ob_point(0, 0), radius = 1)
   r1 <- intersection(arc, circ)
-  r2 <- intersection(circ, arc)
-  expect_equal(r1@x, r2@x, tolerance = 1e-4)
+  expect_identical(arc, r1)
 })
+
+
+test_that("intersection: circle × ellipse", {
+  c1 <- ob_circle()
+  e1 <- ob_ellipse(a = .5, b = 2)
+  i <- intersection(c1, e1)
+  ggdiagram() + c1 + e1 + i
+  expect_length(i, 4L)
+
+})
+
+
+# arc-arc ----
+
+test_that("intersection: arc × arc different centers", {
+  a1 <- ob_arc(start = 0, end = 180)
+  a2 <- ob_arc(center = ob_point(1,0), start = 0, end = 180)
+  p <- intersection(a1, a2)
+  expect_identical(p@xy[1,], c(x = 0.5, y = sqrt(3) / 2))
+  a2 <- ob_arc(center = ob_point(2,0), start = 0, end = 180)
+  p <- intersection(a1, a2)
+  expect_identical(p@xy[1,], c(x = 1, y = 0))
+})
+
+test_that("intersection: arc × arc — overlap", {
+  a1 <- ob_arc(start = 0, end = 180)
+  a2 <- ob_arc(start = 30, end = 190)
+  # overlap returns arc from 30 to 180
+  ai <- intersection(a1, a2)
+  expect_true(S7::S7_inherits(ai, ob_arc))
+  expect_identical(ai, ob_arc(start = 30, end = 180))
+
+  # overlap in different order
+  a3 <- ob_arc(start = 30, end = 15)
+  ai <- intersection(a1, a3)
+  expect_identical(ai, ob_arc(start = 15, end = 30))
+
+  # overlap at one point
+  a4 <- ob_arc(start = 0, end = -30)
+  ai <- intersection(a1, a4)
+  expect_identical(ai, ob_point(1,0))
+  a5 <- ob_arc(start = 180, end = 270)
+  ai <- intersection(a1, a5)
+  expect_identical(ai, ob_point(-1,0))
+
+  # No overlap
+  a6 <- ob_arc(start = 181, end = 185)
+  ai <- intersection(a1, a6)
+  expect_length(ai, 0)
+})
+
 
 # arc-ellipse ----
 
-test_that("intersection: line × arc — symmetric dispatch", {
+test_that("intersection: arc × ellipse — symmetric dispatch", {
   a1 <- ob_arc(center = ob_point(0, 0), radius = 1, start = 0, end = 180)
   e1 <- ob_ellipse(ob_point(.5, 0))
-  ggdiagram() + a1 + e1
   r1 <- intersection(a1, e1)
   r2 <- intersection(e1, a1)
   expect_equal(r1@x, r2@x, tolerance = 1e-6)
+
+  # no intersection
+  a2 <- ob_arc(center = ob_point(5, 5), radius = 1, start = 0, end = 180)
+  r3 <- intersection(a2, e1)
+  expect_length(r3, 0)
+
+  # 1 intersection
+  a3 <- ob_arc(center = ob_point(sqrt(2) / 10, 0), radius = 1, start = 0, end = 180)
+  r4 <- intersection(a3, e1)
+  ggdiagram() + a3 + e1
+  expect_length(r4, 1)
+
+  # 2 arcs, 1 ellipse, 1 intersection
+  a4 <- ob_arc(x = 1, y = 0,  radius = 1:2, end = c(180, 270))
+  expect_length(intersection(a4, e1), 1)
+
+  # 1 arcs, 2 ellipses, 1 intersection
+  e2 <- ob_ellipse(x = 1:2, y = 0)
+  i <- intersection(a1, e2)
+  expect_length(i, 2)
+
+  # 2 arcs, 3 ellispses, error
+  e3 <- ob_ellipse(x = 1:4)
+  expect_error(intersection(a4, e3), "Objects have incompatible lengths.")
+
+
 })
 
 
+# arc-rectangle
 
-
+test_that("intersection: arc - centerpoint", {
+  a <- ob_arc(end = 180)
+  r <- ob_rectangle(height = 2)
+  expect_no_error(intersection(a, r))
+})
 
 # polygon-segment ----
 
@@ -782,48 +905,44 @@ test_that("intersection_angle(segment, line)", {
   expect_identical(intersection_angle(s, l), degree(-90))
 })
 
-o1 <- c(
-        # ob_point(1:2,1:2),
-        # ob_line(1,1),
-        # ob_segment(ob_point(1,1), ob_point(2,3)),
-        # ob_circle(),
-        ob_arc(start = 0, end = 90, center = ob_point(3,4))
-        # ob_ellipse(x = 0, y = .5, a = 1, b = 1.5)
-        )
+# o1 <- c(
+#         ob_point(1:2,1:2),
+#         ob_line(1,1),
+#         ob_segment(ob_point(1,1), ob_point(2,3)),
+#         ob_circle(),
+#         ob_arc(start = 0, end = 90, center = ob_point(3,4)),
+#         ob_ellipse(x = 0, y = .5, a = 1, b = 1.5)
+#         )
+#
+# o1 <-   purrr::map(o1, \(x) {
+#   if (length(x) > 0) {
+#     x <- set_props(x, color = "blue")
+#   }
+#   x
+# })
+#
+# o2 <- c(
+#         ob_point(3:2,c(0,.1)),
+#         ob_line(2,-1),
+#         ob_segment(ob_point(0,1), ob_point(2,0)),
+#         ob_circle(ob_point(1,0), 2),
+#         ob_arc(start = 90, end = 180, center = ob_point(3,4)),
+#         ob_ellipse(x = 0, y = -.5)
+#         )
+#
+#
+# i <- tibble::tibble(x = o1) |>
+#   dplyr::mutate(y = list(o2)) |>
+#   tidyr::unnest(y) |>
+#   dplyr::mutate(i = purrr::map2(x,y, intersection, color = "red")) |>
+#   dplyr::pull(i) |>
+#   bind() |>
+#   map_ob(\(x) {
+#     if (length(x) > 0) {
+#       set_props(x, color = "blue")
+#     }
+#     x
+#   })
+#
+# ggdiagram() + o1 + o2 + i
 
-o1 <-   purrr::map(o1, \(x) {
-  if (length(x) > 0) {
-    set_props(x, color = "blue")
-  }
-  x
-})
-
-o2 <- c(
-        # ob_point(3:2,c(0,.1)),
-        # ob_line(2,-1),
-        # ob_segment(ob_point(0,1), ob_point(2,0)),
-        # ob_circle(ob_point(1,0), 2),
-        ob_arc(start = 90, end = 180, center = ob_point(3,4))
-        # ob_ellipse(x = 0, y = -.5)
-        )
-
-
-i <- tibble::tibble(x = o1) |>
-  dplyr::mutate(y = list(o2)) |>
-  tidyr::unnest(y) |>
-  dplyr::mutate(i = purrr::map2(x,y, intersection)) |>
-  dplyr::pull(i) |>
-  bind() |>
-  map_ob(\(x) {
-    if (length(x) > 0) {
-      set_props(x, color = "blue")
-    }
-    x
-  })
-
-map_ob(ep, identity)
-
-ggdiagram() + o1 + o2 + i
-ggdiagram() + ob_ellipse(x = 0, y = .5) + ob_circle(ob_point(1,0), 2)
-intersection(ob_ellipse(x = 0, y = .5),
-             ob_circle(ob_point(1,0), 2))

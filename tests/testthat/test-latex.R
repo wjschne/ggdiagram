@@ -16,6 +16,7 @@ latex_available <- nzchar(Sys.which("xelatex")) &&
 
 # construction ----
 test_that("ob_latex: basic construction produces correct S7 class", {
+  # skip_on_cran()
   skip_if_not(latex_available, "xelatex not available")
   fn <- withr::local_tempfile()
   lx_base <- ob_latex("x^2", width = 1, filename = fn)
@@ -53,6 +54,7 @@ test_that("ob_latex: basic construction produces correct S7 class", {
   expect_no_error(update_ggplot(lx2, ggdiagram())) # update
   lx3 <- ob_latex("x", height = 2, math_mode = FALSE, family = "Times New Roman",
                   angle = 45, border = c(2,3,4,5), fill = class_color("grey80"), latex_packages = "bm")
+  expect_no_error(as.geom(lx3))
   expect_false(lx3@math_mode) # math_mode = FALSE omits dollar signs from tex
   expect_equal(lx3@height, 2, filename = fn) # height-based sizing respected when width is omitted
   expect_equal(lx3@angle@degree, 45) # angle
