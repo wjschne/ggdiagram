@@ -61,10 +61,10 @@ arc_overlap <- function(x, y) {
     dplyr::filter(.data$max_start <= .data$min_end,
                   .data$x1 == .data$x2,
                   .data$y1 == .data$y2) |>
-    dplyr::select(x = .data$x1,
-                  y = .data$y2,
-                  start = .data$max_start,
-                  end = .data$min_end) |>
+    dplyr::select(x = "x1",
+                  y = "y2",
+                  start = "max_start",
+                  end = "min_end") |>
     data2shape(ob_arc)
 
 }
@@ -188,7 +188,7 @@ intersection1point1bezier <- function(
 
   bb <- b@p[[1]]@bounding_box
 
-  tolerance = max(bb@width, bb@height) / 10000
+  tolerance <- max(bb@width, bb@height) / 10000
 
   evaluate_bezier <- function(t) {
     cps <- cp
@@ -242,7 +242,7 @@ find_theta_on_object <- function(x, y, theta1, theta2, i1, i2, iteration = 1) {
       ) |>
       dplyr::filter(!is.na(.data$th2)) |>
       dplyr::filter(i1 == 0 | i1 == -i2) |>
-      dplyr::rename(theta1 = .data$th1, theta2 = .data$th2) |>
+      dplyr::rename(theta1 = "th1", theta2 = "th2") |>
       dplyr::slice(1)
   }) %>%
     purrr::pmap_dbl(find_theta_on_object)

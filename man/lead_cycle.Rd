@@ -25,11 +25,4 @@ lead_cycle(1:5)
 lead_cycle(1:5, 2)
 lag_cycle(1:5)
 lag_cycle(1:5, 2)
-octagon <- ob_ngon(n = 8)
-vertices <- octagon@vertices
-ggdiagram() +
-  vertices +
-  connect(vertices, lead_cycle(vertices),  resect = 2) +
-  connect(vertices, lag_cycle(vertices, n = 2),  resect = 2) +
-  connect(vertices, lead_cycle(vertices, n = 3),  resect = 2)
 }

@@ -193,7 +193,11 @@ ob_ellipse object
 
 ``` r
 # specify center point and semi-major axes
-e <- ob_ellipse(center = ob_point(0,0), a = 2, b = 3)
-ggdiagram() +
-  e
+ob_ellipse(center = ob_point(0,0), a = 2, b = 3)
+#> 
+#> ── <ob_ellipse> 
+#> # A tibble: 1 × 7
+#>       x     y     a     b angle    m1    m2
+#>   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+#> 1     0     0     2     3     0     2     2
 ```

@@ -211,6 +211,11 @@ ob_rectangle(
 ## Examples
 
 ``` r
-ggdiagram() +
-  ob_rectangle(center = ob_point(0,0), width = 3, height = 2)
+ob_rectangle(center = ob_point(0,0), width = 3, height = 2)
+#> 
+#> ── <ob_rectangle> 
+#> # A tibble: 1 × 7
+#>       x     y width height angle color fill 
+#>   <dbl> <dbl> <dbl>  <dbl> <dbl> <chr> <chr>
+#> 1     0     0     3      2     0 black NA   
 ```

@@ -29,7 +29,6 @@ Create subscripts
 Create superscript
 }
 \examples{
-ggdiagram() +
-  ob_circle(label = ob_label(subscript("X", 1), size = 16)) +
-  ob_circle(x = 3, label = ob_label(superscript("A", 2), size = 16))
+subscript("X", 1)
+superscript("A", 2)
 }

@@ -239,8 +239,8 @@ sg_props <- list(
 #' @param label A character, angle, or [`ob_label`] object
 #' @param label_sloped A logical value indicating whether the label should be sloped with the segment
 #' @param x overrides the x-coordinate of p1
-#' @param xend overrides the y-coordinate of p1
-#' @param y overrides the x-coordinate of p2
+#' @param xend overrides the x-coordinate of p2
+#' @param y overrides the y-coordinate of p1
 #' @param yend overrides the y-coordinate of p2
 #' @param style a style list
 #' @inherit ob_style params
@@ -279,7 +279,7 @@ ob_segment <- S7::new_class(
     label = character(0),
     label_sloped = TRUE,
     alpha = numeric(0),
-    arrow_head = ggarrow::arrow_head_minimal(90),
+    arrow_head = class_arrowhead(ggarrow::arrow_head_minimal(90)),
     arrow_fins = list(),
     arrowhead_length = 7,
     length_head = numeric(0),
@@ -306,6 +306,7 @@ ob_segment <- S7::new_class(
   ) {
     id <- as.character(id)
 
+
     if ((length(x) > 0) || (length(y) > 0)) {
       if (length(x) == 0) {
         x <- 0
@@ -327,12 +328,12 @@ ob_segment <- S7::new_class(
     }
 
     if (length(p1) == 0) {
-      stop("p1 must be a ob_point object with one or more points.")
+      stop("p1 must be an ob_point object with one or more points.")
     } else {
       if (length(p2) == 0) {
         if (p1@length < 2) {
           stop(
-            "If p2 is missing, p1 must be a ob_point object with multiple points."
+            "If p2 is missing, p1 must be an ob_point object with multiple points."
           )
         } else {
           p2 <- p1
@@ -400,8 +401,15 @@ ob_segment <- S7::new_class(
 
     non_empty_list <- get_non_empty_props(s_style)
 
+
     if (length(non_empty_list) > 0) {
       d <- dplyr::bind_cols(d, tibble::tibble(!!!non_empty_list))
+      if ("arrow_head" %in% colnames(d)) {
+        d <- dplyr::mutate(d, arrow_head = purrr::map(arrow_head, class_arrowhead))
+      }
+      if ("arrow_fins" %in% colnames(d)) {
+        d <- dplyr::mutate(d, arrow_fins = purrr::map(arrow_fins, class_arrowhead))
+      }
     }
     pos <- .5
 
@@ -411,7 +419,7 @@ ob_segment <- S7::new_class(
         label@center <- midpoint(p1, p2, position = pos)
       }
       if (all(length(label@angle) == 0) && label_sloped) {
-        label@angle = (p2 - p1)@theta
+        label@angle <- (p2 - p1)@theta
       }
       label@style <- s_style + label@style
     } else {
@@ -433,12 +441,6 @@ ob_segment <- S7::new_class(
         label = character(0)
       }
     }
-
-    # label <- centerpoint_label(
-    #   label = label,
-    #   center = midpoint(p1,p2, position = pos),
-    #   d = d,
-    #   shape_name = "ob_segment")
 
     # If there is one object but many labels, make multiple objects
     if (S7::S7_inherits(label, ob_label)) {
@@ -506,13 +508,14 @@ S7::method(`-`, list(ob_segment, ob_point)) <- function(e1, e2) {
 } # nocov end
 
 S7::method(`+`, list(ob_point, ob_segment)) <- function(e1, e2) {
-  # nocov start
-  e2 + e1
-} # nocov end
+  e2 + e1 # nocov
+}
 
 S7::method(`-`, list(ob_point, ob_segment)) <- function(e1, e2) {
   # nocov start
-  e2 - e1
+  e1p1 <- e1 - e2@p1
+  e1p2 <- e1 - e2@p2
+  ob_segment(e1p1, e1p2, style = e2@style)
 } # nocov end
 
 S7::method(str, ob_segment) <- function(

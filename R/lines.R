@@ -253,7 +253,7 @@ ob_line <- S7::new_class(
       }
 
       # Prevent a and b from being both negative
-      ab_both_negative = -2 * ((d$a <= 0) & (d$b <= 0)) + 1
+      ab_both_negative <- -2 * ((d$a <= 0) & (d$b <= 0)) + 1
       d$a <- d$a * ab_both_negative
       d$b <- d$b * ab_both_negative
       d$c <- d$c * ab_both_negative

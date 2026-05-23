@@ -11,7 +11,7 @@ ob_segment(
   label = character(0),
   label_sloped = TRUE,
   alpha = numeric(0),
-  arrow_head = ggarrow::arrow_head_minimal(90),
+  arrow_head = class_arrowhead(ggarrow::arrow_head_minimal(90)),
   arrow_fins = list(),
   arrowhead_length = 7,
   length_head = numeric(0),
@@ -159,11 +159,11 @@ ob_segment(
 
 - xend:
 
-  overrides the y-coordinate of p1
+  overrides the x-coordinate of p2
 
 - y:
 
-  overrides the x-coordinate of p2
+  overrides the y-coordinate of p1
 
 - yend:
 

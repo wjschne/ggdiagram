@@ -25,6 +25,5 @@ d <- data.frame(
   color = NA,
   radius = c(.25,0.5))
 
-ggdiagram() +
-  data2shape(d, ob_circle)
+data2shape(d, ob_circle)
 }

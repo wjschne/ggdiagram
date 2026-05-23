@@ -193,23 +193,9 @@ ob_arc object
 Create arcs and wedges
 }
 \examples{
-# 90-degree arc
-ggdiagram() +
-  ob_arc(
-    radius = 6,
-    start = degree(0),
-    end = degree(90)
- )
-ggdiagram() +
-  ob_wedge(end = degree(60))
-theta <- degree(seq(0,360, 60))
-ggdiagram() +
-  ob_circular_segment(
-    start = theta[1:6],
-    end = theta[2:7],
-    fill = hsv(h = seq(0,1, length.out = 7)[-7],
-               v = .8,
-               s = .5))
+ob_arc(start = degree(0), end = degree(60))
+ob_circular_segment(start = degree(120), end = degree(180))
+ob_wedge(start = degree(240), end = degree(300))
 }
 \section{Additional properties}{
 

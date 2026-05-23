@@ -243,6 +243,11 @@ the ggarrow::geom_arrow function to create the geom.
 
 ``` r
 control_points <- ob_point(c(0,1,2,4), c(0,4,0,1))
-ggdiagram() +
-  ob_bezier(control_points, color = "blue")
+ob_bezier(control_points, color = "blue")
+#> 
+#> ── <ob_bezier> 
+#> # A tibble: 1 × 4
+#>   p          group color     n
+#>   <list>     <int> <chr> <dbl>
+#> 1 <ggdgr::_>     1 blue    101
 ```

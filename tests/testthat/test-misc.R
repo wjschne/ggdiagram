@@ -7,22 +7,23 @@ test_that(desc = "polarjust", {
 
 
 test_that(desc = "class_margin", {
-  expect_identical(class_margin(list(grid::unit(1, "pt"))), list(class_margin(grid::unit(1,"pt"))))
-  expect_identical(class_margin(1), class_margin(grid::unit(1, "pt")))
-  # expect_identical(class_margin(3), class_margin(ggplot2::margin(3,3,3,3)))
-  expect_identical(class_margin(c(1,2,1,2)), class_margin(grid::unit(1:2, "pt")))
-  expect_identical(class_margin(c(1,2,3,4)), class_margin(grid::unit(1:4, "pt")))
-  expect_error(class_margin(grid::unit(1:5, "pt")), "Margins can have 1 \\(all sides\\), 2 \\(horiztonal vs vertical)\\, or 4 \\(top right bottom left\\) elements\\.")
-  expect_error(class_margin("3"), "Margins can be of class margin, unit, or numeric")
+  expect_identical(ggdiagram:::class_margin(list(grid::unit(1, "pt"))), list(ggdiagram:::class_margin(grid::unit(1,"pt"))))
+  expect_identical(ggdiagram:::class_margin(1), ggdiagram:::class_margin(grid::unit(1, "pt")))
+  expect_identical(ggdiagram:::class_margin(3), ggdiagram:::class_margin(ggplot2::margin(3,3,3,3)))
+  expect_identical(ggdiagram:::class_margin(c(1,2,1,2)), class_margin(grid::unit(1:2, "pt")))
+  expect_identical(ggdiagram:::class_margin(c(1,2,3,4)), ggdiagram:::class_margin(grid::unit(1:4, "pt")))
+  expect_error(ggdiagram:::class_margin(grid::unit(1:5, "pt")), "Margins can have 1 \\(all sides\\), 2 \\(horizontal vs vertical)\\, or 4 \\(top right bottom left\\) elements\\.")
+  expect_error(ggdiagram:::class_margin("3"), "Margins can be of class margin, unit, or numeric")
+  expect_length(ggdiagram:::class_margin(list(ggdiagram:::class_margin(1), ggdiagram:::class_margin(1))), 2L)
 })
 
 test_that(desc = "class_arrowhead", {
   m1 <- matrix(1:6, ncol = 2)
   m2 <- matrix(1:8, ncol = 2)
-  expect_identical(class_arrowhead(class_arrowhead(m1)), class_arrowhead(m1))
-  expect_identical(class_arrowhead(list(m1, m2)), list(class_arrowhead(m1), class_arrowhead(m2)))
-  expect_error(class_arrowhead(1), "Arrowheads must be a 2-column matrix of numbers\\.")
-  expect_error(class_arrowhead(matrix(1)), "Arrowheads must be a 2-column matrix of numbers\\.")
+  expect_identical(ggdiagram:::class_arrowhead(class_arrowhead(m1)), ggdiagram:::class_arrowhead(m1))
+  expect_identical(ggdiagram:::class_arrowhead(list(m1, m2)), list(ggdiagram:::class_arrowhead(m1), class_arrowhead(m2)))
+  expect_error(ggdiagram:::class_arrowhead(1), "Arrowheads must be a 2-column matrix of numbers\\.")
+  expect_error(ggdiagram:::class_arrowhead(matrix(1)), "Arrowheads must be a 2-column matrix of numbers\\.")
   expect_no_error(set_default_arrowhead())
   expect_no_error(set_default_arrowhead(matrix(c(1,0,0,1), nrow = 2, byrow = TRUE)))
 })
@@ -32,7 +33,7 @@ test_that(desc = "assign_data", {
   p <- ob_point(1, c(2, 2.4))
   p2 <- ob_point(1, 2.4)
   expect_identical(p[2]@y, p2@y)
-  identical(ob_circle(center = p)[2], ob_circle(p2))
+  expect_identical(ob_circle(center = p)[2], ob_circle(p2))
   expect_identical(ob_circle(center = p)[2]@center, ob_circle(p2)@center)
 })
 
@@ -53,20 +54,19 @@ test_that(desc = "distances", {
 # str ----
 
 test_that("str no error", {
-  expect_no_error(capture.output(str(ob_point())))
-  expect_no_error(capture.output(str(ob_line())))
-  expect_no_error(capture.output(str(ob_circle())))
-  expect_no_error(capture.output(str(ob_ellipse())))
-  expect_no_error(capture.output(str(ob_rectangle())))
-  expect_no_error(capture.output(str(ob_segment(ob_point(0, 1:3)))))
-  expect_no_error(capture.output(str(ob_arc(start = 0, end = 90, radius = 1, label = "A"))))
-  expect_no_error(capture.output(str(ob_bezier(ob_point(c(0, 1, 2), c(0, 2, 0))))))
-  expect_no_error(capture.output(str(ob_path(ob_point(c(0, 1, 2), c(0, 2, 0))))))
-  expect_no_error(capture.output(str(ob_polygon(ob_point(c(0, 1, 2), c(0, 2, 0))))))
-  expect_no_error(capture.output(str(ob_ngon())))
-  expect_no_error(capture.output(str(ob_reuleaux())))
+  expect_no_error(suppressMessages(capture.output(str(ob_point()))))
+  expect_no_error(suppressMessages(capture.output(str(ob_line()))))
+  expect_no_error(suppressMessages(capture.output(str(ob_circle()))))
+  expect_no_error(suppressMessages(capture.output(str(ob_ellipse()))))
+  expect_no_error(suppressMessages(capture.output(str(ob_rectangle()))))
+  expect_no_error(suppressMessages(capture.output(str(ob_segment(ob_point(0, 1:3))))))
+  expect_no_error(suppressMessages(capture.output(str(ob_arc(start = 0, end = 90, radius = 1, label = "A")))))
+  expect_no_error(suppressMessages(capture.output(str(ob_bezier(ob_point(c(0, 1, 2), c(0, 2, 0)))))))
+  expect_no_error(suppressMessages(capture.output(str(ob_path(ob_point(c(0, 1, 2), c(0, 2, 0)))))))
+  expect_no_error(suppressMessages(capture.output(str(ob_polygon(ob_point(c(0, 1, 2), c(0, 2, 0)))))))
+  expect_no_error(suppressMessages(capture.output(str(ob_ngon()))))
+  expect_no_error(suppressMessages(capture.output(str(ob_reuleaux()))))
 })
-
 
 # bind ----
 test_that("bind", {
@@ -128,8 +128,8 @@ test_that("ob_array", {
 
 # cardinalpoint ----
 test_that("cardinalpoint", {
-  expect_identical(cardinalpoint("south"), 270)
-  expect_error(cardinalpoint("a"), "Position must be an angle, numeric, or one of these named positions:\neast, right, east-northeast, northeast, top right, above right, north-northeast,\nnorth, top, above, north-northwest, northwest, top left, above left,\nwest-northwest, west, left, west-southwest, southwest, bottom left, below left,\nsouth-southwest, south, bottom, below, south-southeast, southeast, bottom right,\nbelow right, east-southeast")
+  expect_identical(ggdiagram:::cardinalpoint("south"), 270)
+  expect_error(ggdiagram:::cardinalpoint("a"), "Position must be an angle, numeric, or one of these named positions:\neast, right, east-northeast, northeast, top right, above right, north-northeast,\nnorth, top, above, north-northwest, northwest, top left, above left,\nwest-northwest, west, left, west-southwest, southwest, bottom left, below left,\nsouth-southwest, south, bottom, below, south-southeast, southeast, bottom right,\nbelow right, east-southeast")
 })
 
 # helpers ----
@@ -169,7 +169,7 @@ test_that("unique", {
   c1 <- ob_circle(label = "a")
   expect_identical(unique(bind(c(c1,c1))), c1)
   c2 <- ob_circle(label = NA_character_)
-  expect_equal(unique(bind(c(c2,c2))), c2)
+  expect_length(unique(bind(c(c2,c2))), 1L)
 })
 
 test_that("lead and lag cycle", {

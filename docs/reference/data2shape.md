@@ -32,6 +32,12 @@ d <- data.frame(
   color = NA,
   radius = c(.25,0.5))
 
-ggdiagram() +
-  data2shape(d, ob_circle)
+data2shape(d, ob_circle)
+#> 
+#> ── <ob_circle> 
+#> # A tibble: 2 × 5
+#>       x     y     r color fill       
+#>   <int> <int> <dbl> <chr> <chr>      
+#> 1     1     1  0.25 NA    blue       
+#> 2     2     2  0.5  NA    forestgreen
 ```

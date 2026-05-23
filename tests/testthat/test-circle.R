@@ -19,7 +19,7 @@ test_that(desc = "circle", {
   expect_no_error(c1@tangent_at(ob_point(5,5)))
   expect_equal(c1@tangent_at(ob_point(5,0))@xintercept, 3)
   expect_no_error(c1@point_at(4))
-  expect_no_error(capture.output(print(c1), file = nullfile()))
+  expect_no_error(suppressMessages(capture.output(print(c1), file = nullfile())))
   expect_no_error(place(ob_line(3,4), c1))
   expect_no_error(ob_array(c1, 4))
   expect_equal(c1@length, 1)

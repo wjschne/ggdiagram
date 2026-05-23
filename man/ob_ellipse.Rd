@@ -70,9 +70,7 @@ Makes ellipses and superellipses
 }
 \examples{
 # specify center point and semi-major axes
-e <- ob_ellipse(center = ob_point(0,0), a = 2, b = 3)
-ggdiagram() +
-  e
+ob_ellipse(center = ob_point(0,0), a = 2, b = 3)
 }
 \section{Additional properties}{
 

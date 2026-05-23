@@ -351,6 +351,67 @@ Figure 7: Chained segments
 </div>
 </div>
 </div>
+</section><section class="section level2"><h2 id="arrowheads-and-fins">Arrowheads and fins<a class="anchor" aria-label="anchor" href="#arrowheads-and-fins"></a>
+</h2>
+<p>In the <code>ob_segment</code> function, the <code>arrow_head</code> and <code>arrow_fins</code> arguments can be set with any arrowhead function from the <a href="https://teunbrand.github.io/ggarrow/reference/arrow_ornaments.html" class="external-link">ggarrow</a> or the <a href="https://wjschne.github.io/arrowheadr/" class="external-link">arrowheadr</a> packages. Any 2-column matrix will also be acceptable, as shown <a href="https://teunbrand.github.io/ggarrow/articles/customisation.html" class="external-link">here</a>. The default arrowhead can be used via the <code><a href="../reference/arrowhead.html">arrowhead()</a></code> function. The size of the arrowhead and fins can also be controlled independently with the <code>length_head</code> and <code>length_fins</code> arguments.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_segment.html">ob_segment</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span>, </span>
+<span>                arrow_head <span class="op">=</span> <span class="fu"><a href="../reference/arrowhead.html">arrowhead</a></span><span class="op">(</span><span class="op">)</span>, </span>
+<span>                arrow_fins <span class="op">=</span> <span class="fu">ggarrow</span><span class="fu">::</span><span class="fu"><a href="https://teunbrand.github.io/ggarrow/reference/arrow_ornaments.html" class="external-link">arrow_fins_feather</a></span><span class="op">(</span><span class="op">)</span>, </span>
+<span>                length_head <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>                length_fins <span class="op">=</span> <span class="fl">7</span>, </span>
+<span>                linewidth <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div id="fig-arrow" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-arrow-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="segments_files/figure-html/fig-arrow-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-arrow-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 8: Segments with arrowheads and fins
+</figcaption></figure>
+</div>
+</div>
+</div>
+</section><section class="section level2"><h2 id="labeling-segments">Labeling segments<a class="anchor" aria-label="anchor" href="#labeling-segments"></a>
+</h2>
+<p>By default, any label is set at the midpoint of the segment (see <a href="#fig-segmentlabel" class="quarto-xref">Figure 9</a>). If it is plain text, it will be just above the segment. Its angle will match that of the segment, but this can be turned off by setting <code>label_sloped</code> to <code>FALSE</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_segment.html">ob_segment</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span>, label <span class="op">=</span> <span class="st">"My label"</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div id="fig-segmentlabel" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-segmentlabel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="segments_files/figure-html/fig-segmentlabel-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-segmentlabel-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 9: Segments with labels
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>As shown <a href="#fig-segmentlabel2" class="quarto-xref">Figure 10</a>, the <code>ob_label</code> function gives much more control over how and where the label will appear.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_segment.html">ob_segment</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span>, </span>
+<span>                label <span class="op">=</span> <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span></span>
+<span>                  label <span class="op">=</span> <span class="st">"My label"</span>, </span>
+<span>                  position <span class="op">=</span> <span class="fl">.25</span>, </span>
+<span>                  color <span class="op">=</span> <span class="st">"blue"</span>, </span>
+<span>                  fill <span class="op">=</span> <span class="fu"><a href="../reference/class_color.html">class_color</a></span><span class="op">(</span><span class="st">"blue"</span><span class="op">)</span><span class="op">@</span><span class="va">lighten</span><span class="op">(</span><span class="op">)</span>, </span>
+<span>                  family <span class="op">=</span> <span class="st">"serif"</span>, </span>
+<span>                  label.padding <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span>t <span class="op">=</span> <span class="fl">5</span>,r <span class="op">=</span> <span class="fl">4</span>,b <span class="op">=</span> <span class="fl">3</span>,l <span class="op">=</span> <span class="fl">4</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div id="fig-segmentlabel2" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-segmentlabel2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="segments_files/figure-html/fig-segmentlabel2-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-segmentlabel2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 10: Segments with arrowheads and fins
+</figcaption></figure>
+</div>
+</div>
+</div>
 </section><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);

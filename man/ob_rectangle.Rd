@@ -87,8 +87,7 @@ ob_rectangle(
 ob_rectangle class
 }
 \examples{
-ggdiagram() +
-  ob_rectangle(center = ob_point(0,0), width = 3, height = 2)
+ob_rectangle(center = ob_point(0,0), width = 3, height = 2)
 }
 \section{Additional properties}{
 

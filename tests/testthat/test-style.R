@@ -237,9 +237,9 @@ test_that("ob_style [ subsetting", {
 
 # print ----
 test_that("ob_style print", {
-  expect_no_error(capture.output(print(ob_style(color = "red"))))
+  expect_no_error(suppressMessages(capture.output(print(ob_style(color = "red")))))
   # empty style also prints without error
-  expect_no_error(capture.output(print(ob_style())))
+  expect_no_error(suppressMessages(capture.output(print(ob_style()))))
 })
 
 # data2shape round-trip ----

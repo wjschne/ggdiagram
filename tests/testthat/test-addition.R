@@ -103,12 +103,16 @@ test_that("adding", {
   p3 <- ob_point(4, 5)
   s1 <- ob_segment(p1, p2)
   s2 <- ob_segment(p2, p3)
+  ggdiagram() + p1 + p2 + p3  + s1 + s2
 
   expect_identical(p1 + p2, p3)
   expect_identical(p3 - p2, p1)
-  expect_identical(ob_segment(p1, p2) + p3, ob_segment(p1 + p3, p2 + p3))
-  expect_identical(p3 + ob_segment(p1, p2), ob_segment(p1 + p3, p2 + p3))
-  expect_equal(p3 - ob_segment(p1, p2), ob_segment(p3 - p1, p3 - p2))
+  expect_identical(ob_segment(p1, p2) + p3,
+                   ob_segment(p1 + p3, p2 + p3))
+  expect_identical(p3 + ob_segment(p1, p2),
+                   ob_segment(p1 + p3, p2 + p3))
+  expect_equal(p3 - ob_segment(p1, p2),
+               ob_segment(p3 - p1, p3 - p2))
   expect_identical(ob_circle(p1, 2) + p2, ob_circle(p1 + p2, 2))
   expect_identical(ob_circle(p1, 2) - p2, ob_circle(p1 - p2, 2))
   expect_identical(p2 + ob_circle(p1, 2), ob_circle(p1 + p2, 2))
@@ -121,8 +125,8 @@ test_that("adding", {
 })
 
 test_that("resect", {
-  s1 <- ob_segment(ob_point(0, 0), ob_point(1, 0))
-  expect_equal(resect(s1, distance(s1) * .05), ob_segment(ob_point(.05, 0), ob_point(.95, 0)))
+  s1 <- ob_segment(ob_polar(0, 0), ob_polar(theta = 0, r = 1))
+  expect_equal(resect(s1, distance(s1) * .05), ob_segment(ob_polar(0, .05), ob_polar(0, 0.95)))
 })
 
 test_that("inside", {

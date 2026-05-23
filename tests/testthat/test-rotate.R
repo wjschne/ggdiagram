@@ -5,10 +5,10 @@ test_that("rotate", {
 
   # rotate a line with an angle
   expect_identical(rotate(ob_line(xintercept = 2), turn(turn = .5)), ob_line(xintercept = -2))
-  # rotate a line with a numeric radian
-  expect_equal(rotate(ob_line(xintercept = 2), turn(turn = .5)), rotate(ob_line(xintercept = 2), pi))
+  # rotate a line with a numeric degree
+  expect_equal(rotate(ob_line(xintercept = 2), turn(turn = .5)), rotate(ob_line(xintercept = 2), 180))
 
-  # rotate a ob_point
+  # rotate an ob_point
   expect_equal(rotate(ob_point(1, 0), turn(turn = .5)), ob_point(-1, 0))
 
   # rotate a segment
@@ -28,13 +28,13 @@ test_that("rotate", {
       a = 2,
       b = 1
     ),
-    theta = turn(.25)
+    theta = radian(.5 * pi)
   ),
   ob_ellipse(
     ob_point(-2, 1),
     a = 2,
     b = 1,
-    angle = turn(.25)
+    angle = radian(.5 * pi)
   ))
 
   # rotate bezier

@@ -38,7 +38,7 @@ test_that(desc = "label", {
       "The plot_point property must be a TRUE/FALSE value of length 1\\."
     )
   )
-  expect_no_error(capture.output(print(l), file = nullfile()))
+  expect_no_error(suppressMessages(capture.output(print(l), file = nullfile())))
   l@label.margin <- ggdiagram:::class_margin(1)
   l@label.padding <- ggdiagram:::class_margin(1)
   expect_no_error(get_tibble(l))
@@ -185,7 +185,7 @@ test_that("geom with plot_point no error", {
 })
 
 test_that("str no error", {
-  expect_no_error(capture.output(str(ob_label("A", center = ob_point(1, 2)))))
+  expect_no_error(suppressMessages(capture.output(str(ob_label("A", center = ob_point(1, 2))))))
 })
 
 test_that(desc = "does set_label_x work on arcs, segments, and bezier curves?", {

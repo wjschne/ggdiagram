@@ -327,7 +327,7 @@ ob_circle <- S7::new_class(
       )
     }
 
-    center = set_props(center, x = d$x, y = d$y)
+    center <- set_props(center, x = d$x, y = d$y)
 
     if (S7::S7_inherits(label, ob_label)) {
       if (all(label@center == ob_point(0, 0))) {

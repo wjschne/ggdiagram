@@ -92,6 +92,9 @@ class_unit <- S7::new_S3_class(
 )
 
 ## class_margin ----
+#' Create a structure for label margins and label padding
+#' @keywords internal
+#' @param x A vector of numeric data, grid
 class_margin <- S7::new_class(
   name = "class_margin",
   package = "ggdiagram",
@@ -110,7 +113,7 @@ class_margin <- S7::new_class(
             inherits(o, "margin")
           }))
         ) {
-          return(purrr::map(x, class_margin))
+          return(purrr::map(x, class_margin)) # nocov
         }
         if (
           all(purrr::map_lgl(x, \(o) {
@@ -130,16 +133,14 @@ class_margin <- S7::new_class(
 
       if (inherits(x, "margin")) {} else if (inherits(x, "unit")) {
         if (length(x) == 1) {
-          x <- rep(x, 4)
-          class(x) <- c("margin", class(x))
+          x <- ggplot2::margin(x, x, x, x, unit = units)
         } else if (length(x) == 2) {
-          x <- rep(x, 2)
-          class(x) <- c("margin", class(x))
+          x <- ggplot2::margin(x[1], x[2], x[1], x[2], unit = units)
         } else if (length(x) == 4) {
-          class(x) <- c("margin", class(x))
+          x <- ggplot2::margin(x[1], x[2], x[3], x[4], unit = units)
         } else {
           stop(
-            "Margins can have 1 (all sides), 2 (horiztonal vs vertical), or 4 (top right bottom left) elements."
+            "Margins can have 1 (all sides), 2 (horizontal vs vertical), or 4 (top right bottom left) elements."
           )
         }
       } else {
@@ -1023,9 +1024,8 @@ ob_array_helper <- function(
 #' @export
 #'
 #' @examples
-#' ggdiagram() +
-#'   ob_circle(label = ob_label(subscript("X", 1), size = 16)) +
-#'   ob_circle(x = 3, label = ob_label(superscript("A", 2), size = 16))
+#' subscript("X", 1)
+#' superscript("A", 2)
 subscript <- function(
   x,
   subscript = seq(length(x)),
@@ -1216,13 +1216,6 @@ round_probability <- function(
 #' lead_cycle(1:5, 2)
 #' lag_cycle(1:5)
 #' lag_cycle(1:5, 2)
-#' octagon <- ob_ngon(n = 8)
-#' vertices <- octagon@vertices
-#' ggdiagram() +
-#'   vertices +
-#'   connect(vertices, lead_cycle(vertices),  resect = 2) +
-#'   connect(vertices, lag_cycle(vertices, n = 2),  resect = 2) +
-#'   connect(vertices, lead_cycle(vertices, n = 3),  resect = 2)
 lead_cycle <- function(x, n = 1L) {
   k <- length(x)
   if (k < 2L) {
@@ -1253,9 +1246,6 @@ lag_cycle <- function(x, n = 1L) {
   if (!((ni == n) && ni > 0 && ni < k)) {
     stop("n must be a positive integer less than length of x.")
   }
-
-
-
   x[c(seq(k - ni + 1, k), seq(1, k - ni))]
 }
 
@@ -1467,17 +1457,8 @@ emphasis <- function(x, output = "markdown") {
 #' @examples
 #' l1 <- ob_line(slope = 2, intercept = 4)
 #' c1 <- ob_circle(radius = 3)
-#' ggdiagram() +
-#'   l1 +
-#'   c1 +
-#'   ob_label(label = equation(c1),
-#'            center = c1@center,
-#'            size = 16) +
-#'   ob_label(label = equation(l1),
-#'            center = ob_segment(intersection(l1, c1))@midpoint(),
-#'            angle = l1@angle,
-#'            size = 16) +
-#'  ggplot2::theme_minimal(base_size = 20)
+#' equation(c1)
+#' equation(l1)
 equation <- S7::new_generic(
   "equation",
   dispatch_args = "x",
@@ -1720,8 +1701,7 @@ ggdiagram <- function(
 #'   color = NA,
 #'   radius = c(.25,0.5))
 #'
-#' ggdiagram() +
-#'   data2shape(d, ob_circle)
+#' data2shape(d, ob_circle)
 data2shape <- function(data, shape) {
   l <- as.list(data)
   rlang::inject(shape(!!!l))

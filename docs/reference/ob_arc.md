@@ -401,23 +401,25 @@ ob_arc object
 ## Examples
 
 ``` r
-# 90-degree arc
-ggdiagram() +
-  ob_arc(
-    radius = 6,
-    start = degree(0),
-    end = degree(90)
- )
-
-ggdiagram() +
-  ob_wedge(end = degree(60))
-
-theta <- degree(seq(0,360, 60))
-ggdiagram() +
-  ob_circular_segment(
-    start = theta[1:6],
-    end = theta[2:7],
-    fill = hsv(h = seq(0,1, length.out = 7)[-7],
-               v = .8,
-               s = .5))
+ob_arc(start = degree(0), end = degree(60))
+#> 
+#> ── <ob_arc> 
+#> # A tibble: 1 × 7
+#>       x     y radius start   end     n type 
+#>   <dbl> <dbl>  <dbl> <dbl> <dbl> <int> <chr>
+#> 1     0     0      1     0    60   360 arc  
+ob_circular_segment(start = degree(120), end = degree(180))
+#> 
+#> ── <ob_arc> 
+#> # A tibble: 1 × 9
+#>       x     y radius start   end color fill      n type   
+#>   <dbl> <dbl>  <dbl> <dbl> <dbl> <chr> <chr> <int> <chr>  
+#> 1     0     0      1   120   180 NA    black   360 segment
+ob_wedge(start = degree(240), end = degree(300))
+#> 
+#> ── <ob_arc> 
+#> # A tibble: 1 × 9
+#>       x     y radius start   end color fill      n type 
+#>   <dbl> <dbl>  <dbl> <dbl> <dbl> <chr> <chr> <int> <chr>
+#> 1     0     0      1   240   300 NA    black   360 wedge
 ```

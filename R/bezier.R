@@ -120,7 +120,7 @@ bz_props <- list(
       S7::class_function,
       getter = function(self) {
         \(x = 0, ...) {
-          xx = x
+          xx <- x
           first_pass <- get_tibble(self) |>
             dplyr::left_join(self@tibble |> dplyr::select(group, n, p),
                       by = dplyr::join_by(group)) |>
@@ -176,7 +176,7 @@ bz_props <- list(
       S7::class_function,
       getter = function(self) {
         \(y = 0, ...) {
-          yy = y
+          yy <- y
           first_pass <- get_tibble(self) |>
             dplyr::left_join(self@tibble |> dplyr::select(group, n, p),
                              by = dplyr::join_by(group)) |>
@@ -367,8 +367,7 @@ bz_props <- list(
 #' @prop tibble Gets a tibble (data.frame) containing parameters and styles used by `ggarrow::geom_arrow`.
 #' @examples
 #' control_points <- ob_point(c(0,1,2,4), c(0,4,0,1))
-#' ggdiagram() +
-#'   ob_bezier(control_points, color = "blue")
+#' ob_bezier(control_points, color = "blue")
 ob_bezier <- S7::new_class(
   name = "ob_bezier",
   parent = has_style,

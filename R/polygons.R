@@ -925,36 +925,9 @@ ob_ngon_props <- list(
 #' @prop southeast lower right point ([`ob_point`])
 #' @inherit ob_style params
 #' @examples
-#' ggdiagram() +
-#'   ob_ngon(center = ob_point(x = 3:8, y = 0),
-#'           n = 3:8,
-#'           radius = .4)
-#'
-#' # Size can be set with side_length instead of radius
-#' ggdiagram() +
-#'   ob_ngon(center = ob_point(x = 3:8, y = 0),
-#'           n = 3:8,
-#'           side_length = .4)
-#'
-#' # Size can be set with apothem (distance from center to side's midpoint)
-#'
-#' ggdiagram() +
-#'   ob_ngon(n = 4,
-#'           radius = 1,
-#'           fill = NA,
-#'           color = "blue") +
-#'   ob_ngon(n = 4,
-#'           apothem = 1,
-#'           fill = NA,
-#'           color = "red") +
-#'   ob_circle(radius = 1)
-#'
-#' # Getting the circles that inscribe and circumscribe the ngon
-#' ggdiagram() +
-#'   {x <- ob_ngon(fill = NA, color = "black")} +
-#'   x@inscribed |> set_props(color = "blue") +
-#'   x@circumscribed |> set_props(color = "red")
-
+#' ob_ngon(center = ob_point(x = 3:8, y = 0),
+#'         n = 3:8,
+#'         radius = .4)
 ob_ngon <- S7::new_class(
   name = "ob_ngon",
   parent = centerpoint,
@@ -1044,7 +1017,7 @@ ob_ngon <- S7::new_class(
       )
     }
 
-    center = set_props(center, x = d$x, y = d$y)
+    center <- set_props(center, x = d$x, y = d$y)
 
     if (S7::S7_inherits(label, ob_label)) {
       if (all(label@center == ob_point(0, 0))) {
@@ -1499,7 +1472,7 @@ ob_intercept <- S7::new_class(
       )
     }
 
-    center = set_props(center, x = d$x, y = d$y)
+    center <- set_props(center, x = d$x, y = d$y)
 
     if (S7::S7_inherits(label, ob_label)) {
       if (all(label@center == ob_point(0, 0))) {
@@ -1581,8 +1554,7 @@ ob_intercept <- S7::new_class(
 #' @export
 #' @returns ob_reuleaux object
 #' @examples
-#' ggdiagram() +
-#'   ob_reuleaux(n = 3, fill = "royalblue", color = NA)
+#' ob_reuleaux(n = 3, fill = "royalblue", color = NA)
 ob_reuleaux <- S7::new_class(
   name = "ob_reuleaux",
   parent = centerpoint,

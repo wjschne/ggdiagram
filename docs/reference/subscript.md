@@ -39,7 +39,8 @@ string
 ## Examples
 
 ``` r
-ggdiagram() +
-  ob_circle(label = ob_label(subscript("X", 1), size = 16)) +
-  ob_circle(x = 3, label = ob_label(superscript("A", 2), size = 16))
+subscript("X", 1)
+#> [1] "X<sub>1</sub>"
+superscript("A", 2)
+#> [1] "A<sup>2</sup>"
 ```

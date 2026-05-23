@@ -231,7 +231,7 @@ test_that("ob_rectangle geom and aesthetics", {
 # print ----
 test_that("ob_rectangle print", {
   r <- ob_rectangle(width = 3, height = 2)
-  expect_no_error(capture.output(print(r)))
+  expect_no_error(suppressMessages(capture.output(print(r))))
 })
 
 # rotate ----

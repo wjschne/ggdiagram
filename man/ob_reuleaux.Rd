@@ -57,8 +57,7 @@ ob_reuleaux object
 Reuleaux polygon
 }
 \examples{
-ggdiagram() +
-  ob_reuleaux(n = 3, fill = "royalblue", color = NA)
+ob_reuleaux(n = 3, fill = "royalblue", color = NA)
 }
 \section{Additional properties}{
 

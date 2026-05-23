@@ -119,13 +119,4 @@ ggdiagram() +
   ob_covariance(x = x[1],
                 y = x[2],
                 label = ob_label("A"))
-
-
-ggdiagram() +
-  x +
-  ob_covariance(x = x[1],
-                y = x[2],
-                label = ob_label("A"),
-                where = -45,
-                looseness = .75)
 ```

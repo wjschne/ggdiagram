@@ -256,3 +256,65 @@ bp +
 ![](segments_files/figure-html/fig-chain-1.png)
 
 Figure 7: Chained segments
+
+## Arrowheads and fins
+
+In the `ob_segment` function, the `arrow_head` and `arrow_fins`
+arguments can be set with any arrowhead function from the
+[ggarrow](https://teunbrand.github.io/ggarrow/reference/arrow_ornaments.html)
+or the [arrowheadr](https://wjschne.github.io/arrowheadr/) packages. Any
+2-column matrix will also be acceptable, as shown
+[here](https://teunbrand.github.io/ggarrow/articles/customisation.html).
+The default arrowhead can be used via the
+[`arrowhead()`](https://wjschne.github.io/ggdiagram/reference/arrowhead.md)
+function. The size of the arrowhead and fins can also be controlled
+independently with the `length_head` and `length_fins` arguments.
+
+``` r
+
+bp + ob_segment(p1, p2, 
+                arrow_head = arrowhead(), 
+                arrow_fins = ggarrow::arrow_fins_feather(), 
+                length_head = 5,
+                length_fins = 7, 
+                linewidth = 2)
+```
+
+![](segments_files/figure-html/fig-arrow-1.png)
+
+Figure 8: Segments with arrowheads and fins
+
+## Labeling segments
+
+By default, any label is set at the midpoint of the segment (see
+[Figure 9](#fig-segmentlabel)). If it is plain text, it will be just
+above the segment. Its angle will match that of the segment, but this
+can be turned off by setting `label_sloped` to `FALSE`.
+
+``` r
+
+bp + ob_segment(p1, p2, label = "My label")
+```
+
+![](segments_files/figure-html/fig-segmentlabel-1.png)
+
+Figure 9: Segments with labels
+
+As shown [Figure 10](#fig-segmentlabel2), the `ob_label` function gives
+much more control over how and where the label will appear.
+
+``` r
+
+bp + ob_segment(p1, p2, 
+                label = ob_label(
+                  label = "My label", 
+                  position = .25, 
+                  color = "blue", 
+                  fill = class_color("blue")@lighten(), 
+                  family = "serif", 
+                  label.padding = ggplot2::margin(t = 5,r = 4,b = 3,l = 4)))
+```
+
+![](segments_files/figure-html/fig-segmentlabel2-1.png)
+
+Figure 10: Segments with arrowheads and fins

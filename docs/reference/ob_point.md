@@ -150,12 +150,7 @@ ob_point object
 ## Examples
 
 ``` r
-ggdiagram() +
-  ob_point(1:5, 1:5) +
-  ggplot2::theme_minimal()
-
-
-ggdiagram() +
-  ob_polar(degree(seq(0, 330, 30)), r = 2) +
-  ggplot2::theme_minimal()
+ggdiagram(theme = ggplot2::theme_minimal) +
+  ob_point(x = -1:1, y = -1:1, color = "red") +
+  ob_polar(theta = degree(seq(0, 330, 30)), r = 2, color = "blue")
 ```

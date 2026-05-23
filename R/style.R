@@ -1,21 +1,9 @@
 prop_hjust <- S7::new_property(
   class_numeric_or_character
-  # validator = function(value) {
-  #   if (is.character(value)) {
-  #     if (length(value) > 0 && !all(value %in% c("left", "center", "right")))
-  #       stop('vjust must be "left", "center", "right", or a numeric value')
-  #   }
-  # }
 )
 
-prop_vjust = S7::new_property(
+prop_vjust <- S7::new_property(
   class_numeric_or_character
-  # validator = function(value) {
-  #   if (is.character(value)) {
-  #     if (length(value) > 0 && !all(value %in% c("top", "middle", "bottom")))
-  #       stop('vjust must be "top", "middle", "bottom", or a numeric value')
-  #   }
-  # }
 )
 
 # ob_style----

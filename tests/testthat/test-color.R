@@ -188,7 +188,7 @@ test_that("class_color: [ subsetting by id", {
 
 # str ----
 test_that("class_color: str produces no error", {
-  expect_no_error(capture.output(str(class_color("red"))))
+  expect_no_error(suppressMessages(capture.output(str(class_color("red")))))
 })
 
 # ── mean_color ────────────────────────────────────────────────────────────────

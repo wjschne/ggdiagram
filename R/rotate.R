@@ -16,7 +16,7 @@ rotate <- S7::new_generic(
   }
 )
 
-# Rotate Line
+## Rotate Line ----
 S7::method(rotate, list(ob_line, ob_angle_or_numeric)) <- function(
   x,
   theta,
@@ -34,7 +34,7 @@ S7::method(rotate, list(ob_line, ob_angle_or_numeric)) <- function(
   ob_line(a = A, b = B, c = C, ...)
 }
 
-# Rotate ----
+
 ## Rotate point ----
 S7::method(rotate, list(ob_point, ob_angle_or_numeric)) <- function(
   x,

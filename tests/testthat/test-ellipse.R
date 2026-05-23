@@ -221,7 +221,7 @@ test_that("ob_ellipse geom and aesthetics", {
 # print ----
 test_that("ob_ellipse print", {
   e <- ob_ellipse(a = 3, b = 2)
-  expect_no_error(capture.output(print(e)))
+  expect_no_error(suppressMessages(capture.output(print(e))))
 })
 
 # subsetting ----

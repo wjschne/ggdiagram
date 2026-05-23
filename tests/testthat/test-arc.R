@@ -304,7 +304,7 @@ test_that("ob_arc geom and aesthetics", {
 
 # print ----
 test_that("ob_arc print", {
-  expect_no_error(capture.output(print(ob_arc(start = 0, end = 90))))
+  expect_no_error(suppressMessages(capture.output(print(ob_arc(start = 0, end = 90)))))
 })
 
 # subsetting ----

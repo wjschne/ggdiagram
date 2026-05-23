@@ -5,7 +5,7 @@ ep <- ob_point(double(0), double(0))
 
 # point-point ----
 
-test_that("intersection: point × line — point on line returns the point", {
+test_that("intersection: point × point", {
   p1 <- ob_point(3, 3)
   p2 <- ob_point(3, 3)
 
@@ -207,8 +207,10 @@ test_that("intersection: line × line — crossing lines", {
   pb2 <- intersection(b, p)
   expect_identical(p, pb)
   expect_identical(pb, pb2)
-  intersection(b@midpoint(), b)
-  intersection1point1bezier(b@midpoint(), b, samples = 1000)
+  expect_length(intersection(b@midpoint(), b), 1)
+  pb3 <- intersection(b, ob_point(2,-1))
+  expect_length(pb3, 0L)
+
 
 })
 

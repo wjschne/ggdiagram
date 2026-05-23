@@ -27,19 +27,21 @@ test_that("ob_segment construction", {
   # error cases
   expect_error(
     ob_segment(),
-    "p1 must be a ob_point object with one or more points\\."
+    "p1 must be an ob_point object with one or more points\\."
   )
   expect_error(
     ob_segment(p1),
-    "If p2 is missing, p1 must be a ob_point object with multiple points\\."
+    "If p2 is missing, p1 must be an ob_point object with multiple points\\."
   )
 
   # x/xend/y/yend build correct endpoints
-  s_xy <- ob_segment(x = 1, y = 2, xend = 4, yend = 6)
+  s_xy <- ob_segment(x = 1, y = 2, xend = 4, yend = 6, arrow_fins = arrowhead())
   expect_equal(s_xy@p1@x, 1)
   expect_equal(s_xy@p1@y, 2)
   expect_equal(s_xy@p2@x, 4)
   expect_equal(s_xy@p2@y, 6)
+
+
 })
 
 # derived values ----
@@ -225,7 +227,7 @@ test_that("ob_segment geom and aesthetics", {
 # print ----
 test_that("ob_segment print", {
   s <- ob_segment(ob_point(0, 0), ob_point(3, 4))
-  expect_no_error(capture.output(print(s)))
+  expect_no_error(suppressMessages(capture.output(print(s))))
 })
 
 # hatch ----
@@ -264,7 +266,6 @@ test_that("ob_segment subsetting", {
   s1 <- ob_segment(p1, p2)
   s2 <- ob_segment(p2, p3, label = ob_label("A"))
   s  <- bind(c(s1, s2))
-
   expect_equal(s[2], s2)
   expect_equal(s[1]@p1@x, 0)
   expect_equal(s[1]@length, 1L)
@@ -316,6 +317,6 @@ test_that("ob_segment equation", {
 # str ----
 
 test_that("str no error", {
-  expect_no_error(capture.output(str(ob_segment(ob_point(c(0,0), c(0,1))))))
+  expect_no_error(suppressMessages(capture.output(str(ob_segment(ob_point(c(0,0), c(0,1)))))))
 })
 

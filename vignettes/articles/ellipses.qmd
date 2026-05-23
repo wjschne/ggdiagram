@@ -186,7 +186,7 @@ Setting the angle of an ellipse will rotate it about its center. If you want to 
 #| label: fig-ellipserotated1
 #| fig-cap: An ellipse rotated 45 degrees about point (2, 0)
 bp +
-  {p1 = ob_point(2,0)} +
+  {p1 <- ob_point(2,0)} +
   {e2 <- ob_ellipse(a  = 2, b = 1)} +
   rotate(e2, theta = degree(45), origin = p1, color = "red") 
 ```

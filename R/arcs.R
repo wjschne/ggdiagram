@@ -509,13 +509,9 @@ arc_props <- list(
 #' @export
 #' @returns ob_arc object
 #' @examples
-#' # 90-degree arc
-#' ggdiagram() +
-#'   ob_arc(
-#'     radius = 6,
-#'     start = degree(0),
-#'     end = degree(90)
-#'  )
+#' ob_arc(start = degree(0), end = degree(60))
+#' ob_circular_segment(start = degree(120), end = degree(180))
+#' ob_wedge(start = degree(240), end = degree(300))
 ob_arc <- S7::new_class(
   name = "ob_arc",
   package = "ggdiagram",
@@ -654,7 +650,7 @@ ob_arc <- S7::new_class(
       }
     }
 
-    center = set_props(center, x = d$x, y = d$y)
+    center <- set_props(center, x = d$x, y = d$y)
     center@style <- arc_style
 
     if (S7::S7_inherits(start, degree)) {
@@ -901,9 +897,6 @@ S7::method(`[`, ob_arc) <- function(x, i) {
 #' ob_wedge
 #' @rdname ob_arc
 #' @export
-#' @examples
-#' ggdiagram() +
-#'   ob_wedge(end = degree(60))
 ob_wedge <- redefault(ob_arc, type = "wedge", color = NA, fill = "black")
 
 # ob_circular_segment ----
@@ -911,15 +904,6 @@ ob_wedge <- redefault(ob_arc, type = "wedge", color = NA, fill = "black")
 #' ob_circular_segment
 #' @rdname ob_arc
 #' @export
-#' @examples
-#' theta <- degree(seq(0,360, 60))
-#' ggdiagram() +
-#'   ob_circular_segment(
-#'     start = theta[1:6],
-#'     end = theta[2:7],
-#'     fill = hsv(h = seq(0,1, length.out = 7)[-7],
-#'                v = .8,
-#'                s = .5))
 ob_circular_segment <- redefault(
   ob_arc,
   type = "segment",

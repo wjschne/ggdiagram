@@ -346,9 +346,7 @@ el_props <- list(
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style object
 #' @examples
 #' # specify center point and semi-major axes
-#' e <- ob_ellipse(center = ob_point(0,0), a = 2, b = 3)
-#' ggdiagram() +
-#'   e
+#' ob_ellipse(center = ob_point(0,0), a = 2, b = 3)
 #' @export
 #' @returns ob_ellipse object
 ob_ellipse <- S7::new_class(
@@ -1040,6 +1038,7 @@ S7::method(midpoint, list(centerpoint, centerpoint)) <- function(
 #' theta <- degree(seq(0, 360 - 45, 45))
 #' ggdiagram() +
 #' {x <- ob_circle(ob_polar(theta, r = 3))} +
+#' connect(x, lag_cycle(x, 3), resect = 2) +
 #' ob_variance(x,
 #'             label = ob_label(LETTERS[seq_along(c(theta))]),
 #'             where = theta,
@@ -1160,14 +1159,6 @@ S7::method(ob_variance, centerpoint) <- function(
 #'   ob_covariance(x = x[1],
 #'                 y = x[2],
 #'                 label = ob_label("A"))
-#'
-#' ggdiagram() +
-#'   x +
-#'   ob_covariance(x = x[1],
-#'                 y = x[2],
-#'                 label = ob_label("A"),
-#'                 where = -45,
-#'                 looseness = .75)
 S7::method(ob_covariance, list(centerpoint, centerpoint)) <- function(
   x,
   y,

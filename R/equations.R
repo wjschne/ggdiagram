@@ -181,7 +181,7 @@ ob_latex <- S7::new_class(
     )
 
     if (length(filename) == 0) {
-      filename <- janitor::make_clean_names(tex)
+      filename <- janitor::make_clean_names(tex) # nocov
     }
 
     filename <- basename(filename)
@@ -211,7 +211,7 @@ ob_latex <- S7::new_class(
       if (force_recompile || !file.exists(f_pdf)) {
         cat(tx, file = f_tex)
         if (tinytex::is_tinytex()) {
-          try(tinytex::xelatex(f_tex))
+          try(tinytex::xelatex(f_tex)) # nocov
         } else {
           try(shell(paste0("xelatex ", f_tex))) # nocov
         }
@@ -324,7 +324,7 @@ S7::method(`+`, list(class_gg, ob_latex)) <- function(e1, e2) {
 
 S7::method(update_ggplot, list(ob_latex, class_ggplot)) <-
   function(object, plot, ...) {
-    plot + as.geom(object)
+    plot + as.geom(object) # nocov
   }
 
 S7::method(place, list(ob_latex, centerpoint)) <- function(

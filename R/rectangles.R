@@ -428,8 +428,7 @@ rc_props <- list(
 #' @returns [`ob_rectangle`] object
 #'
 #' @examples
-#' ggdiagram() +
-#'   ob_rectangle(center = ob_point(0,0), width = 3, height = 2)
+#' ob_rectangle(center = ob_point(0,0), width = 3, height = 2)
 ob_rectangle <- S7::new_class(
   name = "ob_rectangle",
   parent = centerpoint,
@@ -668,7 +667,7 @@ ob_rectangle <- S7::new_class(
       d <- dplyr::bind_cols(d, tibble::tibble(!!!non_empty_list))
     }
 
-    center = set_props(center, x = d$x, y = d$y)
+    center <- set_props(center, x = d$x, y = d$y)
     center@style <- rc_style
     label <- centerpoint_label(
       label,

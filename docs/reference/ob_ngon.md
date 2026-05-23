@@ -213,36 +213,18 @@ ob_ngon(
 ## Examples
 
 ``` r
-ggdiagram() +
-  ob_ngon(center = ob_point(x = 3:8, y = 0),
-          n = 3:8,
-          radius = .4)
-
-
-# Size can be set with side_length instead of radius
-ggdiagram() +
-  ob_ngon(center = ob_point(x = 3:8, y = 0),
-          n = 3:8,
-          side_length = .4)
-
-
-# Size can be set with apothem (distance from center to side's midpoint)
-
-ggdiagram() +
-  ob_ngon(n = 4,
-          radius = 1,
-          fill = NA,
-          color = "blue") +
-  ob_ngon(n = 4,
-          apothem = 1,
-          fill = NA,
-          color = "red") +
-  ob_circle(radius = 1)
-
-
-# Getting the circles that inscribe and circumscribe the ngon
-ggdiagram() +
-  {x <- ob_ngon(fill = NA, color = "black")} +
-  x@inscribed |> set_props(color = "blue") +
-  x@circumscribed |> set_props(color = "red")
+ob_ngon(center = ob_point(x = 3:8, y = 0),
+        n = 3:8,
+        radius = .4)
+#> 
+#> ── <ob_ngon> 
+#> # A tibble: 6 × 5
+#>       x     y radius     n angle
+#>   <int> <dbl>  <dbl> <int> <dbl>
+#> 1     3     0    0.4     3     0
+#> 2     4     0    0.4     4     0
+#> 3     5     0    0.4     5     0
+#> 4     6     0    0.4     6     0
+#> 5     7     0    0.4     7     0
+#> 6     8     0    0.4     8     0
 ```

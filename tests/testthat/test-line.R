@@ -125,7 +125,7 @@ test_that("geom no error", {
 })
 
 test_that("str no error", {
-  expect_no_error(capture.output(str(ob_line(slope = 1, intercept = 2))))
+  expect_no_error(suppressMessages(capture.output(str(ob_line(slope = 1, intercept = 2)))))
 })
 
 test_that(desc = "lines", {

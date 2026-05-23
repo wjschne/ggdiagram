@@ -251,39 +251,20 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="ggdiagram.html">ggdiagram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu">ob_ngon</span><span class="op">(</span>center <span class="op">=</span> <span class="fu"><a href="ob_point.html">ob_point</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">8</span>, y <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>          n <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">8</span>,</span></span>
-<span class="r-in"><span>          radius <span class="op">=</span> <span class="fl">.4</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="ob_ngon-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Size can be set with side_length instead of radius</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="ggdiagram.html">ggdiagram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu">ob_ngon</span><span class="op">(</span>center <span class="op">=</span> <span class="fu"><a href="ob_point.html">ob_point</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">8</span>, y <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>          n <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">8</span>,</span></span>
-<span class="r-in"><span>          side_length <span class="op">=</span> <span class="fl">.4</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="ob_ngon-2.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Size can be set with apothem (distance from center to side's midpoint)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu"><a href="ggdiagram.html">ggdiagram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu">ob_ngon</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">4</span>,</span></span>
-<span class="r-in"><span>          radius <span class="op">=</span> <span class="fl">1</span>,</span></span>
-<span class="r-in"><span>          fill <span class="op">=</span> <span class="cn">NA</span>,</span></span>
-<span class="r-in"><span>          color <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu">ob_ngon</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">4</span>,</span></span>
-<span class="r-in"><span>          apothem <span class="op">=</span> <span class="fl">1</span>,</span></span>
-<span class="r-in"><span>          fill <span class="op">=</span> <span class="cn">NA</span>,</span></span>
-<span class="r-in"><span>          color <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="ob_circle.html">ob_circle</a></span><span class="op">(</span>radius <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="ob_ngon-3.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Getting the circles that inscribe and circumscribe the ngon</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="ggdiagram.html">ggdiagram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="op">{</span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">ob_ngon</span><span class="op">(</span>fill <span class="op">=</span> <span class="cn">NA</span>, color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="va">x</span><span class="op">@</span><span class="va">inscribed</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rconsortium.github.io/S7/reference/props.html" class="external-link">set_props</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="va">x</span><span class="op">@</span><span class="va">circumscribed</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rconsortium.github.io/S7/reference/props.html" class="external-link">set_props</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="ob_ngon-4.png" alt="" width="700" height="433"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">ob_ngon</span><span class="op">(</span>center <span class="op">=</span> <span class="fu"><a href="ob_point.html">ob_point</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">8</span>, y <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>        n <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">8</span>,</span></span>
+<span class="r-in"><span>        radius <span class="op">=</span> <span class="fl">.4</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ── <span style="color: #0000BB;">&lt;ob_ngon&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 5</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       x     y radius     n angle</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     3     0    0.4     3     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>     4     0    0.4     4     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>     5     0    0.4     5     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>     6     0    0.4     6     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>     7     0    0.4     7     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>     8     0    0.4     8     0</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

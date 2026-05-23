@@ -177,6 +177,11 @@ ob_reuleaux object
 ## Examples
 
 ``` r
-ggdiagram() +
-  ob_reuleaux(n = 3, fill = "royalblue", color = NA)
+ob_reuleaux(n = 3, fill = "royalblue", color = NA)
+#> 
+#> ── <ob_reuleaux> 
+#> # A tibble: 1 × 7
+#>       x     y radius     n angle color fill     
+#>   <dbl> <dbl>  <dbl> <int> <dbl> <chr> <chr>    
+#> 1     0     0      1     3    90 NA    royalblue
 ```

@@ -66,6 +66,7 @@ Creates double-headed arrow paths indicating variance
 theta <- degree(seq(0, 360 - 45, 45))
 ggdiagram() +
 {x <- ob_circle(ob_polar(theta, r = 3))} +
+connect(x, lag_cycle(x, 3), resect = 2) +
 ob_variance(x,
             label = ob_label(LETTERS[seq_along(c(theta))]),
             where = theta,

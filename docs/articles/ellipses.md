@@ -165,7 +165,7 @@ ellipse around.
 ``` r
 
 bp +
-  {p1 = ob_point(2,0)} +
+  {p1 <- ob_point(2,0)} +
   {e2 <- ob_ellipse(a  = 2, b = 1)} +
   rotate(e2, theta = degree(45), origin = p1, color = "red") 
 ```

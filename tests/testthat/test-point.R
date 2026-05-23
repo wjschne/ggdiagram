@@ -40,8 +40,8 @@ test_that("xy property", {
 
 test_that("bounding_box", {
   bb <- ob_point(c(1, 3), c(2, 4))@bounding_box
-  expect_equal(bb@southwest, ob_point(1, 2))
-  expect_equal(bb@northeast, ob_point(3, 4))
+  expect_equal(bb@southwest, ob_point(1, 2, color = "black", fill = NA))
+  expect_equal(bb@northeast, ob_point(3, 4, color = "black", fill = NA))
 })
 
 test_that("tibble property", {
@@ -87,8 +87,8 @@ test_that("matrix input error message", {
 })
 
 test_that("str method no error", {
-  expect_no_error(capture.output(str(ob_point(1, 2))))
-  expect_no_error(capture.output(str(ob_polar(degree(45)))))
+  expect_no_error(suppressMessages(capture.output(str(ob_point(1, 2)))))
+  expect_no_error(suppressMessages(capture.output(str(ob_polar(degree(45))))))
 })
 
 test_that("multiplication", {
@@ -215,7 +215,7 @@ test_that("point misc", {
   p <- ob_point(c(1, 3), c(3, 5))
   expect_identical(p@centroid, ob_point(2, 4))
   expect_no_error(p@geom())
-  expect_no_error(capture.output(print(ob_polar())))
+  expect_no_error(suppressMessages(capture.output(print(ob_polar()))))
 
   p1 <- ob_point()
   p2 <- ob_point(1, 1)
