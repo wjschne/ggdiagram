@@ -208,12 +208,14 @@ ob_latex <- S7::new_class(
     image <- purrr::pmap_df(d, \(tx, fn, imgsz, center, theta, hj, vj) {
       f_pdf <- paste0(fn, ".pdf")
       f_tex <- paste0(fn, ".tex")
+      f_aux <- paste0(fn, ".aux")
+      f_log <- paste0(fn, ".log")
       if (force_recompile || !file.exists(f_pdf)) {
         cat(tx, file = f_tex)
         if (tinytex::is_tinytex()) {
           try(tinytex::xelatex(f_tex)) # nocov
         } else {
-          try(shell(paste0("xelatex ", f_tex))) # nocov
+          try(system2(paste0("xelatex ", f_tex))) # nocov
         }
       }
 
@@ -230,8 +232,19 @@ ob_latex <- S7::new_class(
       i <- magick::image_raster(i, tidy = FALSE)
 
       if (delete_files) {
-        file.remove(f_pdf)
-        file.remove(f_tex)
+        if (file.exists(f_pdf)) {
+          file.remove(f_pdf)
+        }
+        if (file.exists(f_tex)) {
+          file.remove(f_tex)
+        }
+        if (file.exists(f_log)) {
+          file.remove(f_log)
+        }
+        if (file.exists(f_aux)) {
+          file.remove(f_aux)
+        }
+
       }
 
       tibble::tibble(

@@ -16,7 +16,7 @@ latex_available <- nzchar(Sys.which("xelatex")) &&
 
 # construction ----
 test_that("ob_latex: basic construction produces correct S7 class", {
-  # skip_on_cran()
+  skip_on_cran()
   skip_if_not(latex_available, "xelatex not available")
   fn <- withr::local_tempfile()
   lx_base <- ob_latex("x^2", width = 1, filename = fn)
