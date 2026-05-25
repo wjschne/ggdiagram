@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\renee\\\\Dropbox\\\\packages\\\\ggdiagram\" -Force)",
-      "Bash(Select-Object Name, PSIsContainer)"
-    ]
-  }
-}

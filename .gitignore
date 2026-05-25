@@ -35,6 +35,6 @@ vignettes/articles/_freeze/
 /Meta/
 
 /.quarto/
-
+.claude
 .positai
 revdep/
