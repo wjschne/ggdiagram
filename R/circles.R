@@ -155,7 +155,6 @@ cr_props <- list(
       class = S7::class_function,
       getter = function(self) {
         \(theta = degree(0), ...) {
-
           if (S7::S7_inherits(theta, ob_point)) {
             theta <- (projection(theta, self) - self@center)@theta
           }
@@ -344,7 +343,7 @@ ob_circle <- S7::new_class(
 
     # If there is one object but many labels, make multiple objects
     if (S7::S7_inherits(label, ob_label)) {
-      if (label@length > 1 & nrow(d) == 1) {
+      if (label@length > 1 && nrow(d) == 1) {
         d <- dplyr::mutate(d, k = label@length) |>
           tidyr::uncount(.data$k)
       }

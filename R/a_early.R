@@ -601,7 +601,7 @@ S7::method(unbind, ob_shape_list) <- function(x) {
 #' @returns a ggdiagram object
 #' @export
 map_ob <- function(.x, .f, ..., .progress = FALSE) {
-  if (S7::S7_inherits(.x, has_style) | S7::S7_inherits(.x, ob_angle)) {
+  if (S7::S7_inherits(.x, has_style) || S7::S7_inherits(.x, ob_angle)) {
     .x <- unbind(.x)
   }
   if (S7::S7_inherits(.x, ob_shape_list)) {
@@ -623,10 +623,10 @@ map_ob <- function(.x, .f, ..., .progress = FALSE) {
 #' @returns a ggdiagram object
 #' @export
 map2_ob <- function(.x, .y, .f, ..., .progress = FALSE) {
-  if (S7::S7_inherits(.x, has_style) | S7::S7_inherits(.x, ob_angle)) {
+  if (S7::S7_inherits(.x, has_style) || S7::S7_inherits(.x, ob_angle)) {
     .x <- unbind(.x)
   }
-  if (S7::S7_inherits(.y, has_style) | S7::S7_inherits(.y, ob_angle)) {
+  if (S7::S7_inherits(.y, has_style) || S7::S7_inherits(.y, ob_angle)) {
     .y <- unbind(.y)
   }
 
@@ -1084,7 +1084,7 @@ signs_centered <- function(x, space = NULL, encoding = "UTF-8", ...) {
 #' @returns a character vector
 #' @export
 #' @examples
-#' round_probability(c(0, .0012, .012, .12, .99, .992, .9997, 1), digits = 2)
+#' round_probability(c(0, 0.0012, 0.012, 0.12, 0.99, 0.992, 0.9997, 1), digits = 2)
 round_probability <- function(
   p,
   accuracy = 0.01,
@@ -1481,7 +1481,7 @@ projection <- S7::new_generic("projection", c("p", "object"))
 #' It is possible to get more than one midpoint by specifying a position vector with a length greater than 1. Position values outside 0 and 1 will usually work, but will be outside the object.
 #' @param x object
 #' @param y object (can be omitted for segments and arcs)
-#' @param position numeric vector. 0 is start, 1 is end. Defaults to .5
+#' @param position numeric vector. 0 is start, 1 is end. Defaults to 0.5
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> properties passed to style
 #' @export
 #' @returns ob_point
@@ -1690,7 +1690,7 @@ ggdiagram <- function(
 #'   y = 1:2,
 #'   fill = c("blue", "forestgreen"),
 #'   color = NA,
-#'   radius = c(.25,0.5))
+#'   radius = c(0.25, 0.5))
 #'
 #' data2shape(d, ob_circle)
 data2shape <- function(data, shape) {

@@ -55,21 +55,21 @@ my_font <- "Roboto Condensed"
 my_font_size <- 20
 my_point_size <- 2
 
-# my_colors <- viridis::viridis(2, begin = .25, end = .5)
+# my_colors <- viridis::viridis(2, begin = 0.25, end = 0.5)
 my_colors <- c("#3B528B", "#21908C")
 
 bp <- ggdiagram(
   font_family = my_font,
   font_size = my_font_size,
   point_size = my_point_size,
-  linewidth = .5,
+  linewidth = 0.5,
   theme_function = theme_minimal,
   axis.title.x =  element_text(face = "italic"),
   axis.title.y = element_text(
     face = "italic",
     angle = 0,
-    hjust = .5,
-    vjust = .5)) +
+    hjust = 0.5,
+    vjust = 0.5)) +
   scale_x_continuous(labels = signs_centered,
                      limits = c(-4, 4)) +
   scale_y_continuous(labels = signs::signs,
@@ -180,7 +180,7 @@ ggdiagram(font_family = my_font,
 
 # Midpoints
 
-The midpoint function can find one or more midpoints at different positions. The default position is .5.
+The midpoint function can find one or more midpoints at different positions. The default position is 0.5.
 
 ```{r}
 #| label: fig-midpoint
@@ -230,7 +230,7 @@ bp +
     end = 120,
     label = ob_label(
       c("Start", "Middle", "End"),
-      position = c(0, .5, 1),
+      position = c(0, 0.5, 1),
       plot_point = TRUE
     )
   )
@@ -250,7 +250,7 @@ bp +
     label = ob_label(
       "A",
       vjust = 1.2,
-      hjust = .75
+      hjust = 0.75
     )
   )
 ```
@@ -314,14 +314,14 @@ bp +
                   label = "A")} +
   {B <- ob_ellipse(x = 1, 
                    a = 1, 
-                   b = .5, 
+                   b = 0.5, 
                    angle = degree(60), 
                    label = ob_label("B", angle = 0))} + 
   {C <- ob_rectangle(center = ob_point(3,0), 
                      label = "C")} +
-  connect(A, B, arc_bend = -.75) +
+  connect(A, B, arc_bend = -0.75) +
   connect(B, C, arc_bend = -1) +
-  connect(A, C@south, arc_bend = .6)
+  connect(A, C@south, arc_bend = 0.6)
 ```
 
 # Wedges

@@ -23,11 +23,11 @@
 #' # Display html hexcode
 #' c(mycolor)
 #' # Set transparency
-#' mycolor@transparentize(.5)
+#' mycolor@transparentize(0.5)
 #' # Lighten color
-#' mycolor@lighten(.5)
+#' mycolor@lighten(0.5)
 #' # Darken color
-#' mycolor@darken(.5)
+#' mycolor@darken(0.5)
 class_color <- S7::new_class(
   name = "class_color",
   parent = S7::class_character,
@@ -222,7 +222,7 @@ class_color <- S7::new_class(
       hue <- degree(hue)@positive@degree
       # Make sure hue is of same length as color
       max_length <- lengths(d) |> max()
-      if (max_length == 1 | max_length == length(hue) | length(hue) == 1) {
+      if (max_length == 1 || max_length == length(hue) || length(hue) == 1) {
         d$h <- hue
       } else {
         stop("Hue must be of same length as color.")
@@ -235,8 +235,8 @@ class_color <- S7::new_class(
       # Make sure saturation is of same length as color
       max_length <- lengths(d) |> max()
       if (
-        max_length == 1 |
-          max_length == length(saturation) |
+        max_length == 1 ||
+          max_length == length(saturation) ||
           length(saturation) == 1
       ) {
         d$s <- saturation
@@ -251,8 +251,8 @@ class_color <- S7::new_class(
       # Make sure brightness is of same length as color
       max_length <- lengths(d) |> max()
       if (
-        max_length == 1 |
-          max_length == length(brightness) |
+        max_length == 1 ||
+          max_length == length(brightness) ||
           length(brightness) == 1
       ) {
         d$v <- brightness
@@ -266,7 +266,9 @@ class_color <- S7::new_class(
       alpha <- ifelse(abs(alpha) > 1, 1, abs(alpha))
       # Make sure alpha is of same length as color
       max_length <- lengths(d) |> max()
-      if (max_length == 1 | max_length == length(alpha) | length(alpha) == 1) {
+      if (
+        max_length == 1 || max_length == length(alpha) || length(alpha) == 1
+      ) {
         d$alpha <- alpha
       } else {
         stop("Alpha must be of same length as color.")

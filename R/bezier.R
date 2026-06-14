@@ -122,46 +122,60 @@ bz_props <- list(
         \(x = 0, ...) {
           xx <- x
           first_pass <- get_tibble(self) |>
-            dplyr::left_join(self@tibble |> dplyr::select(group, n, p),
-                      by = dplyr::join_by(group)) |>
-            dplyr::mutate(t = purrr::map(n, \(nn) {
-              seq(0,1, length.out = nn)
-            })) |>
+            dplyr::left_join(
+              self@tibble |> dplyr::select(group, n, p),
+              by = dplyr::join_by(group)
+            ) |>
+            dplyr::mutate(
+              t = purrr::map(n, \(nn) {
+                seq(0, 1, length.out = nn)
+              })
+            ) |>
             tidyr::unnest(c(p_unnest, t)) |>
-            dplyr::mutate(x1 = dplyr::lead(x),
-                          t1 = dplyr::lead(t),
-                          rowid = dplyr::row_number(),
-                          .by = group) |>
+            dplyr::mutate(
+              x1 = dplyr::lead(x),
+              t1 = dplyr::lead(t),
+              rowid = dplyr::row_number(),
+              .by = group
+            ) |>
             dplyr::filter(!is.na(x1)) |>
-            dplyr::filter(((x <= xx) & (x1 > xx)) | ((x > xx) & (x1 <= xx)) | ((x == xx) & ((rowid == 1) | (rowid == n - 1))))
+            dplyr::filter(
+              ((x <= xx) & (x1 > xx)) |
+                ((x > xx) & (x1 <= xx)) |
+                ((x == xx) & ((rowid == 1) | (rowid == n - 1)))
+            )
 
           if (nrow(first_pass) == 0) {
             return(NULL)
           }
 
           second_pass <- first_pass |>
-            dplyr::mutate(group1 = dplyr::row_number(),
-                          .by = group) |>
-            dplyr::mutate(my_point = purrr::pmap(list(p = p,
-                                                      t = t,
-                                                      t1 = t1,
-                                                      n = n,
-                                                      rowid = rowid),
-                                                 \(p,t,t1, n, rowid) {
-                                     bezier::bezier(seq(t, t1, length.out = 100), p = p@xy) |>
-                                       `colnames<-`(c("x", "y")) |>
-                                       tibble::as_tibble() |>
-                                       dplyr::mutate(x1 = dplyr::lead(x)) |>
-                                       dplyr::filter(!is.na(x1)) |>
-                                       dplyr::filter(((x <= xx) & (x1 > xx)) | ((x > xx) & (x1 <= xx)) | ((x == xx) & ((rowid == 1) | (rowid == n - 1)))) |>
-                                       dplyr::select(-x1)
-
-                                   })) |>
+            dplyr::mutate(group1 = dplyr::row_number(), .by = group) |>
+            dplyr::mutate(
+              my_point = purrr::pmap(
+                list(p = p, t = t, t1 = t1, n = n, rowid = rowid),
+                \(p, t, t1, n, rowid) {
+                  bezier::bezier(seq(t, t1, length.out = 100), p = p@xy) |>
+                    `colnames<-`(c("x", "y")) |>
+                    tibble::as_tibble() |>
+                    dplyr::mutate(x1 = dplyr::lead(x)) |>
+                    dplyr::filter(!is.na(x1)) |>
+                    dplyr::filter(
+                      ((x <= xx) & (x1 > xx)) |
+                        ((x > xx) & (x1 <= xx)) |
+                        ((x == xx) & ((rowid == 1) | (rowid == n - 1)))
+                    ) |>
+                    dplyr::select(-x1)
+                }
+              )
+            ) |>
             dplyr::select(-x, -y) |>
             tidyr::unnest(my_point) |>
             dplyr::select(group, x, y) |>
             tidyr::nest(.by = group) |>
-            dplyr::mutate(p = purrr::map(data, ggdiagram::data2shape, shape = ob_point)) |>
+            dplyr::mutate(
+              p = purrr::map(data, ggdiagram::data2shape, shape = ob_point)
+            ) |>
             dplyr::mutate(n = purrr::map_int(data, nrow))
 
           if (all(second_pass$n == 1)) {
@@ -178,46 +192,62 @@ bz_props <- list(
         \(y = 0, ...) {
           yy <- y
           first_pass <- get_tibble(self) |>
-            dplyr::left_join(self@tibble |> dplyr::select(group, n, p),
-                             by = dplyr::join_by(group)) |>
-            dplyr::mutate(t = purrr::map(n, \(nn) {
-              seq(0,1, length.out = nn)
-            })) |>
+            dplyr::left_join(
+              self@tibble |> dplyr::select(group, n, p),
+              by = dplyr::join_by(group)
+            ) |>
+            dplyr::mutate(
+              t = purrr::map(n, \(nn) {
+                seq(0, 1, length.out = nn)
+              })
+            ) |>
             tidyr::unnest(c(p_unnest, t)) |>
-            dplyr::mutate(y1 = dplyr::lead(y),
-                          t1 = dplyr::lead(t),
-                          rowid = dplyr::row_number(),
-                          .by = group) |>
+            dplyr::mutate(
+              y1 = dplyr::lead(y),
+              t1 = dplyr::lead(t),
+              rowid = dplyr::row_number(),
+              .by = group
+            ) |>
             dplyr::filter(!is.na(y1)) |>
-            dplyr::filter(((y <= yy) & (y1 > yy)) | ((y > yy) & (y1 <= yy)) | ((y == yy) & (rowid == 1)) | ((y1 == yy) & (rowid == n - 1)))
+            dplyr::filter(
+              ((y <= yy) & (y1 > yy)) |
+                ((y > yy) & (y1 <= yy)) |
+                ((y == yy) & (rowid == 1)) |
+                ((y1 == yy) & (rowid == n - 1))
+            )
 
           if (nrow(first_pass) == 0) {
             return(NULL)
           }
 
           second_pass <- first_pass |>
-            dplyr::mutate(group1 = dplyr::row_number(),
-                          .by = group) |>
-            dplyr::mutate(my_point = purrr::pmap(list(p = p,
-                                                      t = t,
-                                                      t1 = t1,
-                                                      n = n,
-                                                      rowid = rowid),
-                                                 \(p,t,t1, n, rowid) {
-                                                   bezier::bezier(seq(t, t1, length.out = 100), p = p@xy) |>
-                                                     `colnames<-`(c("x", "y")) |>
-                                                     tibble::as_tibble() |>
-                                                     dplyr::mutate(y1 = dplyr::lead(y)) |>
-                                                     dplyr::filter(!is.na(y1)) |>
-                                                     dplyr::filter(((y <= yy) & (y1 > yy)) | ((y > yy) & (y1 <= yy)) | ((y == yy) & (rowid == 1)) | ((y1 == yy) & (rowid == n - 1))) |>
-                                                     dplyr::select(-y1)
-
-                                                 })) |>
+            dplyr::mutate(group1 = dplyr::row_number(), .by = group) |>
+            dplyr::mutate(
+              my_point = purrr::pmap(
+                list(p = p, t = t, t1 = t1, n = n, rowid = rowid),
+                \(p, t, t1, n, rowid) {
+                  bezier::bezier(seq(t, t1, length.out = 100), p = p@xy) |>
+                    `colnames<-`(c("x", "y")) |>
+                    tibble::as_tibble() |>
+                    dplyr::mutate(y1 = dplyr::lead(y)) |>
+                    dplyr::filter(!is.na(y1)) |>
+                    dplyr::filter(
+                      ((y <= yy) & (y1 > yy)) |
+                        ((y > yy) & (y1 <= yy)) |
+                        ((y == yy) & (rowid == 1)) |
+                        ((y1 == yy) & (rowid == n - 1))
+                    ) |>
+                    dplyr::select(-y1)
+                }
+              )
+            ) |>
             dplyr::select(-x, -y) |>
             tidyr::unnest(my_point) |>
             dplyr::select(group, x, y) |>
             tidyr::nest(.by = group) |>
-            dplyr::mutate(p = purrr::map(data, ggdiagram::data2shape, shape = ob_point)) |>
+            dplyr::mutate(
+              p = purrr::map(data, ggdiagram::data2shape, shape = ob_point)
+            ) |>
             dplyr::mutate(n = purrr::map_int(data, nrow))
 
           if (all(second_pass$n == 1)) {
@@ -269,7 +299,7 @@ bz_props <- list(
             if (is.null(position)) {
               position <- 0.5
             }
-              y <- self[1]@midpoint(position)@y
+            y <- self[1]@midpoint(position)@y
           }
 
           lc <- map2_ob(self, y, \(s, yy) {
@@ -486,7 +516,7 @@ ob_bezier <- S7::new_class(
     }
     # If there is one object but many labels, make multiple objects
     if (S7::S7_inherits(label, ob_label)) {
-      if (label@length > 1 & nrow(d) == 1) {
+      if (label@length > 1 && nrow(d) == 1) {
         d <- dplyr::mutate(d, k = label@length) |>
           tidyr::uncount(.data$k)
       }
@@ -637,10 +667,7 @@ S7::method(as.geom, ob_bezier) <- function(x, ...) {
         user_overrides = NULL
       )
     } else {
-
       dpos <- tibble::tibble(group = unique(d$group), pos = x@label@position)
-
-
 
       if (is.na(x@label@position)) {
         d_label <- x@label@tibble
@@ -667,7 +694,6 @@ S7::method(as.geom, ob_bezier) <- function(x, ...) {
           ) |>
           dplyr::select(group, x = xpos, y = ypos) |>
           dplyr::bind_cols(d_l)
-
       }
 
       if ("size" %in% colnames(d_label)) {
@@ -705,9 +731,6 @@ S7::method(midpoint, list(ob_bezier, S7::class_missing)) <- function(
     } else {
       ob_point(bezier::bezier(t = pos, p = xx@xy), ...)
     }
-
   }) |>
     bind()
 }
-
-

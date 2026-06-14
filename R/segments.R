@@ -158,7 +158,6 @@ sg_props <- list(
             } else {
               x <- self[1]@midpoint(position)@x
             }
-
           }
           self@label@center <- self@line@point_at_x(x)
           self
@@ -178,7 +177,6 @@ sg_props <- list(
             } else {
               y <- self[1]@midpoint(position)@y
             }
-
           }
           self@label@center <- self@line@point_at_y(y)
           self
@@ -306,7 +304,6 @@ ob_segment <- S7::new_class(
   ) {
     id <- as.character(id)
 
-
     if ((length(x) > 0) || (length(y) > 0)) {
       if (length(x) == 0) {
         x <- 0
@@ -401,14 +398,19 @@ ob_segment <- S7::new_class(
 
     non_empty_list <- get_non_empty_props(s_style)
 
-
     if (length(non_empty_list) > 0) {
       d <- dplyr::bind_cols(d, tibble::tibble(!!!non_empty_list))
       if ("arrow_head" %in% colnames(d)) {
-        d <- dplyr::mutate(d, arrow_head = purrr::map(arrow_head, class_arrowhead))
+        d <- dplyr::mutate(
+          d,
+          arrow_head = purrr::map(arrow_head, class_arrowhead)
+        )
       }
       if ("arrow_fins" %in% colnames(d)) {
-        d <- dplyr::mutate(d, arrow_fins = purrr::map(arrow_fins, class_arrowhead))
+        d <- dplyr::mutate(
+          d,
+          arrow_fins = purrr::map(arrow_fins, class_arrowhead)
+        )
       }
     }
     pos <- 0.5
@@ -444,7 +446,7 @@ ob_segment <- S7::new_class(
 
     # If there is one object but many labels, make multiple objects
     if (S7::S7_inherits(label, ob_label)) {
-      if (label@length > 1 & nrow(d) == 1) {
+      if (label@length > 1 && nrow(d) == 1) {
         d <- dplyr::mutate(d, k = label@length) |>
           tidyr::uncount(.data$k)
       }
@@ -563,7 +565,10 @@ S7::method(get_tibble_defaults, ob_segment) <- function(x) {
     ),
     lineend = "butt",
     linejoin = "round",
-    linewidth = replace_na(ggarrow::GeomArrowSegment$default_aes$linewidth, 0.5),
+    linewidth = replace_na(
+      ggarrow::GeomArrowSegment$default_aes$linewidth,
+      0.5
+    ),
     linewidth_head = replace_na(
       ggarrow::GeomArrowSegment$default_aes$linewidth,
       1
@@ -691,4 +696,3 @@ S7::method(equation, ob_segment) <- function(
     digits = digits
   )
 }
-

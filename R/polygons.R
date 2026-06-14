@@ -36,32 +36,35 @@ ob_polygon_aesthetics <- class_aesthetics_list(
 ob_polygon_props <- list(
   # primary ----
   primary = list(
-    p = S7::new_property(class = point_or_list, setter = path_props$primary$p$setter,
-                         validator = function(value) {
-      if (inherits(value, "list")) {
-        allsameclass(value, "ob_point")
-      }
-
-      if (S7::S7_inherits(value, ob_point)) {
-        value <- list(value) # nocov
-      }
-
-      chk_points <- purrr::imap_chr(value, \(x, idx) {
-        if (x@length < 3) {
-          paste0(
-            "Group ",
-            idx,
-            " needs at least 3 points. It has ",
-            x@length,
-            ". "
-          )
-        } else {
-          ""
+    p = S7::new_property(
+      class = point_or_list,
+      setter = path_props$primary$p$setter,
+      validator = function(value) {
+        if (inherits(value, "list")) {
+          allsameclass(value, "ob_point")
         }
-      }) |>
-        paste0(collapse = "")
-      if (nchar(chk_points) > 0) chk_points
-    })
+
+        if (S7::S7_inherits(value, ob_point)) {
+          value <- list(value) # nocov
+        }
+
+        chk_points <- purrr::imap_chr(value, \(x, idx) {
+          if (x@length < 3) {
+            paste0(
+              "Group ",
+              idx,
+              " needs at least 3 points. It has ",
+              x@length,
+              ". "
+            )
+          } else {
+            ""
+          }
+        }) |>
+          paste0(collapse = "")
+        if (nchar(chk_points) > 0) chk_points
+      }
+    )
   ),
   # extra ----
   extra = list(
@@ -125,11 +128,11 @@ ob_polygon_props <- list(
         rlang::inject(ob_style(!!!get_non_empty_list(pr)))
       },
       setter = function(self, value) {
-          s <- self@style + value
-          s_list <- get_non_empty_props(s)
-          s_list <- s_list[names(s_list) %in% ob_polygon_styles]
-          self <- rlang::inject(set_props(self, !!!s_list))
-          self
+        s <- self@style + value
+        s_list <- get_non_empty_props(s)
+        s_list <- s_list[names(s_list) %in% ob_polygon_styles]
+        self <- rlang::inject(set_props(self, !!!s_list))
+        self
       }
     ),
     tibble = S7::new_property(getter = function(self) {
@@ -160,16 +163,16 @@ ob_polygon_props <- list(
     }),
     point_at = S7::new_property(S7::class_function, getter = function(self) {
       \(theta = degree(0), ...) {
-        if (!S7::S7_inherits(theta, ob_angle)) theta <- degree(theta)
+        if (!S7::S7_inherits(theta, ob_angle)) {
+          theta <- degree(theta)
+        }
         map2_ob(self, theta, \(s, th) {
           r <- max(distance(s@center, s@p[[1]])) + 1
           sg <- ob_segment(s@center, s@center + ob_polar(r = r, theta = th))
           map_ob(s@segment, \(ss) {
             intersection(ss, sg)
           })[1]
-
         })
-
       }
     })
   ),
@@ -296,7 +299,7 @@ ob_polygon <- S7::new_class(
 
     # If there is one object but many labels, make multiple objects
     if (S7::S7_inherits(label, ob_label)) {
-      if (label@length > 1 & nrow(d) == 1) {
+      if (label@length > 1 && nrow(d) == 1) {
         d <- dplyr::mutate(d, k = label@length) |>
           tidyr::uncount(.data$k)
       }
@@ -695,7 +698,6 @@ S7::method(connect, list(ob_polygon, centerpoint)) <- function(
 }
 
 
-
 # ob_ngon ----
 
 ob_ngon_props <- list(
@@ -805,12 +807,10 @@ ob_ngon_props <- list(
       S7::class_function,
       getter = function(self) {
         \(theta = degree(0), distance = 1, ...) {
-
           if (S7::S7_inherits(theta, ob_point)) {
             pr <- projection(theta, self)
             cpr <- pr - self@center
             theta <- cpr@theta
-
           }
 
           if (!S7::S7_inherits(theta, ob_angle)) {
@@ -825,7 +825,8 @@ ob_ngon_props <- list(
 
             th_normal <- turn(
               th_floor * th_n + ifelse(th_floor == th_r, 0, th_n / 2)
-            ) + s@angle
+            ) +
+              s@angle
 
             s@point_at(th) + ob_polar(theta = th_normal, r = distance)
           }) |>
@@ -840,7 +841,6 @@ ob_ngon_props <- list(
       getter = function(self) {
         \(theta = degree(0), ...) {
           st <- rlang::list2(...)
-
 
           if (!S7::S7_inherits(theta, ob_angle)) {
             theta <- degree(theta)
@@ -927,7 +927,7 @@ ob_ngon_props <- list(
 #' @examples
 #' ob_ngon(center = ob_point(x = 3:8, y = 0),
 #'         n = 3:8,
-#'         radius = .4)
+#'         radius = 0.4)
 ob_ngon <- S7::new_class(
   name = "ob_ngon",
   parent = centerpoint,
@@ -1034,7 +1034,7 @@ ob_ngon <- S7::new_class(
 
     # If there is one object but many labels, make multiple objects
     if (S7::S7_inherits(label, ob_label)) {
-      if (label@length > 1 & nrow(d) == 1) {
+      if (label@length > 1 && nrow(d) == 1) {
         d <- dplyr::mutate(d, k = label@length) |>
           tidyr::uncount(.data$k)
       }
@@ -1406,10 +1406,12 @@ ob_intercept <- S7::new_class(
       self@center + ob_polar(degree(90), r = self@width * 0.5 / cos(degree(30)))
     }),
     left = S7::new_property(getter = function(self) {
-      self@center + ob_polar(degree(210), r = self@width * 0.5 / cos(degree(30)))
+      self@center +
+        ob_polar(degree(210), r = self@width * 0.5 / cos(degree(30)))
     }),
     right = S7::new_property(getter = function(self) {
-      self@center + ob_polar(degree(330), r = self@width * 0.5 / cos(degree(30)))
+      self@center +
+        ob_polar(degree(330), r = self@width * 0.5 / cos(degree(30)))
     }),
   ),
   constructor = function(
@@ -1432,7 +1434,6 @@ ob_intercept <- S7::new_class(
     angle <- degree(90)
     id <- as.character(id)
     radius <- width / (2 * sin(turn(1 / (2 * n))))
-
 
     if ((length(x) > 0) || (length(y) > 0)) {
       if (length(x) == 0) {
@@ -1489,7 +1490,7 @@ ob_intercept <- S7::new_class(
 
     # If there is one object but many labels, make multiple objects
     if (S7::S7_inherits(label, ob_label)) {
-      if (label@length > 1 & nrow(d) == 1) {
+      if (label@length > 1 && nrow(d) == 1) {
         d <- dplyr::mutate(d, k = label@length) |>
           tidyr::uncount(.data$k)
         center = set_props(center, x = d$x, y = d$y)
@@ -1514,12 +1515,6 @@ ob_intercept <- S7::new_class(
     )
   }
 )
-
-
-
-
-
-
 
 
 # ob_reuleaux ----
@@ -1579,9 +1574,9 @@ ob_reuleaux <- S7::new_class(
     ob_style@properties$linetype,
     ob_polygon@properties$style,
     arc_radius = S7::new_property(getter = \(self) {
-        purrr::map_dbl(unbind(self), \(s) {
-          s@arcs[1]@radius
-        })
+      purrr::map_dbl(unbind(self), \(s) {
+        s@arcs[1]@radius
+      })
     }),
     arcs = S7::new_property(getter = \(self) {
       map_ob(self, \(s) {
@@ -1632,7 +1627,11 @@ ob_reuleaux <- S7::new_class(
       })
     }),
     inscribed = S7::new_property(getter = \(self) {
-      ob_circle(self@center, radius = distance(self@arcs[1]@midpoint(), self@center), style = self@style)
+      ob_circle(
+        self@center,
+        radius = distance(self@arcs[1]@midpoint(), self@center),
+        style = self@style
+      )
     }),
     inscribed_angle = S7::new_property(getter = \(self) {
       degree(180 / self@n)
@@ -1794,7 +1793,7 @@ ob_reuleaux <- S7::new_class(
 
     # If there is one object but many labels, make multiple objects
     if (S7::S7_inherits(label, ob_label)) {
-      if (label@length > 1 & nrow(d) == 1) {
+      if (label@length > 1 && nrow(d) == 1) {
         d <- dplyr::mutate(d, k = label@length) |>
           tidyr::uncount(.data$k)
       }

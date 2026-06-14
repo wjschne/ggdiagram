@@ -23,20 +23,26 @@ path_styles <- c(
 path_props <- list(
   # primary ----
   primary = list(
-    p = S7::new_property(class = point_or_list, validator = function(value) {
-      if (inherits(value, "list")) {
-        allsameclass(value, "ob_point")
+    p = S7::new_property(
+      class = point_or_list,
+      validator = function(value) {
+        if (inherits(value, "list")) {
+          allsameclass(value, "ob_point")
+        }
+      },
+      setter = function(self, value) {
+        if (S7::S7_inherits(value, ob_point)) {
+          self@p <- list(value)
+        } else if (inherits(value, "list")) {
+          self@p <- value
+        } else {
+          stop(
+            "Control points must be an ob_point object or a list of ob_point objects."
+          )
+        }
+        return(self)
       }
-    }, setter = function(self, value) {
-      if (S7::S7_inherits(value, ob_point)) {
-        self@p <- list(value)
-      } else if (inherits(value, "list")) {
-        self@p <- value
-      } else {
-        stop("Control points must be an ob_point object or a list of ob_point objects.")
-      }
-      return(self)
-    } )
+    )
   ),
   extra = list(
     label = label_or_character_or_angle,
@@ -61,10 +67,8 @@ path_props <- list(
     }),
     length = pt_props$derived$length,
     segment = S7::new_property(getter = function(self) {
-
       purrr::map(self@p, \(s) ob_segment(s, style = self@style)) |>
         bind()
-
     }),
     style = S7::new_property(
       getter = function(self) {
@@ -111,17 +115,13 @@ path_props <- list(
     vertex_angle = S7::new_property(getter = function(self) {
       a <- purrr::map(self@p, \(pp) {
         if (pp@length > 2) {
-
           aa <- purrr::map(seq(2, pp@length - 1), \(i) {
-
             a1 <- (pp[i - 1] - pp[i])@theta
             a2 <- (pp[i + 1] - pp[i])@theta
             a21 <- a1 - a2
             a21@positive
-
-          }) %>% bind()
-
-
+          }) %>%
+            bind()
 
           if (pp[1] == pp[pp@length]) {
             a11 <- (pp[pp@length - 1] - pp[1])@theta -
@@ -344,7 +344,7 @@ ob_path <- S7::new_class(
     }
     # If there is one object but many labels, make multiple objects
     if (S7::S7_inherits(label, ob_label)) {
-      if (label@length > 1 & nrow(d) == 1) {
+      if (label@length > 1 && nrow(d) == 1) {
         d <- dplyr::mutate(d, k = label@length) |>
           tidyr::uncount(.data$k)
       }
@@ -431,10 +431,7 @@ S7::method(as.geom, ob_path) <- function(x, ...) {
         d,
         label.padding = purrr::map_dbl(label.padding, \(lp) c(lp[1] / 96))
       )
-
     }
-
-
 
     gl <- make_geom_helper(
       d,
@@ -455,10 +452,10 @@ S7::method(`[`, ob_path) <- function(x, i) {
 }
 
 S7::method(str, ob_path) <- function(
-    object,
-    nest.lev = 0,
-    additional = TRUE,
-    omit = omit_props(object, include = c(""))
+  object,
+  nest.lev = 0,
+  additional = TRUE,
+  omit = omit_props(object, include = c(""))
 ) {
   str_properties(
     object,
@@ -480,10 +477,10 @@ S7::method(str, ob_path) <- function(
 }
 
 S7::method(midpoint, list(ob_path, S7::class_missing)) <- function(
-    x,
-    y,
-    position = 0.5,
-    ...
+  x,
+  y,
+  position = 0.5,
+  ...
 ) {
   purrr::map2(unbind(x), position, \(xx, pos) {
     if (pos < 0 || pos > 1) {
@@ -492,20 +489,23 @@ S7::method(midpoint, list(ob_path, S7::class_missing)) <- function(
       total_distance <- sum(xx@segment@distance)
       mid_distance <- total_distance * pos
       tibble::tibble(s = unbind(xx@segment)) |>
-        dplyr::mutate(d = purrr::map_dbl(s, distance),
-                      end_cd = cumsum(d),
-                      end_cp = end_cd / max(end_cd),
-                      start_cd = dplyr::lag(end_cd, default = 0),
-                      start_cp = dplyr::lag(end_cp, default = 0)) |>
+        dplyr::mutate(
+          d = purrr::map_dbl(s, distance),
+          end_cd = cumsum(d),
+          end_cp = end_cd / max(end_cd),
+          start_cd = dplyr::lag(end_cd, default = 0),
+          start_cp = dplyr::lag(end_cp, default = 0)
+        ) |>
         dplyr::select(s, d, start_cd, end_cd, start_cp, end_cp) |>
         dplyr::filter(pos >= start_cp & pos <= end_cp) |>
         dplyr::slice(1) |>
-        dplyr::mutate(md = mid_distance - start_cd,
-                      mp = md / d,
-                      m = purrr::map(s, midpoint, position = mp)) |>
+        dplyr::mutate(
+          md = mid_distance - start_cd,
+          mp = md / d,
+          m = purrr::map(s, midpoint, position = mp)
+        ) |>
         dplyr::pull(m)
     }
-
   }) |>
     bind()
 }

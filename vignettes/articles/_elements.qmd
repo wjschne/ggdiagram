@@ -78,7 +78,7 @@ o <- ob_point(0, 0)
 theta <- degree(c(0,35))
 baseplot +
   ob_wedge(end = theta[2],
-           radius = .6,
+           radius = 0.6,
            fill = yellow) +
   ob_segment(o, ob_polar(theta, r = 1, color = c(red, blue))) 
 ```
@@ -97,7 +97,7 @@ baseplot +
   {
     a <- ob_arc(
       o,
-      radius = .85,
+      radius = 0.85,
       start = c(0, 90),
       end = c(90, 180),
       linewidth = 3
@@ -105,9 +105,9 @@ baseplot +
   } +
   a@hatch(linewidth = 1) +
   ob_rectangle(
-    o + ob_point(0, .05),
-    height = .1,
-    width = .2,
+    o + ob_point(0, 0.05),
+    height = 0.1,
+    width = 0.2,
     linewidth = 1
   )
 ```
@@ -180,7 +180,7 @@ sBC <- ob_segment(pB, pC, color = red)
 sABC <- bind(c(sAB, sAC, sBC))
 
 # Hatch marks to note congruence
-hABC <- sABC@hatch(linewidth = .75)
+hABC <- sABC@hatch(linewidth = 0.75)
 
 # Make point labels
 lABCDE <- ob_label(
@@ -190,7 +190,7 @@ lABCDE <- ob_label(
   color = c(red, blue, black, blue, red),
   size = 18,
   family = my_font,
-  vjust = .5,
+  vjust = 0.5,
   label.padding = margin(4, 3, 0, 3),
   label.r = unit(9, units = "pt")
 )
@@ -273,13 +273,13 @@ baseplot +
   pABD +
   bind(c(sAB, sBD, sAD))@hatch(
     linewidth = 1,
-    height = .12
+    height = 0.12
   ) +
   bind(c(sBC, sAK, sBG))@hatch(
     k = 2,
-    height = .12,
+    height = 0.12,
     linewidth = 1,
-    sep = .1
+    sep = 0.1
   ) +
   cCGH +
   sBF +
@@ -290,7 +290,7 @@ baseplot +
   p@label(
     c(LETTERS[1:9], "K"),
     fill = bg,
-    # vjust = c(rep(.55, 9), .5),
+    # vjust = c(rep(.55, 9), 0.5),
     label.r = unit(9, units = "pt"),
     label.padding = margin(4, 3, 1, 3)
   )
@@ -375,21 +375,21 @@ sCJ2 <- sCJ %>%
 p <- bind(c(pA, pB, pC, pD, pE, pF, pG, pH, pI, pJ, pK))
 # points for orienting labels
 p_orient <- bind(
-  c(pG, pA, pE, pB, pA, pB, pC, pA, pC, pC, nudge(pK, -.01, -.01))
+  c(pG, pA, pE, pB, pA, pB, pC, pA, pC, pC, nudge(pK, -0.01, -0.01))
 )
 # polar adjustments for labels
 p_just <- ob_polar((p - p_orient)@theta, r = 1.4)
 
 
 baseplot +
-  scale_y_continuous(expand = expansion(.2)) +
+  scale_y_continuous(expand = expansion(0.2)) +
   ob_polygon(bind(c(pB, pC, pF, pG)), fill = red, color = NA) +
   ob_polygon(bind(c(pA, pB, pE, pD)), fill = blue, color = NA) +
   ob_polygon(bind(c(pA, pC, pH, pI)), fill = black, color = NA) +
   ob_polygon(bind(c(pA, pD, pJ, pK)), fill = yellow, color = NA) +
   ob_wedge(
     pB,
-    radius = .4,
+    radius = 0.4,
     start = (pC - pB)@theta,
     end = (pA - pB)@theta,
     fill = black,
@@ -397,7 +397,7 @@ baseplot +
   ) +
   ob_wedge(
     pB,
-    radius = .4,
+    radius = 0.4,
     start = (pA - pB)@theta,
     end = (pE - pB)@theta@positive,
     fill = yellow,
@@ -405,7 +405,7 @@ baseplot +
   ) +
   ob_wedge(
     pB,
-    radius = .4,
+    radius = 0.4,
     start = (pG - pB)@theta,
     end = (pC - pB)@theta,
     fill = yellow,
@@ -453,7 +453,7 @@ baseplot +
     pABCD,
     start = pABCD@theta + degree(135),
     end = pABCD@theta + degree(225),
-    radius = .2,
+    radius = 0.2,
     fill = red
   ) +
   c0 
@@ -518,7 +518,7 @@ node <- redefault(
   ob_circle,
   radius = 1 / sqrt(pi),
   fill = blue,
-  alpha = .5,
+  alpha = 0.5,
   color = blue,
   linewidth = 1
 )
@@ -526,8 +526,8 @@ ct <- redefault(
   connect,
   resect = 1,
   color = black,
-  alpha = .3,
-  linewidth = .75,
+  alpha = 0.3,
+  linewidth = 0.75,
   length_head = 5
 )
 
@@ -537,8 +537,8 @@ transition <- redefault(
   width = 1,
   color = black,
   fill = black,
-  alpha = .3,
-  linewidth = .75
+  alpha = 0.3,
+  linewidth = 0.75
 )
 ggdiagram(font_family = "Roboto Condensed", font_size = 20) +
   {waiting <- node()} +
@@ -554,7 +554,7 @@ ggdiagram(font_family = "Roboto Condensed", font_size = 20) +
   {s4 <- node() %>% place(s3, "below", d)} +
   bind(c(waiting@center, s4@center, s2@center + ob_polar(degree(c(
     90, 210, 330
-  )), .2))) %>%
+  )), 0.2))) %>%
   set_props(
     color = black,
     fill = NA_character_,
@@ -583,42 +583,42 @@ ggdiagram(font_family = "Roboto Condensed", font_size = 20) +
     )),
     resect = 2,
     arrow_head = arrowhead(),
-    linewidth = .75,
+    linewidth = 0.75,
     color = black,
-    alpha = .5,
+    alpha = 0.5,
     length_head = 5
   ) +
   ob_latex(
     "s",
-    ob_point() %>% place(s1, "left", .15),
+    ob_point() %>% place(s1, "left", 0.15),
     color = red,
     hjust = 1,
     fill = NA,
-    width = .4,
+    width = 0.4,
     density = 600
   ) +
   ob_latex(
     "\\bar{s}",
-    ob_point() %>% place(s2, "right", .15),
+    ob_point() %>% place(s2, "right", 0.15),
     color = red,
     fill = NA,
     hjust = 0,
-    width = .4,
+    width = 0.4,
     density = 600
   )
 ```
 
 
 ```{r}
-p_quadrilateral <- ob_point(c(0, 2, 1.9, .3), c(0, 1.2, -.1, 1))
+p_quadrilateral <- ob_point(c(0, 2, 1.9, 0.3), c(0, 1.2, -0.1, 1))
 p_complex <- p_quadrilateral + ob_polar(degree(340), 5)
-p_simple <- ob_point(c(0, 2, 1.5, 1.8), c(0, -.1, .6, 1.4))
+p_simple <- ob_point(c(0, 2, 1.5, 1.8), c(0, -0.1, 0.6, 1.4))
 p_simple <- p_simple - p_simple@centroid + rotate(p_complex@centroid,
                                                   theta = degree(-140),
                                                   origin = p_quadrilateral@centroid)
 
 my_polygon <- redefault(ob_polygon,
-                        fill = class_color("blue")@lighten(.1),
+                        fill = class_color("blue")@lighten(0.1),
                         color = "blue4")
 my_connect <- redefault(connect, arrow_head = ggarrow::arrow_fins_minimal())
 
@@ -657,7 +657,7 @@ ggdiagram(font_family = "serif", font_size = 14) +
 my_ticks <- (-2:2)[-3]
 ggdiagram(font_family = "Roboto Condensed", font_size = 16) +
   ob_circle(radius = c(1:3), linetype = "dotted") +
-  ob_wedge(end = 60, fill = class_color("blue")@lighten(.2)) +
+  ob_wedge(end = 60, fill = class_color("blue")@lighten(0.2)) +
   ob_arc(end = 60) +
   ob_segment(ob_point(c(-3, 0), c(0, -3)), {
     xy <- ob_point(c(3, 0), c(0, 3))
@@ -725,8 +725,8 @@ ggdiagram(font_family = "Roboto Condensed", font_size = 16) +
     fill = NA
   ) +
   ob_segment(bind(c(p2, p3)), bind(c(p3, ob_point(1, 0))), linetype = "dashed") +
-  ob_segment(ob_point(my_ticks, -.05), ob_point(my_ticks, 0.05)) +
-  ob_segment(ob_point(-0.05, my_ticks), ob_point(.05, my_ticks))
+  ob_segment(ob_point(my_ticks, -0.05), ob_point(my_ticks, 0.05)) +
+  ob_segment(ob_point(-0.05, my_ticks), ob_point(0.05, my_ticks))
 ```
 
 ```{r}

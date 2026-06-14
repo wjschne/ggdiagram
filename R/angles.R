@@ -34,10 +34,10 @@ num2turn <- function(x, object_name) {
 #' degree(90)
 #'
 #' ## half pi radians
-#' radian(.5 * pi)
+#' radian(0.5 * pi)
 #'
 #' ## A quarter turn
-#' turn(.25)
+#' turn(0.25)
 #'
 #' # Operations
 #' degree(30) + degree(20)
@@ -50,7 +50,7 @@ num2turn <- function(x, object_name) {
 #'
 #' radian(1) + 1 # added or subtracted numbers are radians
 #' degree(10) + 10 # added or subtracted numbers are degrees
-#' turn(.25) + .25 # added or subtracted numbers are turns
+#' turn(0.25) + 0.25 # added or subtracted numbers are turns
 #'
 #' # Trigonometric functions work as normal
 #' sin(degree(30))
@@ -105,8 +105,6 @@ ob_angle <- new_class(
       p <- c(self@positive)
       p[p > 0.25 & p <= 0.75] <- p[p > 0.25 & p <= 0.75] + 0.5
       S7::convert(ob_angle(p)@positive, S7::S7_class(self))
-
-
     })
   ),
   constructor = function(
@@ -264,7 +262,8 @@ S7::method(`!=`, list(ob_angle, ob_angle)) <- function(e1, e2) {
 
 purrr::walk(
   list(`<`, `<=`, `>`, `>=`),
-  \(.f) { # nocov start
+  \(.f) {
+    # nocov start
     S7::method(.f, list(ob_angle, ob_angle)) <- function(e1, e2) {
       .f(c(e1), c(e2))
     }
@@ -274,7 +273,7 @@ purrr::walk(
     S7::method(.f, list(S7::class_numeric, ob_angle)) <- function(e1, e2) {
       .f(num2turn(e1, e2), c(e2))
     }
-  }  # nocov end
+  } # nocov end
 )
 
 # Trigonometry ----
@@ -413,7 +412,9 @@ S7::method(unbind, ob_angle) <- function(x) {
   purrr::map(seq_len(length(x)), \(i) x[i])
 }
 
-S7::method(bind, ob_angle) <- function(x, ...) {x}
+S7::method(bind, ob_angle) <- function(x, ...) {
+  x
+}
 
 #' @export
 `[<-.ggdiagram::ob_angle` <- function(x, i, value) {
@@ -422,5 +423,3 @@ S7::method(bind, ob_angle) <- function(x, ...) {x}
   S7::S7_data(x) <- d
   x
 }
-
-

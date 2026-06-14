@@ -95,7 +95,7 @@ sBC <- ob_segment(pB, pC, color = red)
 sABC <- bind(c(sAB, sAC, sBC))
 
 # Hatch marks to note congruence
-hABC <- sABC@hatch(linewidth = .75) 
+hABC <- sABC@hatch(linewidth = 0.75) 
 
 # Make point labels
 lABCDE <- ob_label(
@@ -105,7 +105,7 @@ lABCDE <- ob_label(
   color = c(red, blue, black, blue, red),
   size = 22,
   family = my_font,
-  vjust = .5,
+  vjust = 0.5,
   label.padding = margin(4,3,0,3),
   label.r = unit(9, units = "pt")
 )
@@ -305,11 +305,11 @@ ggdiagram(font_size = 16, font_family = my_font) +
   E + 
   D@west@label("D", hjust = 1.1, fill = NA) +
   E@east@label("E", hjust = -0.1, fill = NA) +
-  C@label("C", vjust = -.2, hjust = .6, fill = NA) +
+  C@label("C", vjust = -0.2, hjust = 0.6, fill = NA) +
   Cprime@label("C&prime;", vjust = 1.3, fill = NA) +
   CCprime + 
   pF +
-  pF@label("F", vjust = 1.1, hjust = -.3, fill = NA)
+  pF@label("F", vjust = 1.1, hjust = -0.3, fill = NA)
 
 ```
 
@@ -324,14 +324,14 @@ Back to Euclid’s code. He uses the background layer for drawing the triangle b
 #| fig-height: 5
 rvector <- function(scalar = 1) {
   scalar * ob_point(
-    runif(n = 1, min = -.1, max = .1),
-    runif(n = 1, min = -.1, max = .1)
+    runif(n = 1, min = -0.1, max = 0.1),
+    runif(n = 1, min = -0.1, max = 0.1)
   )
 }
 
 ggdiagram(font_size = 16, font_family = my_font) +
-  {A <- ob_point(0, 0) + rvector(.1)} +
-  {B <- ob_point(1.25, 0.25) + rvector(.1)} +
+  {A <- ob_point(0, 0) + rvector(0.1)} +
+  {B <- ob_point(1.25, 0.25) + rvector(0.1)} +
   {AB <- ob_segment(A, B, color = blue)} +
   {D <- ob_circle(A, radius = AB@distance)} +
   {E <- ob_circle(B, radius = AB@distance)} + 
@@ -346,7 +346,7 @@ ggdiagram(font_size = 16, font_family = my_font) +
   {C <- intersection(D, E)[1]} +
   ob_polygon(p = {p_ABC <- bind(c(A, B, C))}, 
              color = NA, 
-             fill = class_color("orange")@lighten(.3)) +
+             fill = class_color("orange")@lighten(0.3)) +
   {s_ABC <- ob_segment(bind(c(A,B,C,A)), color = c(red, blue, blue))} + 
   s_ABC@hatch() +
   p_ABC +
@@ -381,7 +381,7 @@ my_label <- redefault(
 )
 ggdiagram(font_family = my_font) +
   {A <- ob_point()} + 
-  {B <- ob_point(1, .2)} + 
+  {B <- ob_point(1, 0.2)} + 
   {C <- ob_point(1, 2.5)} + 
   {BC <- my_segment(B, C, color = blue, linewidth = 1)} + 
   {AB <- my_segment(A, B)} +
@@ -396,8 +396,8 @@ ggdiagram(font_family = my_font) +
   {DG <- my_segment(D, G)} +
   {GKL <- ob_circle(D, DG@distance, color = gray)} + 
   {L <- intersection(AE, GKL)[2]} + 
-  {E <- AE@point_at_y(L@y - .5)} +
-  {`F` <- BF@point_at_y(G@y - .5)} +
+  {E <- AE@point_at_y(L@y - 0.5)} +
+  {`F` <- BF@point_at_y(G@y - 0.5)} +
   {AL <- my_segment(A, L, color = red, linewidth = 1)} +
   my_label("A", A, polar_just = (A - B)@theta, color = yellow) +
   my_label("B", B, polar_just = (B - A)@theta, color = blue) +
@@ -411,7 +411,7 @@ ggdiagram(font_family = my_font) +
   my_label("L", L, polar_just = degree(-65), color = red) + 
   my_label("H", intersection(BF, CGH)[2], polar_just = (D - B)@theta, plot_point = FALSE) +
   my_label("K", intersection(BF, GKL)[2], polar_just = (D - B)@theta, plot_point = FALSE) +
-  scale_y_continuous(NULL, breaks = NULL, minor_breaks = NULL, expand = expansion(c(.1, .01)))
+  scale_y_continuous(NULL, breaks = NULL, minor_breaks = NULL, expand = expansion(c(0.1, 0.01)))
 ```
 
 To place a straight line equal to a given straight line with one end at a given point.
@@ -447,7 +447,7 @@ my_label <- redefault(
 )
 plot_AB <- ggdiagram(font_family = my_font) +
   {A <- ob_point()} + 
-  {B <- ob_point(1, .2)} + 
+  {B <- ob_point(1, 0.2)} + 
   {AB <- my_segment(A, B)} +
   my_label("A", A, polar_just = (A - B)@theta) + 
   my_label("B", B, polar_just = (B - A)@theta) 
@@ -523,7 +523,7 @@ plot_CGH <- plot_AB +
     "G",
     size = 16,
     fill = NA,
-    nudge_x = .2,
+    nudge_x = 0.2,
     color = red
   ) + 
   A +
@@ -545,7 +545,7 @@ plot_CGH
 ```{r complete2}
 ggdiagram(font_family = my_font) +
   {A <- ob_point()} + 
-  {B <- ob_point(1, .2)} + 
+  {B <- ob_point(1, 0.2)} + 
   {AB <- my_segment(A, B)} +
   my_label(label = "A", 
            center = A, 
@@ -583,8 +583,8 @@ ggdiagram(font_family = my_font) +
   G@label(
     "G",
     size = 16,
-    nudge_x = .25,
-    nudge_y = -.05,
+    nudge_x = 0.25,
+    nudge_y = -0.05,
     color = gray,
     fill = NA
   ) + 

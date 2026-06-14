@@ -71,14 +71,13 @@ arc_props <- list(
     type = S7::new_property(
       class = S7::class_character,
       validator = function(value) {
-          if (length(value) != 1) {
-            return("The type property must be of length 1.")
-          }
-          if (!(value %in% c("arc", "wedge", "segment"))) {
-            'The type property must be "arc", "wedge", or "segment".'
-          }
-
+        if (length(value) != 1) {
+          return("The type property must be of length 1.")
         }
+        if (!(value %in% c("arc", "wedge", "segment"))) {
+          'The type property must be "arc", "wedge", or "segment".'
+        }
+      }
     )
   ),
   # derived ----
@@ -161,9 +160,10 @@ arc_props <- list(
       },
       setter = \(self, value) {
         if (S7::S7_inherits(value, ob_point)) {
-          if (value@length == self@length || value@length == 1 || self@length == 1) {
+          if (
+            value@length == self@length || value@length == 1 || self@length == 1
+          ) {
             self@center <- self@center + value - self@end_point
-
           } else {
             stop(paste0(
               "The number of points in end_point (",
@@ -217,7 +217,9 @@ arc_props <- list(
       },
       setter = function(self, value) {
         if (S7::S7_inherits(value, ob_point)) {
-          if (value@length == self@length || value@length == 1 || self@length == 1) {
+          if (
+            value@length == self@length || value@length == 1 || self@length == 1
+          ) {
             self@center <- self@center + value - self@start_point
           } else {
             stop(paste0(
@@ -382,7 +384,6 @@ arc_props <- list(
             } else {
               x <- self[1]@midpoint(position)@x
             }
-
           }
           self@label_sloped = FALSE
           self@label@center <- intersection(self, ob_line(xintercept = x))
@@ -403,7 +404,6 @@ arc_props <- list(
             } else {
               y <- self[1]@midpoint(position)@y
             }
-
           }
           self@label_sloped = FALSE
           self@label@center <- intersection(self, ob_line(intercept = y))
@@ -570,7 +570,7 @@ ob_arc <- S7::new_class(
       end <- degree(end)
     }
 
-    if (length(x) > 0 | length(y) > 0) {
+    if (length(x) > 0 || length(y) > 0) {
       if (length(x) == 0) {
         x <- 0
       }
@@ -644,7 +644,7 @@ ob_arc <- S7::new_class(
 
     # If there is one object but many labels, make multiple objects
     if (S7::S7_inherits(label, ob_label)) {
-      if (label@length > 1 & nrow(d) == 1) {
+      if (label@length > 1 && nrow(d) == 1) {
         d <- dplyr::mutate(d, k = label@length) |>
           tidyr::uncount(.data$k)
       }
@@ -683,12 +683,11 @@ ob_arc <- S7::new_class(
             label@vjust <- 0.5
           }
         } else {
-          if (all(length(label@hjust) == 0) & all(length(label@vjust) == 0)) {
+          if (all(length(label@hjust) == 0) && all(length(label@vjust) == 0)) {
             label@hjust <- polar2just(m, 1.4, axis = "h")
             label@vjust <- polar2just(m, 1.4, axis = "v")
           } else {
             if (all(length(label@hjust) == 0)) {
-
               label@hjust <- 0.5
             }
 

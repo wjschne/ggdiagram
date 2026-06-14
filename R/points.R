@@ -98,7 +98,7 @@ pt_props <- list(
         if (is.null(label)) {
           label = label_object(self, accuracy)
         }
-        if (is.numeric(label) & !S7::S7_inherits(label)) {
+        if (is.numeric(label) && !S7::S7_inherits(label)) {
           if (rlang::is_integerish(label)) {
             label <- signs::signs(label)
           } else {
@@ -364,7 +364,7 @@ S7::method(polar2just, S7::class_numeric) <- function(
   multiplier = NULL,
   axis = c("h", "v")
 ) {
-  if (length(multiplier) == 0 | is.null(multiplier)) {
+  if (length(multiplier) == 0 || is.null(multiplier)) {
     multiplier <- 1.2
   }
   axis <- match.arg(axis)
@@ -397,7 +397,7 @@ S7::method(polar2just, ob_point) <- function(
   multiplier = NULL,
   axis = c("h", "v")
 ) {
-  if (length(multiplier) == 0 | is.null(multiplier)) {
+  if (length(multiplier) == 0 || is.null(multiplier)) {
     multiplier <- x@r
   }
   polar2just(x@theta, multiplier, axis)
@@ -408,7 +408,7 @@ S7::method(polar2just, ob_polar) <- function(
   multiplier = NULL,
   axis = c("h", "v")
 ) {
-  if (length(multiplier) == 0 | is.null(multiplier)) {
+  if (length(multiplier) == 0 || is.null(multiplier)) {
     multiplier <- x@r
   }
   polar2just(x@theta, multiplier, axis)
@@ -430,7 +430,6 @@ purrr::walk(list(`+`, `-`, `*`, `/`, `^`), \(.f) {
     e2@style <- e1@style + e2@style
     e2
   } # nocov end
-
 
   S7::method(.f, list(ob_point, S7::class_numeric)) <- function(e1, e2) {
     # nocov start
@@ -536,8 +535,6 @@ S7::method(`[`, ob_point) <- function(x, i) {
   } else {
     data2shape(x@tibble[i, ], ob_point)
   }
-
-
 }
 
 #' @export
@@ -893,5 +890,4 @@ S7::method(unique, ob_point) <- function(x, incomparables = FALSE, ...) {
   } else {
     data2shape(d, S7::S7_class(x))
   }
-
 }

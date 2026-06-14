@@ -7,8 +7,12 @@ library(ggdiagram)
 test_that("ob_polygon construction", {
   pts <- ob_point(c(0, 1, 0.5), c(0, 0, 1))
   pg <- ob_polygon(pts)
-  expect_no_error(pg@p <- pts)
-  expect_no_error(pg@style <- ob_style(color = "red"))
+  expect_no_error({
+    pg@p <- pts
+  })
+  expect_no_error({
+    pg@style <- ob_style(color = "red")
+  })
   expect_no_error(ob_polygon(pts))
   expect_s3_class(ob_polygon(pts), "ggdiagram::ob_polygon")
 
@@ -26,13 +30,18 @@ test_that("ob_polygon construction", {
   pg@p <- pts
   # setter makdes points into list
   expect_identical(list(pts), pg@p)
-  expect_error(pg@vertex_radius <- c(2,2), "The vertex_radius property must be of length 1.")
+  expect_error(
+    pg@vertex_radius <- c(2, 2),
+    "The vertex_radius property must be of length 1."
+  )
   pg@style <- ob_style(color = "red")
   expect_identical(pg@color, "red")
-  expect_identical(pg@point_at(-90), ob_point(0.5,0))
-  expect_identical(ob_polygon(pts, label = ob_label("a", fill = "red"))@label@fill, "red")
+  expect_identical(pg@point_at(-90), ob_point(0.5, 0))
+  expect_identical(
+    ob_polygon(pts, label = ob_label("a", fill = "red"))@label@fill,
+    "red"
+  )
   expect_identical(ob_polygon(pts, label = ob_label(c("a", "b")))@length, 2L)
-
 })
 
 # length ----
@@ -55,7 +64,7 @@ test_that("ob_polygon center", {
   pts2 <- ob_point(c(4, 6, 5), c(0, 0, 2))
   poly2 <- ob_polygon(list(pts, pts2))
   expect_equal(poly2@center@x, c(1, 5), tolerance = 1e-10)
-  expect_equal(poly2@center@y, c(2/3, 2/3), tolerance = 1e-10)
+  expect_equal(poly2@center@y, c(2 / 3, 2 / 3), tolerance = 1e-10)
 })
 
 # bounding_box ----
@@ -64,8 +73,8 @@ test_that("ob_polygon bounding_box", {
   poly <- ob_polygon(pts)
   bb <- poly@bounding_box
   expect_s3_class(bb, "ggdiagram::ob_rectangle")
-  expect_equal(bb@west@x,  0, tolerance = 1e-10)
-  expect_equal(bb@east@x,  2, tolerance = 1e-10)
+  expect_equal(bb@west@x, 0, tolerance = 1e-10)
+  expect_equal(bb@east@x, 2, tolerance = 1e-10)
   expect_equal(bb@south@y, 0, tolerance = 1e-10)
   expect_equal(bb@north@y, 3, tolerance = 1e-10)
 })
@@ -87,23 +96,29 @@ test_that("ob_polygon segment", {
 test_that("ob_polygon style", {
   pts <- ob_point(c(0, 1, 0.5), c(0, 0, 1))
 
-  poly <- ob_polygon(pts, color = "blue", fill = "red", linewidth = 2,
-                     alpha = 0.5, linetype = 2)
-  expect_equal(poly@color,     "blue")
-  expect_equal(poly@fill,      "red")
+  poly <- ob_polygon(
+    pts,
+    color = "blue",
+    fill = "red",
+    linewidth = 2,
+    alpha = 0.5,
+    linetype = 2
+  )
+  expect_equal(poly@color, "blue")
+  expect_equal(poly@fill, "red")
   expect_equal(poly@linewidth, 2)
-  expect_equal(poly@alpha,     0.5)
-  expect_equal(poly@linetype,  2)
+  expect_equal(poly@alpha, 0.5)
+  expect_equal(poly@linetype, 2)
 
   sty <- poly@style
   expect_s3_class(sty, "ggdiagram::ob_style")
   expect_equal(sty@color, "blue")
-  expect_equal(sty@fill,  "red")
+  expect_equal(sty@fill, "red")
 
   # style argument
   poly_s <- ob_polygon(pts, style = ob_style(color = "green", fill = "yellow"))
   expect_equal(poly_s@color, "green")
-  expect_equal(poly_s@fill,  "yellow")
+  expect_equal(poly_s@fill, "yellow")
 
   poly_s@style <- ob_style(color = "blue")
   expect_identical(poly_s@color, "blue")
@@ -117,7 +132,7 @@ test_that("ob_polygon label", {
   expect_equal(poly_lbl@label@label, "A")
   # label placed at centroid
   expect_equal(poly_lbl@label@center@x, mean(c(0, 1, 0.5)), tolerance = 1e-6)
-  expect_equal(poly_lbl@label@center@y, mean(c(0, 0, 1)),   tolerance = 1e-6)
+  expect_equal(poly_lbl@label@center@y, mean(c(0, 0, 1)), tolerance = 1e-6)
 
   # multiple polygons, multiple labels
   pts2 <- ob_point(c(2, 3, 2.5), c(0, 0, 1))
@@ -149,21 +164,21 @@ test_that("ob_polygon id", {
 test_that("ob_polygon tibble", {
   pts <- ob_point(c(0, 1, 0.5), c(0, 0, 1))
   tib <- ob_polygon(pts)@tibble
-  expect_true("p"     %in% colnames(tib))
+  expect_true("p" %in% colnames(tib))
   expect_true("group" %in% colnames(tib))
   expect_equal(nrow(tib), 1)
 
   tib2 <- ob_polygon(pts, color = "blue", fill = "red")@tibble
   expect_true("color" %in% colnames(tib2))
-  expect_true("fill"  %in% colnames(tib2))
+  expect_true("fill" %in% colnames(tib2))
 })
 
 # get_tibble ----
 test_that("ob_polygon get_tibble", {
   pts <- ob_point(c(0, 1, 0.5), c(0, 0, 1))
   gt <- get_tibble(ob_polygon(pts))
-  expect_true("x"     %in% colnames(gt))
-  expect_true("y"     %in% colnames(gt))
+  expect_true("x" %in% colnames(gt))
+  expect_true("y" %in% colnames(gt))
   expect_true("group" %in% colnames(gt))
   # one polygon with 3 points
   expect_equal(nrow(gt), 3)
@@ -187,13 +202,13 @@ test_that("ob_polygon geom", {
 test_that("ob_polygon connect", {
   pts <- ob_point(c(0, 1, 0.5), c(0, 0, 1))
   pg1 <- ob_polygon(pts)
-  pg2 <- ob_polygon(pts + ob_point(3,0))
+  pg2 <- ob_polygon(pts + ob_point(3, 0))
   expect_no_error(connect(pg1, pg2))
 
-  expect_no_error(connect(ob_point(3,2), pg1))
-  expect_no_error(connect(pg1, ob_point(3,2)))
-  expect_no_error(connect(pg1, ob_circle(ob_point(3,2))))
-  expect_no_error(connect(ob_circle(ob_point(3,2)), pg1))
+  expect_no_error(connect(ob_point(3, 2), pg1))
+  expect_no_error(connect(pg1, ob_point(3, 2)))
+  expect_no_error(connect(pg1, ob_circle(ob_point(3, 2))))
+  expect_no_error(connect(ob_circle(ob_point(3, 2)), pg1))
 })
 
 # ── ob_ngon ───────────────────────────────────────────────────────────────────
@@ -205,7 +220,7 @@ test_that("ob_ngon construction", {
 
   # default values
   ng <- ob_ngon()
-  expect_equal(ng@n,      3)
+  expect_equal(ng@n, 3)
   expect_equal(ng@radius, 1)
   expect_equal(ng@center@x, 0)
   expect_equal(ng@center@y, 0)
@@ -215,7 +230,7 @@ test_that("ob_ngon construction", {
   ng2 <- ob_ngon(center = ob_point(1, 2), n = 6, radius = 3)
   expect_equal(ng2@center@x, 1)
   expect_equal(ng2@center@y, 2)
-  expect_equal(ng2@n,      6)
+  expect_equal(ng2@n, 6)
   expect_equal(ng2@radius, 3)
 
   expect_identical(ob_ngon(x = 3)@center@x, 3)
@@ -249,7 +264,7 @@ test_that("ob_ngon alternate constructors", {
   expect_equal(ng_ap@radius, 1, tolerance = 1e-10)
 
   # both apothem and side_length give same radius for a triangle
-  sl_tri <- 2 * sin(pi / 3)  # side_length of equilateral triangle with radius 1
+  sl_tri <- 2 * sin(pi / 3) # side_length of equilateral triangle with radius 1
   ng_sl3 <- ob_ngon(n = 3, side_length = sl_tri)
   expect_equal(ng_sl3@radius, 1, tolerance = 1e-10)
 })
@@ -267,7 +282,11 @@ test_that("ob_ngon angle rotation", {
 # length ----
 test_that("ob_ngon length", {
   expect_equal(ob_ngon()@length, 1)
-  ng_v <- ob_ngon(center = ob_point(c(0, 1, 2), c(0, 0, 0)), n = c(3, 4, 5), radius = 1)
+  ng_v <- ob_ngon(
+    center = ob_point(c(0, 1, 2), c(0, 0, 0)),
+    n = c(3, 4, 5),
+    radius = 1
+  )
   expect_equal(ng_v@length, 3)
 })
 
@@ -275,18 +294,21 @@ test_that("ob_ngon length", {
 test_that("ob_ngon derived values", {
   # equilateral triangle, radius = 1
   tri <- ob_ngon(n = 3, radius = 1)
-  expect_equal(tri@side_length, 2 * sin(pi / 3),       tolerance = 1e-10)
-  expect_equal(tri@apothem,     cos(pi / 3),            tolerance = 1e-10)
-  expect_equal(tri@area,
-    3 * tri@side_length * tri@apothem / 2,              tolerance = 1e-10)
-  expect_equal(tri@perimeter,   3 * tri@side_length,    tolerance = 1e-10)
+  expect_equal(tri@side_length, 2 * sin(pi / 3), tolerance = 1e-10)
+  expect_equal(tri@apothem, cos(pi / 3), tolerance = 1e-10)
+  expect_equal(
+    tri@area,
+    3 * tri@side_length * tri@apothem / 2,
+    tolerance = 1e-10
+  )
+  expect_equal(tri@perimeter, 3 * tri@side_length, tolerance = 1e-10)
 
   # square, radius = 1
   sq <- ob_ngon(n = 4, radius = 1)
-  expect_equal(sq@side_length, sqrt(2),                 tolerance = 1e-10)
-  expect_equal(sq@apothem,     cos(pi / 4),             tolerance = 1e-10)
-  expect_equal(sq@area,        2,                        tolerance = 1e-10)
-  expect_equal(sq@perimeter,   4 * sqrt(2),             tolerance = 1e-10)
+  expect_equal(sq@side_length, sqrt(2), tolerance = 1e-10)
+  expect_equal(sq@apothem, cos(pi / 4), tolerance = 1e-10)
+  expect_equal(sq@area, 2, tolerance = 1e-10)
+  expect_equal(sq@perimeter, 4 * sqrt(2), tolerance = 1e-10)
 })
 
 # vertices ----
@@ -331,9 +353,9 @@ test_that("ob_ngon compass points", {
   # compass points are point_at(0/90/180/270)
   sq45 <- ob_ngon(n = 4, radius = 1, angle = 45)
   expect_equal(sq45@north@y, sq45@south@y * -1, tolerance = 1e-6)
-  expect_equal(sq45@east@x,  sq45@west@x  * -1, tolerance = 1e-6)
-  expect_equal(sq45@north@x, 0,                  tolerance = 1e-6)
-  expect_equal(sq45@east@y,  0,                  tolerance = 1e-6)
+  expect_equal(sq45@east@x, sq45@west@x * -1, tolerance = 1e-6)
+  expect_equal(sq45@north@x, 0, tolerance = 1e-6)
+  expect_equal(sq45@east@y, 0, tolerance = 1e-6)
 })
 
 # bounding_box ----
@@ -342,10 +364,10 @@ test_that("ob_ngon bounding_box", {
   bb <- sq45@bounding_box
   expect_s3_class(bb, "ggdiagram::ob_rectangle")
   hw <- sqrt(2) / 2
-  expect_equal(bb@west@x,  -hw, tolerance = 1e-6)
-  expect_equal(bb@east@x,   hw, tolerance = 1e-6)
+  expect_equal(bb@west@x, -hw, tolerance = 1e-6)
+  expect_equal(bb@east@x, hw, tolerance = 1e-6)
   expect_equal(bb@south@y, -hw, tolerance = 1e-6)
-  expect_equal(bb@north@y,  hw, tolerance = 1e-6)
+  expect_equal(bb@north@y, hw, tolerance = 1e-6)
 })
 
 # point_at ----
@@ -368,12 +390,9 @@ test_that("ob_ngon point_at", {
 # angle_at ----
 test_that("ob_ngon angle_at", {
   sq <- ob_ngon(n = 4, radius = 1, angle = 0)
-  expect_equal(sq@angle_at(ob_point(1, 0))@degree,  0,  tolerance = 1e-10)
-  expect_equal(sq@angle_at(ob_point(0, 1))@degree,  90, tolerance = 1e-10)
+  expect_equal(sq@angle_at(ob_point(1, 0))@degree, 0, tolerance = 1e-10)
+  expect_equal(sq@angle_at(ob_point(0, 1))@degree, 90, tolerance = 1e-10)
   expect_equal(sq@angle_at(ob_point(-1, 0))@degree, 180, tolerance = 1e-10)
-
-
-
 })
 
 # normal_at ----
@@ -404,18 +423,25 @@ test_that("ob_ngon tangent_at", {
 
 # style ----
 test_that("ob_ngon style", {
-  ng <- ob_ngon(n = 5, radius = 2, color = "red", fill = "blue",
-                linewidth = 1.5, alpha = 0.7, linetype = 3)
-  expect_equal(ng@color,     "red")
-  expect_equal(ng@fill,      "blue")
+  ng <- ob_ngon(
+    n = 5,
+    radius = 2,
+    color = "red",
+    fill = "blue",
+    linewidth = 1.5,
+    alpha = 0.7,
+    linetype = 3
+  )
+  expect_equal(ng@color, "red")
+  expect_equal(ng@fill, "blue")
   expect_equal(ng@linewidth, 1.5)
-  expect_equal(ng@alpha,     0.7)
-  expect_equal(ng@linetype,  3)
+  expect_equal(ng@alpha, 0.7)
+  expect_equal(ng@linetype, 3)
 
   sty <- ng@style
   expect_s3_class(sty, "ggdiagram::ob_style")
   expect_equal(sty@color, "red")
-  expect_equal(sty@fill,  "blue")
+  expect_equal(sty@fill, "blue")
 
   ng@style <- ob_style(color = "green")
   expect_identical(ng@color, "green")
@@ -434,18 +460,18 @@ test_that("ob_ngon label", {
 # tibble ----
 test_that("ob_ngon tibble", {
   tib <- ob_ngon(n = 4, radius = 2)@tibble
-  expect_true("x"      %in% colnames(tib))
-  expect_true("y"      %in% colnames(tib))
-  expect_true("n"      %in% colnames(tib))
+  expect_true("x" %in% colnames(tib))
+  expect_true("y" %in% colnames(tib))
+  expect_true("n" %in% colnames(tib))
   expect_true("radius" %in% colnames(tib))
-  expect_true("angle"  %in% colnames(tib))
+  expect_true("angle" %in% colnames(tib))
 })
 
 # get_tibble ----
 test_that("ob_ngon get_tibble", {
   gt <- get_tibble(ob_ngon(n = 4, radius = 1))
-  expect_true("x"     %in% colnames(gt))
-  expect_true("y"     %in% colnames(gt))
+  expect_true("x" %in% colnames(gt))
+  expect_true("y" %in% colnames(gt))
   expect_true("group" %in% colnames(gt))
   # n+1 rows per polygon (close the loop)
   expect_equal(nrow(gt), 5)
@@ -453,7 +479,7 @@ test_that("ob_ngon get_tibble", {
   # with styles
   gt2 <- get_tibble(ob_ngon(n = 3, radius = 2, color = "red", fill = "blue"))
   expect_true("color" %in% colnames(gt2))
-  expect_true("fill"  %in% colnames(gt2))
+  expect_true("fill" %in% colnames(gt2))
 
   # vertex_radius renamed to 'radius'
   gt3 <- get_tibble(ob_ngon(n = 3, radius = 1, vertex_radius = 0.05))
@@ -469,21 +495,21 @@ test_that("ob_ngon geom", {
 test_that("ob_ngon subsetting by index", {
   ng_v <- ob_ngon(
     center = ob_point(c(0, 1, 2), c(0, 0, 0)),
-    n      = c(3, 4, 5),
+    n = c(3, 4, 5),
     radius = 1
   )
   sub <- ng_v[2]
   expect_equal(sub@length, 1)
-  expect_equal(sub@n,      4)
+  expect_equal(sub@n, 4)
   expect_equal(sub@center@x, 1)
 })
 
 test_that("ob_ngon subsetting by id", {
   ng_id <- ob_ngon(
     center = ob_point(c(0, 1, 2), c(0, 0, 0)),
-    n      = c(3, 4, 5),
+    n = c(3, 4, 5),
     radius = 1,
-    id     = c("a", "b", "c")
+    id = c("a", "b", "c")
   )
   sub <- ng_id["b"]
   expect_equal(sub@n, 4)
@@ -495,20 +521,20 @@ test_that("ob_ngon data2shape round-trip", {
   ng <- ob_ngon(n = 5, radius = 2, color = "red")
   tib <- ng@tibble
   ng_rt <- data2shape(tib, ob_ngon)
-  expect_equal(ng_rt@n,      ng@n)
+  expect_equal(ng_rt@n, ng@n)
   expect_equal(ng_rt@radius, ng@radius, tolerance = 1e-10)
-  expect_equal(ng_rt@color,  ng@color)
+  expect_equal(ng_rt@color, ng@color)
 })
 
 # vectorised construction ----
 test_that("ob_ngon vectorised construction", {
   ng_v <- ob_ngon(
     center = ob_point(c(0, 2, 4), c(0, 0, 0)),
-    n      = c(3, 4, 5),
+    n = c(3, 4, 5),
     radius = c(1, 1.5, 2)
   )
   expect_equal(ng_v@length, 3)
-  expect_equal(ng_v@n,      c(3, 4, 5))
+  expect_equal(ng_v@n, c(3, 4, 5))
   expect_equal(ng_v@radius, c(1, 1.5, 2))
   expect_equal(ng_v@center@x, c(0, 2, 4))
 })
@@ -519,8 +545,8 @@ test_that("ob_ngon connection", {
   ng1 <- ob_ngon(n = 4)
   ng2 <- ob_ngon(x = 5, n = 6)
   expect_identical(connect(ng1, ng2)@p2@x, 4)
-  expect_identical(connect(ob_point(1,0), ng2)@p2@x, 4)
-  expect_identical(connect(ng1, ob_point(4,0))@p1@x, 1)
+  expect_identical(connect(ob_point(1, 0), ng2)@p2@x, 4)
+  expect_identical(connect(ng1, ob_point(4, 0))@p1@x, 1)
   expect_identical(connect(ng1, ob_circle(x = 4, y = 0))@p2@x, 3)
   expect_identical(connect(ob_circle(x = -4, y = 0), ng1)@p2@x, -1)
 })
@@ -537,13 +563,13 @@ test_that("ob_intercept construction", {
   ic <- ob_intercept()
   expect_equal(ic@center@x, 0)
   expect_equal(ic@center@y, 0)
-  expect_equal(ic@width,    1)
+  expect_equal(ic@width, 1)
 
   # custom
   ic2 <- ob_intercept(center = ob_point(1, 2), width = 2)
   expect_equal(ic2@center@x, 1)
   expect_equal(ic2@center@y, 2)
-  expect_equal(ic2@width,    2)
+  expect_equal(ic2@width, 2)
 
   # x/y shortcut
   ic3 <- ob_intercept(x = 3, y = 4)
@@ -558,27 +584,26 @@ test_that("ob_intercept construction", {
 
   ic6 <- ob_intercept(y = 3, label = ob_label(c("a", "b")))
   expect_identical(ic6@length, 2L)
-
 })
 
 # equilateral triangle geometry ----
 test_that("ob_intercept vertex geometry", {
   ic <- ob_intercept(width = 1)
-  r_expected <- 0.5 / cos(pi / 6)  # width/2 / cos(30°)
+  r_expected <- 0.5 / cos(pi / 6) # width/2 / cos(30°)
 
   # all three vertices equidistant from center
-  d_top   <- sqrt(ic@top@x^2   + ic@top@y^2)
-  d_left  <- sqrt(ic@left@x^2  + ic@left@y^2)
+  d_top <- sqrt(ic@top@x^2 + ic@top@y^2)
+  d_left <- sqrt(ic@left@x^2 + ic@left@y^2)
   d_right <- sqrt(ic@right@x^2 + ic@right@y^2)
-  expect_equal(d_top,   r_expected, tolerance = 1e-6)
-  expect_equal(d_left,  r_expected, tolerance = 1e-6)
+  expect_equal(d_top, r_expected, tolerance = 1e-6)
+  expect_equal(d_left, r_expected, tolerance = 1e-6)
   expect_equal(d_right, r_expected, tolerance = 1e-6)
 
   # top vertex at (0, r), left/right symmetric about y-axis
-  expect_equal(ic@top@x,   0,   tolerance = 1e-6)
-  expect_equal(ic@top@y,   r_expected, tolerance = 1e-6)
-  expect_equal(ic@left@x,  -ic@right@x, tolerance = 1e-6)
-  expect_equal(ic@left@y,   ic@right@y, tolerance = 1e-6)
+  expect_equal(ic@top@x, 0, tolerance = 1e-6)
+  expect_equal(ic@top@y, r_expected, tolerance = 1e-6)
+  expect_equal(ic@left@x, -ic@right@x, tolerance = 1e-6)
+  expect_equal(ic@left@y, ic@right@y, tolerance = 1e-6)
 })
 
 # polygon property ----
@@ -594,17 +619,17 @@ test_that("ob_intercept bounding_box", {
   ic <- ob_intercept(width = 1)
   bb <- ic@bounding_box
   expect_s3_class(bb, "ggdiagram::ob_rectangle")
-  expect_equal(bb@west@x,  -0.5,                 tolerance = 1e-6)
-  expect_equal(bb@east@x,   0.5,                 tolerance = 1e-6)
-  expect_equal(bb@south@y, ic@left@y,             tolerance = 1e-6)
-  expect_equal(bb@north@y, 0.5 / cos(pi / 6),    tolerance = 1e-6)
+  expect_equal(bb@west@x, -0.5, tolerance = 1e-6)
+  expect_equal(bb@east@x, 0.5, tolerance = 1e-6)
+  expect_equal(bb@south@y, ic@left@y, tolerance = 1e-6)
+  expect_equal(bb@north@y, 0.5 / cos(pi / 6), tolerance = 1e-6)
 })
 
 # style ----
 test_that("ob_intercept style", {
   ic <- ob_intercept(color = "blue", fill = "red", linewidth = 1.2)
-  expect_equal(ic@color,     "blue")
-  expect_equal(ic@fill,      "red")
+  expect_equal(ic@color, "blue")
+  expect_equal(ic@fill, "red")
   expect_equal(ic@linewidth, 1.2)
 })
 
@@ -630,7 +655,7 @@ test_that("ob_reuleaux construction", {
 
   # defaults
   rel <- ob_reuleaux()
-  expect_equal(rel@n,      5L)
+  expect_equal(rel@n, 5L)
   expect_equal(rel@radius, 1)
   expect_equal(rel@center@x, 0)
   expect_equal(rel@center@y, 0)
@@ -640,9 +665,12 @@ test_that("ob_reuleaux construction", {
   # custom
   rel2 <- ob_reuleaux(n = 3, radius = 2)
 
-  expect_equal(rel2@n,      3L)
+  expect_equal(rel2@n, 3L)
   expect_equal(rel2@radius, 2)
-  expect_error(ob_reuleaux(vertex_radius = c(1,2)), "The vertex_radius property must be of length 1.")
+  expect_error(
+    ob_reuleaux(vertex_radius = c(1, 2)),
+    "The vertex_radius property must be of length 1."
+  )
   expect_no_error(get_tibble(ob_reuleaux(vertex_radius = 1)))
 
   expect_no_error(as.geom(ob_reuleaux()))
@@ -660,13 +688,17 @@ test_that("ob_reuleaux central and inscribed angles", {
 
   expect_equal(rel3@angle_at(ob_point(0, 3)), radian(0.5 * pi))
   expect_no_error(rel3@normal_at(30))
-  expect_no_error(rel3@normal_at(ob_point(3,3)))
+  expect_no_error(rel3@normal_at(ob_point(3, 3)))
   expect_no_error(rel3@normal_at(degree(30)))
   expect_equal(rel3@point_at(90), ob_point(0, 1), tolerance = 1e-06)
 
-  rel4 <- ob_reuleaux(n = 3, label = ob_label(c("hello", "goodbye")), vertex_radius = 2, angle = -10)
+  rel4 <- ob_reuleaux(
+    n = 3,
+    label = ob_label(c("hello", "goodbye")),
+    vertex_radius = 2,
+    angle = -10
+  )
   expect_identical(rel4@label@label, c("hello", "goodbye"))
-
 })
 
 # arcs ----
@@ -729,8 +761,8 @@ test_that("ob_reuleaux circumference", {
 # style ----
 test_that("ob_reuleaux style", {
   rel <- ob_reuleaux(color = "blue", fill = "red", linewidth = 1.5)
-  expect_equal(rel@color,     "blue")
-  expect_equal(rel@fill,      "red")
+  expect_equal(rel@color, "blue")
+  expect_equal(rel@fill, "red")
   expect_equal(rel@linewidth, 1.5)
 
   sty <- rel@style
@@ -744,8 +776,8 @@ test_that("ob_reuleaux bounding_box", {
   bb <- rel@bounding_box
   expect_s3_class(bb, "ggdiagram::ob_rectangle")
   # bounding box must contain the shape
-  expect_lte(bb@west@x,  -0.9)
-  expect_gte(bb@east@x,   0.9)
+  expect_lte(bb@west@x, -0.9)
+  expect_gte(bb@east@x, 0.9)
 })
 
 # geom ----

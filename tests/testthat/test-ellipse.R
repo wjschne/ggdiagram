@@ -55,7 +55,7 @@ test_that("ob_ellipse derived values", {
   bb <- ec@bounding_box
   expect_equal(bb@center@x, 1, tolerance = 1e-4)
   expect_equal(bb@center@y, 2, tolerance = 1e-4)
-  expect_equal(bb@width,  6, tolerance = 1e-4)
+  expect_equal(bb@width, 6, tolerance = 1e-4)
   expect_equal(bb@height, 4, tolerance = 1e-4)
 
   # tibble columns
@@ -67,18 +67,18 @@ test_that("ob_ellipse derived values", {
 test_that("ob_ellipse foci", {
   # horizontal ellipse (a > b)
   e <- ob_ellipse(a = 5, b = 4)
-  c_val <- sqrt(5^2 - 4^2)   # = 3
+  c_val <- sqrt(5^2 - 4^2) # = 3
   expect_equal(e@focus_1@x, -c_val, tolerance = 1e-10)
-  expect_equal(e@focus_1@y,  0,     tolerance = 1e-10)
-  expect_equal(e@focus_2@x,  c_val, tolerance = 1e-10)
-  expect_equal(e@focus_2@y,  0,     tolerance = 1e-10)
+  expect_equal(e@focus_1@y, 0, tolerance = 1e-10)
+  expect_equal(e@focus_2@x, c_val, tolerance = 1e-10)
+  expect_equal(e@focus_2@y, 0, tolerance = 1e-10)
 
   # vertical ellipse (b > a): foci should be on the y-axis
   e2 <- ob_ellipse(a = 3, b = 5)
-  c_val2 <- sqrt(5^2 - 3^2)  # = 4
-  expect_equal(e2@focus_1@x, 0,      tolerance = 1e-10)
+  c_val2 <- sqrt(5^2 - 3^2) # = 4
+  expect_equal(e2@focus_1@x, 0, tolerance = 1e-10)
   expect_equal(e2@focus_1@y, c_val2, tolerance = 1e-10)
-  expect_equal(e2@focus_2@x, 0,      tolerance = 1e-10)
+  expect_equal(e2@focus_2@x, 0, tolerance = 1e-10)
   expect_equal(e2@focus_2@y, -c_val2, tolerance = 1e-10)
 
   # circle: both foci at center
@@ -91,20 +91,20 @@ test_that("ob_ellipse foci", {
   # offset center
   ec2 <- ob_ellipse(center = ob_point(1, 2), a = 5, b = 4)
   expect_equal(ec2@focus_1@x, 1 - c_val, tolerance = 1e-10)
-  expect_equal(ec2@focus_1@y, 2,         tolerance = 1e-10)
+  expect_equal(ec2@focus_1@y, 2, tolerance = 1e-10)
 })
 
 # point_at ----
 test_that("ob_ellipse point_at", {
   e <- ob_ellipse(a = 3, b = 2)
 
-  expect_equal(e@point_at(0)@x,   3, tolerance = 1e-6)
-  expect_equal(e@point_at(0)@y,   0, tolerance = 1e-6)
-  expect_equal(e@point_at(90)@x,  0, tolerance = 1e-6)
-  expect_equal(e@point_at(90)@y,  2, tolerance = 1e-6)
+  expect_equal(e@point_at(0)@x, 3, tolerance = 1e-6)
+  expect_equal(e@point_at(0)@y, 0, tolerance = 1e-6)
+  expect_equal(e@point_at(90)@x, 0, tolerance = 1e-6)
+  expect_equal(e@point_at(90)@y, 2, tolerance = 1e-6)
   expect_equal(e@point_at(180)@x, -3, tolerance = 1e-6)
-  expect_equal(e@point_at(180)@y,  0, tolerance = 1e-6)
-  expect_equal(e@point_at(270)@x,  0, tolerance = 1e-6)
+  expect_equal(e@point_at(180)@y, 0, tolerance = 1e-6)
+  expect_equal(e@point_at(270)@x, 0, tolerance = 1e-6)
   expect_equal(e@point_at(270)@y, -2, tolerance = 1e-6)
 
   # accepts ob_angle objects
@@ -176,14 +176,14 @@ test_that("ob_ellipse polygon", {
 test_that("ob_ellipse compass points", {
   e <- ob_ellipse(a = 3, b = 2)
 
-  expect_equal(e@east@x,  3, tolerance = 1e-6)
-  expect_equal(e@east@y,  0, tolerance = 1e-6)
+  expect_equal(e@east@x, 3, tolerance = 1e-6)
+  expect_equal(e@east@y, 0, tolerance = 1e-6)
   expect_equal(e@west@x, -3, tolerance = 1e-6)
-  expect_equal(e@west@y,  0, tolerance = 1e-6)
+  expect_equal(e@west@y, 0, tolerance = 1e-6)
   expect_equal(e@north@x, 0, tolerance = 1e-6)
   expect_equal(e@north@y, 2, tolerance = 1e-6)
   expect_equal(e@south@x, 0, tolerance = 1e-6)
-  expect_equal(e@south@y,-2, tolerance = 1e-6)
+  expect_equal(e@south@y, -2, tolerance = 1e-6)
 
   # diagonal compass points are on the ellipse boundary
   expect_no_error(e@northeast)
@@ -271,7 +271,7 @@ test_that("ob_ellipse place", {
 # connect ----
 test_that("ob_ellipse connect", {
   e1 <- ob_ellipse(x = -2, y = 0, a = 1, b = 0.5)
-  e2 <- ob_ellipse(x =  2, y = 0, a = 1, b = 0.5)
+  e2 <- ob_ellipse(x = 2, y = 0, a = 1, b = 0.5)
   # centerpoint to centerpoint
   expect_no_error(connect(e1, e2))
   expect_no_error(connect(e1, ob_point(2, 0)))
@@ -281,41 +281,94 @@ test_that("ob_ellipse connect", {
   expect_no_error(connect(e1, e2@center, arc_bend = 0.1))
   expect_no_error(connect(e1@center, e2, arc_bend = 0.1))
   ## bezier
-  expect_no_error(connect(e1, e2, from_offset = ob_point(0,1), to_offset = ob_point(0, -1)))
-  expect_no_error(connect(e1, e2@center, from_offset = ob_point(0,1), to_offset = ob_point(0, -1)))
-  expect_no_error(connect(e1@center, e2, from_offset = ob_point(0,1), to_offset = ob_point(0, -1)))
+  expect_no_error(connect(
+    e1,
+    e2,
+    from_offset = ob_point(0, 1),
+    to_offset = ob_point(0, -1)
+  ))
+  expect_no_error(connect(
+    e1,
+    e2@center,
+    from_offset = ob_point(0, 1),
+    to_offset = ob_point(0, -1)
+  ))
+  expect_no_error(connect(
+    e1@center,
+    e2,
+    from_offset = ob_point(0, 1),
+    to_offset = ob_point(0, -1)
+  ))
   ## 1 to many
-  expect_no_error(connect(e1, ob_ellipse(x =  2:3, y = 0, a = 1, b = 0.5)))
-  expect_no_error(connect(ob_ellipse(x =  2:3, y = 0, a = 1, b = 0.5), e1))
-  expect_no_error(connect(e1, ob_ellipse(x =  2:3, y = 0, a = 1, b = 0.5), arc_bend = 0.5))
-  expect_no_error(connect(ob_ellipse(x =  2:3, y = 0, a = 1, b = 0.5), e1, arc_bend = 0.5))
+  expect_no_error(connect(e1, ob_ellipse(x = 2:3, y = 0, a = 1, b = 0.5)))
+  expect_no_error(connect(ob_ellipse(x = 2:3, y = 0, a = 1, b = 0.5), e1))
+  expect_no_error(connect(
+    e1,
+    ob_ellipse(x = 2:3, y = 0, a = 1, b = 0.5),
+    arc_bend = 0.5
+  ))
+  expect_no_error(connect(
+    ob_ellipse(x = 2:3, y = 0, a = 1, b = 0.5),
+    e1,
+    arc_bend = 0.5
+  ))
 
   # centerpoint to line
   expect_no_error(connect(e1, ob_line(slope = 3)))
   expect_no_error(connect(ob_line(slope = 3), e1))
 
-
   # list
   expect_no_error(connect(c(e1, e2), ob_circle()))
   expect_no_error(connect(ob_shape_list(c(e1, e2)), ob_circle()))
-  expect_error(connect(list(e1, 2), ob_circle()), "List must contain shape objects.")
-
-
+  expect_error(
+    connect(list(e1, 2), ob_circle()),
+    "List must contain shape objects."
+  )
 
   expect_no_error(connect(c(ob_line(slope = 3)), e1))
 
-  expect_equal(midpoint(e1, e2)@x, ob_point(0,0)@x)
+  expect_equal(midpoint(e1, e2)@x, ob_point(0, 0)@x)
 
-  expect_no_error(ob_variance(e1, theta = 20, where = 90, bend = 10, label = "hello"))
-  expect_no_error(ob_variance(e1, label = "hello", linewidth = 0.2, arrowhead_length = 2))
+  expect_no_error(ob_variance(
+    e1,
+    theta = 20,
+    where = 90,
+    bend = 10,
+    label = "hello"
+  ))
+  expect_no_error(ob_variance(
+    e1,
+    label = "hello",
+    linewidth = 0.2,
+    arrowhead_length = 2
+  ))
 
-  expect_no_error(ob_covariance(e1, e2, where = 90, bend = 10, label = "hello", linewidth = 0.2, arrowhead_length = 2))
-  expect_no_error(ob_covariance(e1, e2, label = "hello", linewidth = 0.2, arrowhead_length = 2))
+  expect_no_error(ob_covariance(
+    e1,
+    e2,
+    where = 90,
+    bend = 10,
+    label = "hello",
+    linewidth = 0.2,
+    arrowhead_length = 2
+  ))
+  expect_no_error(ob_covariance(
+    e1,
+    e2,
+    label = "hello",
+    linewidth = 0.2,
+    arrowhead_length = 2
+  ))
 
   expect_no_error(place(ob_ellipse(label = "e"), ob_circle(label = "c")))
   expect_no_error(place(ob_circle(label = "a"), ob_point()))
-  expect_error(e1[1] <- ob_circle(), "Replacement value must be of the same type.")
-  expect_no_error(e1[1] <- ob_ellipse(label = "e"))
+  expect_error(
+    e1[1] <- ob_circle(),
+    "Replacement value must be of the same type."
+  )
+  expect_no_error({
+    e1[1] <- ob_ellipse(label = "e")
+  })
   e3 <- ob_ellipse(label = "e", id = "id3")
   e3["id3"] <- ob_ellipse()
   expect_equal(e3@id, "id3")
@@ -324,9 +377,6 @@ test_that("ob_ellipse connect", {
   expect_equal(e4@id, "id4")
   e4[1] <- ob_ellipse(id = "id5")
   expect_equal(e4@id, "id5")
-
-
-
 })
 
 # data2shape ----

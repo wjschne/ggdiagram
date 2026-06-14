@@ -84,7 +84,7 @@ lv_names <- lavNames(fit, "lv")
 ob_observed <- redefault(ob_ellipse, m1 = 15)
 ov <- ob_observed() %>% ob_array(
   length(ov_names),
-  sep = .2,
+  sep = 0.2,
   id = ov_names,
   label = ov_names %>%
     snakecase::to_title_case() %>%
@@ -112,7 +112,7 @@ loadings <- d_pt %>%
   select(from = lhs, to = rhs, label = est.std) %>% 
   mutate(from = map(from, \(x) lv[x]),
          to = map(to, \(x) ov[x]),
-         label = map(label, \(x) ob_label(round_probability(x), angle = 0, position = .47))) %>%
+         label = map(label, \(x) ob_label(round_probability(x), angle = 0, position = 0.47))) %>%
   pmap(connect, resect = 2) %>% 
   bind()
 
