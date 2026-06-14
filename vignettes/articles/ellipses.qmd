@@ -31,9 +31,9 @@ my_font <- "Roboto Condensed"
 # gdtools::addGFontHtmlDependency(family = my_font)
 update_geom_defaults("richtext",
                      list(family = my_font, 
-                          size = .8 * 16 / ggplot2::.pt))
+                          size = 0.8 * 16 / ggplot2::.pt))
 
-update_geom_defaults("arrow_segment", list(length_head = 5, linewidth = .5))
+update_geom_defaults("arrow_segment", list(length_head = 5, linewidth = 0.5))
 ```
 
 # Setup
@@ -75,14 +75,14 @@ bp <- ggdiagram(
   font_family = my_font,
   font_size = my_font_size,
   point_size = my_point_size,
-  linewidth = .5,
+  linewidth = 0.5,
   theme_function = theme_minimal,
   axis.title.x =  element_text(face = "italic"),
   axis.title.y = element_text(
     face = "italic",
     angle = 0,
-    hjust = .5,
-    vjust = .5)) +
+    hjust = 0.5,
+    vjust = 0.5)) +
   scale_x_continuous(labels = signs_centered,
                      limits = c(-4, 4)) +
   scale_y_continuous(labels = signs::signs,
@@ -248,7 +248,7 @@ bp +
   {p1 <- c1@point_at(theta)} +
   ob_label(theta, p1, polar_just = ob_polar(theta, r = 1.5)) +
   ob_segment(ob_point(), p1, linewidth = 0.2) +
-  {p2 <- e1@point_at(theta, definitional = T, color = "dodgerblue")} +
+  {p2 <- e1@point_at(theta, definitional = TRUE, color = "dodgerblue")} +
   ob_segment(ob_point(), p2) + 
   ob_label(theta@degree, p2, polar_just = ob_polar(theta, r = 1.5)) +
   theme_void() + 

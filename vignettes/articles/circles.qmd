@@ -31,12 +31,12 @@ my_font <- "Roboto Condensed"
 # gdtools::addGFontHtmlDependency(family = my_font)
 update_geom_defaults("richtext",
                      list(family = my_font, 
-                          size = .8 * 16 / ggplot2::.pt))
+                          size = 0.8 * 16 / ggplot2::.pt))
 
 update_geom_defaults("arrow_segment", list(length_head = 5, 
-                                           linewidth = .5))
+                                           linewidth = 0.5))
 update_geom_defaults("arrow", list(length_head = 5, 
-                                   linewidth = .5))
+                                   linewidth = 0.5))
 ```
 
 # Setup
@@ -79,14 +79,14 @@ bp <- ggdiagram(
   font_family = my_font,
   font_size = my_font_size,
   point_size = my_point_size,
-  linewidth = .5,
+  linewidth = 0.5,
   theme_function = theme_minimal,
   axis.title.x =  element_text(face = "italic"),
   axis.title.y = element_text(
     face = "italic",
     angle = 0,
-    hjust = .5,
-    vjust = .5)) +
+    hjust = 0.5,
+    vjust = 0.5)) +
   scale_x_continuous(labels = signs_centered,
                      limits = c(-4, 4)) +
   scale_y_continuous(labels = signs::signs,
@@ -215,7 +215,7 @@ Multiple circles can be created at once with named directions:
 #| fig-cap: Place mutliple circles using named directions
 bp + 
   {c3 <- ob_circle(ob_point(0, 0), radius = 1)} + 
-  place(ob_circle(radius = .5), 
+  place(ob_circle(radius = 0.5), 
         from = c3, 
         where = c("northwest", 
                   "northeast", 
@@ -231,7 +231,7 @@ Or with numbers (degrees):
 #| fig-cap: Place mutliple circles using degrees
 bp + 
   c3 + 
-  place(ob_circle(radius = .5), 
+  place(ob_circle(radius = 0.5), 
         from = c3, 
         where = c(0, 30, -30), 
         sep = 1)
@@ -271,7 +271,7 @@ bp +
   {p1 <- ob_point(0, 0)} +
   {c6 <- place(
       x = ob_circle(
-        radius = .5,
+        radius = 0.5,
         fill = viridis::viridis(6),
         color = NA
       ),
@@ -284,7 +284,7 @@ bp +
            place(
              from = x,
              where = degree(seq(0, 330, 30)),
-             sep = .5
+             sep = 0.5
            ))
 ```
 

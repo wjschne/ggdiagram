@@ -49,7 +49,7 @@ A variety of color manipulation functions are available. Colors can be darkened:
 ```{r}
 #| label: darken
 ggdiagram() +
-  ob_circle(fill = my_color@darken(.5))
+  ob_circle(fill = my_color@darken(0.5))
 ```
 
 Colors can be lightened:
@@ -57,7 +57,7 @@ Colors can be lightened:
 ```{r}
 #| label: lighten
 ggdiagram() +
-  ob_circle(fill = my_color@lighten(.5))
+  ob_circle(fill = my_color@lighten(0.5))
 ```
 
 Colors can be made transparent:
@@ -65,9 +65,9 @@ Colors can be made transparent:
 ```{r}
 #| label: transparent
 ggdiagram() +
-  ob_circle(fill = my_color@transparentize(.5)) +
-  ob_circle(fill = my_color@transparentize(.5), 
-            center = ob_point(1,0))
+  ob_circle(fill = my_color@transparentize(0.5)) +
+  ob_circle(fill = my_color@transparentize(0.5), 
+            center = ob_point(1, 0))
 ```
 
 Here we create sequences of shades with the `@lighten` and `@darken` properties:
@@ -77,14 +77,14 @@ Here we create sequences of shades with the `@lighten` and `@darken` properties:
 #| fig-height: 2.5
 ggdiagram() + 
   {my_array <- ob_circle(color = NA) %>% 
-    ob_array(fill = my_color@lighten(seq(.1,1,length.out = 5)), 
+    ob_array(fill = my_color@lighten(seq(0.1,1,length.out = 5)), 
              k = 5, 
-             sep = .2)} + 
+             sep = 0.2)} + 
   ob_circle(color = NA) %>% 
-    ob_array(fill = my_color@darken(seq(0,.9,length.out = 5)), 
+    ob_array(fill = my_color@darken(seq(0,0.9,length.out = 5)), 
              k = 5, 
-             sep = .2) %>% 
-    place(my_array, "below", sep = .2) 
+             sep = 0.2) %>% 
+    place(my_array, "below", sep = 0.2) 
 ```
 
 The `@lighten` function makes colors appear the same as `@transparentize` with a white background. This feature can make be useful when text labels need to be placed over transparent shapes. The `@darken` function makes colors appear the same as `@transparentize` with a black background (with `@darken`'s `amount` values subtracted from 1).
@@ -114,7 +114,7 @@ ggdiagram() +
   ob_circle(color = NA) %>%
   ob_array(fill = my_color_array,
            k = 12,
-           sep = .2)
+           sep = 0.2)
 ```
 
 
@@ -124,13 +124,13 @@ We can set an array of colors with the same hue as the original color but with d
 #| label: samehue
 #| fig-height: 1.5
 my_color_array <- class_color(my_color, 
-                              saturation = seq(.1, .6, .1))
+                              saturation = seq(0.1, 0.6, 0.1))
 
 ggdiagram() +
   ob_circle(color = NA) %>%
   ob_array(fill = my_color_array, 
            k = 6, 
-           sep = .2)
+           sep = 0.2)
 ```
 
 Alternately, the RGB (Red/Green/Blue) color properties can also be retrieved or set. Values are integers ranging from 0 to 255.
