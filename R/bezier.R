@@ -112,7 +112,7 @@ bz_props <- list(
       }
     }),
     midpoint = S7::new_property(S7::class_function, getter = function(self) {
-      \(position = .5, ...) {
+      \(position = 0.5, ...) {
         midpoint(self, position = position, ...)
       }
     }),
@@ -237,7 +237,7 @@ bz_props <- list(
           }
           if (is.null(x)) {
             if (is.null(position)) {
-              position <- .5
+              position <- 0.5
             }
             x <- self[1]@midpoint(position)@x
           }
@@ -267,7 +267,7 @@ bz_props <- list(
           }
           if (is.null(y)) {
             if (is.null(position)) {
-              position <- .5
+              position <- 0.5
             }
               y <- self[1]@midpoint(position)@y
           }
@@ -580,7 +580,7 @@ S7::method(get_tibble_defaults, ob_bezier) <- function(x) {
     ),
     lineend = "butt",
     linejoin = "round",
-    linewidth = replace_na(ggarrow::GeomArrow$default_aes$linewidth, .5),
+    linewidth = replace_na(ggarrow::GeomArrow$default_aes$linewidth, 0.5),
     linewidth_head = replace_na(ggarrow::GeomArrow$default_aes$linewidth, 1),
     linewidth_fins = replace_na(ggarrow::GeomArrow$default_aes$linewidth, 1),
     linetype = replace_na(ggarrow::GeomArrow$default_aes$linetype, 1),
@@ -696,7 +696,7 @@ S7::method(`[`, ob_bezier) <- function(x, i) {
 S7::method(midpoint, list(ob_bezier, S7::class_missing)) <- function(
   x,
   y,
-  position = .5,
+  position = 0.5,
   ...
 ) {
   purrr::map2(x@p, position, \(xx, pos) {

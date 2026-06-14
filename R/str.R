@@ -27,7 +27,7 @@ obj_desc <- function(x) { # nocov start
 # from S7 internals
 str_function <- function(object, ..., nest.lev = 0) {
   attr(object, "srcref") <- NULL
-  if (identical(class(object), "function")) {
+  if (inherits(object, "function")) {
     cat(" ")
   }
   utils::str(object, ..., nest.lev = nest.lev)

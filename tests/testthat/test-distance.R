@@ -39,7 +39,7 @@ test_that("distances", {
   ## point at center == radius
   expect_identical(distance(p1, c1), c1@radius)
   ## point inside circle to closest point
-  expect_identical(distance(p1 + ob_point(.5,0), c1), .5)
+  expect_identical(distance(p1 + ob_point(0.5,0), c1), 0.5)
   ## point on circle
   expect_identical(distance(c1@point_at(0), c1), 0)
   ## point outside circle
@@ -51,7 +51,7 @@ test_that("distances", {
   expect_identical(distance(c1, c2), 1)
 
   ## intersecting circles
-  expect_identical(distance(ob_point(.5, 0) + c1, c1), 0)
+  expect_identical(distance(ob_point(0.5, 0) + c1, c1), 0)
 
   ## identical circles
   expect_identical(distance(c1, c1), 0)

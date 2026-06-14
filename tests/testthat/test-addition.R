@@ -126,7 +126,7 @@ test_that("adding", {
 
 test_that("resect", {
   s1 <- ob_segment(ob_polar(0, 0), ob_polar(theta = 0, r = 1))
-  expect_equal(resect(s1, distance(s1) * .05), ob_segment(ob_polar(0, .05), ob_polar(0, 0.95)))
+  expect_equal(resect(s1, distance(s1) * 0.05), ob_segment(ob_polar(0, 0.05), ob_polar(0, 0.95)))
 })
 
 test_that("inside", {
@@ -138,7 +138,7 @@ test_that("inside", {
   expect_equal(inside(ob_point(0, 2), r1), 0)
   expect_equal(inside(ob_point(0, 1.5), r1), 1)
   expect_equal(inside(ob_point(1.5, 1.5), r1), -1)
-  expect_equal(inside(ob_point(.5, 2.5), r1), -1)
+  expect_equal(inside(ob_point(0.5, 2.5), r1), -1)
 
   c1 <- ob_circle(ob_point(1, 1), radius = sqrt(2))
   expect_equal(inside(ob_point(1, 1), c1), 1)

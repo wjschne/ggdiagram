@@ -4,21 +4,21 @@ library(ggdiagram)
 test_that("rotate", {
 
   # rotate a line with an angle
-  expect_identical(rotate(ob_line(xintercept = 2), turn(turn = .5)), ob_line(xintercept = -2))
+  expect_identical(rotate(ob_line(xintercept = 2), turn(turn = 0.5)), ob_line(xintercept = -2))
   # rotate a line with a numeric degree
-  expect_equal(rotate(ob_line(xintercept = 2), turn(turn = .5)), rotate(ob_line(xintercept = 2), 180))
+  expect_equal(rotate(ob_line(xintercept = 2), turn(turn = 0.5)), rotate(ob_line(xintercept = 2), 180))
 
   # rotate an ob_point
-  expect_equal(rotate(ob_point(1, 0), turn(turn = .5)), ob_point(-1, 0))
+  expect_equal(rotate(ob_point(1, 0), turn(turn = 0.5)), ob_point(-1, 0))
 
   # rotate a segment
-  expect_equal(rotate(ob_segment(ob_point(0, 1), ob_point(1, 0)), theta = turn(.5)),
+  expect_equal(rotate(ob_segment(ob_point(0, 1), ob_point(1, 0)), theta = turn(0.5)),
                ob_segment(ob_point(0, -1), ob_point(-1, 0)))
 
   # rotate a circle
-  expect_equal(rotate(x = ob_circle(ob_point(1, 2)), theta = turn(.25)), ob_circle(ob_point(-2, 1)))
+  expect_equal(rotate(x = ob_circle(ob_point(1, 2)), theta = turn(0.25)), ob_circle(ob_point(-2, 1)))
 
-  expect_equal(rotate(x = ob_circle(ob_point(1, 2), n = 50), theta = turn(.25)),
+  expect_equal(rotate(x = ob_circle(ob_point(1, 2), n = 50), theta = turn(0.25)),
                ob_circle(ob_point(-2, 1), n = 50))
 
   # rotate an ellipse
@@ -28,13 +28,13 @@ test_that("rotate", {
       a = 2,
       b = 1
     ),
-    theta = radian(.5 * pi)
+    theta = radian(0.5 * pi)
   ),
   ob_ellipse(
     ob_point(-2, 1),
     a = 2,
     b = 1,
-    angle = radian(.5 * pi)
+    angle = radian(0.5 * pi)
   ))
 
   # rotate bezier

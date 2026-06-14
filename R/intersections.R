@@ -285,7 +285,7 @@ S7::method(intersection, list(ob_point, ob_line)) <- function(x, y, ...) {
   ) |>
     dplyr::pull(is_on)
 
-  if (all(!is_on_line)) {
+  if (!any(is_on_line)) {
     ob_point(double(0), double(0))
   } else {
     s <- rlang::list2(...)
@@ -606,8 +606,8 @@ S7::method(intersection, list(ob_segment, ob_rectangle)) <- function(
     y,
     ...
 ) {
-  y@width <- ifelse(y@width == 0, .0001, y@width)
-  y@height <- ifelse(y@height == 0, .0001, y@height)
+  y@width <- ifelse(y@width == 0, 0.0001, y@width)
+  y@height <- ifelse(y@height == 0, 0.0001, y@height)
 
   unique(c(
     intersection(x, ob_segment(p1 = y@northeast, p2 = y@northwest), ...),
@@ -807,7 +807,7 @@ S7::method(intersection, list(centerpoint, centerpoint)) <- function(
     th <- tibble::tibble(
       x = unbind(xx),
       y = unbind(yy),
-      theta1 = seq(0, 360, .1),
+      theta1 = seq(0, 360, 0.1),
       theta2 = lead_cycle(theta1),
       i1 = inside(xx@point_at(theta1), yy),
       i2 = lead_cycle(i1),

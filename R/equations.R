@@ -38,8 +38,8 @@ ob_latex <- S7::new_class(
       getter = function(self) {
         cc <- rotate(
           ob_point(
-            (self@hjust - .5) * -1 * self@width,
-            (self@vjust - .5) * -1 * self@height
+            (self@hjust - 0.5) * -1 * self@width,
+            (self@vjust - 0.5) * -1 * self@height
           ),
           self@angle
         ) +
@@ -87,8 +87,8 @@ ob_latex <- S7::new_class(
     center = ob_point(0, 0),
     width = numeric(0),
     height = numeric(0),
-    hjust = .5,
-    vjust = .5,
+    hjust = 0.5,
+    vjust = 0.5,
     angle = 0,
     aspect_ratio = 1,
     border = numeric(0),
@@ -299,7 +299,7 @@ S7::method(as.geom, ob_latex) <- function(x, ...) {
     ),
     \(i, width, height, center, angle, hjust, vjust, fill) {
       cc <- rotate(
-        ob_point((hjust - .5) * -1 * width, (vjust - .5) * -1 * height),
+        ob_point((hjust - 0.5) * -1 * width, (vjust - 0.5) * -1 * height),
         angle
       ) +
         center

@@ -94,7 +94,7 @@ pt_props <- list(
       }
     }),
     label = S7::new_property(S7::class_function, getter = function(self) {
-      \(label = NULL, accuracy = .1, ...) {
+      \(label = NULL, accuracy = 0.1, ...) {
         if (is.null(label)) {
           label = label_object(self, accuracy)
         }
@@ -451,7 +451,7 @@ purrr::walk(list(`+`, `-`, `*`, `/`, `^`), \(.f) {
 S7::method(midpoint, list(ob_point, ob_point)) <- function(
   x,
   y,
-  position = .5,
+  position = 0.5,
   ...
 ) {
   p <- x + ((y - x) * position)
@@ -510,7 +510,7 @@ S7::method(`%-|%`, list(ob_point, ob_point)) <- function(e1, e2) {
   e2
 }
 
-S7::method(label_object, ob_point) <- function(object, accuracy = .1) {
+S7::method(label_object, ob_point) <- function(object, accuracy = 0.1) {
   if (rlang::is_integerish(object@x)) {
     x <- signs::signs(object@x)
   } else {
@@ -623,7 +623,7 @@ S7::method(connect, list(ob_point, ob_point)) <- function(
     m_arc <- ob_polar(theta_arc, r = 0.5 * chord_distance * abs(arc_bend)) + m
     sagitta_distance <- distance(m, m_arc)
     r_arc <- sagitta_distance / 2 + (chord_distance^2) / (8 * sagitta_distance)
-    center <- m_arc + ob_polar(theta_arc - turn(.5), r_arc)
+    center <- m_arc + ob_polar(theta_arc - turn(0.5), r_arc)
     cc <- ob_circle(center = center, radius = distance(from, center))
     theta_start <- cc@angle_at(from)@positive
     theta_end <- cc@angle_at(to)@positive

@@ -29,7 +29,7 @@ test_that("ob_polygon construction", {
   expect_error(pg@vertex_radius <- c(2,2), "The vertex_radius property must be of length 1.")
   pg@style <- ob_style(color = "red")
   expect_identical(pg@color, "red")
-  expect_identical(pg@point_at(-90), ob_point(.5,0))
+  expect_identical(pg@point_at(-90), ob_point(0.5,0))
   expect_identical(ob_polygon(pts, label = ob_label("a", fill = "red"))@label@fill, "red")
   expect_identical(ob_polygon(pts, label = ob_label(c("a", "b")))@length, 2L)
 

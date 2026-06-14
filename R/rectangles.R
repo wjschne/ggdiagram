@@ -1,7 +1,7 @@
 #' @keywords internal
 #' @noRd
 find_side <- function(theta, width = 1, height = 1) {
-  my_pi <- turn(.5)
+  my_pi <- turn(0.5)
   if (!S7::S7_inherits(theta, ob_angle)) {
     theta <- radian(theta)
   }

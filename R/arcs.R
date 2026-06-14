@@ -317,7 +317,7 @@ arc_props <- list(
     auto_label = S7::new_property(S7::class_function, getter = function(self) {
       \(
         label = as.character(degree(self@theta)),
-        position = .5,
+        position = 0.5,
         polar_just_angle = (self@midpoint(position) - self@center)@theta,
         polar_just_distance = 1.4,
         ...
@@ -335,7 +335,7 @@ arc_props <- list(
       }
     }),
     hatch = S7::new_property(S7::class_function, getter = function(self) {
-      \(k = 1, sep = .05, height = .1, position = .5, ...) {
+      \(k = 1, sep = 0.05, height = 0.1, position = 0.5, ...) {
         h <- map_ob(self, \(s) {
           m <- s@midpoint(position = position)
           m_theta <- (m - s@center)@theta
@@ -356,7 +356,7 @@ arc_props <- list(
       }
     }),
     midpoint = S7::new_property(S7::class_function, getter = function(self) {
-      \(position = .5, ...) {
+      \(position = 0.5, ...) {
         m <- self@start@turn + (self@theta@turn * position)
         self@center +
           ob_polar(
@@ -860,7 +860,7 @@ S7::method(get_tibble_defaults, ob_arc) <- function(x) {
     ),
     lineend = "butt",
     linejoin = "round",
-    linewidth = replace_na(ggarrow::GeomArrow$default_aes$linewidth, .5),
+    linewidth = replace_na(ggarrow::GeomArrow$default_aes$linewidth, 0.5),
     linewidth_head = replace_na(ggarrow::GeomArrow$default_aes$linewidth, 1),
     linewidth_fins = replace_na(ggarrow::GeomArrow$default_aes$linewidth, 1),
     linetype = replace_na(ggarrow::GeomArrow$default_aes$linetype, 1),
@@ -876,7 +876,7 @@ S7::method(get_tibble_defaults, ob_arc) <- function(x) {
 S7::method(midpoint, list(ob_arc, S7::class_missing)) <- function(
   x,
   y,
-  position = .5,
+  position = 0.5,
   ...
 ) {
   x@midpoint(position = position, ...)

@@ -315,10 +315,10 @@ test_that("intersection: line by circle", {
   expect_equal(intersection(c1, l1), bind(c(p1, p2))) # same points
   expect_equal(intersection(l2, c1), ob_point(2, 1)) # 1 point at tangent
 
-  l1 <- ob_line(slope = .5, intercept = 0)
+  l1 <- ob_line(slope = 0.5, intercept = 0)
   c1 <- ob_circle(ob_point(0, 0), radius = 1)
     expect_equal(intersection(l1, c1), bind(c(
-    ob_point(x = cos(atan(.5)), y = sin(atan(.5))), ob_point(x = -cos(atan(.5)), y = -sin(atan(.5))) # 2 points at sloped line intersection
+    ob_point(x = cos(atan(0.5)), y = sin(atan(0.5))), ob_point(x = -cos(atan(0.5)), y = -sin(atan(0.5))) # 2 points at sloped line intersection
   )))
 })
 
@@ -461,9 +461,9 @@ test_that("intersection: line × path — symmetric dispatch", {
 test_that("intersection: segment × segment — crossing segments", {
   s1 <- ob_segment(ob_point(0, 1), ob_point(1, 0))
   s2 <- ob_segment(ob_point(0, 0), ob_point(1, 1))
-  s3 <- ob_segment(ob_point(0.1, .1), ob_point(.9, .9))
+  s3 <- ob_segment(ob_point(0.1, 0.1), ob_point(0.9, 0.9))
   s4 <- ob_segment(ob_point(1, 1), ob_point(2, 2))
-  p1 <- ob_point(.5, .5)
+  p1 <- ob_point(0.5, 0.5)
   expect_equal(intersection(s1, s2), p1) # normal intersection
   expect_equal(intersection(s1@line, s2), p1) # intersects at line
   expect_equal(intersection(s1, s2@line), p1) # intersects at line
@@ -728,7 +728,7 @@ test_that("intersection: circle × arc — same center, same radius", {
 
 test_that("intersection: circle × ellipse", {
   c1 <- ob_circle()
-  e1 <- ob_ellipse(a = .5, b = 2)
+  e1 <- ob_ellipse(a = 0.5, b = 2)
   i <- intersection(c1, e1)
   ggdiagram() + c1 + e1 + i
   expect_length(i, 4L)
@@ -780,7 +780,7 @@ test_that("intersection: arc × arc — overlap", {
 
 test_that("intersection: arc × ellipse — symmetric dispatch", {
   a1 <- ob_arc(center = ob_point(0, 0), radius = 1, start = 0, end = 180)
-  e1 <- ob_ellipse(ob_point(.5, 0))
+  e1 <- ob_ellipse(ob_point(0.5, 0))
   r1 <- intersection(a1, e1)
   r2 <- intersection(e1, a1)
   expect_equal(r1@x, r2@x, tolerance = 1e-6)

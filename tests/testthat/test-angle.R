@@ -5,31 +5,31 @@ library(testthat)
 test_that("add, subtract, multiply, divide, and exponentiate degrees, radians, and turns",
           {
             purrr::map(list(degree, radian, turn), \(.f) {
-              expect_equal(S7::prop(.f(.1), S7::S7_class(.f(0))@name), .1)
-              expect_equal(.f(.1) + .f(.1), .f(.2))
-              expect_equal(.f(.1) - .f(.1), .f(0))
-              expect_equal(.f(.1) * .1, .f(.01))
-              expect_equal(.f(.1) / 2, .f(.05))
-              expect_equal(.f(.1)^2, .f(.01))
+              expect_equal(S7::prop(.f(0.1), S7::S7_class(.f(0))@name), 0.1)
+              expect_equal(.f(0.1) + .f(0.1), .f(0.2))
+              expect_equal(.f(0.1) - .f(0.1), .f(0))
+              expect_equal(.f(0.1) * 0.1, .f(0.01))
+              expect_equal(.f(0.1) / 2, .f(0.05))
+              expect_equal(.f(0.1)^2, .f(0.01))
             })
           })
 
 test_that("ob_angle equality", {
   expect_equal(c(degree(90)), c(ob_angle(degree = 90)))
   expect_equal(c(radian(1)), c(ob_angle(radian = 1)))
-  expect_equal(c(turn(.1)), c(ob_angle(turn = .1)))
+  expect_equal(c(turn(0.1)), c(ob_angle(turn = 0.1)))
 })
 
 
 
 test_that("trig functions work with ob_angle", {
   expect_equal(cos(turn(1)), cospi(2))
-  expect_equal(sin(turn(.25)), sinpi(.5))
-  expect_equal(tan(turn(.5)), tanpi(1))
+  expect_equal(sin(turn(0.25)), sinpi(0.5))
+  expect_equal(tan(turn(0.5)), tanpi(1))
 })
 
 test_that("cardinal point", {
-  expect_identical(ob_angle(.25), ob_angle("north"))
+  expect_identical(ob_angle(0.25), ob_angle("north"))
 })
 
 test_that("equality with ob_angle", {
@@ -39,8 +39,8 @@ test_that("equality with ob_angle", {
   ),
   .g = list(`>`, `<`, `<=`, `>=`, `==`, `!=`)) |>
     dplyr::mutate(
-      t1 = .2,
-      t2 = .3,
+      t1 = 0.2,
+      t2 = 0.3,
       a1 = purrr::map2(.f, t1, \(f, t) f(t)),
       a2 = purrr::map2(.f, t2, \(f, t) f(t)),
       n1 = ratio * t1,
@@ -106,11 +106,11 @@ test_that("misc angle", {
   expect_identical(as.character(radian(-pi)), "−π")
   expect_identical(as.character(radian(2 * pi)), "0π")
   expect_identical(as.character(radian(-2 * pi)), "0π")
-  expect_identical(as.character(radian(-.1 * pi)), "−0.1π")
-  expect_identical(as.character(turn(.5)), ".50")
+  expect_identical(as.character(radian(-0.1 * pi)), "−0.1π")
+  expect_identical(as.character(turn(0.5)), ".50")
   expect_identical(as.character(turn(0)), "0")
   expect_identical(as.character(turn(1)), "0")
-  expect_identical(as.character(turn(-.5)), "−.50")
+  expect_identical(as.character(turn(-0.5)), "−.50")
   a <- degree(0)
   a@degree <- 20
   expect_identical(a@degree, 20)

@@ -103,7 +103,7 @@ ob_angle <- new_class(
     }),
     upright = new_property(getter = \(self) {
       p <- c(self@positive)
-      p[p > .25 & p <= .75] <- p[p > .25 & p <= .75] + .5
+      p[p > 0.25 & p <= 0.75] <- p[p > 0.25 & p <= 0.75] + 0.5
       S7::convert(ob_angle(p)@positive, S7::S7_class(self))
 
 

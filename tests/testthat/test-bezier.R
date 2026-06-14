@@ -221,16 +221,16 @@ test_that("from and to offset with direction words", {
   expect_no_error(bz@set_label_x())
   expect_no_error(bz@set_label_y())
   # Positions
-  expect_no_error(bz@set_label_x(position = .2))
-  expect_no_error(bz@set_label_y(position = .1))
+  expect_no_error(bz@set_label_x(position = 0.2))
+  expect_no_error(bz@set_label_y(position = 0.1))
   # Position outside of range
   expect_true(is.na(bz@set_label_x(position = 2)@label@center@x))
   expect_true(is.na(bz@set_label_y(position = -1)@label@center@x))
 
   # x and y
 
-  expect_equal(bz@set_label_y(y = -.2)@label@center@y, -.2, tolerance = 1e-04)
-  expect_no_error(bz@set_label_y(y = .2))
+  expect_equal(bz@set_label_y(y = -.2)@label@center@y, -0.2, tolerance = 1e-04)
+  expect_no_error(bz@set_label_y(y = 0.2))
   # x and y out of range
   expect_true(is.na(bz@set_label_x(x = 2)@label@center@x))
   expect_true(is.na(bz@set_label_y(y = .2)@label@center@y))

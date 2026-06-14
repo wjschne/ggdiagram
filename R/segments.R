@@ -120,7 +120,7 @@ sg_props <- list(
       }
     }),
     hatch = S7::new_property(S7::class_function, getter = function(self) {
-      \(k = 1, sep = .05, height = .05, position = .5, ...) {
+      \(k = 1, sep = 0.05, height = 0.05, position = 0.5, ...) {
         h <- map_ob(self, \(s) {
           m <- s@midpoint(position = position)
           p_center <- ob_array(m, k = k, sep = sep, where = s@line@angle)
@@ -136,7 +136,7 @@ sg_props <- list(
     midpoint = S7::new_property(
       S7::class_function,
       getter = function(self) {
-        \(position = .5, ...) midpoint(self, position = position, ...)
+        \(position = 0.5, ...) midpoint(self, position = position, ...)
       }
     ),
     nudge = S7::new_property(
@@ -411,7 +411,7 @@ ob_segment <- S7::new_class(
         d <- dplyr::mutate(d, arrow_fins = purrr::map(arrow_fins, class_arrowhead))
       }
     }
-    pos <- .5
+    pos <- 0.5
 
     if (S7::S7_inherits(label, ob_label)) {
       pos <- label@position
@@ -530,7 +530,7 @@ S7::method(str, ob_segment) <- function(
 S7::method(midpoint, list(ob_segment, S7::class_missing)) <- function(
   x,
   y,
-  position = .5,
+  position = 0.5,
   ...
 ) {
   x@p1@style <- x@p1@style + x@style
@@ -563,7 +563,7 @@ S7::method(get_tibble_defaults, ob_segment) <- function(x) {
     ),
     lineend = "butt",
     linejoin = "round",
-    linewidth = replace_na(ggarrow::GeomArrowSegment$default_aes$linewidth, .5),
+    linewidth = replace_na(ggarrow::GeomArrowSegment$default_aes$linewidth, 0.5),
     linewidth_head = replace_na(
       ggarrow::GeomArrowSegment$default_aes$linewidth,
       1
@@ -605,7 +605,7 @@ S7::method(resect, list(ob_segment, S7::class_numeric)) <- function(
 ) {
   d <- x@p2 - x@p1
   x@p1 <- x@p1 + ob_polar(theta = d@theta, r = distance)
-  x@p2 <- x@p2 + ob_polar(theta = d@theta + turn(.5), r = distance_end)
+  x@p2 <- x@p2 + ob_polar(theta = d@theta + turn(0.5), r = distance_end)
   x
 }
 

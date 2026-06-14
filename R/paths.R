@@ -147,7 +147,7 @@ path_props <- list(
       }
     }),
     midpoint = S7::new_property(S7::class_function, getter = function(self) {
-      \(position = .5, ...) midpoint(self, position = position, ...)
+      \(position = 0.5, ...) midpoint(self, position = position, ...)
     })
   ),
   # info ----
@@ -412,7 +412,7 @@ S7::method(as.geom, ob_path) <- function(x, ...) {
 
     if (!("hjust" %in% colnames(d))) {
       pos <- x@label@position
-      pos[is.na(pos)] <- .5
+      pos[is.na(pos)] <- 0.5
       d <- dplyr::mutate(d, hjust = pos)
     }
 
@@ -482,7 +482,7 @@ S7::method(str, ob_path) <- function(
 S7::method(midpoint, list(ob_path, S7::class_missing)) <- function(
     x,
     y,
-    position = .5,
+    position = 0.5,
     ...
 ) {
   purrr::map2(unbind(x), position, \(xx, pos) {

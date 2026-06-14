@@ -235,7 +235,7 @@ test_that("helpers", {
 
   expect_identical(round_probability(NA_real_, digits = 2, max_digits = 5), "")
 
-  expect_identical(round_probability(.0002, digits = 2, max_digits = 3), "0")
+  expect_identical(round_probability(0.0002, digits = 2, max_digits = 3), "0")
   expect_identical(
     round_probability(0, digits = 2, max_digits = 3, round_zero_one = F),
     ".000"

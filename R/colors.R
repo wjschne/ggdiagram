@@ -42,7 +42,7 @@ class_color <- S7::new_class(
     transparentize = S7::new_property(
       class = S7::class_function,
       getter = function(self) {
-        \(alpha = .5) class_color(scales::alpha(alpha = alpha, colour = self))
+        \(alpha = 0.5) class_color(scales::alpha(alpha = alpha, colour = self))
       }
     ),
     lighten = S7::new_property(
@@ -221,7 +221,7 @@ class_color <- S7::new_class(
       # Make sure hue is between 0 and 360
       hue <- degree(hue)@positive@degree
       # Make sure hue is of same length as color
-      max_length <- purrr::map_int(d, length) |> max()
+      max_length <- lengths(d) |> max()
       if (max_length == 1 | max_length == length(hue) | length(hue) == 1) {
         d$h <- hue
       } else {
@@ -233,7 +233,7 @@ class_color <- S7::new_class(
       # Make sure saturation is between 0 and 1
       saturation <- ifelse(abs(saturation) > 1, 1, abs(saturation))
       # Make sure saturation is of same length as color
-      max_length <- purrr::map_int(d, length) |> max()
+      max_length <- lengths(d) |> max()
       if (
         max_length == 1 |
           max_length == length(saturation) |
@@ -249,7 +249,7 @@ class_color <- S7::new_class(
       # Make sure brightness is between 0 and 1
       brightness <- ifelse(abs(brightness) > 1, 1, abs(brightness))
       # Make sure brightness is of same length as color
-      max_length <- purrr::map_int(d, length) |> max()
+      max_length <- lengths(d) |> max()
       if (
         max_length == 1 |
           max_length == length(brightness) |
@@ -265,7 +265,7 @@ class_color <- S7::new_class(
       # Make sure alpha is between 0 and 1
       alpha <- ifelse(abs(alpha) > 1, 1, abs(alpha))
       # Make sure alpha is of same length as color
-      max_length <- purrr::map_int(d, length) |> max()
+      max_length <- lengths(d) |> max()
       if (max_length == 1 | max_length == length(alpha) | length(alpha) == 1) {
         d$alpha <- alpha
       } else {

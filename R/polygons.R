@@ -285,7 +285,7 @@ ob_polygon <- S7::new_class(
         }
         if (
           length(label@fill) == 0 ||
-            all(label@fill == "white") && all(!is.na(label@fill))
+            all(label@fill == "white") && !anyNA(label@fill)
         ) {
           label@fill <- d[["fill"]] %||% fill
         }
@@ -1403,13 +1403,13 @@ ob_intercept <- S7::new_class(
       self@side_length
     }),
     top = S7::new_property(getter = function(self) {
-      self@center + ob_polar(degree(90), r = self@width * .5 / cos(degree(30)))
+      self@center + ob_polar(degree(90), r = self@width * 0.5 / cos(degree(30)))
     }),
     left = S7::new_property(getter = function(self) {
-      self@center + ob_polar(degree(210), r = self@width * .5 / cos(degree(30)))
+      self@center + ob_polar(degree(210), r = self@width * 0.5 / cos(degree(30)))
     }),
     right = S7::new_property(getter = function(self) {
-      self@center + ob_polar(degree(330), r = self@width * .5 / cos(degree(30)))
+      self@center + ob_polar(degree(330), r = self@width * 0.5 / cos(degree(30)))
     }),
   ),
   constructor = function(
@@ -1675,7 +1675,7 @@ ob_reuleaux <- S7::new_class(
         i_arc <- floor(c(th) / c(self@central_angle))
         a_start <- i_arc * self@central_angle + self@angle
         a_end <- a_start + self@central_angle
-        a_center <- a_start + (self@central_angle / 2) + turn(.5)
+        a_center <- a_start + (self@central_angle / 2) + turn(0.5)
         p_center <- ob_polar(a_center, self@radius) + self@center
         p_start <- ob_polar(a_start, self@radius) + self@center
         p_end <- ob_polar(a_end, self@radius) + self@center
@@ -1842,7 +1842,7 @@ S7::method(get_tibble, ob_reuleaux) <- function(x) {
           s <- purrr::map_df(theta, \(th) {
             start <- degree(th)
             end <- start + degree(ntheta)
-            opposite <- start + degree(ntheta / 2) + turn(.5)
+            opposite <- start + degree(ntheta / 2) + turn(0.5)
             p_start <- ob_polar(start, r)
             p_end <- ob_polar(end, r)
             p_opposite <- ob_polar(opposite, r)

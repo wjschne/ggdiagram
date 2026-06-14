@@ -5,7 +5,7 @@ do_nothing <- function(x) {
     p1 <- ggforce::geom_circle()
     p2 <- arrowheadr::arrow_head_deltoid(d = 2.3, n = 100)
     p3 <- geomtextpath::geom_labelcurve()
-    p4 <- bezier::bezier(t = .5, p = c(0, 0, 1, 1))
+    p4 <- bezier::bezier(t = 0.5, p = c(0, 0, 1, 1))
     p5 <- tinter::tinter("red")
   }
   # nocov end
@@ -1015,7 +1015,7 @@ ob_array_helper <- function(
 #' superscript("A", 2)
 subscript <- function(
   x,
-  subscript = seq(length(x)),
+  subscript = seq_along(x),
   output = c("markdown", "latex")
 ) {
   output <- match.arg(output)
@@ -1037,7 +1037,7 @@ subscript <- function(
 #' @export
 superscript <- function(
   x,
-  superscript = seq(length(x)),
+  superscript = seq_along(x),
   output = c("markdown", "latex")
 ) {
   output <- match.arg(output)
@@ -1488,7 +1488,7 @@ projection <- S7::new_generic("projection", c("p", "object"))
 midpoint <- S7::new_generic(
   "midpoint",
   c("x", "y"),
-  fun = function(x, y, position = .5, ...) {
+  fun = function(x, y, position = 0.5, ...) {
     S7::S7_dispatch()
   }
 )
@@ -1610,7 +1610,7 @@ place <- S7::new_generic(
 ggdiagram <- function(
   font_family = "sans",
   font_size = 11,
-  linewidth = .5,
+  linewidth = 0.5,
   point_size = 1.5,
   rect_linewidth = linewidth,
   theme_function = ggplot2::theme_void,

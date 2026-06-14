@@ -381,8 +381,8 @@ test_that("ob_arc set_label_x and set_label_y", {
   expect_no_error(a_lbl@set_label_x(position = 0.25))
   expect_no_error(a_lbl@set_label_y(position = 0.75))
 
-  a <- ob_arc(start = 0, end = 90, radius = 1, label = ob_label("A", hjust = .5))
-  b <- ob_arc(start = 0, end = 90, radius = 1, label = ob_label("B", vjust = .5))
+  a <- ob_arc(start = 0, end = 90, radius = 1, label = ob_label("A", hjust = 0.5))
+  b <- ob_arc(start = 0, end = 90, radius = 1, label = ob_label("B", vjust = 0.5))
   expect_identical(a@label@center@x, b@label@center@x)
 
   as.geom(ob_arc(arrowhead_length = 5, arrow_head = arrowhead(), label = "A", label_sloped = TRUE))

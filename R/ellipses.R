@@ -29,7 +29,7 @@ el_props <- list(
           d = purrr::pmap(
             list(x0 = x, y0 = y, a = a, b = b, angle = angle, m1 = m1, m2 = m2),
             \(x0, y0, a, b, angle, m1, m2) {
-              th <- degree(seq(0, 359.5, .5))
+              th <- degree(seq(0, 359.5, 0.5))
               cs <- cos(th)
               sn <- sin(th)
               x <- a * (abs(cs)^(2 / m1)) * sign(cs)
@@ -1025,7 +1025,7 @@ S7::method(connect, list(S7::class_list, centerpoint)) <- function(
 S7::method(midpoint, list(centerpoint, centerpoint)) <- function(
   x,
   y,
-  position = .5,
+  position = 0.5,
   ...
 ) {
   midpoint(connect(x, y), position = position, ...)
@@ -1124,7 +1124,7 @@ S7::method(ob_variance, centerpoint) <- function(
   }
 
   if (is.null(dots$linewidth)) {
-    lw <- .5
+    lw <- 0.5
   } else {
     lw <- dots$linewidth
     dots$linewidth <- NULL

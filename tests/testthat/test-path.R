@@ -32,7 +32,7 @@ test_that("ob_path construction", {
     pts,
     label = ob_label("a",
                      label.padding = ggplot2::margin(1, 1, 1, 1),
-                     hjust = .45,
+                     hjust = 0.45,
                      label.color = "blue"),
     arrowhead_length = 2
   )
@@ -44,7 +44,7 @@ test_that("ob_path construction", {
     label = ob_label("a",
                      label.padding = ggplot2::margin(1, 1, 1, 1),
                      position = NA_real_,
-                     hjust = .45,
+                     hjust = 0.45,
                      label.color = "blue"),
     arrowhead_length = 2
   )
@@ -221,7 +221,7 @@ test_that("ob_path bounding_box", {
   pts <- ob_point(c(0, 1, 2), c(0, 1, 0))
   bb <- ob_path(pts)@bounding_box
   expect_equal(bb@center@x, 1)
-  expect_equal(bb@center@y, .5)
+  expect_equal(bb@center@y, 0.5)
   expect_equal(bb@width, 2)
   expect_equal(bb@height, 1)
 })

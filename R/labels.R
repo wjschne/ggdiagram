@@ -260,7 +260,7 @@ ob_label <- S7::new_class(
     vjust = numeric(0),
     style = S7::class_missing,
     plot_point = FALSE,
-    position = .5,
+    position = 0.5,
     spacing = numeric(0),
     x = S7::class_missing,
     y = S7::class_missing,
@@ -331,13 +331,13 @@ ob_label <- S7::new_class(
           ifelse(
             rlang::is_integerish(center@x),
             center@x,
-            signs::signs(center@x, accuracy = .1)
+            signs::signs(center@x, accuracy = 0.1)
           ),
           ",",
           ifelse(
             rlang::is_integerish(center@y),
             center@y,
-            signs::signs(center@y, accuracy = .1)
+            signs::signs(center@y, accuracy = 0.1)
           ),
           ")"
         )
@@ -404,7 +404,7 @@ ob_label <- S7::new_class(
       l_style <- l_style +
         ob_style(
           polar2just = ob_polar(
-            theta = (center - alt_center@center)@theta + turn(.5),
+            theta = (center - alt_center@center)@theta + turn(0.5),
             r = 1.15
           )
         )
@@ -586,17 +586,17 @@ S7::method(get_tibble_defaults, ob_label) <- function(x) {
     family = replace_na(ggtext::GeomRichText$default_aes$family, "sans"),
     fill = "fill",
     fontface = "plain",
-    hjust = .5,
+    hjust = 0.5,
     label.color = "black",
     label.margin = class_margin(ggplot2::margin(2, 2, 2, 2, "pt")),
     label.padding = class_margin(ggplot2::margin(1, 1, 1, 1, "pt")),
-    label.size = .25,
+    label.size = 0.25,
     lineheight = 1.2,
     nudge_x = 0,
     nudge_y = 0,
     size = 11,
     text.color = "black",
-    vjust = .5
+    vjust = 0.5
   )
   get_tibble_defaults_helper(x, sp, required_aes = c("x", "y", "label"))
 }
@@ -627,7 +627,7 @@ S7::method(as.geom, ob_label) <- function(x, ...) {
   gl
 }
 
-S7::method(label_object, ob_label) <- function(object, accuracy = .1) {
+S7::method(label_object, ob_label) <- function(object, accuracy = 0.1) {
   label_object(object@center, accuracy = accuracy)
 }
 

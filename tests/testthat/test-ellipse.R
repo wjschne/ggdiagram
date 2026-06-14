@@ -277,9 +277,9 @@ test_that("ob_ellipse connect", {
   expect_no_error(connect(e1, ob_point(2, 0)))
   expect_no_error(connect(ob_point(-2, 0), e2))
   ## arc
-  expect_no_error(connect(e1, e2, arc_bend = .1))
-  expect_no_error(connect(e1, e2@center, arc_bend = .1))
-  expect_no_error(connect(e1@center, e2, arc_bend = .1))
+  expect_no_error(connect(e1, e2, arc_bend = 0.1))
+  expect_no_error(connect(e1, e2@center, arc_bend = 0.1))
+  expect_no_error(connect(e1@center, e2, arc_bend = 0.1))
   ## bezier
   expect_no_error(connect(e1, e2, from_offset = ob_point(0,1), to_offset = ob_point(0, -1)))
   expect_no_error(connect(e1, e2@center, from_offset = ob_point(0,1), to_offset = ob_point(0, -1)))
@@ -287,8 +287,8 @@ test_that("ob_ellipse connect", {
   ## 1 to many
   expect_no_error(connect(e1, ob_ellipse(x =  2:3, y = 0, a = 1, b = 0.5)))
   expect_no_error(connect(ob_ellipse(x =  2:3, y = 0, a = 1, b = 0.5), e1))
-  expect_no_error(connect(e1, ob_ellipse(x =  2:3, y = 0, a = 1, b = 0.5), arc_bend = .5))
-  expect_no_error(connect(ob_ellipse(x =  2:3, y = 0, a = 1, b = 0.5), e1, arc_bend = .5))
+  expect_no_error(connect(e1, ob_ellipse(x =  2:3, y = 0, a = 1, b = 0.5), arc_bend = 0.5))
+  expect_no_error(connect(ob_ellipse(x =  2:3, y = 0, a = 1, b = 0.5), e1, arc_bend = 0.5))
 
   # centerpoint to line
   expect_no_error(connect(e1, ob_line(slope = 3)))
@@ -307,10 +307,10 @@ test_that("ob_ellipse connect", {
   expect_equal(midpoint(e1, e2)@x, ob_point(0,0)@x)
 
   expect_no_error(ob_variance(e1, theta = 20, where = 90, bend = 10, label = "hello"))
-  expect_no_error(ob_variance(e1, label = "hello", linewidth = .2, arrowhead_length = 2))
+  expect_no_error(ob_variance(e1, label = "hello", linewidth = 0.2, arrowhead_length = 2))
 
-  expect_no_error(ob_covariance(e1, e2, where = 90, bend = 10, label = "hello", linewidth = .2, arrowhead_length = 2))
-  expect_no_error(ob_covariance(e1, e2, label = "hello", linewidth = .2, arrowhead_length = 2))
+  expect_no_error(ob_covariance(e1, e2, where = 90, bend = 10, label = "hello", linewidth = 0.2, arrowhead_length = 2))
+  expect_no_error(ob_covariance(e1, e2, label = "hello", linewidth = 0.2, arrowhead_length = 2))
 
   expect_no_error(place(ob_ellipse(label = "e"), ob_circle(label = "c")))
   expect_no_error(place(ob_circle(label = "a"), ob_point()))
