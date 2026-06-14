@@ -1,25 +1,25 @@
 ---
 title: "Angles"
 knitr:
-  opts_chunk: 
+  opts_chunk:
     collapse: true
-    comment: '#>'
+    comment: "#>"
     dev: ragg_png
-format: 
+format:
   html:
     toc: true
     html-math-method: katex
-    fig-width:  7
+    fig-width: 7
     fig-height: 7
 vignette: >
-  %\VignetteIndexEntry{angles}
-  %\VignetteEngine{quarto::html}
+  %\VignetteIndexEntry{angles} %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r}
 #| label: presetup
 #| include: false
+
 library(ggdiagram)
 library(ggplot2)
 library(dplyr)
@@ -40,6 +40,7 @@ update_geom_defaults("arrow_segment", list(length_head = 5))
 
 ```{r}
 #| label: setup
+
 library(ggdiagram)
 library(ggplot2)
 library(dplyr)
@@ -50,19 +51,25 @@ my_font <- "Roboto Condensed"
 
 # Angles
 
-Angles have different kinds of units associated with them: turns (1 turn = one full rotation a circle), degrees (1 turn = 360 degrees), and radians (1 turn = $2\pi$ = $\tau$).
+Angles have different kinds of units associated with them: turns (1 turn = one
+full rotation a circle), degrees (1 turn = 360 degrees), and radians (1 turn =
+$2\pi$ = $\tau$).
 
-I like &pi; just fine, but I agree with Michael Hartl's [Tau Manifesto](https://tauday.com/tau-manifesto) that we would have been better off if we had recognized that the number of radians to complete a full turn of a circle (&tau; = 2&pi; &asymp; 6.283185) is more fundamental than the number of radians to complete a half turn (&pi;).
+I like &pi; just fine, but I agree with Michael Hartl's [Tau
+Manifesto](https://tauday.com/tau-manifesto) that we would have been better off
+if we had recognized that the number of radians to complete a full turn of a
+circle (&tau; = 2&pi; &asymp; 6.283185) is more fundamental than the number of
+radians to complete a half turn (&pi;).
 
-Turns | Radians | Degrees |
-:----:|:-------:|:-------:|
-$\frac{1}{12}$  | $\frac{\tau}{12}=\frac{\pi}{6}$   | $30^\circ$  |
-$\frac{1}{8}$  | $\frac{\tau}{8}=\frac{\pi}{4}$     | $45^\circ$  |
-$\frac{1}{6}$  | $\frac{\tau}{6}=\frac{\pi}{3}$     | $60^\circ$  |
-$\frac{1}{4}$  | $\frac{\tau}{4}=\frac{\pi}{2}$     | $90^\circ$  |
-$\frac{1}{3}$  | $\frac{\tau}{3}=\frac{2\pi}{3}$    | $120^\circ$ |
-$\frac{1}{2}$  | $\frac{\tau}{2}=\pi$               | $180^\circ$ |
-$1$            | $\tau=2\pi$                        | $360^\circ$ |
+  | Turns          | Radians                         | Degrees     |
+  | :------------: | :-----------------------------: | :---------: |
+  | $\frac{1}{12}$ | $\frac{\tau}{12}=\frac{\pi}{6}$ | $30^\circ$  |
+  | $\frac{1}{8}$  | $\frac{\tau}{8}=\frac{\pi}{4}$  | $45^\circ$  |
+  | $\frac{1}{6}$  | $\frac{\tau}{6}=\frac{\pi}{3}$  | $60^\circ$  |
+  | $\frac{1}{4}$  | $\frac{\tau}{4}=\frac{\pi}{2}$  | $90^\circ$  |
+  | $\frac{1}{3}$  | $\frac{\tau}{3}=\frac{2\pi}{3}$ | $120^\circ$ |
+  | $\frac{1}{2}$  |      $\frac{\tau}{2}=\pi$       | $180^\circ$ |
+  |      $1$       |           $\tau=2\pi$           | $360^\circ$ |
 
 ```{r}
 #| label: fig-angles
@@ -70,6 +77,7 @@ $1$            | $\tau=2\pi$                        | $360^\circ$ |
 #| fig-cap: "Angle Metrics"
 #| fig-width: 8
 #| fig-height: 8
+
 theta <- degree(seq(0,330, 30))
 angle_types <- c("Turns", "Radians", "Degrees")
 theta_list <- lapply(list(turn, radian, degree), \(.a) .a(theta))
@@ -111,15 +119,18 @@ One can create equivalent angles with any of the three metrics.
 
 ```{r}
 #| label: convenient_wrappers
+
 degree(90)
 turn(1 / 4)
 radian(pi / 2)
 ```
 
-Although these methods have convenient printing, under the hood they are `ob_angle` objects can retrieve angles in any of the the three metrics.
+Although these methods have convenient printing, under the hood they are
+`ob_angle` objects can retrieve angles in any of the the three metrics.
 
 ```{r}
 #| label: still_angles
+
 radian(pi)
 radian(pi)@degree
 radian(pi)@turn
@@ -139,6 +150,7 @@ For labeling, sometimes is convenient to convert angles to text:
 
 ```{r}
 #| label: ascharacter
+
 as.character(degree(90))
 as.character(turn(.25))
 as.character(radian(.5 * pi))
@@ -150,6 +162,7 @@ Any of the metrics can be converted to any other:
 
 ```{r}
 #| label: angle_convert
+
 a <- degree(degree = 270)
 a
 radian(a)
@@ -159,13 +172,17 @@ turn(a)
 
 # Arithmetic Operations
 
-Angles can be added, subtracted, multiplied, and divided. The underlying value stored can be any real number (in turn units), but degrees, radians, and turns are always displayed as between &minus;1 and +1 turns, &pm;360 degrees, or &pm;2&pi; radians.
+Angles can be added, subtracted, multiplied, and divided. The underlying value
+stored can be any real number (in turn units), but degrees, radians, and turns
+are always displayed as between &minus;1 and +1 turns, &pm;360 degrees, or
+&pm;2&pi; radians.
 
 30&deg; + 60&deg; = 90&deg;
 
 ```{r}
 #| label: angle_maker
 #| code-fold: true
+
 make_angles <- function(a = c(80, 300), 
                         r = c(.1, .2, .3), 
                         label_adjust = c(0,0,0), 
@@ -195,8 +212,6 @@ arcs <- ob_arc(radius = r,
       arrow_head =  arrowhead(),
       color = mycolors)
 
-
-
 ggplot() +
   theme_void() +
   coord_equal()  +
@@ -218,6 +233,7 @@ ggplot() +
 #| fig-cap: "30&deg; + 60&deg; = 90&deg;"
 #| fig-width: 7
 #| fig-height: 7
+
 make_angles(a = c(30, 60), 
             r = c(.12,.24, .36), 
             multiplier = c(1.5,1.5,1.5)) 
@@ -225,6 +241,7 @@ make_angles(a = c(30, 60),
 
 ```{r}
 #| label: add
+
 degree(30) + degree(60)
 ```
 
@@ -232,6 +249,7 @@ Adding a number to the degree class assumes the number is in the degree metric.
 
 ```{r}
 #| label: add_degree
+
 degree(30) + 10
 ```
 
@@ -239,6 +257,7 @@ Likewise, adding a number to a radian (or an angle by default) makes a radian:
 
 ```{r}
 #| label: add_radian
+
 radian(pi) + 0.5 * pi
 ```
 
@@ -246,6 +265,7 @@ Turns work the same way:
 
 ```{r}
 #| label: add_turn
+
 turn(.1) + .2
 ```
 
@@ -262,11 +282,13 @@ $$
 #| label: fig-80300
 #| code-fold: true
 #| fig-cap: "80&deg; + 300&deg; = 380&deg; = 20&deg;"
+
 make_angles(c(80, 300)) 
 ```
 
 ```{r}
 #| label: add380
+
 degree(80) + degree(300)
 ```
 
@@ -284,18 +306,21 @@ $$
 #| fig-height: 7
 
 make_angles(c(40, -60)) 
-
 ```
 
 ```{r}
 #| label: subtract
+
 degree(40) - degree(60)
 ```
 
-$$2\cdot20^\circ=40^\circ$$
+$$
+2\cdot20^\circ=40^\circ
+$$
 
 ```{r}
 #| label: mult20
+
 2 * degree(20)
 ```
 
@@ -307,14 +332,18 @@ $$
 
 ```{r}
 #| label: mult180
+
 2 * degree(180)
 ```
 
 ## Positive and Negative Angles
 
-You can ensure that an angle is always positive or negative with the `@positive` and `@negative` attributes.
+You can ensure that an angle is always positive or negative with the `@positive`
+and `@negative` attributes.
 
-```{r posneg}
+```{r}
+#| label: posneg
+
 # Display a negative angle as a positive angle
 degree(-30)@positive
 
@@ -324,10 +353,12 @@ degree(330)@negative
 
 # Trigonometry
 
-The outputs of `degree`, `radian`, and `turn` can take the three standard trigonometric functions
+The outputs of `degree`, `radian`, and `turn` can take the three standard
+trigonometric functions
 
 ```{r}
 #| label: trig
+
 theta <- degree(60)
 cos(theta)
 sin(theta)
@@ -344,9 +375,12 @@ tan(theta)
 o <- ob_point(0, 0)
 p <- ob_polar(theta, 1)
 
-# col <- purrr::map2_chr(scico::scico(6, palette = "hawaii"),
-#                        c(0.01,0.01,0.01,0.01,.15, .4), 
-#                        tinter::darken)
+# # colors made this way:
+# my_colors <- purrr::map2_chr(
+#   scico::scico(6, palette = "hawaii"),
+#   c(0.01, 0.01, 0.01, 0.01, .15, .4),
+#   tinter::darken
+# )
 
 my_colors <- c("#8C0172", "#944046", "#9B7424", 
                "#8EB63B", "#53BD91", "#6C939A")
@@ -444,15 +478,18 @@ ggdiagram() +
    
 ```
 
-Benefits of using trigonometric functions with angles instead of numeric radians include:
+Benefits of using trigonometric functions with angles instead of numeric radians
+include:
 
-* Angle metric conversions are handled automatically.
-* Under the hood, the `cospi`, `sinpi`, and `tanpi` functions are used to get the rounding right on key locations (e.g., 90 degrees, 180 degrees)
+- Angle metric conversions are handled automatically.
+- Under the hood, the `cospi`, `sinpi`, and `tanpi` functions are used to get
+  the rounding right on key locations (e.g., 90 degrees, 180 degrees)
 
 For example, `tan(pi)` is slightly off from its true value of 0.
 
 ```{r}
 #| label: tan
+
 tan(pi)
 ```
 
@@ -460,15 +497,21 @@ By contrast, `tan(radian(pi))` rounds to 0 exactly.
 
 ```{r}
 #| label: tanpi
-tan(radian(pi))
 
+tan(radian(pi))
 ```
 
 # Retrieving the underlying data from a `ob_angle` object
 
-Angles created with the `degree`, `radian`, or `turn` function are `ob_angle` objects. The `ob_angle` function exists but is not meant to be used directly. Its underlying data is a vector of numeric data representing the number of turns. The underlying turn data from any `ob_angle` object can be extracted with the `c` function (or with the `S7::S7_data` function).
+Angles created with the `degree`, `radian`, or `turn` function are `ob_angle`
+objects. The `ob_angle` function exists but is not meant to be used directly.
+Its underlying data is a vector of numeric data representing the number of
+turns. The underlying turn data from any `ob_angle` object can be extracted with
+the `c` function (or with the `S7::S7_data` function).
 
-```{r getangledata}
+```{r}
+#| label: getangledata
+
 theta <- degree(c(0,180,360, 720))
 # Degrees range: 0<= degree < 360
 theta@degree

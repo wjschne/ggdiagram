@@ -303,12 +303,9 @@ S7::method(unique, shape) <- function(x, incomparables = FALSE, ...) {
       if (S7::S7_inherits(x@label, ob_label)) {
         l <- unbind(x@label)
 
-          d <- d %>%
-            dplyr::mutate(label = l)
-
-
+        d <- d %>%
+          dplyr::mutate(label = l)
       }
-
     }
   }
   ud <- d %>%
@@ -317,19 +314,15 @@ S7::method(unique, shape) <- function(x, incomparables = FALSE, ...) {
   u <- ud
   u$label <- NULL
 
-
-
   u <- data2shape(u, S7::S7_class(x))
 
   if ("label" %in% colnames(ud)) {
     if (all(purrr::map_lgl(ud$label, S7::S7_inherits, class = ob_label))) {
       u@label <- bind(ud$label)
     }
-
-    }
+  }
 
   u
-
 }
 
 S7::method(unique, ob_shape_list) <- function(x, incomparables = FALSE, ...) {
@@ -465,10 +458,11 @@ ob_array <- S7::new_generic(
 #' @returns a bound object of same class as x (or list of objects if x contains objects of different types)
 bind <- S7::new_generic(name = "bind", dispatch_args = "x")
 
-S7::method(bind, shape) <- function(x, ...) {x}
+S7::method(bind, shape) <- function(x, ...) {
+  x
+}
 
 S7::method(bind, S7::class_list) <- function(x, ...) {
-
   all_angles <- all(purrr::map_lgl(x, S7::S7_inherits, class = ob_angle))
   if (all_angles) {
     if (length(x) == 0) {
@@ -573,8 +567,6 @@ S7::method(bind, ob_shape_list) <- function(x, ...) {
 }
 
 
-
-
 ## unbind ----
 
 #' unbind
@@ -587,14 +579,15 @@ S7::method(bind, ob_shape_list) <- function(x, ...) {
 unbind <- S7::new_generic("unbind", dispatch_args = "x")
 
 S7::method(unbind, has_style) <- function(x) {
-  if (x@length == 0) return(c(x))
+  if (x@length == 0) {
+    return(c(x))
+  }
   purrr::map(seq_len(x@length), \(i) x[i])
 }
 
 S7::method(unbind, ob_shape_list) <- function(x) {
   as.list(x)
 }
-
 
 
 #' Map over a ggdiagram object
@@ -678,7 +671,7 @@ S7::method(`+`, list(S7::class_character, S7::class_numeric)) <- function(
   e1,
   e2
 ) {
-  paste0(e1, e2)# nocov
+  paste0(e1, e2) # nocov
 }
 
 ## get_tibble----
@@ -697,7 +690,6 @@ S7::method(get_tibble, S7::class_list) <- function(x) {
 S7::method(get_tibble, ob_shape_list) <- function(x) {
   purrr::map(S7::S7_data(x), get_tibble)
 }
-
 
 
 # Resect ----
@@ -732,7 +724,6 @@ S7::method(get_tibble_defaults, S7::class_any) <- function(x) {
 S7::method(length, shape) <- function(x) {
   x@length
 }
-
 
 
 #' Move an object
@@ -881,9 +872,7 @@ get_tibble_defaults_helper <- function(
           d[missings, n] <- d_prop
         }
       }
-
     }
-
   }
   d
 }
@@ -985,8 +974,6 @@ ob_array_helper <- function(
         center = p_center
       )
     }
-
-
   }
 
   if (is.null(dots$label)) {
@@ -1113,7 +1100,7 @@ round_probability <- function(
   } else {
     abs_p <- abs(p)
     sig_digits <- abs(ceiling(log10(abs_p + abs_p / 1e+09)) - digits)
-    pgt99 <- abs_p > 0.99
+    pgt99 <- (abs_p > 0.99) & !is.na(p)
     sig_digits[pgt99] <- abs(ceiling(log10(1 - abs_p[pgt99])) - digits + 1)
 
     sig_digits[
@@ -1128,7 +1115,13 @@ round_probability <- function(
 
     sig_digits[is.infinite(sig_digits)] <- 0
 
-    l <- purrr::map2_chr(p, sig_digits, formatC, format = "f", flag = "#")
+    l <- purrr::map2_chr(p, sig_digits, \(pp, ss) {
+      if (is.na(pp)) {
+        ""
+      } else {
+        formatC(pp, ss, format = "f", flag = "#")
+      }
+    })
   }
   if (remove_leading_zero) {
     l <- sub("^-0", "-", sub("^0", "", l))
@@ -1228,9 +1221,7 @@ lead_cycle <- function(x, n = 1L) {
     stop("n must be a positive integer less than length of x.")
   }
 
-
-
-  x[c(seq(ni + 1,k), seq(1, ni))]
+  x[c(seq(ni + 1, k), seq(1, ni))]
 }
 
 #' @rdname lead_cycle

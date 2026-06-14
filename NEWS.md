@@ -1,3 +1,7 @@
+# ggdiagram 0.2.1 _2026-06-12_
+
+* Fixed bug in `round_probability` so that `NA` does not throw an error when digits are specified.
+
 # ggdiagram 0.2.0 _2026-05-04_
 
 * Better documentation of objects (used Posit Assistant to identify undocumented properties).

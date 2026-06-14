@@ -1,0 +1,7 @@
+[format]
+flavor = "quarto"
+wrap = "sentence"
+
+[flavor-overrides]
+"README.md" = "gfm"
+"docs/**/*.md" = "quarto"

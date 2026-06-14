@@ -63,14 +63,14 @@ bp <- ggdiagram(
   font_family = my_font,
   font_size = my_font_size,
   point_size = my_point_size,
-  linewidth = .5,
+  linewidth = 0.5,
   theme_function = theme_minimal,
   axis.title.x =  element_text(face = "italic"),
   axis.title.y = element_text(
     face = "italic",
     angle = 0,
-    hjust = .5,
-    vjust = .5
+    hjust = 0.5,
+    vjust = 0.5
   )
 ) +
   scale_x_continuous(labels = signs_centered, limits = c(-4, 4)) +
@@ -142,7 +142,7 @@ bp +
              paste0("Distance = ",
                     round(s1@distance, 2))),
            center = midpoint(s1),
-           vjust = c(-.2, 1.1),
+           vjust = c(-0.2, 1.1),
            angle = s1@line@angle)
 ```
 
@@ -163,7 +163,7 @@ s1@midpoint()
 bp +
   s1 +
   s1@midpoint()@label("Midpoint", hjust = 0, vjust = 1) +
-  s1@midpoint(c(0, .5, 1))@label(
+  s1@midpoint(c(0, 0.5, 1))@label(
     plot_point = TRUE,
     hjust = 1,
     vjust = 0)
@@ -174,7 +174,7 @@ To find the midpoint 25% of the distance between the endpoints of segment:
 
 ```{r}
 #| label: midpoint25
-s1@midpoint(position = .25)
+s1@midpoint(position = 0.25)
 ```
 
 
@@ -185,7 +185,7 @@ s1@midpoint(position = .25)
 
 bp +
   s1 +
-  {p25 <- s1@midpoint(.25)} +
+  {p25 <- s1@midpoint(0.25)} +
   p25@label(
     label = c(
       p25@auto_label,
@@ -206,7 +206,7 @@ Multiple midpoints can be specified:
 #| fig-cap: Selecting multiple midpoints
 bp +
   s1 +
-    s1@midpoint(seq(0, 1, .2))
+    s1@midpoint(seq(0, 1, 0.2))
 ```
 
 A quick way to get the endpoints of a segment is to specify "midpoints" at positions 0 and 1:
@@ -266,11 +266,11 @@ As shown @fig-segmentlabel2, the `ob_label` function gives much more control ove
 bp + ob_segment(p1, p2, 
                 label = ob_label(
                   label = "My label", 
-                  position = .25, 
+                  position = 0.25, 
                   color = "blue", 
                   fill = class_color("blue")@lighten(), 
                   family = "serif", 
-                  label.padding = ggplot2::margin(t = 5,r = 4,b = 3,l = 4)))
+                  label.padding = ggplot2::margin(t = 5, r = 4, b = 3, l = 4)))
 ```
 
 
