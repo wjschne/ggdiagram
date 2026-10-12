@@ -162,7 +162,9 @@ ggdiagram() +
     linewidth = 3)
 ```
 
-![](paths_files/figure-html/unnamed-chunk-1-1.png)
+![](paths_files/figure-html/fig-pathgradient-1.png)
+
+Figure 5: Color Gradients
 
 The colors can come from any palette function (here, with some
 transparency).
@@ -176,4 +178,6 @@ ggdiagram() +
     linewidth = 3)
 ```
 
-![](paths_files/figure-html/unnamed-chunk-2-1.png)
+![](paths_files/figure-html/fig-pathgradient2-1.png)
+
+Figure 6: Color Gradients with a function

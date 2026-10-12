@@ -170,6 +170,8 @@ It is possible to create color gradients along a path with the `gradient` parame
 You can use a vector of two or more colors.
 
 ```{r}
+#| label: fig-pathgradient
+#| fig-cap: Color Gradients
 ggdiagram() +
   ob_path(
     p_curve, 
@@ -180,6 +182,8 @@ ggdiagram() +
 The colors can come from any palette function (here, with some transparency).
 
 ```{r}
+#| label: fig-pathgradient2
+#| fig-cap: Color Gradients with a function
 ggdiagram() +
   ob_path(
     p_curve, 
