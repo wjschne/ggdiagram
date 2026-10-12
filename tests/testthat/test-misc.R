@@ -48,12 +48,12 @@ test_that(desc = "class_arrowhead", {
   m1 <- matrix(1:6, ncol = 2)
   m2 <- matrix(1:8, ncol = 2)
   expect_identical(
-    ggdiagram:::class_arrowhead(class_arrowhead(m1)),
+    ggdiagram:::class_arrowhead(ggdiagram:::class_arrowhead(m1)),
     ggdiagram:::class_arrowhead(m1)
   )
   expect_identical(
     ggdiagram:::class_arrowhead(list(m1, m2)),
-    list(ggdiagram:::class_arrowhead(m1), class_arrowhead(m2))
+    list(ggdiagram:::class_arrowhead(m1), ggdiagram:::class_arrowhead(m2))
   )
   expect_error(
     ggdiagram:::class_arrowhead(1),

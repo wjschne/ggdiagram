@@ -18,7 +18,7 @@ ob_covariance(
 )
 
 ## S7 method for classes <ggdiagram::centerpoint>, <ggdiagram::centerpoint>
-ob_covariance(
+\special{ob_covariance(
   x,
   y,
   where = NULL,
@@ -29,7 +29,7 @@ ob_covariance(
   length_fins = 7,
   resect = 2,
   ...
-)
+)}
 }
 \arguments{
 \item{x}{object}

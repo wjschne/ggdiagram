@@ -1,5 +1,6 @@
 ## R CMD check results
 
-0 errors | 0 warnings | 0 note
+Windows with R 4.6.1
+0 errors ✔ | 0 warnings ✔ | 0 notes ✔
+R CMD check succeeded
 
-Fixed problem with example taking too long on debian.

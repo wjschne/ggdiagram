@@ -170,7 +170,6 @@ class_arrowhead <- S7::new_class(
         is.matrix(x) &&
         ncol(x) == 2)
     ) {
-      print(x)
       stop("Arrowheads must be a 2-column matrix of numbers.")
     }
 

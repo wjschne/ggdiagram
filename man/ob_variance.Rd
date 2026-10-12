@@ -17,7 +17,7 @@ ob_variance(
 )
 
 ## S7 method for class <ggdiagram::centerpoint>
-ob_variance(
+\special{ob_variance(
   x,
   where = "north",
   theta = 50,
@@ -27,7 +27,7 @@ ob_variance(
   arrow_fins = the$arrow_head,
   resect = 2,
   ...
-)
+)}
 }
 \arguments{
 \item{x}{object of type \code{ggdiagram::centerpoint}}

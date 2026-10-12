@@ -38,3 +38,4 @@ vignettes/articles/_freeze/
 .claude
 .positai
 revdep/
+tests/testthat/Rplots.pdf

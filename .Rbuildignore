@@ -26,3 +26,5 @@ logo.png
 ^\.positai$
 ^\.claude$
 ^revdep$
+^AGENTS\.md
+^\.panache\.toml

@@ -50,7 +50,7 @@ install.packages("ggdiagram", repos = "https://wjschne.r-universe.dev")
 
 In <a href="#fig-example" class="quarto-xref">Figure 1</a>, we create a
 circle object with `ob_circle` and a rectangle object with
-`ob_rectangle`, placing the rectangle such that there is .5 units of
+`ob_rectangle`, placing the rectangle such that there is 0.5 units of
 separation between the two objects.
 
 The `ggdiagram` function is a a wrapper for `ggplot`, that sets some
@@ -71,7 +71,7 @@ c1 <- ob_circle(radius = 1 / sqrt(pi))
 r2 <- ob_rectangle() |>
   place(from = c1,
         where = "right", 
-        sep = .5)
+        sep = 0.5)
 
 ggdiagram() +
   c1 +

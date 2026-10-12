@@ -482,7 +482,7 @@ centerpoint <- S7::new_class(
   properties = list(
     center = S7::new_property(
       class = ob_point,
-      default = ob_point(0, 0)
+      default = quote(ob_point(0, 0))
     ),
     label = S7::new_property(label_or_character_or_angle),
     xy = S7::new_property(getter = function(self) {

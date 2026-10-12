@@ -22,7 +22,7 @@ Imports:
     dplyr,
     farver,
     geomtextpath,
-    ggarrow,
+    ggarrow (>= 0.2.0),
     ggforce (>= 0.5.0),
     ggplot2 (>= 4.0.0),
     ggtext,
@@ -63,7 +63,7 @@ VignetteBuilder:
     quarto
 Config/Needs/website: quarto
 Config/roxygen2/markdown: TRUE
-Config/roxygen2/version: 8.1.0
+Config/roxygen2/version: 8.1.1
 Config/testthat/edition: 3
 Encoding: UTF-8
 Language: en-US
