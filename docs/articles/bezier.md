@@ -141,8 +141,13 @@ Gradients can be applied to an `ob_bezier` object.
 
 ``` r
 
-bp + 
-  ob_bezier(control_point_list, arrow_head = arrowhead(), linewidth = 2, gradient = c("blue", "gray", "red"))
+bp +
+  ob_bezier(
+    control_point_list,
+    arrow_head = arrowhead(),
+    linewidth = 2,
+    gradient = c("blue", "green", "red")
+  )
 ```
 
 ![](bezier_files/figure-html/fig-gradient-1.png)

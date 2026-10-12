@@ -446,16 +446,15 @@ Figure 11: Segments with formatted labels
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggdiagram.html">ggdiagram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="op">{</span><span class="va">c1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_circle.html">ob_circle</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"dodgerblue4"</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span> </span>
-<span>  <span class="op">{</span><span class="va">c2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_circle.html">ob_circle</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"firebrick4"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="op">{</span><span class="va">c1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_circle.html">ob_circle</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"dodgerblue4"</span>, color <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span> </span>
+<span>  <span class="op">{</span><span class="va">c2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_circle.html">ob_circle</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"firebrick4"</span>, color <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>    <span class="fu"><a href="../reference/place.html">place</a></span><span class="op">(</span>from <span class="op">=</span> <span class="va">c1</span>, where <span class="op">=</span> <span class="st">"right"</span>, sep <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/ob_segment.html">ob_segment</a></span><span class="op">(</span><span class="va">c1</span><span class="op">@</span><span class="va">east</span>,</span>
 <span>             <span class="va">c2</span><span class="op">@</span><span class="va">west</span>,</span>
 <span>             arrow_head <span class="op">=</span> <span class="fu"><a href="../reference/arrowhead.html">arrowhead</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>             resect <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>             arrowhead_length <span class="op">=</span> <span class="fl">4</span>,</span>
 <span>             linewidth <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>             gradient <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dodgerblue4"</span>, <span class="st">"firebrick4"</span><span class="op">)</span>,</span>
-<span>             stroke_color <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> </span></code></pre></div>
+<span>             gradient <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dodgerblue4"</span>, <span class="st">"firebrick4"</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
 <div class="cell-output-display">
 <div id="fig-gradient" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-gradient-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -467,6 +466,7 @@ Figure 12: Segments with color gradients
 </div>
 </div>
 </div>
+<p>Gradients are interpolated in the OKLab color space, which is more perceptually even than RGB. A different space can be chosen for all gradients with <code>options(ggdiagram.gradient_space = "oklch")</code> (or <code>"lab"</code>, <code>"lch"</code>, or <code>"rgb"</code>).</p>
 <p>Resection works as usual with gradients. Here, the segment is shortened by 3 mm at each end, and the gradient spans the shortened arrow.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="downlit sourceCode r">
@@ -476,10 +476,10 @@ Figure 12: Segments with color gradients
 <span>  <span class="fu"><a href="../reference/ob_segment.html">ob_segment</a></span><span class="op">(</span><span class="va">c1</span><span class="op">@</span><span class="va">east</span>, </span>
 <span>             <span class="va">c2</span><span class="op">@</span><span class="va">west</span>,</span>
 <span>             arrow_head <span class="op">=</span> <span class="fu"><a href="../reference/arrowhead.html">arrowhead</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>             arrowhead_length <span class="op">=</span> <span class="fl">4</span>,</span>
 <span>             resect <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>             linewidth <span class="op">=</span> <span class="fl">2</span>,</span>
-<span>             gradient <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dodgerblue4"</span>, <span class="st">"orchid4"</span>, <span class="st">"firebrick4"</span><span class="op">)</span>,</span>
-<span>             stroke_color <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span></code></pre></div>
+<span>             gradient <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dodgerblue4"</span>, <span class="st">"orchid4"</span>, <span class="st">"firebrick4"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div id="fig-gradient2" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-gradient2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">

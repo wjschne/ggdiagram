@@ -17,6 +17,7 @@ geom_arrow_segment_gradient(
   ...,
   gradient = c("white", "black"),
   stops = NULL,
+  space = NULL,
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
@@ -139,6 +140,15 @@ geom_arrow_segment_gradient(
   Numeric vector of gradient stops, the same length as `gradient`.
   Defaults to equal spacing.
 
+- space:
+
+  Color space in which the gradient is interpolated: `"oklab"` (the
+  default), `"oklch"`, `"lab"`, `"lch"`, or `"rgb"`. In the perceptual
+  spaces, the gradient is sampled at many closely spaced stops so that
+  the colors blend smoothly and avoid the muddy midpoints of simple RGB
+  interpolation. If `NULL`, the `ggdiagram.gradient_space` option is
+  used (default `"oklab"`).
+
 - na.rm:
 
   If `FALSE`, the default, missing values are removed with a warning. If
@@ -171,6 +181,15 @@ Gradients require a graphics device that supports them (e.g., ragg, svg,
 pdf, or cairo png). The `gradient` colors apply to all arrows in the
 layer. The gradient replaces the `colour` of the arrow body; the stroke
 is unchanged (set `stroke_colour = NA` to hide it).
+
+## Acknowledgements
+
+The idea of drawing color gradients along arrows was inspired by
+[`ggforce::geom_link()`](https://ggforce.data-imaginist.com/reference/geom_link.html)
+by Thomas Lin Pedersen. Sampling gradients in a perceptual color space
+was inspired by Matt DesLauriers' post [Perceptually Smooth Multi-Color
+Linear
+Gradients](https://observablehq.com/@mattdesl/perceptually-smooth-multi-color-linear-gradients).
 
 ## Examples
 

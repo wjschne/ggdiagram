@@ -98,7 +98,7 @@
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<p>In <a href="#fig-example" class="quarto-xref">Figure 1</a>, we create a circle object with <code>ob_circle</code> and a rectangle object with <code>ob_rectangle</code>, placing the rectangle such that there is .5 units of separation between the two objects.</p>
+<p>In <a href="#fig-example" class="quarto-xref">Figure 1</a>, we create a circle object with <code>ob_circle</code> and a rectangle object with <code>ob_rectangle</code>, placing the rectangle such that there is 0.5 units of separation between the two objects.</p>
 <p>The <code>ggdiagram</code> function is a a wrapper for <code>ggplot</code>, that sets some defaults (e.g., <code>theme_void</code>, <code>coord_equal</code>, fonts, line size, etc.).</p>
 <p>The <code>ob_*</code> functions have methods such that they can be added to any ggplot. Under the hood, they are first converted to an appropriate geom and then added to the ggplot object. In this case, an <code>ob_circle</code> is converted to a <code>ggforce:geom_circle</code>, and an <code>ob_rectangle</code> is converted to a <code><a href="https://ggforce.data-imaginist.com/reference/geom_shape.html" class="external-link">ggforce::geom_shape</a></code>.</p>
 <p>The <code>connect</code> function connects the circle and rectangle at their edges with an arrow (drawn with <code><a href="https://teunbrand.github.io/ggarrow/reference/geom_arrow_segment.html" class="external-link">ggarrow::geom_arrow_segment</a></code>).</p>
@@ -108,7 +108,7 @@
 <span><span class="va">r2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/ob_rectangle.html">ob_rectangle</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/place.html">place</a></span><span class="op">(</span>from <span class="op">=</span> <span class="va">c1</span>,</span>
 <span>        where <span class="op">=</span> <span class="st">"right"</span>, </span>
-<span>        sep <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span></span>
+<span>        sep <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/ggdiagram.html">ggdiagram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="va">c1</span> <span class="op">+</span></span>

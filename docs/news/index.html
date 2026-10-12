@@ -51,6 +51,35 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.3.0" id="ggdiagram-030-2026-10-12">ggdiagram 0.3.0 <em>2026-10-12</em>
+<a class="anchor" aria-label="anchor" href="#ggdiagram-030-2026-10-12"></a></h2>
+<div class="section level3">
+<h3 id="new-features-0-3-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-3-0"></a></h3>
+<ul><li>Color gradients for arrows. <code>ob_segment</code>, <code>ob_path</code>, <code>ob_bezier</code>, and <code>ob_arc</code> gain a <code>gradient</code> property: a vector of 2 or more colors (or a list of such vectors, one per object) that makes a smooth gradient from the arrow’s fins to its head. Gradients are drawn as grid gradient fills, so they require a graphics device that supports them (e.g., ragg, svg, or pdf). For paths, beziers, and arcs, the gradient follows a straight line from start to end, not the curve.</li>
+<li>New functions <code><a href="../reference/geom_arrow_segment_gradient.html">geom_arrow_segment_gradient()</a></code> and <code><a href="../reference/geom_arrow_gradient.html">geom_arrow_gradient()</a></code> apply the gradients in ordinary ggplot2 code (ggarrow does not accept gradient colors). The approach was inspired by <code><a href="https://ggforce.data-imaginist.com/reference/geom_link.html" class="external-link">ggforce::geom_link()</a></code> and its color gradients along segments, by Thomas Lin Pedersen, the author of ggforce.</li>
+<li>Gradients are interpolated in the OKLab color space by default, which avoids the dull midpoints of RGB interpolation (e.g., blue to yellow no longer passes through gray). The gradient is sampled at many closely spaced stops, following the approach in Matt DesLauriers’ post <a href="https://observablehq.com/@mattdesl/perceptually-smooth-multi-color-linear-gradients" class="external-link">Perceptually Smooth Multi-Color Linear Gradients</a>. Use the <code>space</code> argument of the gradient geoms, or <code>options(ggdiagram.gradient_space = ...)</code>, to choose <code>"oklab"</code>, <code>"oklch"</code>, <code>"lab"</code>, <code>"lch"</code>, or <code>"rgb"</code>.</li>
+<li>
+<code>connect</code> now uses a color gradient by default when the <code>from</code> and <code>to</code> objects have different colors. An object’s color is its <code>color</code>, or its <code>fill</code> if <code>color</code> is <code>NA</code>, or black if both are <code>NA</code>. If the two colors are identical, no gradient is used and the connector has that color. Specifying <code>color</code>, <code>gradient</code>, or a style with a color overrides this behavior.</li>
+<li>
+<code>ob_style</code> and <code>ob_segment</code> gain <code>distort</code> (a ggarrow distortion, e.g., <code>"sinewave"</code>) and <code>force_arrow</code> (draw the arrowhead even if the segment is too short). <code>ob_path</code> gains <code>force_arrow</code>.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="changes-in-behavior-0-3-0">Changes in behavior<a class="anchor" aria-label="anchor" href="#changes-in-behavior-0-3-0"></a></h3>
+<ul><li>
+<code>ob_segment</code> now defaults to black when no color is specified (or inherited) unless <code>color = NA</code> is set explicitly. Objects derived from segments, such as <code>@midpoint()</code>, therefore carry <code>color = "black"</code>.</li>
+<li>The <code>connect</code> color now comes from the <code>from</code> object. Previously the <code>to</code> object’s color overrode it.</li>
+<li>
+<code>ob_path@segment</code> no longer carries arrowheads or fins, and each segment keeps the style of its own path.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation-and-internal-changes-0-3-0">Documentation and internal changes<a class="anchor" aria-label="anchor" href="#documentation-and-internal-changes-0-3-0"></a></h3>
+<ul><li>New “Color gradients” sections in the segments, paths, Bézier, and arc/wedge articles.</li>
+<li>Reorganized source files: generics moved to <code>R/generics.R</code> and helper functions to <code>R/helpers.R</code>.</li>
+<li>Minimum R version is now 4.4.0.</li>
+<li>Added copyright holder (<code>cph</code>) role to the maintainer in <code>DESCRIPTION</code>.</li>
+</ul></div>
+</div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.1" id="ggdiagram-021-2026-06-12">ggdiagram 0.2.1 <em>2026-06-12</em>
 <a class="anchor" aria-label="anchor" href="#ggdiagram-021-2026-06-12"></a></h2>
 <ul><li>Fixed bug in <code>round_probability</code> so that <code>NA</code> does not throw an error when digits are specified.</li>

@@ -573,9 +573,13 @@ get_depth_helper <- function(x, model, depth = 0L, max_depth = 20) {
 #'
 #' Gradients require a graphics device that supports them (e.g., ragg, svg, pdf, or cairo png). The `gradient` colors apply to all arrows in the layer. The gradient replaces the `colour` of the arrow body; the stroke is unchanged (set `stroke_colour = NA` to hide it).
 #'
+#' @section Acknowledgements:
+#' The idea of drawing color gradients along arrows was inspired by [ggforce::geom_link()] by Thomas Lin Pedersen. Sampling gradients in a perceptual color space was inspired by Matt DesLauriers' post [Perceptually Smooth Multi-Color Linear Gradients](https://observablehq.com/@mattdesl/perceptually-smooth-multi-color-linear-gradients).
+#'
 #' @inheritParams ggarrow::geom_arrow_segment
 #' @param gradient Character vector of 2 or more colors, from fin to head. If `NULL`, the arrow is drawn as usual.
 #' @param stops Numeric vector of gradient stops, the same length as `gradient`. Defaults to equal spacing.
+#' @param space Color space in which the gradient is interpolated: `"oklab"` (the default), `"oklch"`, `"lab"`, `"lch"`, or `"rgb"`. In the perceptual spaces, the gradient is sampled at many closely spaced stops so that the colors blend smoothly and avoid the muddy midpoints of simple RGB interpolation. If `NULL`, the `ggdiagram.gradient_space` option is used (default `"oklab"`).
 #' @return A ggplot2 layer
 #' @export
 #' @examples
@@ -596,6 +600,7 @@ geom_arrow_segment_gradient <- function(
   ...,
   gradient = c("white", "black"),
   stops = NULL,
+  space = NULL,
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
@@ -613,6 +618,7 @@ geom_arrow_segment_gradient <- function(
   l$geom <- GeomArrowSegmentGradient
   l$geom_params$gradient <- gradient
   l$geom_params$stops <- stops
+  l$geom_params$space <- space
   l
 }
 
@@ -641,7 +647,8 @@ GeomArrowSegmentGradient <- ggplot2::ggproto(
     sep = 0,
     distort = NULL,
     gradient = NULL,
-    stops = NULL
+    stops = NULL,
+    space = NULL
   ) {
     grob <- ggplot2::ggproto_parent(ggarrow::GeomArrowSegment, self)$draw_panel(
       data,
@@ -666,7 +673,8 @@ GeomArrowSegmentGradient <- ggplot2::ggproto(
     gradient_arrows(
       grob,
       gradient,
-      stops %||% seq(0, 1, length.out = length(gradient))
+      stops %||% seq(0, 1, length.out = length(gradient)),
+      space
     )
   }
 )
@@ -682,11 +690,57 @@ geom_arrow_segment_maybe_gradient <- function(..., gradient = NULL) {
   }
 }
 
+#' Expand a gradient into many stops interpolated in a perceptual color space
+#'
+#' Gradients drawn by graphics devices interpolate linearly in sRGB between stops, which makes dull midpoints. Sampling the gradient densely in a perceptual space (e.g., OKLab) and passing all the samples as stops gives smoother, more even gradients.
+#' @param colors character vector of colors
+#' @param stops numeric vector of stop positions, same length as `colors`
+#' @param space one of "oklab", "oklch", "lab", "lch", "rgb"
+#' @param n approximate number of sampled stops
+#' @return list with `colours` and `stops`
+#' @keywords internal
+#' @noRd
+expand_gradient <- function(colors, stops, space = NULL, n = 32L) {
+  space <- space %||% getOption("ggdiagram.gradient_space", "oklab")
+  space <- match.arg(space, c("oklab", "oklch", "lab", "lch", "rgb"))
+  if (space == "rgb" || length(colors) < 2L) {
+    return(list(colours = colors, stops = stops))
+  }
+  o <- order(stops)
+  colors <- colors[o]
+  stops <- stops[o]
+  pos <- sort(unique(c(stops, seq(min(stops), max(stops), length.out = n))))
+  m <- farver::decode_colour(colors, alpha = TRUE, to = space, na_value = "transparent")
+  alpha <- m[, "alpha"]
+  m <- m[, setdiff(colnames(m), "alpha"), drop = FALSE]
+  # interval of the user's stops containing each position
+  k <- pmin(findInterval(pos, stops, rightmost.closed = TRUE), length(stops) - 1L)
+  k <- pmax(k, 1L)
+  width <- stops[k + 1L] - stops[k]
+  t <- ifelse(width > 0, (pos - stops[k]) / width, 0)
+  out <- m[k, , drop = FALSE] + t * (m[k + 1L, , drop = FALSE] - m[k, , drop = FALSE])
+  if (space %in% c("oklch", "lch")) {
+    # hue is the 3rd channel, in degrees; take the shorter arc
+    h1 <- m[k, 3]
+    dh <- ((m[k + 1L, 3] - h1 + 180) %% 360) - 180
+    out[, 3] <- (h1 + t * dh) %% 360
+  }
+  list(
+    colours = farver::encode_colour(
+      out,
+      alpha = alpha[k] + t * (alpha[k + 1L] - alpha[k]),
+      from = space
+    ),
+    stops = pos
+  )
+}
+
 #' Replace the fill of each arrow grob with a fin-to-head gradient
 #' @keywords internal
 #' @noRd
-gradient_arrows <- function(x, colors, stops) {
+gradient_arrows <- function(x, colors, stops, space = NULL) {
   if (inherits(x, "arrow_path")) {
+    gs <- expand_gradient(colors, stops, space)
     len <- vctrs::field(x$id_rle, "length")
     id <- rep(seq_along(len), len)
     px <- as.numeric(x$x)
@@ -695,8 +749,8 @@ gradient_arrows <- function(x, colors, stops) {
     last <- length(id) + 1L - match(unique(id), rev(id))
     x$gp$fill <- lapply(seq_along(first), function(i) {
       grid::linearGradient(
-        colours = colors,
-        stops = stops,
+        colours = gs$colours,
+        stops = gs$stops,
         x1 = grid::unit(px[first[i]], "native"),
         y1 = grid::unit(py[first[i]], "native"),
         x2 = grid::unit(px[last[i]], "native"),
@@ -709,7 +763,13 @@ gradient_arrows <- function(x, colors, stops) {
     return(x)
   }
   if (inherits(x, "gTree")) {
-    x$children[] <- lapply(x$children, gradient_arrows, colors = colors, stops = stops)
+    x$children[] <- lapply(
+      x$children,
+      gradient_arrows,
+      colors = colors,
+      stops = stops,
+      space = space
+    )
   }
   x
 }
@@ -717,6 +777,9 @@ gradient_arrows <- function(x, colors, stops) {
 #' Arrows and paths with a color gradient
 #'
 #' Like [geom_arrow_segment_gradient()], but for [ggarrow::geom_arrow()], which draws paths and curves. The gradient runs in a straight line from each path's first point (fin) to its last point (head), so it follows the curve only approximately for strongly curved paths.
+#'
+#' @section Acknowledgements:
+#' The idea of drawing color gradients along arrows was inspired by [ggforce::geom_link()] by Thomas Lin Pedersen. Sampling gradients in a perceptual color space was inspired by Matt DesLauriers' post [Perceptually Smooth Multi-Color Linear Gradients](https://observablehq.com/@mattdesl/perceptually-smooth-multi-color-linear-gradients).
 #'
 #' @inheritParams ggarrow::geom_arrow
 #' @inheritParams geom_arrow_segment_gradient
@@ -740,6 +803,7 @@ geom_arrow_gradient <- function(
   ...,
   gradient = c("white", "black"),
   stops = NULL,
+  space = NULL,
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
@@ -757,6 +821,7 @@ geom_arrow_gradient <- function(
   l$geom <- GeomArrowGradient
   l$geom_params$gradient <- gradient
   l$geom_params$stops <- stops
+  l$geom_params$space <- space
   l
 }
 
@@ -785,7 +850,8 @@ GeomArrowGradient <- ggplot2::ggproto(
     resect = list(head = 0, fins = 0),
     distort = NULL,
     gradient = NULL,
-    stops = NULL
+    stops = NULL,
+    space = NULL
   ) {
     grob <- ggplot2::ggproto_parent(ggarrow::GeomArrow, self)$draw_panel(
       data,
@@ -810,7 +876,8 @@ GeomArrowGradient <- ggplot2::ggproto(
     gradient_arrows(
       grob,
       gradient,
-      stops %||% seq(0, 1, length.out = length(gradient))
+      stops %||% seq(0, 1, length.out = length(gradient)),
+      space
     )
   }
 )

@@ -358,21 +358,25 @@ the arrow’s outline.
 ``` r
 
 ggdiagram() +
-  {c1 <- ob_circle(color = "dodgerblue4")} + 
-  {c2 <- ob_circle(color = "firebrick4") |> 
+  {c1 <- ob_circle(fill = "dodgerblue4", color = NA)} + 
+  {c2 <- ob_circle(fill = "firebrick4", color = NA) |> 
     place(from = c1, where = "right", sep = 2)} + 
   ob_segment(c1@east,
              c2@west,
              arrow_head = arrowhead(),
-             resect = 3,
+             arrowhead_length = 4,
              linewidth = 2,
-             gradient = c("dodgerblue4", "firebrick4"),
-             stroke_color = NA) 
+             gradient = c("dodgerblue4", "firebrick4")) 
 ```
 
 ![](segments_files/figure-html/fig-gradient-1.png)
 
 Figure 12: Segments with color gradients
+
+Gradients are interpolated in the OKLab color space, which is more
+perceptually even than RGB. A different space can be chosen for all
+gradients with `options(ggdiagram.gradient_space = "oklch")` (or
+`"lab"`, `"lch"`, or `"rgb"`).
 
 Resection works as usual with gradients. Here, the segment is shortened
 by 3 mm at each end, and the gradient spans the shortened arrow.
@@ -385,10 +389,10 @@ ggdiagram() +
   ob_segment(c1@east, 
              c2@west,
              arrow_head = arrowhead(),
+             arrowhead_length = 4,
              resect = 3,
              linewidth = 2,
-             gradient = c("dodgerblue4", "orchid4", "firebrick4"),
-             stroke_color = NA)
+             gradient = c("dodgerblue4", "orchid4", "firebrick4"))
 ```
 
 ![](segments_files/figure-html/fig-gradient2-1.png)

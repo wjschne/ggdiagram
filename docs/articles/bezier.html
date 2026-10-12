@@ -228,8 +228,13 @@ Figure 3: Multiple bézier paths
 <p>Gradients can be applied to an <code>ob_bezier</code> object.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/ob_bezier.html">ob_bezier</a></span><span class="op">(</span><span class="va">control_point_list</span>, arrow_head <span class="op">=</span> <span class="fu"><a href="../reference/arrowhead.html">arrowhead</a></span><span class="op">(</span><span class="op">)</span>, linewidth <span class="op">=</span> <span class="fl">2</span>, gradient <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"gray"</span>, <span class="st">"red"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_bezier.html">ob_bezier</a></span><span class="op">(</span></span>
+<span>    <span class="va">control_point_list</span>,</span>
+<span>    arrow_head <span class="op">=</span> <span class="fu"><a href="../reference/arrowhead.html">arrowhead</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>    linewidth <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>    gradient <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"green"</span>, <span class="st">"red"</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div id="fig-gradient" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-gradient-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">

@@ -65,6 +65,7 @@
 <span>  <span class="va">...</span>,</span>
 <span>  gradient <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"white"</span>, <span class="st">"black"</span><span class="op">)</span>,</span>
 <span>  stops <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  space <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  na.rm <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  show.legend <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  inherit.aes <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -154,6 +155,10 @@ which parameters it can accept.</p></li>
 <dd><p>Numeric vector of gradient stops, the same length as <code>gradient</code>. Defaults to equal spacing.</p></dd>
 
 
+<dt id="arg-space">space<a class="anchor" aria-label="anchor" href="#arg-space"></a></dt>
+<dd><p>Color space in which the gradient is interpolated: <code>"oklab"</code> (the default), <code>"oklch"</code>, <code>"lab"</code>, <code>"lch"</code>, or <code>"rgb"</code>. In the perceptual spaces, the gradient is sampled at many closely spaced stops so that the colors blend smoothly and avoid the muddy midpoints of simple RGB interpolation. If <code>NULL</code>, the <code>ggdiagram.gradient_space</code> option is used (default <code>"oklab"</code>).</p></dd>
+
+
 <dt id="arg-na-rm">na.rm<a class="anchor" aria-label="anchor" href="#arg-na-rm"></a></dt>
 <dd><p>If <code>FALSE</code>, the default, missing values are removed with a warning. If
 <code>TRUE</code>, missing values are silently removed.</p></dd>
@@ -178,6 +183,12 @@ specification, e.g. <code><a href="https://ggplot2.tidyverse.org/reference/annot
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A ggplot2 layer</p>
+    </div>
+    <div class="section level2">
+    <h2 id="acknowledgements">Acknowledgements<a class="anchor" aria-label="anchor" href="#acknowledgements"></a></h2>
+
+
+<p>The idea of drawing color gradients along arrows was inspired by <code><a href="https://ggforce.data-imaginist.com/reference/geom_link.html" class="external-link">ggforce::geom_link()</a></code> by Thomas Lin Pedersen. Sampling gradients in a perceptual color space was inspired by Matt DesLauriers' post <a href="https://observablehq.com/@mattdesl/perceptually-smooth-multi-color-linear-gradients" class="external-link">Perceptually Smooth Multi-Color Linear Gradients</a>.</p>
     </div>
 
     <div class="section level2">

@@ -392,3 +392,28 @@ test_that("gradient works for paths, beziers, and arcs", {
     ggarrow::GeomArrow$parameters(TRUE) %in% GeomArrowGradient$parameters(TRUE)
   ))
 })
+
+test_that("gradients are expanded into perceptual stops", {
+  g <- expand_gradient(c("blue", "yellow"), c(0, 1), "oklab")
+  expect_length(g$colours, 32)
+  expect_equal(g$stops[c(1, length(g$stops))], c(0, 1))
+  expect_equal(g$colours[1], "#0000FF")
+  expect_equal(g$colours[length(g$colours)], "#FFFF00")
+  # OKLab midpoint is not the gray of RGB interpolation
+  expect_false(g$colours[16] == "#808080")
+  # rgb leaves the colors alone
+  expect_equal(
+    expand_gradient(c("blue", "yellow"), c(0, 1), "rgb"),
+    list(colours = c("blue", "yellow"), stops = c(0, 1))
+  )
+  # user stops are honored
+  g <- expand_gradient(c("red", "white", "blue"), c(0, 0.2, 1), "oklab")
+  expect_true(0.2 %in% g$stops)
+  expect_equal(g$colours[g$stops == 0.2], "#FFFFFF")
+  # the option sets the default space
+  withr::with_options(
+    list(ggdiagram.gradient_space = "rgb"),
+    expect_equal(expand_gradient(c("a", "b"), c(0, 1))$colours, c("a", "b"))
+  )
+  expect_error(expand_gradient(c("blue", "red"), c(0, 1), "nope"))
+})

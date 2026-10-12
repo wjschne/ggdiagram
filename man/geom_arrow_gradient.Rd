@@ -12,6 +12,7 @@ geom_arrow_gradient(
   ...,
   gradient = c("white", "black"),
   stops = NULL,
+  space = NULL,
   na.rm = FALSE,
   show.legend = NA,
   inherit.aes = TRUE
@@ -91,6 +92,8 @@ which parameters it can accept.
 
 \item{stops}{Numeric vector of gradient stops, the same length as \code{gradient}. Defaults to equal spacing.}
 
+\item{space}{Color space in which the gradient is interpolated: \code{"oklab"} (the default), \code{"oklch"}, \code{"lab"}, \code{"lch"}, or \code{"rgb"}. In the perceptual spaces, the gradient is sampled at many closely spaced stops so that the colors blend smoothly and avoid the muddy midpoints of simple RGB interpolation. If \code{NULL}, the \code{ggdiagram.gradient_space} option is used (default \code{"oklab"}).}
+
 \item{na.rm}{If \code{FALSE}, the default, missing values are removed with a warning. If
 \code{TRUE}, missing values are silently removed.}
 
@@ -112,6 +115,11 @@ A ggplot2 layer
 \description{
 Like \code{\link[=geom_arrow_segment_gradient]{geom_arrow_segment_gradient()}}, but for \code{\link[ggarrow:geom_arrow]{ggarrow::geom_arrow()}}, which draws paths and curves. The gradient runs in a straight line from each path's first point (fin) to its last point (head), so it follows the curve only approximately for strongly curved paths.
 }
+\section{Acknowledgements}{
+
+The idea of drawing color gradients along arrows was inspired by \code{\link[ggforce:geom_link]{ggforce::geom_link()}} by Thomas Lin Pedersen. Sampling gradients in a perceptual color space was inspired by Matt DesLauriers' post \href{https://observablehq.com/@mattdesl/perceptually-smooth-multi-color-linear-gradients}{Perceptually Smooth Multi-Color Linear Gradients}.
+}
+
 \examples{
 library(ggplot2)
 d <- data.frame(x = c(0, 1, 2), y = c(0, 1, 0))
