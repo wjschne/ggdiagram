@@ -13,6 +13,9 @@ ob_segment(
   arrow_head = class_arrowhead(ggarrow::arrow_head_minimal(90)),
   arrow_fins = list(),
   arrowhead_length = 7,
+  distort = character(0),
+  force_arrow = logical(0),
+  gradient = list(),
   length_head = numeric(0),
   length_fins = numeric(0),
   color = character(0),
@@ -52,6 +55,12 @@ ob_segment(
 \item{arrow_fins}{A 2-column matrix of polygon points}
 
 \item{arrowhead_length}{Determines the size of the arrow ornaments. This parameter becomes the \code{length} parameter in ggarrow functions. Numeric values set the ornament size relative to the linewidth. A \link[grid:unit]{grid::unit} value sets the ornament size in an absolute manner.}
+
+\item{distort}{a character string associated with a ggarrow distort function (or a custom distort function with a distort prefix). If the custom function is \code{distort_mydistortion}, then the \code{distort} slot here should be \code{"mydistortion"}.}
+
+\item{force_arrow}{Force arrow to be drawn even if the segment is too short.}
+
+\item{gradient}{A character vector of 2 or more colors (or a list of such vectors, one per object) that make a smooth color gradient from the arrow's fins to its head. Used by \link{ob_segment}. Requires a graphics device that supports gradients (e.g., ragg, svg, pdf).}
 
 \item{length_head}{Determines the size of the arrow head. Numeric values set the ornament size relative to the linewidth. A \link[grid:unit]{grid::unit} value sets the ornament size in an absolute manner. From ggarrow.}
 

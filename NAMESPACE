@@ -17,6 +17,8 @@ export(data2shape)
 export(degree)
 export(distance)
 export(equation)
+export(geom_arrow_gradient)
+export(geom_arrow_segment_gradient)
 export(get_depth)
 export(get_tibble)
 export(get_tibble_defaults)
@@ -77,11 +79,14 @@ export(turn)
 export(unbind)
 if (getRversion() < "4.3.0") importFrom("S7", "@")
 import(S7)
-importFrom(S7,prop)
-importFrom(S7,props)
-importFrom(S7,set_props)
-importFrom(ggplot2,class_ggplot)
-importFrom(ggplot2,update_ggplot)
+importFrom(S7,
+  prop,
+  props,
+  set_props
+)
+importFrom(ggplot2,
+  class_ggplot,
+  update_ggplot
+)
 importFrom(magrittr,"%>%")
 importFrom(rlang,.data)
-importFrom(rlang,`%||%`)

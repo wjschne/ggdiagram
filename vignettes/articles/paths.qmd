@@ -163,13 +163,27 @@ bp +
        label = c(".52", ".42", ".61"))
 ```
 
-# Segments
+# Color Gradients
 
-It is possible to create color gradients along a path using the paths' segments.
+It is possible to create color gradients along a path with the `gradient` parameter. The gradient runs in a straight line from the first point to the last point of the path, so it follows the path closely only when the path does not double back on itself.
 
-```{r segmentgradient}
+You can use a vector of two or more colors.
+
+```{r}
 ggdiagram() +
-  ob_path(p_curve)@segment |> 
-  set_props(color = viridis::viridis(p_curve@length - 1))
+  ob_path(
+    p_curve, 
+    gradient = c("red", "yellow", "blue"),
+    linewidth = 3)
+```
+
+The colors can come from any palette function (here, with some transparency).
+
+```{r}
+ggdiagram() +
+  ob_path(
+    p_curve, 
+    gradient = viridis::viridis(10, alpha = .5),
+    linewidth = 3)
 ```
 

@@ -320,3 +320,78 @@ test_that("str no error", {
   expect_no_error(suppressMessages(capture.output(str(ob_segment(ob_point(c(0,0), c(0,1)))))))
 })
 
+# default black ----
+test_that("black default", {
+  s <- ob_segment(ob_point(color = NA), ob_point(color = NA))
+  expect_equal(s@color, "black")
+  s1 <- ob_segment(ob_point(color = NA), ob_point(color = NA), color = NA)
+  expect_true(is.na(s1@color))
+
+  a <- ob_circle(color = NA, fill = "red")
+  b <- ob_circle(color = NA, fill = "blue") |>
+    place(a)
+
+  expect_equal(connect(a, b)@color, "red")
+  ggdiagram() +
+    a +
+    b +
+    connect(a, b)
+
+
+})
+
+test_that("gradient property works", {
+  g <- c("white", "black")
+  s <- ob_segment(ob_point(0, 0), ob_point(1, 1), gradient = g)
+  expect_equal(s@gradient, list(g))
+  expect_equal(s[1]@gradient, list(g))
+  expect_s3_class(s@geom()[[1]]$geom, "GeomArrowSegmentGradient")
+  expect_s3_class(
+    ob_segment(ob_point(0, 0), ob_point(1, 1))@geom()[[1]]$geom,
+    "GeomArrowSegment"
+  )
+  # gradient fill is applied to the arrow grob
+  skip_if_not_installed("ragg")
+  p <- ggdiagram() + s
+  gt <- ggplot2::ggplotGrob(p)
+  find_arrow <- function(x) {
+    if (inherits(x, "arrow_path")) return(x)
+    kids <- if (inherits(x, "gtable")) x$grobs else if (inherits(x, "gTree")) x$children else list()
+    for (k in kids) {
+      r <- find_arrow(k)
+      if (!is.null(r)) return(r)
+    }
+    NULL
+  }
+  ap <- find_arrow(gt)
+  expect_true(inherits(ap$gp$fill[[1]], "GridLinearGradient"))
+})
+
+test_that("gradient geom accepts all ggarrow parameters", {
+  expect_true(all(
+    ggarrow::GeomArrowSegment$parameters(TRUE) %in%
+      GeomArrowSegmentGradient$parameters(TRUE)
+  ))
+  expect_true(all(
+    c("gradient", "stops") %in% GeomArrowSegmentGradient$parameters(TRUE)
+  ))
+})
+
+test_that("gradient works for paths, beziers, and arcs", {
+  g <- c("white", "black")
+  p <- ob_path(ob_point(c(0, 1, 2), c(0, 1, 0)), gradient = g)
+  b <- ob_bezier(ob_point(c(0, 1, 3, 4), c(3, 5, 5, 3)), gradient = g)
+  a <- ob_arc(ob_point(0, 0), radius = 1, start = degree(0), end = degree(90), gradient = g)
+  for (o in list(p, b, a)) {
+    expect_equal(o@gradient, list(g))
+    expect_s3_class(o@geom()[[1]]$geom, "GeomArrowGradient")
+  }
+  expect_equal(p[1]@gradient, list(g))
+  expect_s3_class(
+    ob_path(ob_point(c(0, 1, 2), c(0, 1, 0)))@geom()[[1]]$geom,
+    "GeomArrow"
+  )
+  expect_true(all(
+    ggarrow::GeomArrow$parameters(TRUE) %in% GeomArrowGradient$parameters(TRUE)
+  ))
+})

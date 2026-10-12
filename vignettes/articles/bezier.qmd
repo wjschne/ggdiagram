@@ -151,6 +151,21 @@ bp +
   bind(control_point_list)
 ```
 
+
+# Color Gradients
+
+Gradients can be applied to an `ob_bezier` object. 
+
+```{r}
+#| label: fig-gradient
+#| fig-cap: Gradient colers on Bézier curves
+bp + 
+  ob_bezier(control_point_list, arrow_head = arrowhead(), linewidth = 2, gradient = c("blue", "gray", "red"))
+```
+
+
+At this time, gradients do not actually follow the curve but follow a straight line from the start to the end point. Thus, a complex path (e.g,. a loop) might not come out as expected.
+
 # Curved Connectors
 
 Drawing connectors between shapes is usually with straight line segments. However, a bezier curve with endpoints at the center of the objects can be drawn with a control point from the first object (`from_offset`) and/or a control point from second object (`to_offset`). These control points are relative to the endpoints, so `from_offset = ob_point(1, 0)` would be one unit to the right of the `from` endpoint, and `to_offset = ob_polar("north", 1)` would be one unit above the `to` endpoint.

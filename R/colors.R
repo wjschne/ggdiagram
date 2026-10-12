@@ -1,3 +1,4 @@
+# class_color ----
 #' color class
 #'
 #' Useful for manipulating colors in R.

@@ -19,11 +19,11 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: W. Joel Schneider \email{w.joel.schneider@gmail.com} (\href{https://orcid.org/0000-0002-8393-5316}{ORCID})
+\strong{Maintainer}: W. Joel Schneider \email{w.joel.schneider@gmail.com} (\href{https://orcid.org/0000-0002-8393-5316}{ORCID}) [copyright holder]
 
 Authors:
 \itemize{
-  \item W. Joel Schneider \email{w.joel.schneider@gmail.com} (\href{https://orcid.org/0000-0002-8393-5316}{ORCID})
+  \item W. Joel Schneider \email{w.joel.schneider@gmail.com} (\href{https://orcid.org/0000-0002-8393-5316}{ORCID}) [copyright holder]
 }
 
 }

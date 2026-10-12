@@ -3,6 +3,7 @@ arc_styles <- c(
   "arrow_head",
   "arrow_fins",
   "arrowhead_length",
+  "gradient",
   "length_head",
   "length_fins",
   "color",
@@ -283,6 +284,7 @@ arc_props <- list(
           arrow_head = self@arrow_head,
           arrow_fins = self@arrow_fins,
           arrowhead_length = self@arrowhead_length,
+          gradient = self@gradient,
           length_head = self@length_head,
           length_fins = self@length_fins,
           color = self@color,
@@ -418,7 +420,7 @@ arc_props <- list(
     aesthetics = S7::new_property(
       getter = function(self) {
         class_aesthetics_list(
-          geom = ggarrow::geom_arrow,
+          geom = geom_arrow_maybe_gradient,
           mappable_bare = character(0),
           mappable_identity = c(
             "color",
@@ -439,6 +441,7 @@ arc_props <- list(
             "resect",
             "resect_fins",
             "resect_head",
+            "gradient",
             "linemitre"
           ),
           required_aes = c(
@@ -539,6 +542,7 @@ ob_arc <- S7::new_class(
     arrow_head = list(),
     arrow_fins = list(),
     arrowhead_length = numeric(0),
+    gradient = list(),
     length_head = numeric(0),
     length_fins = numeric(0),
     color = character(0),
@@ -597,6 +601,7 @@ ob_arc <- S7::new_class(
         arrow_head = arrow_head,
         arrow_fins = arrow_fins,
         arrowhead_length = arrowhead_length,
+        gradient = gradient,
         length_head = length_head,
         length_fins = length_fins,
         color = color,
@@ -710,6 +715,7 @@ ob_arc <- S7::new_class(
       arrow_head = d[["arrow_head"]] %||% arrow_head,
       arrow_fins = d[["arrow_fins"]] %||% arrow_fins,
       arrowhead_length = d[["arrowhead_length"]] %||% arrowhead_length,
+      gradient = d[["gradient"]] %||% gradient,
       length_head = d[["length_head"]] %||% length_head,
       length_fins = d[["length_fins"]] %||% length_fins,
       color = d[["color"]] %||% color,

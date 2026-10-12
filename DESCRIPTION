@@ -1,8 +1,8 @@
 Package: ggdiagram
 Title: Object-Oriented Diagram Plots with 'ggplot2'
-Version: 0.2.0
+Version: 0.3.0
 Authors@R: 
-    person("W. Joel", "Schneider", , "w.joel.schneider@gmail.com", role = c("aut", "cre"),
+    person("W. Joel", "Schneider", , "w.joel.schneider@gmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0002-8393-5316"))
 Description: Creates diagrams with an object-oriented approach. Geometric
     objects have computed properties with information about themselves
@@ -14,7 +14,7 @@ URL: https://github.com/wjschne/ggdiagram,
     https://wjschne.github.io/ggdiagram/
 BugReports: https://github.com/wjschne/ggdiagram/issues
 Depends: 
-    R (>= 4.1.0)
+    R (>= 4.4.0)
 Imports: 
     arrowheadr,
     bezier,
@@ -63,16 +63,17 @@ VignetteBuilder:
     quarto
 Config/Needs/website: quarto
 Config/roxygen2/markdown: TRUE
-Config/roxygen2/version: 8.0.0
+Config/roxygen2/version: 8.1.0
 Config/testthat/edition: 3
 Encoding: UTF-8
 Language: en-US
 LazyData: true
-RoxygenNote: 8.0.0
 Collate: 
     'ggdiagram-package.R'
     'utils-pipe.R'
     'a_early.R'
+    'helpers.R'
+    'generics.R'
     'str.R'
     'colors.R'
     'angles.R'

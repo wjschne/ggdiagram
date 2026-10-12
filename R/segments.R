@@ -4,6 +4,9 @@ sg_styles <- c(
   "arrow_fins",
   "arrowhead_length",
   "color",
+  "distort",
+  "force_arrow",
+  "gradient",
   "length_head",
   "length_fins",
   "lineend",
@@ -92,6 +95,9 @@ sg_props <- list(
           arrow_head = self@arrow_head,
           arrow_fins = self@arrow_fins,
           arrowhead_length = self@arrowhead_length,
+          distort = self@distort,
+          force_arrow = self@force_arrow,
+          gradient = self@gradient,
           length_head = self@length_head,
           length_fins = self@length_fins,
           color = self@color,
@@ -188,7 +194,7 @@ sg_props <- list(
   info = list(
     aesthetics = S7::new_property(S7::class_function, getter = function(self) {
       class_aesthetics_list(
-        geom = ggarrow::geom_arrow_segment,
+        geom = geom_arrow_segment_maybe_gradient,
         mappable_bare = character(0),
         mappable_identity = c(
           "color",
@@ -209,7 +215,10 @@ sg_props <- list(
           "lineend",
           "linejoin",
           "arrow_head",
-          'arrow_fins',
+          "arrow_fins",
+          "distort",
+          "force_arrow",
+          "gradient",
           "length",
           "length_head",
           "length_fins",
@@ -217,7 +226,8 @@ sg_props <- list(
           "resect",
           "resect_fins",
           "resect_head",
-          "linemitre"
+          "linemitre",
+          "force_arrow"
         ),
         required_aes = c("x", "y", "xend", "yend"),
         omit_names = c("linejoin", "rule", "group", "label", "label_sloped"),
@@ -280,6 +290,9 @@ ob_segment <- S7::new_class(
     arrow_head = class_arrowhead(ggarrow::arrow_head_minimal(90)),
     arrow_fins = list(),
     arrowhead_length = 7,
+    distort = character(0),
+    force_arrow = logical(0),
+    gradient = list(),
     length_head = numeric(0),
     length_fins = numeric(0),
     color = character(0),
@@ -361,6 +374,8 @@ ob_segment <- S7::new_class(
 
     user_overrides <- rlang::list2(...)
 
+
+
     s_style <- p1@style +
       p2@style +
       ob_style(
@@ -369,6 +384,9 @@ ob_segment <- S7::new_class(
         arrow_head = arrow_head,
         arrow_fins = arrow_fins,
         arrowhead_length = arrowhead_length,
+        distort = distort,
+        force_arrow = force_arrow,
+        gradient = gradient,
         length_head = length_head,
         length_fins = length_fins,
         color = color,
@@ -386,6 +404,15 @@ ob_segment <- S7::new_class(
       ) +
       style +
       rlang::inject(ob_style(!!!user_overrides))
+
+    # It is confusing the points have no color to inherit no color
+    # So unless the color is explicitly set to NA, the default color is black
+
+    if (all(is.na(s_style@color))) {
+      if (!(length(color) > 0 && all(is.na(color)))) {
+        s_style@color <- "black"
+      }
+    }
 
     d <- get_non_empty_tibble(list(
       p1x = p1@x,
@@ -465,6 +492,9 @@ ob_segment <- S7::new_class(
       arrow_head = d[["arrow_head"]] %||% arrow_head,
       arrow_fins = d[["arrow_fins"]] %||% arrow_fins,
       arrowhead_length = d[["arrowhead_length"]] %||% arrowhead_length,
+      distort = d[["distort"]] %||% distort,
+      force_arrow = d[["force_arrow"]] %||% force_arrow,
+      gradient = d[["gradient"]] %||% gradient,
       length_head = d[["length_head"]] %||% length_head,
       length_fins = d[["length_fins"]] %||% length_fins,
       color = d[["color"]] %||% color,

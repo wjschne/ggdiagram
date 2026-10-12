@@ -9,6 +9,9 @@ class_margin(x = numeric(0), units = "pt")
 \arguments{
 \item{x}{A vector of numeric data, grid}
 }
+\value{
+class_margin
+}
 \description{
 Create a structure for label margins and label padding
 }

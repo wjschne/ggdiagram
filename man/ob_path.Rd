@@ -12,6 +12,8 @@ ob_path(
   arrow_head = S7::class_missing,
   arrow_fins = S7::class_missing,
   arrowhead_length = numeric(0),
+  gradient = list(),
+  force_arrow = logical(0),
   length_head = numeric(0),
   length_fins = numeric(0),
   color = character(0),
@@ -46,6 +48,10 @@ ob_path(
 \item{arrow_fins}{A 2-column matrix of polygon points}
 
 \item{arrowhead_length}{Determines the size of the arrow ornaments. This parameter becomes the \code{length} parameter in ggarrow functions. Numeric values set the ornament size relative to the linewidth. A \link[grid:unit]{grid::unit} value sets the ornament size in an absolute manner.}
+
+\item{gradient}{A character vector of 2 or more colors (or a list of such vectors, one per object) that make a smooth color gradient from the arrow's fins to its head. Used by \link{ob_segment}. Requires a graphics device that supports gradients (e.g., ragg, svg, pdf).}
+
+\item{force_arrow}{Force arrow to be drawn even if the segment is too short.}
 
 \item{length_head}{Determines the size of the arrow head. Numeric values set the ornament size relative to the linewidth. A \link[grid:unit]{grid::unit} value sets the ornament size in an absolute manner. From ggarrow.}
 

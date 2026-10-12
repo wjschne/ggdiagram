@@ -38,11 +38,11 @@ mycolor
 # Display html hexcode
 c(mycolor)
 # Set transparency
-mycolor@transparentize(.5)
+mycolor@transparentize(0.5)
 # Lighten color
-mycolor@lighten(.5)
+mycolor@lighten(0.5)
 # Darken color
-mycolor@darken(.5)
+mycolor@darken(0.5)
 }
 \section{Additional properties}{
 

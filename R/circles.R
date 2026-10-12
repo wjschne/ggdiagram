@@ -565,3 +565,4 @@ circle_from_3_points <- function(p1, p2 = NULL, p3 = NULL, ...) {
   center <- ob_point(x, y)
   ob_circle(center, radius = distance(center, p1), ...)
 }
+

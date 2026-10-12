@@ -12,9 +12,12 @@ ob_style(
   arrow_fins = list(),
   arrow_mid = list(),
   color = character(0),
+  distort = character(0),
   family = character(0),
   fill = character(0),
   fontface = character(0),
+  force_arrow = logical(0),
+  gradient = list(),
   hjust = numeric(0),
   justify = numeric(0),
   label.color = character(0),
@@ -67,11 +70,17 @@ ob_style(
 
 \item{color}{character string for color}
 
+\item{distort}{a character string associated with a ggarrow distort function (or a custom distort function with a distort prefix). If the custom function is \code{distort_mydistortion}, then the \code{distort} slot here should be \code{"mydistortion"}.}
+
 \item{family}{font family}
 
 \item{fill}{character string for fill color}
 
 \item{fontface}{Can be plain, bold, italic, or bold.italic}
+
+\item{force_arrow}{Force arrow to be drawn even if the segment is too short.}
+
+\item{gradient}{A character vector of 2 or more colors (or a list of such vectors, one per object) that make a smooth color gradient from the arrow's fins to its head. Used by \link{ob_segment}. Requires a graphics device that supports gradients (e.g., ragg, svg, pdf).}
 
 \item{hjust}{horizontal justification. 0 means left justified, 1 means right justified, 0.5 means horizontally centered}
 

@@ -71,7 +71,7 @@ An ngon is a regular polygon, meaning that each side is of equal length. The \co
 \examples{
 ob_ngon(center = ob_point(x = 3:8, y = 0),
         n = 3:8,
-        radius = .4)
+        radius = 0.4)
 }
 \section{Additional properties}{
 

@@ -84,17 +84,18 @@ A segment is a portion of a line between two points.
 
 ```{r}
 #| label: s1
-p1 <- ob_point(-3, -1)
-p2 <- ob_point(3, 3)
-s1 <- ob_segment(p1, p2)
+
 ```
+
 
 ```{r}
 #| label: fig-s1
 #| fig-cap: Plotting a segment and its endpoints
-bp + s1 + p1 + p2
+bp + 
+  {p1 <- ob_point(-3, -1)} +
+  {p2 <- ob_point(3, 3)} +
+  {s1 <- ob_segment(p1, p2)}
 ```
-
 
 
 # Features of a segment
@@ -113,6 +114,21 @@ Alternately:
 distance(s1)
 ```
 
+## Segment resection
+
+
+Sometimes a segment looks better when it reaches close to its endpoint but is resected a little. As seen in @fig-resect, the `resect` parameter sets the amount of resection in millimeters. If needed, the `resect_fins` and `resect_head` parameters control the start and and end point resection separately.
+
+```{r}
+#| label: fig-resect
+#| fig-cap: Plotting a resected segment between its endpoints
+
+bp + 
+  p1 + 
+  p2 +
+  ob_segment(p1, p2, resect = 3)
+
+```
 
 ## Line passing through the segment
 
@@ -191,7 +207,7 @@ bp +
       p25@auto_label,
       "Midpoint a quarter the<br>way between endpoints"
     ),
-    vjust = c(0, 1),
+    vjust = c(0, 1.05),
     hjust = c(1, 0)
   ) +
   s1@midpoint(c(0, 1))@label(plot_point = TRUE,
@@ -221,7 +237,7 @@ bp +
 
 # Segment chains
 
-If a point object with multiple points is placed in the `p1` slot but the `p2` slot is left empty, a series of segments chained together will be created.
+If a point object with multiple points is placed in the `p1` slot, but the `p2` slot is left empty, a series of segments chained together will be created.
 
 ```{r}
 #| label: fig-chain
@@ -262,15 +278,66 @@ As shown @fig-segmentlabel2, the `ob_label` function gives much more control ove
 
 ```{r}
 #| label: fig-segmentlabel2
-#| fig-cap: Segments with arrowheads and fins
-bp + ob_segment(p1, p2, 
-                label = ob_label(
-                  label = "My label", 
-                  position = 0.25, 
-                  color = "blue", 
-                  fill = class_color("blue")@lighten(), 
-                  family = "serif", 
-                  label.padding = ggplot2::margin(t = 5, r = 4, b = 3, l = 4)))
+#| fig-cap: Segments with formatted labels
+
+bp +
+  ob_segment(
+    p1,
+    p2,
+    label = ob_label(
+      label = "My label",
+      position = 0.25,
+      color = "blue",
+      fill = class_color("blue")@lighten(),
+      family = "serif",
+      vjust = -0.1,
+      label.padding = ggplot2::margin(
+        t = 5,
+        r = 4,
+        b = 3,
+        l = 4
+      )
+    )
+  )
 ```
 
+# Color Gradients
 
+The `color_gradient` parameter makes a smooth color gradient from the fins of an arrow to its head. It takes a vector of 2 or more colors. The gradient is a grid gradient fill, so it requires a graphics device that supports gradients (e.g., ragg, svg, or pdf). Because the gradient replaces the color of the arrow's body, set `stroke_color = NA` to hide the arrow's outline.
+
+```{r}
+#| label: fig-gradient
+#| fig-cap: Segments with color gradients
+#| fig-height: 3.5
+ggdiagram() +
+  {c1 <- ob_circle(color = "dodgerblue4")} + 
+  {c2 <- ob_circle(color = "firebrick4") |> 
+    place(from = c1, where = "right", sep = 2)} + 
+  ob_segment(c1@east,
+             c2@west,
+             arrow_head = arrowhead(),
+             resect = 3,
+             linewidth = 2,
+             gradient = c("dodgerblue4", "firebrick4"),
+             stroke_color = NA) 
+
+```
+
+Resection works as usual with gradients. Here, the segment is shortened by 3 mm at each end, and the gradient spans the shortened arrow.
+
+```{r}
+#| label: fig-gradient2
+#| fig-cap: A resected segment with a three-color gradient
+#| fig-height: 3.5
+
+ggdiagram() +
+  c1 + 
+  c2 + 
+  ob_segment(c1@east, 
+             c2@west,
+             arrow_head = arrowhead(),
+             resect = 3,
+             linewidth = 2,
+             gradient = c("dodgerblue4", "orchid4", "firebrick4"),
+             stroke_color = NA)
+```

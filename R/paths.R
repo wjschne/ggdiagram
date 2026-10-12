@@ -3,6 +3,8 @@ path_styles <- c(
   "arrow_head",
   "arrow_fins",
   "arrowhead_length",
+  "gradient",
+  "force_arrow",
   "length_head",
   "length_fins",
   "color",
@@ -67,7 +69,12 @@ path_props <- list(
     }),
     length = pt_props$derived$length,
     segment = S7::new_property(getter = function(self) {
-      purrr::map(self@p, \(s) ob_segment(s, style = self@style)) |>
+      st <- self@style
+      st@arrow_head <- list()
+      st@arrow_fins <- list()
+      purrr::map2(self@p, unbind(self), \(s, ss) {
+        ob_segment(s, style = ss@style)
+      }) |>
         bind()
     }),
     style = S7::new_property(
@@ -92,6 +99,7 @@ path_props <- list(
         arrow_head = self@arrow_head,
         arrow_fins = self@arrow_fins,
         arrowhead_length = self@arrowhead_length,
+        gradient = self@gradient,
         length_head = self@length_head,
         length_fins = self@length_fins,
         color = self@color,
@@ -155,7 +163,7 @@ path_props <- list(
     aesthetics = S7::new_property(
       getter = function(self) {
         class_aesthetics_list(
-          geom = ggarrow::geom_arrow,
+          geom = geom_arrow_maybe_gradient,
           mappable_bare = character(0),
           mappable_identity = c(
             "color",
@@ -168,6 +176,7 @@ path_props <- list(
             "linejoin",
             "arrow_head",
             "arrow_fins",
+            "force_arrow",
             "length",
             "length_head",
             "length_fins",
@@ -175,6 +184,7 @@ path_props <- list(
             "resect",
             "resect_fins",
             "resect_head",
+            "gradient",
             "linemitre"
           ),
           required_aes = c(
@@ -242,6 +252,8 @@ ob_path <- S7::new_class(
     arrow_head = S7::class_missing,
     arrow_fins = S7::class_missing,
     arrowhead_length = numeric(0),
+    gradient = list(),
+    force_arrow = logical(0),
     length_head = numeric(0),
     length_fins = numeric(0),
     color = character(0),
@@ -299,10 +311,12 @@ ob_path <- S7::new_class(
         arrow_head = arrow_head,
         arrow_fins = arrow_fins,
         arrowhead_length = arrowhead_length,
+        gradient = gradient,
         length_head = length_head,
         length_fins = length_fins,
         color = color,
         fill = fill,
+        force_arrow = force_arrow,
         lineend = lineend,
         linejoin = linejoin,
         linewidth = linewidth,
@@ -359,6 +373,8 @@ ob_path <- S7::new_class(
       arrow_head = d[["arrow_head"]] %||% arrow_head,
       arrow_fins = d[["arrow_fins"]] %||% arrow_fins,
       arrowhead_length = d[["arrowhead_length"]] %||% arrowhead_length,
+      gradient = d[["gradient"]] %||% gradient,
+      force_arrow = force_arrow,
       length_head = d[["length_head"]] %||% length_head,
       length_fins = d[["length_fins"]] %||% length_fins,
       color = d[["color"]] %||% color,

@@ -17,7 +17,10 @@ prop_vjust <- S7::new_property(
 #' @param arrow_mid A 2-column matrix of polygon points
 #' @param arrowhead_length Determines the size of the arrow ornaments. This parameter becomes the `length` parameter in ggarrow functions. Numeric values set the ornament size relative to the linewidth. A [grid::unit] value sets the ornament size in an absolute manner.
 #' @param color character string for color
+#' @param distort a character string associated with a ggarrow distort function (or a custom distort function with a distort prefix). If the custom function is `distort_mydistortion`, then the `distort` slot here should be `"mydistortion"`.
 #' @param family font family
+#' @param force_arrow Force arrow to be drawn even if the segment is too short.
+#' @param gradient A character vector of 2 or more colors (or a list of such vectors, one per object) that make a smooth color gradient from the arrow's fins to its head. Used by [ob_segment]. Requires a graphics device that supports gradients (e.g., ragg, svg, pdf).
 #' @param fill character string for fill color
 #' @param fontface Can be plain, bold, italic, or bold.italic
 #' @param hjust horizontal justification. 0 means left justified, 1 means right justified, 0.5 means horizontally centered
@@ -68,9 +71,12 @@ ob_style <- S7::new_class(
     arrow_head = S7::class_list,
     arrow_mid = S7::class_list,
     color = S7::class_character,
+    distort = S7::class_character,
     family = S7::class_character,
     fill = S7::class_character,
     fontface = S7::class_character,
+    force_arrow = S7::class_logical,
+    gradient = S7::class_list,
     hjust = prop_hjust,
     justify = S7::class_numeric,
     label.color = S7::class_character,
@@ -134,9 +140,12 @@ ob_style <- S7::new_class(
     arrow_fins = list(),
     arrow_mid = list(),
     color = character(0),
+    distort =  character(0),
     family = character(0),
     fill = character(0),
     fontface = character(0),
+    force_arrow = logical(0),
+    gradient = list(),
     hjust = numeric(0),
     justify = numeric(0),
     label.color = character(0),
@@ -215,6 +224,10 @@ ob_style <- S7::new_class(
       arrow_mid <- class_arrowhead(arrow_mid)
     }
 
+    if (is.character(gradient)) {
+      gradient <- list(gradient)
+    }
+
     if (is.character(angle)) {
       angle <- degree(angle)
     }
@@ -231,9 +244,12 @@ ob_style <- S7::new_class(
       arrow_head = arrow_head,
       arrow_fins = arrow_fins,
       arrow_mid = arrow_mid,
+      distort = distort,
       family = family,
       fill = as.character(fill),
       fontface = fontface,
+      force_arrow = force_arrow,
+      gradient = gradient,
       hjust = hjust,
       justify = justify,
       label.color = as.character(label.color),
@@ -284,9 +300,12 @@ ob_style <- S7::new_class(
       arrow_head = arrow_head,
       arrow_fins = arrow_fins,
       arrow_mid = arrow_mid,
+      distort = distort,
       family = family,
       fill = as.character(fill),
       fontface = fontface,
+      force_arrow = force_arrow,
+      gradient = gradient,
       hjust = hjust,
       justify = justify,
       label.color = as.character(label.color),
@@ -348,7 +367,8 @@ S7::method(print, ob_style) <- function(x, ...) {
   invisible(x)
 }
 
-S7::method(`+`, list(ob_style, ob_style)) <- function(e1, e2) { # nocov start
+S7::method(`+`, list(ob_style, ob_style)) <- function(e1, e2) {
+  # nocov start
   pn <- S7::prop_names(e1)
   pnames <- pn[pn != "tibble"]
   for (p in pnames) {

@@ -44,10 +44,10 @@ Angles turns can be any real number, but degrees are displayed as values between
 degree(90)
 
 ## half pi radians
-radian(.5 * pi)
+radian(0.5 * pi)
 
 ## A quarter turn
-turn(.25)
+turn(0.25)
 
 # Operations
 degree(30) + degree(20)
@@ -60,7 +60,7 @@ degree(30) / 3
 
 radian(1) + 1 # added or subtracted numbers are radians
 degree(10) + 10 # added or subtracted numbers are degrees
-turn(.25) + .25 # added or subtracted numbers are turns
+turn(0.25) + 0.25 # added or subtracted numbers are turns
 
 # Trigonometric functions work as normal
 sin(degree(30))
