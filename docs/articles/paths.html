@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Roboto_Condensed-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/Roboto_Condensed-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="paths_files/libs/quarto-html/popper.min.js"></script><script src="paths_files/libs/quarto-html/tippy.umd.min.js"></script><link href="paths_files/libs/quarto-html/tippy.css" rel="stylesheet">
@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggdiagram</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -124,14 +124,14 @@
 <span>  font_family <span class="op">=</span> <span class="va">my_font</span>,</span>
 <span>  font_size <span class="op">=</span> <span class="va">my_font_size</span>,</span>
 <span>  point_size <span class="op">=</span> <span class="va">my_point_size</span>,</span>
-<span>  linewidth <span class="op">=</span> <span class="fl">.5</span>,</span>
+<span>  linewidth <span class="op">=</span> <span class="fl">0.5</span>,</span>
 <span>  theme_function <span class="op">=</span> <span class="va">theme_minimal</span>,</span>
 <span>  axis.title.x <span class="op">=</span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>face <span class="op">=</span> <span class="st">"italic"</span><span class="op">)</span>,</span>
 <span>  axis.title.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span></span>
 <span>    face <span class="op">=</span> <span class="st">"italic"</span>,</span>
 <span>    angle <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>    hjust <span class="op">=</span> <span class="fl">.5</span>,</span>
-<span>    vjust <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    hjust <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>    vjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="va">signs_centered</span>,</span>
 <span>                     limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">signs</span><span class="fu">::</span><span class="va"><a href="https://benjaminwolfe.github.io/signs/reference/signs.html" class="external-link">signs</a></span>,</span>
@@ -162,7 +162,7 @@ Figure 1: Plotting a path.
 <p>The label of a path is created with <code><a href="https://allancameron.github.io/geomtextpath/reference/geom_textpath.html" class="external-link">geomtextpath::geom_labelpath</a></code>, and thus will curve if the path is curved.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p_curve</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>, <span class="fl">4</span>, <span class="fl">.1</span><span class="op">)</span>, </span>
+<code class="sourceCode R"><span><span class="va">p_curve</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>, <span class="fl">4</span>, <span class="fl">0.1</span><span class="op">)</span>, </span>
 <span>                  y <span class="op">=</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">pnorm</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">*</span> <span class="fl">8</span> <span class="op">-</span> <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
@@ -173,7 +173,7 @@ Figure 1: Plotting a path.
 <span>    p <span class="op">=</span> <span class="va">p_curve</span>,</span>
 <span>    label <span class="op">=</span> <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span></span>
 <span>      <span class="st">"A path label will curve along the path."</span>,</span>
-<span>      vjust <span class="op">=</span> <span class="op">-</span><span class="fl">.1</span>,</span>
+<span>      vjust <span class="op">=</span> <span class="op">-</span><span class="fl">0.1</span>,</span>
 <span>      size <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>      color <span class="op">=</span> <span class="st">"dodgerblue4"</span></span>
 <span>    <span class="op">)</span>,</span>
@@ -199,10 +199,10 @@ Figure 2: A path with a curved label
 <span>    p <span class="op">=</span> <span class="va">p_curve</span>,</span>
 <span>    label <span class="op">=</span> <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span></span>
 <span>      <span class="st">"A path label will curve along the path."</span>,</span>
-<span>      vjust <span class="op">=</span> <span class="op">-</span><span class="fl">.1</span>,</span>
+<span>      vjust <span class="op">=</span> <span class="op">-</span><span class="fl">0.1</span>,</span>
 <span>      size <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>      color <span class="op">=</span> <span class="st">"dodgerblue4"</span>,</span>
-<span>      position <span class="op">=</span> <span class="fl">.1</span></span>
+<span>      position <span class="op">=</span> <span class="fl">0.1</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    arrowhead_length <span class="op">=</span> <span class="fl">8</span>,</span>
 <span>    arrow_head <span class="op">=</span> <span class="fu"><a href="../reference/arrowhead.html">arrowhead</a></span><span class="op">(</span><span class="op">)</span></span>
@@ -225,8 +225,8 @@ Figure 3: A path with a curved label at position .1
 <div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/ob_path.html">ob_path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">p_curve</span>, </span>
-<span>         <span class="va">p_curve</span> <span class="op">*</span> <span class="fl">.5</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">2</span>,<span class="op">-</span><span class="fl">2</span><span class="op">)</span>,</span>
-<span>         <span class="va">p_curve</span> <span class="op">*</span> <span class="fl">.5</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span>, </span>
+<span>         <span class="va">p_curve</span> <span class="op">*</span> <span class="fl">0.5</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">2</span>,<span class="op">-</span><span class="fl">2</span><span class="op">)</span>,</span>
+<span>         <span class="va">p_curve</span> <span class="op">*</span> <span class="fl">0.5</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="op">-</span><span class="fl">2</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span>, </span>
 <span>       color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"orchid4"</span>,</span>
 <span>                 <span class="st">"dodgerblue3"</span>,</span>
 <span>                 <span class="st">"firebrick4"</span><span class="op">)</span>,</span>
@@ -242,17 +242,35 @@ Figure 4: Multiple paths
 </div>
 </div>
 </div>
-</section><section class="section level2"><h2 id="segments">Segments<a class="anchor" aria-label="anchor" href="#segments"></a>
+</section><section class="section level2"><h2 id="color-gradients">Color Gradients<a class="anchor" aria-label="anchor" href="#color-gradients"></a>
 </h2>
-<p>It is possible to create color gradients along a path using the paths’ segments.</p>
+<p>It is possible to create color gradients along a path with the <code>gradient</code> parameter. The gradient runs in a straight line from the first point to the last point of the path, so it follows the path closely only when the path does not double back on itself.</p>
+<p>You can use a vector of two or more colors.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggdiagram.html">ggdiagram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/ob_path.html">ob_path</a></span><span class="op">(</span><span class="va">p_curve</span><span class="op">)</span><span class="op">@</span><span class="va">segment</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="https://rconsortium.github.io/S7/reference/props.html" class="external-link">set_props</a></span><span class="op">(</span>color <span class="op">=</span> <span class="fu">viridis</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">viridis</a></span><span class="op">(</span><span class="va">p_curve</span><span class="op">@</span><span class="va">length</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/ob_path.html">ob_path</a></span><span class="op">(</span></span>
+<span>    <span class="va">p_curve</span>, </span>
+<span>    gradient <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"red"</span>, <span class="st">"yellow"</span>, <span class="st">"blue"</span><span class="op">)</span>,</span>
+<span>    linewidth <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div>
-<figure><p><img src="paths_files/figure-html/segmentgradient-1.png" width="672"></p>
+<figure><p><img src="paths_files/figure-html/unnamed-chunk-1-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The colors can come from any palette function (here, with some transparency).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ggdiagram.html">ggdiagram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_path.html">ob_path</a></span><span class="op">(</span></span>
+<span>    <span class="va">p_curve</span>, </span>
+<span>    gradient <span class="op">=</span> <span class="fu">viridis</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">viridis</a></span><span class="op">(</span><span class="fl">10</span>, alpha <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span>,</span>
+<span>    linewidth <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure><p><img src="paths_files/figure-html/unnamed-chunk-2-1.png" width="672"></p>
 </figure>
 </div>
 </div>
@@ -350,7 +368,7 @@ Figure 4: Multiple paths
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

@@ -13,9 +13,12 @@ ob_style(
   arrow_fins = list(),
   arrow_mid = list(),
   color = character(0),
+  distort = character(0),
   family = character(0),
   fill = character(0),
   fontface = character(0),
+  force_arrow = logical(0),
+  gradient = list(),
   hjust = numeric(0),
   justify = numeric(0),
   label.color = character(0),
@@ -84,6 +87,13 @@ ob_style(
 
   character string for color
 
+- distort:
+
+  a character string associated with a ggarrow distort function (or a
+  custom distort function with a distort prefix). If the custom function
+  is `distort_mydistortion`, then the `distort` slot here should be
+  `"mydistortion"`.
+
 - family:
 
   font family
@@ -95,6 +105,19 @@ ob_style(
 - fontface:
 
   Can be plain, bold, italic, or bold.italic
+
+- force_arrow:
+
+  Force arrow to be drawn even if the segment is too short.
+
+- gradient:
+
+  A character vector of 2 or more colors (or a list of such vectors, one
+  per object) that make a smooth color gradient from the arrow's fins to
+  its head. Used by
+  [ob_segment](https://wjschne.github.io/ggdiagram/reference/ob_segment.md).
+  Requires a graphics device that supports gradients (e.g., ragg, svg,
+  pdf).
 
 - hjust:
 

@@ -168,6 +168,10 @@ Functions for plotting
   : ggdiagram function
 - [`as.geom()`](https://wjschne.github.io/ggdiagram/reference/as.geom.md)
   : as.geom function
+- [`geom_arrow_gradient()`](https://wjschne.github.io/ggdiagram/reference/geom_arrow_gradient.md)
+  : Arrows and paths with a color gradient
+- [`geom_arrow_segment_gradient()`](https://wjschne.github.io/ggdiagram/reference/geom_arrow_segment_gradient.md)
+  : Arrow segments with a color gradient
 
 ## Other functions
 

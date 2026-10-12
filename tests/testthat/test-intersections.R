@@ -223,7 +223,7 @@ test_that("intersection: point × segmented", {
   ppb2 <- intersection(pp, p)
   expect_identical(p, ppb)
   expect_identical(ppb, ppb2)
-  expect_identical(pp@midpoint(), ob_point(0.5, 1))
+  expect_identical(pp@midpoint(), ob_point(0.5, 1, color = "black"))
 
   pg <- ob_polygon(p = pp@p)
   ppg <- intersection(p, pg)

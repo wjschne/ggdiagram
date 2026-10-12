@@ -1,5 +1,6 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://wjschne.github.io/ggdiagram/404.html</loc></url>
+<url><loc>https://wjschne.github.io/ggdiagram/AGENTS.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/articles/angles.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/articles/arcwedges.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/articles/automation.html</loc></url>
@@ -35,6 +36,8 @@
 <url><loc>https://wjschne.github.io/ggdiagram/reference/data2shape.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/distance.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/equation.html</loc></url>
+<url><loc>https://wjschne.github.io/ggdiagram/reference/geom_arrow_gradient.html</loc></url>
+<url><loc>https://wjschne.github.io/ggdiagram/reference/geom_arrow_segment_gradient.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/get_depth.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/get_tibble.html</loc></url>
 <url><loc>https://wjschne.github.io/ggdiagram/reference/ggdiagram-package.html</loc></url>

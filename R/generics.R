@@ -717,6 +717,8 @@ label_object <- S7::new_generic("label_object", "object")
 #' @param arc_bend If specified, the arrow will be an arc with a sagitta sized in proportion to the distance between points. The sagitta is is the largest distance from the arc's chord to the arc itself. Negative values bend left. Positive values bend right. 1 and -1 create semi-circles. 0 is a straight segment. If specified, will override `from_offset` and `to_offset`.
 #' @param from_offset If specified, arrow will be a bezier curve. The `from_offset` is a point (ob_point or ob_polar) that is added to `from` to act as a control point in the bezier curve.
 #' @param to_offset If specified, arrow will be a bezier curve. The `to_offset` is a point (ob_point or ob_polar) that is added to `to` to act as a control point in the bezier curve.
+#' @details If `color` and `gradient` are not specified, the connector is drawn with a color gradient from the color of the `from` object to the color of the `to` object. The color of an object is its `color`, or its `fill` if `color` is `NA`, or black if both are `NA`. If the two colors are identical, no gradient is used and the connector has that color.
+#'
 #' @inheritParams ob_bezier
 #' @param ... <[`dynamic-dots`][rlang::dyn-dots]> Arguments passed to [ob_style]
 #' @export
@@ -754,7 +756,15 @@ connect <- S7::new_generic(
     label_sloped = TRUE,
     id = character(0)
   ) {
-    S7::S7_dispatch()
+    s <- S7::S7_dispatch()
+    connect_default_gradient(
+      s,
+      from,
+      to,
+      color_given = !missing(color),
+      style = style,
+      dots = rlang::list2(...)
+    )
   }
 )
 

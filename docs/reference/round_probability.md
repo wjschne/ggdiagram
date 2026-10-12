@@ -58,6 +58,6 @@ a character vector
 ## Examples
 
 ``` r
-round_probability(c(0, .0012, .012, .12, .99, .992, .9997, 1), digits = 2)
+round_probability(c(0, 0.0012, 0.012, 0.12, 0.99, 0.992, 0.9997, 1), digits = 2)
 #> [1] "0"     ".0012" ".012"  ".12"   ".99"   ".992"  ".9997" "1"    
 ```

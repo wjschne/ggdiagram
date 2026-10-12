@@ -7,9 +7,9 @@ Create superscript
 ## Usage
 
 ``` r
-subscript(x, subscript = seq(length(x)), output = c("markdown", "latex"))
+subscript(x, subscript = seq_along(x), output = c("markdown", "latex"))
 
-superscript(x, superscript = seq(length(x)), output = c("markdown", "latex"))
+superscript(x, superscript = seq_along(x), output = c("markdown", "latex"))
 ```
 
 ## Arguments

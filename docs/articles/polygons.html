@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Roboto_Condensed-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/Roboto_Condensed-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="polygons_files/libs/quarto-html/popper.min.js"></script><script src="polygons_files/libs/quarto-html/tippy.umd.min.js"></script><link href="polygons_files/libs/quarto-html/tippy.css" rel="stylesheet">
@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggdiagram</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -125,14 +125,14 @@
 <span>  font_family <span class="op">=</span> <span class="va">my_font</span>,</span>
 <span>  font_size <span class="op">=</span> <span class="va">my_font_size</span>,</span>
 <span>  point_size <span class="op">=</span> <span class="va">my_point_size</span>,</span>
-<span>  linewidth <span class="op">=</span> <span class="fl">.5</span>,</span>
+<span>  linewidth <span class="op">=</span> <span class="fl">0.5</span>,</span>
 <span>  theme_function <span class="op">=</span> <span class="va">theme_minimal</span>,</span>
 <span>  axis.title.x <span class="op">=</span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>face <span class="op">=</span> <span class="st">"italic"</span><span class="op">)</span>,</span>
 <span>  axis.title.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span></span>
 <span>    face <span class="op">=</span> <span class="st">"italic"</span>,</span>
 <span>    angle <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>    hjust <span class="op">=</span> <span class="fl">.5</span>,</span>
-<span>    vjust <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    hjust <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>    vjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="va">signs_centered</span>,</span>
 <span>                     limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">signs</span><span class="fu">::</span><span class="va"><a href="https://benjaminwolfe.github.io/signs/reference/signs.html" class="external-link">signs</a></span>,</span>
@@ -192,9 +192,9 @@ Figure 2: A path with a curved label
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span></span>
-<span>  <span class="op">{</span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_polygon.html">ob_polygon</a></span><span class="op">(</span><span class="fl">.5</span> <span class="op">*</span> <span class="va">p</span> <span class="op">-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">1.9</span>, <span class="fl">1.9</span><span class="op">)</span>,</span>
+<span>  <span class="op">{</span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_polygon.html">ob_polygon</a></span><span class="op">(</span><span class="fl">0.5</span> <span class="op">*</span> <span class="va">p</span> <span class="op">-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">1.9</span>, <span class="fl">1.9</span><span class="op">)</span>,</span>
 <span>                    fill <span class="op">=</span> <span class="st">"dodgerblue4"</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
-<span>  <span class="op">{</span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_polygon.html">ob_polygon</a></span><span class="op">(</span><span class="fl">.5</span> <span class="op">*</span> <span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">1.9</span>, <span class="fl">1.9</span><span class="op">)</span>,</span>
+<span>  <span class="op">{</span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_polygon.html">ob_polygon</a></span><span class="op">(</span><span class="fl">0.5</span> <span class="op">*</span> <span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="fl">1.9</span>, <span class="fl">1.9</span><span class="op">)</span>,</span>
 <span>                    fill <span class="op">=</span> <span class="st">"orchid4"</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/connect.html">connect</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span>,</span>
 <span>          resect <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -241,9 +241,9 @@ Figure 4: A polygon with rounded vertices
 <span><span class="va">bp</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/ob_ngon.html">ob_ngon</a></span><span class="op">(</span></span>
 <span>    n <span class="op">=</span> <span class="va">n</span><span class="op">:</span><span class="fl">1</span> <span class="op">+</span> <span class="fl">2</span>,</span>
-<span>    radius <span class="op">=</span> <span class="fl">4</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">.1</span>, length.out <span class="op">=</span> <span class="va">n</span><span class="op">)</span> <span class="op">^</span> <span class="fl">.7</span>,</span>
-<span>    fill <span class="op">=</span> <span class="fu">viridis</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">viridis</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n</span>, begin <span class="op">=</span> <span class="fl">.2</span>, end <span class="op">=</span> <span class="fl">.8</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>      <span class="fu">tinter</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tinter/man/lighten.html" class="external-link">lighten</a></span><span class="op">(</span><span class="fl">.6</span><span class="op">)</span>,</span>
+<span>    radius <span class="op">=</span> <span class="fl">4</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.1</span>, length.out <span class="op">=</span> <span class="va">n</span><span class="op">)</span> <span class="op">^</span> <span class="fl">0.7</span>,</span>
+<span>    fill <span class="op">=</span> <span class="fu">viridis</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">viridis</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n</span>, begin <span class="op">=</span> <span class="fl">0.2</span>, end <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>      <span class="fu">tinter</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tinter/man/lighten.html" class="external-link">lighten</a></span><span class="op">(</span><span class="fl">0.6</span><span class="op">)</span>,</span>
 <span>    color <span class="op">=</span> <span class="st">"white"</span>,</span>
 <span>    linewidth <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>    angle <span class="op">=</span> <span class="fl">90</span></span>
@@ -284,7 +284,7 @@ Figure 5: Regular polygons
 <span>    color <span class="op">=</span> <span class="st">"white"</span>,</span>
 <span>    label <span class="op">=</span> <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span></span>
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Apothem = "</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">ng</span><span class="op">@</span><span class="va">apothem</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>      vjust <span class="op">=</span> <span class="op">-</span><span class="fl">.2</span>,</span>
+<span>      vjust <span class="op">=</span> <span class="op">-</span><span class="fl">0.2</span>,</span>
 <span>      fill <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>      family <span class="op">=</span> <span class="va">my_font</span></span>
 <span>    <span class="op">)</span></span>
@@ -335,12 +335,12 @@ Figure 7: A Reuleaux triangle
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggdiagram.html">ggdiagram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/ob_reuleaux.html">ob_reuleaux</a></span><span class="op">(</span></span>
 <span>    n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">13</span>, <span class="fl">3</span>, <span class="op">-</span><span class="fl">2</span><span class="op">)</span>,</span>
-<span>    radius <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="op">-</span><span class="fl">.2</span><span class="op">)</span>,</span>
+<span>    radius <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">1</span>, <span class="op">-</span><span class="fl">0.2</span><span class="op">)</span>,</span>
 <span>    fill <span class="op">=</span> <span class="fu">viridis</span><span class="fu">::</span><span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html" class="external-link">viridis</a></span><span class="op">(</span></span>
 <span>      n <span class="op">=</span> <span class="fl">6</span>,</span>
-<span>      begin <span class="op">=</span> <span class="fl">.2</span>,</span>
-<span>      end <span class="op">=</span> <span class="fl">.8</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>      <span class="fu">tinter</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tinter/man/lighten.html" class="external-link">lighten</a></span><span class="op">(</span><span class="fl">.6</span><span class="op">)</span>,</span>
+<span>      begin <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>      end <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>      <span class="fu">tinter</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tinter/man/lighten.html" class="external-link">lighten</a></span><span class="op">(</span><span class="fl">0.6</span><span class="op">)</span>,</span>
 <span>    color <span class="op">=</span> <span class="st">"white"</span>,</span>
 <span>    linewidth <span class="op">=</span> <span class="fl">1</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
@@ -487,7 +487,7 @@ Figure 10: A symmetric lens
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

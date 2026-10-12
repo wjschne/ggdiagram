@@ -23,21 +23,21 @@ my_font <- "Roboto Condensed"
 my_font_size <- 20
 my_point_size <- 2
 
-# my_colors <- viridis::viridis(2, begin = .25, end = .5)
+# my_colors <- viridis::viridis(2, begin = 0.25, end = 0.5)
 my_colors <- c("#3B528B", "#21908C")
 
 bp <- ggdiagram(
   font_family = my_font,
   font_size = my_font_size,
   point_size = my_point_size,
-  linewidth = .5,
+  linewidth = 0.5,
   theme_function = theme_minimal,
   axis.title.x =  element_text(face = "italic"),
   axis.title.y = element_text(
     face = "italic",
     angle = 0,
-    hjust = .5,
-    vjust = .5)) +
+    hjust = 0.5,
+    vjust = 0.5)) +
   scale_x_continuous(labels = signs_centered,
                      limits = c(-4, 4)) +
   scale_y_continuous(labels = signs::signs,
@@ -66,7 +66,7 @@ ob_arc(center = ob_point(1,2),
 #> ── <ob_arc>
 #> # A tibble: 1 × 7
 #>       x     y radius start   end     n type 
-#>   <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl> <chr>
+#>   <dbl> <dbl>  <dbl> <dbl> <dbl> <int> <chr>
 #> 1     1     2      3    25    75   360 arc
 ```
 
@@ -169,7 +169,7 @@ angles.
 ## Midpoints
 
 The midpoint function can find one or more midpoints at different
-positions. The default position is .5.
+positions. The default position is 0.5.
 
 ``` r
 
@@ -224,7 +224,7 @@ bp +
     end = 120,
     label = ob_label(
       c("Start", "Middle", "End"),
-      position = c(0, .5, 1),
+      position = c(0, 0.5, 1),
       plot_point = TRUE
     )
   )
@@ -247,7 +247,7 @@ bp +
     label = ob_label(
       "A",
       vjust = 1.2,
-      hjust = .75
+      hjust = 0.75
     )
   )
 ```
@@ -290,6 +290,20 @@ bp +
 
 Figure 9: Adjusting the arc’s autolabel
 
+## Arcs with color gradients
+
+A gradient can be applied to an `ob_arc` object.
+
+``` r
+
+ggdiagram() + 
+  ob_arc(start = 0, end = 90, gradient = c("blue", "yellow"), linewidth = 3)
+```
+
+![](arcwedges_files/figure-html/fig-arcgradient-1.png)
+
+Figure 10: An arc with a color gradient
+
 ## Arcs with arrows
 
 The arc object is plotted using `ggarrow::arrow`. This means that arrows
@@ -308,7 +322,7 @@ bp +
 
 ![](arcwedges_files/figure-html/fig-arcarrow-1.png)
 
-Figure 10: Arcs with arrowheads
+Figure 11: Arcs with arrowheads
 
 ## Connecting Points and Shapes with Arcs
 
@@ -337,19 +351,19 @@ bp +
                   label = "A")} +
   {B <- ob_ellipse(x = 1, 
                    a = 1, 
-                   b = .5, 
+                   b = 0.5, 
                    angle = degree(60), 
                    label = ob_label("B", angle = 0))} + 
   {C <- ob_rectangle(center = ob_point(3,0), 
                      label = "C")} +
-  connect(A, B, arc_bend = -.75) +
+  connect(A, B, arc_bend = -0.75) +
   connect(B, C, arc_bend = -1) +
-  connect(A, C@south, arc_bend = .6)
+  connect(A, C@south, arc_bend = 0.6)
 ```
 
 ![](arcwedges_files/figure-html/fig-arcconnectors-1.png)
 
-Figure 11: Arcs with arrowheads
+Figure 12: Arcs with arrowheads
 
 ## Wedges
 
@@ -379,7 +393,7 @@ bp +
 
 ![](arcwedges_files/figure-html/fig-wedge-1.png)
 
-Figure 12: Arc wedges
+Figure 13: Arc wedges
 
 ## Circular Segments
 
@@ -402,14 +416,14 @@ ggdiagram() +
 
 ![](arcwedges_files/figure-html/fig-threecircularsegments-1.png)
 
-Figure 13: Three circular segments
+Figure 14: Three circular segments
 
 Objects made with `ob_arc`, `ob_wedge`, or `ob_circular_segment` can
 return important features of arcs, including the `chord`, `sagitta`, and
-`arc_length`. In [Figure 14](#fig-circularsegment), the `chord` is the
+`arc_length`. In [Figure 15](#fig-circularsegment), the `chord` is the
 `ob_segment` that connects the endpoints of the arc. The `sagitta` is
 `ob_segment` from the arc’s midpoint to the chord’s midpoint. Not shown
-in [Figure 14](#fig-circularsegment), the `apothem` is the `ob_segment`
+in [Figure 15](#fig-circularsegment), the `apothem` is the `ob_segment`
 from the arc’s center point to the midpoint of the chord. The radius is
 the sum of the distances spanned by the apothem and the sagitta.
 
@@ -449,16 +463,26 @@ bp +
     vjust = 0,
     angle = cs@sagitta@line@angle,
     size = 18,
-    fill = NA, 
+    fill = NA,
     color = "white"
   ) +
-  connect(cs@center, cs@point_at(degree(225)), color = "black", label = ob_label("Radius = 3", angle = degree(45), size = 18, vjust = 0))
+  connect(
+    cs@center,
+    cs@point_at(degree(225)),
+    color = "black",
+    label = ob_label(
+      "Radius = 3",
+      angle = degree(45),
+      size = 18,
+      vjust = 0
+    )
+  )
   
 ```
 
 ![](arcwedges_files/figure-html/fig-circularsegment-1.png)
 
-Figure 14: A circular segment and arc and its chord.
+Figure 15: A circular segment and arc and its chord.
 
 Fun fact: Our geometric concepts *arc*, *chord*, and *sagitta* are all
 archery terms, deriving from the Latin words *arcus* (bow), *chorda*

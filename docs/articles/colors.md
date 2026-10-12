@@ -45,7 +45,7 @@ darkened:
 ``` r
 
 ggdiagram() +
-  ob_circle(fill = my_color@darken(.5))
+  ob_circle(fill = my_color@darken(0.5))
 ```
 
 ![](colors_files/figure-html/darken-1.png)
@@ -55,7 +55,7 @@ Colors can be lightened:
 ``` r
 
 ggdiagram() +
-  ob_circle(fill = my_color@lighten(.5))
+  ob_circle(fill = my_color@lighten(0.5))
 ```
 
 ![](colors_files/figure-html/lighten-1.png)
@@ -65,9 +65,9 @@ Colors can be made transparent:
 ``` r
 
 ggdiagram() +
-  ob_circle(fill = my_color@transparentize(.5)) +
-  ob_circle(fill = my_color@transparentize(.5), 
-            center = ob_point(1,0))
+  ob_circle(fill = my_color@transparentize(0.5)) +
+  ob_circle(fill = my_color@transparentize(0.5), 
+            center = ob_point(1, 0))
 ```
 
 ![](colors_files/figure-html/transparent-1.png)
@@ -79,14 +79,14 @@ properties:
 
 ggdiagram() + 
   {my_array <- ob_circle(color = NA) %>% 
-    ob_array(fill = my_color@lighten(seq(.1,1,length.out = 5)), 
+    ob_array(fill = my_color@lighten(seq(0.1,1,length.out = 5)), 
              k = 5, 
-             sep = .2)} + 
+             sep = 0.2)} + 
   ob_circle(color = NA) %>% 
-    ob_array(fill = my_color@darken(seq(0,.9,length.out = 5)), 
+    ob_array(fill = my_color@darken(seq(0,0.9,length.out = 5)), 
              k = 5, 
-             sep = .2) %>% 
-    place(my_array, "below", sep = .2) 
+             sep = 0.2) %>% 
+    place(my_array, "below", sep = 0.2) 
 ```
 
 ![](colors_files/figure-html/makesequence-1.png)
@@ -127,7 +127,7 @@ ggdiagram() +
   ob_circle(color = NA) %>%
   ob_array(fill = my_color_array,
            k = 12,
-           sep = .2)
+           sep = 0.2)
 ```
 
 ![](colors_files/figure-html/hsvsequence-1.png)
@@ -138,13 +138,13 @@ but with different saturation and/or brightness:
 ``` r
 
 my_color_array <- class_color(my_color, 
-                              saturation = seq(.1, .6, .1))
+                              saturation = seq(0.1, 0.6, 0.1))
 
 ggdiagram() +
   ob_circle(color = NA) %>%
   ob_array(fill = my_color_array, 
            k = 6, 
-           sep = .2)
+           sep = 0.2)
 ```
 
 ![](colors_files/figure-html/samehue-1.png)

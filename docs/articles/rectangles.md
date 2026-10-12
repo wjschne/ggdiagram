@@ -47,14 +47,14 @@ bp <- ggdiagram(
   font_family = my_font,
   font_size = my_font_size,
   point_size = my_point_size,
-  linewidth = .5,
+  linewidth = 0.5,
   theme_function = theme_minimal,
   axis.title.x =  element_text(face = "italic"),
   axis.title.y = element_text(
     face = "italic",
     angle = 0,
-    hjust = .5,
-    vjust = .5)) +
+    hjust = 0.5,
+    vjust = 0.5)) +
   scale_x_continuous(labels = signs_centered,
                      limits = c(-4, 4)) +
   scale_y_continuous(labels = signs::signs,
@@ -109,7 +109,7 @@ r1 <- ob_rectangle(
   height = h,
   center = cent,
   color = my_colors$primary,
-  fill = my_colors$primary@transparentize(.15),
+  fill = my_colors$primary@transparentize(0.15),
   linewidth = 1
 )
 r1
@@ -131,10 +131,10 @@ double_arrowstyle <- ob_style(
   color = my_colors$secondar
 )
 
-s_east <- r1@side@east@nudge(x = .1)
+s_east <- r1@side@east@nudge(x = 0.1)
 s_east@style <- double_arrowstyle
 
-s_north <- r1@side@north@nudge(y = .1)
+s_north <- r1@side@north@nudge(y = 0.1)
 s_north@style <- double_arrowstyle
 
 rc_plot <- ggplot() +
@@ -145,8 +145,8 @@ rc_plot <- ggplot() +
 rc_center <- list(
   r1@center,
   r1@center@label(
-    fill = my_colors$primary@lighten(.15),
-    vjust = -.15)) |>
+    fill = my_colors$primary@lighten(0.15),
+    vjust = -0.15)) |>
   bind()
 
 rc_width <- s_north |>
@@ -171,28 +171,28 @@ rc_nw <- r1@northwest@label(
   plot_point = TRUE,
   vjust = 1.1,
   hjust = 0,
-  fill = my_colors$primary@lighten(.15)
+  fill = my_colors$primary@lighten(0.15)
 )
 
 rc_ne <- r1@northeast@label(
   plot_point = TRUE,
   vjust = 1.1,
   hjust = 1,
-  fill = my_colors$primary@lighten(.15)
+  fill = my_colors$primary@lighten(0.15)
 )
 
 rc_sw <- r1@southwest@label(
   plot_point = TRUE,
-  vjust = -.1,
+  vjust = -0.1,
   hjust = 0,
-  fill = my_colors$primary@lighten(.15)
+  fill = my_colors$primary@lighten(0.15)
 )
 
 rc_se <- r1@southeast@label(
   plot_point = TRUE,
-  vjust = -.1,
+  vjust = -0.1,
   hjust = 1,
-  fill = my_colors$primary@lighten(.15)
+  fill = my_colors$primary@lighten(0.15)
 )
 
 rc_plot + rc_center + rc_width + rc_height
@@ -368,26 +368,26 @@ rc_plot +
         1.1,
         ifelse(
           grepl(x = x, "south|center"),
-          -.1,
-          .5))
+          -0.1,
+          0.5))
       
       h <- ifelse(
         grepl(x = x, "east"),
         1.1,
-        ifelse(grepl(x = x, "west"), -.1, .5))
+        ifelse(grepl(x = x, "west"), -0.1, 0.5))
       c(
         as.geom(
           prop(r1, x)@label(
             label = x,
             hjust = h,
             vjust = v,
-            fill = my_colors$primary@lighten(.15)
+            fill = my_colors$primary@lighten(0.15)
           )
         ),
         as.geom(
           prop(r1, x)@label(hjust = 1 - h, vjust = 1 - v),
           fill = ifelse(x == "center",
-                        my_colors$primary@lighten(.15),
+                        my_colors$primary@lighten(0.15),
                         "white")
         ),
         as.geom(prop(r1, x))
@@ -395,8 +395,8 @@ rc_plot +
     }
   ) +
   coord_equal(
-    xlim = c(-.25, 4.25),
-    ylim = c(-.25, 2.25))
+    xlim = c(-0.25, 4.25),
+    ylim = c(-0.25, 2.25))
 ```
 
 ![](rectangles_files/figure-html/fig-points-1.png)
@@ -429,11 +429,11 @@ rc_plot +
     polar_just = ob_polar(theta, 1.5),
     plot_point = TRUE) +
   ob_arc(center = r1@center,
-      radius = .5,
+      radius = 0.5,
       end = theta,
       label = ob_label(
         theta,
-        fill = my_colors$primary@lighten(.15),
+        fill = my_colors$primary@lighten(0.15),
         color = my_colors$primary@color))
 ```
 
@@ -452,9 +452,9 @@ r1@side@north
 #> 
 #> ── <ob_segment>
 #> # A tibble: 1 × 8
-#>       x     y  xend  yend arrow_head    arrowhead_length color     linewidth
-#>   <dbl> <dbl> <dbl> <dbl> <list>                   <dbl> <chr>         <dbl>
-#> 1     0     2     4     2 <dbl [2 × 2]>                7 #27408BFF         1
+#>       x     y  xend  yend arrow_head     arrowhead_length color     linewidth
+#>   <dbl> <dbl> <dbl> <dbl> <list>                    <dbl> <chr>         <dbl>
+#> 1     0     2     4     2 <ggdgr::_ [1]>                7 #27408BFF         1
 ```
 
 Code
@@ -465,7 +465,7 @@ rc_plot +
   r1@side@north |>
     set_props(color = my_colors$secondary@color, linewidth = 2) +
   r1@north@label(label = "North Side",
-                 vjust = -.1,
+                 vjust = -0.1,
                  size = 20,
                  color = my_colors$secondary)
 ```
@@ -539,7 +539,7 @@ ggplot() +
   ob_rectangle(
     center = ob_polar(theta = th, r = w / 2 + r_middle),
     width = w,
-    height = .15,
+    height = 0.15,
     angle = th,
     color = NA,
     fill = hcl(th@degree)

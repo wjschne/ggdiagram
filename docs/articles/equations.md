@@ -39,7 +39,7 @@ ggdiagram(font_family = "Roboto Condensed") +
   {lv <- ob_variance(l)} +
   ob_latex(tex = "\\sigma_e^2",
            center = lv@midpoint(), 
-           width = .4) 
+           width = 0.4) 
 ```
 
 ![](equations_files/figure-html/fig-latent-1.svg)
@@ -58,7 +58,7 @@ ggdiagram(font_family = "Roboto Condensed") +
   {lv <- ob_variance(l)} +
   ob_latex(tex = r"(\text{\emph{σ}}_{\text{\emph{e}}}^{\text{2}})",
            center = lv@midpoint(), 
-           width = .4, 
+           width = 0.4, 
            family = "Roboto Condensed") 
 ```
 
@@ -85,7 +85,7 @@ ggplot() +
     geom = "area",
     n = 1000,
     fill = "dodgerblue",
-    alpha = .5
+    alpha = 0.5
   ) +
   scale_x_continuous(NULL,
                      breaks = mu + seq(-4 * sigma, 4 * sigma, sigma), 
@@ -107,7 +107,7 @@ ggplot() +
     filename = "zscore",
     density = 600
   ) |>
-  place(ob_point(mu + sigma * .7, dnorm(mu + sigma * .7, mu, sigma)), 
+  place(ob_point(mu + sigma * 0.7, dnorm(mu + sigma * 0.7, mu, sigma)), 
         where = "right", 
         sep = 3) + 
   ob_label(label = paste0("*&mu;* = ", mu), 
@@ -199,16 +199,16 @@ ggdiagram(theme_function = ggplot2::theme_minimal, font_size = 20) +
   {s <- connect(ob_point(), ob_point(3,4))} +
   ob_latex("\\left\\lVert\\vec{x}\\right\\rVert=5", 
            center = s@midpoint(), 
-           height = .35,
+           height = 0.35,
            density = 900,
            angle = s@line@angle, 
-           vjust = -.1) + 
+           vjust = -0.1) + 
   ob_latex(
     paste0("\\vec{x}=", s@p2@auto_label),
     vjust = 1.2,
     hjust = 1.3,
     center = s@p2,
-    height = .3,
+    height = 0.3,
     density = 600
   ) 
  

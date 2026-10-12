@@ -93,21 +93,21 @@ mycolor
 c(mycolor)
 #> [1] "#0000FFFF"
 # Set transparency
-mycolor@transparentize(.5)
+mycolor@transparentize(0.5)
 #> 
 #> ── <ggdiagram::class_color> ────────────────────────────────────────────────────
 #> @ color: chr "#0000FF80"
 #> Other props: transparentize, lighten, darken, saturation, hue,
 #>              brightness, alpha, red, green, blue, mean, tex, id
 # Lighten color
-mycolor@lighten(.5)
+mycolor@lighten(0.5)
 #> 
 #> ── <ggdiagram::class_color> ────────────────────────────────────────────────────
 #> @ color: chr "#8282FFFF"
 #> Other props: transparentize, lighten, darken, saturation, hue,
 #>              brightness, alpha, red, green, blue, mean, tex, id
 # Darken color
-mycolor@darken(.5)
+mycolor@darken(0.5)
 #> 
 #> ── <ggdiagram::class_color> ────────────────────────────────────────────────────
 #> @ color: chr "#000082FF"

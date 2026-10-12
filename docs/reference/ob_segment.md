@@ -14,6 +14,9 @@ ob_segment(
   arrow_head = class_arrowhead(ggarrow::arrow_head_minimal(90)),
   arrow_fins = list(),
   arrowhead_length = 7,
+  distort = character(0),
+  force_arrow = logical(0),
+  gradient = list(),
   length_head = numeric(0),
   length_fins = numeric(0),
   color = character(0),
@@ -80,6 +83,24 @@ ob_segment(
   ornament size relative to the linewidth. A
   [grid::unit](https://rdrr.io/r/grid/unit.html) value sets the ornament
   size in an absolute manner.
+
+- distort:
+
+  a character string associated with a ggarrow distort function (or a
+  custom distort function with a distort prefix). If the custom function
+  is `distort_mydistortion`, then the `distort` slot here should be
+  `"mydistortion"`.
+
+- force_arrow:
+
+  Force arrow to be drawn even if the segment is too short.
+
+- gradient:
+
+  A character vector of 2 or more colors (or a list of such vectors, one
+  per object) that make a smooth color gradient from the arrow's fins to
+  its head. Used by ob_segment. Requires a graphics device that supports
+  gradients (e.g., ragg, svg, pdf).
 
 - length_head:
 

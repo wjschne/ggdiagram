@@ -16,6 +16,8 @@ ob_path(
   arrow_head = S7::class_missing,
   arrow_fins = S7::class_missing,
   arrowhead_length = numeric(0),
+  gradient = list(),
+  force_arrow = logical(0),
   length_head = numeric(0),
   length_fins = numeric(0),
   color = character(0),
@@ -76,6 +78,19 @@ ob_path(
   ornament size relative to the linewidth. A
   [grid::unit](https://rdrr.io/r/grid/unit.html) value sets the ornament
   size in an absolute manner.
+
+- gradient:
+
+  A character vector of 2 or more colors (or a list of such vectors, one
+  per object) that make a smooth color gradient from the arrow's fins to
+  its head. Used by
+  [ob_segment](https://wjschne.github.io/ggdiagram/reference/ob_segment.md).
+  Requires a graphics device that supports gradients (e.g., ragg, svg,
+  pdf).
+
+- force_arrow:
+
+  Force arrow to be drawn even if the segment is too short.
 
 - length_head:
 

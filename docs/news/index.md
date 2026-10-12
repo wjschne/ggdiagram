@@ -1,6 +1,13 @@
 # Changelog
 
+## ggdiagram 0.2.1 *2026-06-12*
+
+- Fixed bug in `round_probability` so that `NA` does not throw an error
+  when digits are specified.
+
 ## ggdiagram 0.2.0 *2026-05-04*
+
+CRAN release: 2026-05-23
 
 - Better documentation of objects (used Posit Assistant to identify
   undocumented properties).

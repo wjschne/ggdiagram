@@ -99,13 +99,13 @@
 <circle cx='378.32' cy='343.87' r='2.49' style='stroke-width: 0.71; stroke: #1E90FF; fill: #1E90FF;' />
 <circle cx='444.44' cy='320.26' r='2.49' style='stroke-width: 0.71; stroke: #1E90FF; fill: #1E90FF;' />
 <path d='M 468.65 288.53 L 468.65 288.00 L 468.65 287.47 L 288.00 287.47 L 288.00 288.53 Z' style='fill-rule: evenodd; fill: #1E90FF; stroke-width: 0.53; stroke: none; stroke-linecap: butt;' />
-<path d='M 444.56 256.26 L 444.44 255.74 L 444.34 255.22 L 287.89 287.48 L 288.00 288.00 L 288.11 288.52 Z' style='fill-rule: evenodd; fill: #1E90FF; stroke-width: 0.53; stroke: none; stroke-linecap: butt;' />
+<path d='M 444.56 256.26 L 444.44 255.74 L 444.34 255.22 L 287.89 287.48 L 288.11 288.52 Z' style='fill-rule: evenodd; fill: #1E90FF; stroke-width: 0.53; stroke: none; stroke-linecap: butt;' />
 <path d='M 378.61 232.58 L 378.32 232.13 L 378.05 231.67 L 287.72 287.55 L 288.28 288.45 Z' style='fill-rule: evenodd; fill: #1E90FF; stroke-width: 0.53; stroke: none; stroke-linecap: butt;' />
 <path d='M 288.53 223.48 L 288.00 223.48 L 287.47 223.48 L 287.47 288.00 L 288.53 288.00 Z' style='fill-rule: evenodd; fill: #1E90FF; stroke-width: 0.53; stroke: none; stroke-linecap: butt;' />
 <path d='M 288.28 287.55 L 197.95 231.67 L 197.68 232.13 L 197.39 232.58 L 287.72 288.45 Z' style='fill-rule: evenodd; fill: #1E90FF; stroke-width: 0.53; stroke: none; stroke-linecap: butt;' />
 <path d='M 288.11 287.48 L 131.66 255.22 L 131.56 255.74 L 131.44 256.26 L 287.89 288.52 Z' style='fill-rule: evenodd; fill: #1E90FF; stroke-width: 0.53; stroke: none; stroke-linecap: butt;' />
 <path d='M 288.00 287.47 L 107.35 287.47 L 107.35 288.00 L 107.35 288.53 L 288.00 288.53 Z' style='fill-rule: evenodd; fill: #1E90FF; stroke-width: 0.53; stroke: none; stroke-linecap: butt;' />
-<path d='M 288.11 288.52 L 288.00 288.00 L 287.89 287.48 L 131.44 319.74 L 131.56 320.26 L 131.66 320.78 Z' style='fill-rule: evenodd; fill: #1E90FF; stroke-width: 0.53; stroke: none; stroke-linecap: butt;' />
+<path d='M 288.11 288.52 L 287.89 287.48 L 131.44 319.74 L 131.56 320.26 L 131.66 320.78 Z' style='fill-rule: evenodd; fill: #1E90FF; stroke-width: 0.53; stroke: none; stroke-linecap: butt;' />
 <path d='M 288.28 288.45 L 287.72 287.55 L 197.39 343.42 L 197.68 343.87 L 197.95 344.33 Z' style='fill-rule: evenodd; fill: #1E90FF; stroke-width: 0.53; stroke: none; stroke-linecap: butt;' />
 <path d='M 288.53 288.00 L 287.47 288.00 L 287.47 352.52 L 288.00 352.52 L 288.53 352.52 Z' style='fill-rule: evenodd; fill: #1E90FF; stroke-width: 0.53; stroke: none; stroke-linecap: butt;' />
 <path d='M 378.32 343.87 L 378.61 343.42 L 288.28 287.55 L 287.72 288.45 L 378.05 344.33 Z' style='fill-rule: evenodd; fill: #1E90FF; stroke-width: 0.53; stroke: none; stroke-linecap: butt;' />

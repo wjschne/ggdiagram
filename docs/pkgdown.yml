@@ -1,5 +1,5 @@
-pandoc: 3.8.3
-pkgdown: 2.2.0
+pandoc: '3.10'
+pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   articles/angles: angles.html
@@ -18,7 +18,7 @@ articles:
   articles/polygons: polygons.html
   articles/rectangles: rectangles.html
   articles/segments: segments.html
-last_built: 2026-05-23T05:31Z
+last_built: 2026-10-12T04:47Z
 urls:
   reference: https://wjschne.github.io/ggdiagram/reference
   article: https://wjschne.github.io/ggdiagram/articles

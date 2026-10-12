@@ -98,3 +98,6 @@ ob_segment
 \description{
 By default, will create an \code{\link{ob_segment}} with an arrowhead on the end. If \code{arc_bend} is specified, an \code{\link{ob_arc}} with an arrowhead will be created instead. If \code{from_offset} or \code{to_offset} are specified, an \code{\link{ob_bezier}} with an arrowhead will be created.
 }
+\details{
+If \code{color} and \code{gradient} are not specified, the connector is drawn with a color gradient from the color of the \code{from} object to the color of the \code{to} object. The color of an object is its \code{color}, or its \code{fill} if \code{color} is \code{NA}, or black if both are \code{NA}. If the two colors are identical, no gradient is used and the connector has that color.
+}

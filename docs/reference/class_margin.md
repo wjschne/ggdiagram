@@ -13,3 +13,7 @@ class_margin(x = numeric(0), units = "pt")
 - x:
 
   A vector of numeric data, grid
+
+## Value
+
+class_margin

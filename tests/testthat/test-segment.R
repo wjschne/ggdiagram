@@ -328,14 +328,11 @@ test_that("black default", {
   expect_true(is.na(s1@color))
 
   a <- ob_circle(color = NA, fill = "red")
-  b <- ob_circle(color = NA, fill = "blue") |>
+  b <- ob_circle(color = "blue", fill = NA) |>
     place(a)
 
-  expect_equal(connect(a, b)@color, "red")
-  ggdiagram() +
-    a +
-    b +
-    connect(a, b)
+  expect_equal(connect(a, b)@gradient, list(c("red", "blue")))
+
 
 
 })

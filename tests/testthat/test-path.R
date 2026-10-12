@@ -21,7 +21,7 @@ test_that("ob_path construction", {
   expect_error(p@p <- ob_circle(), "Control points must be an ob_point object or a list of ob_point objects.")
   expect_error(p@p <- list(1), "All items must be ggdiagram::ob_point.")
   expect_error(ob_path(ob_point(integer(0))), "A path cannot have 0 points.")
-  expect_identical(p@midpoint(), ob_point(1,1))
+  expect_identical(p@midpoint(), ob_point(1,1, color = "black"))
 
   expect_true(is.na(p@midpoint(2)@x))
 

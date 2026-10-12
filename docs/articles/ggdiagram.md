@@ -84,9 +84,9 @@ added to any ggplot object in the usual manner.
 # Plot
 ggplot() +
   ob_circle(radius = 1) +
-  ob_rectangle(width = 2, 
-               height = 2) + 
-  coord_fixed() + 
+  ob_rectangle(width = 2,
+               height = 2) +
+  coord_fixed() +
   theme_void()
 ```
 
@@ -127,7 +127,7 @@ can be styled. Let’s create a segment and its two endpoints.
 p1 <- ob_point(-3, 2)
 p2 <- ob_point(1, 5)
 s1 <- ob_segment(p1, p2)
-bp <- ggdiagram(theme_function = ggplot2::theme_minimal, 
+bp <- ggdiagram(theme_function = ggplot2::theme_minimal,
                 font_size = 18)
 bp +
   p1 +
@@ -148,10 +148,11 @@ If you are not sure which properties can be set, you an see them in the
 
 s1@aesthetics@style
 #>  [1] "alpha"            "arrow_head"       "arrow_fins"       "arrowhead_length"
-#>  [5] "color"            "length_head"      "length_fins"      "lineend"         
-#>  [9] "linejoin"         "linewidth"        "linewidth_fins"   "linewidth_head"  
-#> [13] "linetype"         "resect"           "resect_fins"      "resect_head"     
-#> [17] "stroke_color"     "stroke_width"
+#>  [5] "color"            "distort"          "force_arrow"      "gradient"        
+#>  [9] "length_head"      "length_fins"      "lineend"          "linejoin"        
+#> [13] "linewidth"        "linewidth_fins"   "linewidth_head"   "linetype"        
+#> [17] "resect"           "resect_fins"      "resect_head"      "stroke_color"    
+#> [21] "stroke_width"
 ```
 
 Styles can be specified when the object is created.
@@ -268,7 +269,7 @@ ggdiagram() +
     n = 3,
     angle = degree(90),
     style = style_shape,
-    label = my_label("Triangle", nudge_y = -.25))
+    label = my_label("Triangle", nudge_y = -0.25))
 ```
 
 ![](ggdiagram_files/figure-html/fig-applystyles-1.png)
@@ -290,7 +291,7 @@ x <- ob_circle()
 y <- ob_rectangle() |>
   place(from = x,
         where = "above",
-        sep = .5)
+        sep = 0.5)
 
 ggdiagram() +
   x +
@@ -328,7 +329,7 @@ ggdiagram(font_size = 18) +
   ob_array(k = 5,
            label = 1:5,
            where = "southeast",
-           sep = .5) 
+           sep = 0.5) 
 ```
 
 ![](ggdiagram_files/figure-html/fig-array1-1.png)
@@ -354,7 +355,7 @@ ggplot2 workflow, we can enclose an assignment statement in curly braces
 ``` r
 
 # Loadings
-loadings <- c(.86, .79, .90)
+loadings <- c(0.86, 0.79, 0.90)
 error_variances <- sqrt(1 - loadings ^ 2)
 
 ggdiagram(font_size = 16) +
@@ -362,7 +363,7 @@ ggdiagram(font_size = 16) +
   {A <- ob_circle(radius = 2,
                   label = ob_label("A",
                                    size = 96,
-                                   nudge_y = -.15))} +
+                                   nudge_y = -0.15))} +
   # Observed variables (array of 3 superellipses below A)
   {A_3 <- ob_ellipse(m1 = 20) |>
     place(from = A,
@@ -370,11 +371,11 @@ ggdiagram(font_size = 16) +
           sep = 3) |>
     ob_array(
       k = 3,
-      sep = .5,
+      sep = 0.5,
       label = ob_label(
         label = paste0("A~", 1:3, "~"),
         size = 32,
-        vjust = .6
+        vjust = 0.6
       )
     )} +
   # Observed variable loadings with labels set to the same y coordinate
@@ -383,7 +384,7 @@ ggdiagram(font_size = 16) +
     to = A_3,
     resect = 2,
     label = ob_label(label = round_probability(loadings),
-                     angle = 0))@set_label_y(position = .5) +
+                     angle = 0))@set_label_y(position = 0.5) +
   # Error variances
   ob_variance(
     A_3,
@@ -457,7 +458,7 @@ ggdiagram() +
   connect(x, y, resect = 2)
 ```
 
-![](ggdiagram_files/figure-html/unnamed-chunk-3-1.png)
+![](ggdiagram_files/figure-html/demonstratenewarrowhead-1.png)
 
 The original default can be restored like so:
 

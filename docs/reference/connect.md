@@ -189,3 +189,11 @@ connect(
 ## Value
 
 ob_segment
+
+## Details
+
+If `color` and `gradient` are not specified, the connector is drawn with
+a color gradient from the color of the `from` object to the color of the
+`to` object. The color of an object is its `color`, or its `fill` if
+`color` is `NA`, or black if both are `NA`. If the two colors are
+identical, no gradient is used and the connector has that color.

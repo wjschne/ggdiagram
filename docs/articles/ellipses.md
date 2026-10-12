@@ -37,14 +37,14 @@ bp <- ggdiagram(
   font_family = my_font,
   font_size = my_font_size,
   point_size = my_point_size,
-  linewidth = .5,
+  linewidth = 0.5,
   theme_function = theme_minimal,
   axis.title.x =  element_text(face = "italic"),
   axis.title.y = element_text(
     face = "italic",
     angle = 0,
-    hjust = .5,
-    vjust = .5)) +
+    hjust = 0.5,
+    vjust = 0.5)) +
   scale_x_continuous(labels = signs_centered,
                      limits = c(-4, 4)) +
   scale_y_continuous(labels = signs::signs,
@@ -237,12 +237,12 @@ bp +
   {e1 <- ob_ellipse(a = 2.8, b = 1)} +
   {p1 <- c1@point_at(theta)} +
   ob_label(theta, p1, polar_just = ob_polar(theta, r = 1.5)) +
-  ob_segment(ob_point(), p1, linewidth = .2) +
-  {p2 <- e1@point_at(theta, definitional = T, color = "dodgerblue")} +
+  ob_segment(ob_point(), p1, linewidth = 0.2) +
+  {p2 <- e1@point_at(theta, definitional = TRUE, color = "dodgerblue")} +
   ob_segment(ob_point(), p2) + 
   ob_label(theta@degree, p2, polar_just = ob_polar(theta, r = 1.5)) +
   theme_void() + 
-  scale_x_continuous(expand = expansion(.12))
+  scale_x_continuous(expand = expansion(0.12))
 #> Scale for x is already present.
 #> Adding another scale for x, which will replace the existing scale.
 ```
@@ -449,8 +449,8 @@ k <- 12
 # Colors
 e_fills <- hsv(
   h = seq(0, 1 - 1 / k, length.out = k), 
-  s = .4, 
-  v = .6)
+  s = 0.4, 
+  v = 0.6)
 
 bp + 
   {e_0 <- ob_ellipse(
@@ -466,8 +466,8 @@ bp +
   )} + 
   {e_x <- place(
     x = ob_ellipse(
-      a = .4,
-      b = .4,
+      a = 0.4,
+      b = 0.4,
       m1 = 6,
       label = ob_label(
         paste0("*e*~", seq(k), "~"),

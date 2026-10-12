@@ -641,20 +641,6 @@ S7::method(connect, list(centerpoint, centerpoint)) <- function(
     s <- pp
   }
 
-  # Get colors from fills if from has no color
-  # If no fills, make black
-  if (all(is.na(from@color)) && all(is.na(to@color))) {
-
-    if (!(length(color) > 0 && all(is.na(color)))) {
-      if (!all(is.na(from@fill))) {
-        s@color <- from@fill
-      } else if (!all(is.na(to@fill))) {
-        s@color <- to@fill
-      }
-
-    }
-  }
-
   s
 }
 

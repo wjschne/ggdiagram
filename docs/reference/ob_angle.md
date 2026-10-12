@@ -71,11 +71,11 @@ degree(90)
 #> [1] "90°"
 
 ## half pi radians
-radian(.5 * pi)
+radian(0.5 * pi)
 #> [1] "0.5π"
 
 ## A quarter turn
-turn(.25)
+turn(0.25)
 #> [1] ".25"
 
 # Operations
@@ -97,7 +97,7 @@ radian(1) + 1 # added or subtracted numbers are radians
 #> [1] "0.64π"
 degree(10) + 10 # added or subtracted numbers are degrees
 #> [1] "20°"
-turn(.25) + .25 # added or subtracted numbers are turns
+turn(0.25) + 0.25 # added or subtracted numbers are turns
 #> [1] ".50"
 
 # Trigonometric functions work as normal

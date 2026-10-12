@@ -22,7 +22,7 @@ my_font <- "Roboto Condensed"
 my_font_size <- 20
 my_point_size <- 2
 
-# my_colors <- viridis::viridis(2, begin = .25, end = .5)
+# my_colors <- viridis::viridis(2, begin = 0.25, end = 0.5)
 my_colors <- c("#3B528B", "#21908C")
 
 theme_set(
@@ -35,14 +35,14 @@ bp <- ggdiagram(
   font_family = my_font,
   font_size = my_font_size,
   point_size = my_point_size,
-  linewidth = .5,
+  linewidth = 0.5,
   theme_function = theme_minimal,
   axis.title.x =  element_text(face = "italic"),
   axis.title.y = element_text(
     face = "italic",
     angle = 0,
-    hjust = .5,
-    vjust = .5)) +
+    hjust = 0.5,
+    vjust = 0.5)) +
   scale_x_continuous(labels = signs_centered,
                      limits = c(-4, 4)) +
   scale_y_continuous(labels = signs::signs,
@@ -61,7 +61,7 @@ bp +
   {control_points <- ob_point(
     x = c(-4,4,4), 
     y = c(4,-4, 0))} + 
-  ob_path(control_points, linetype = "dashed", linewidth = .25) +
+  ob_path(control_points, linetype = "dashed", linewidth = 0.25) +
   ob_bezier(control_points)
 ```
 
@@ -97,7 +97,7 @@ bp +
   ob_path(p, 
        linetype = "dashed", 
        color = "gray",
-       linewidth = .25) +
+       linewidth = 0.25) +
   p + 
   ob_bezier(p, 
           label = ob_label("Labels can follow the path of the bézier curve.")) 
@@ -118,22 +118,40 @@ in the list.
 control_point_list <- c(
       ob_point(
         x = c(-4, -3, 4), 
-        y = c(.1,  4, .1), 
+        y = c(0.1,  4, 0.1), 
         color = my_colors[1]),
       ob_point(
         x = c(-4, 3, 4), 
-        y = c(-.1, -4, -.1), 
+        y = c(-0.1, -4, -0.1), 
         color = my_colors[2] )
       )
 bp + 
   ob_bezier(control_point_list) +
-  ob_path(control_point_list, linetype = "dashed", linewidth = .25) +
+  ob_path(control_point_list, linetype = "dashed", linewidth = 0.25) +
   bind(control_point_list)
 ```
 
 ![](bezier_files/figure-html/fig-multbz-1.png)
 
 Figure 3: Multiple bézier paths
+
+## Color Gradients
+
+Gradients can be applied to an `ob_bezier` object.
+
+``` r
+
+bp + 
+  ob_bezier(control_point_list, arrow_head = arrowhead(), linewidth = 2, gradient = c("blue", "gray", "red"))
+```
+
+![](bezier_files/figure-html/fig-gradient-1.png)
+
+Figure 4: Gradient colers on Bézier curves
+
+At this time, gradients do not actually follow the curve but follow a
+straight line from the start to the end point. Thus, a complex path
+(e.g,. a loop) might not come out as expected.
 
 ## Curved Connectors
 
@@ -170,7 +188,7 @@ ggdiagram(font_family = "Roboto Condensed",
 
 ![](bezier_files/figure-html/fig-connect-1.png)
 
-Figure 4: Connecting shapes with offset control points creates bezier
+Figure 5: Connecting shapes with offset control points creates bezier
 curves instead of straight lines.
 
 Of course, if you want the endpoints to be placed on some part of the
@@ -189,7 +207,7 @@ ggdiagram(font_family = "Roboto Condensed",
                 color = "black")} + 
   {B <- ob_circle(x = 5, 
                   y = -2, 
-                  radius = pi * .5)} + 
+                  radius = pi * 0.5)} + 
   {AB <- connect(A@south,
                  B@southwest, 
                  from_offset = ob_polar("south", 2), 
@@ -199,4 +217,4 @@ ggdiagram(font_family = "Roboto Condensed",
 
 ![](bezier_files/figure-html/fig-connect2-1.png)
 
-Figure 5: Connecting points with offset control points
+Figure 6: Connecting points with offset control points

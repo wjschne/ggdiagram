@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Roboto_Condensed-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/Roboto_Condensed-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="ellipses_files/libs/quarto-html/popper.min.js"></script><script src="ellipses_files/libs/quarto-html/tippy.umd.min.js"></script><link href="ellipses_files/libs/quarto-html/tippy.css" rel="stylesheet">
@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggdiagram</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -124,14 +124,14 @@
 <span>  font_family <span class="op">=</span> <span class="va">my_font</span>,</span>
 <span>  font_size <span class="op">=</span> <span class="va">my_font_size</span>,</span>
 <span>  point_size <span class="op">=</span> <span class="va">my_point_size</span>,</span>
-<span>  linewidth <span class="op">=</span> <span class="fl">.5</span>,</span>
+<span>  linewidth <span class="op">=</span> <span class="fl">0.5</span>,</span>
 <span>  theme_function <span class="op">=</span> <span class="va">theme_minimal</span>,</span>
 <span>  axis.title.x <span class="op">=</span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>face <span class="op">=</span> <span class="st">"italic"</span><span class="op">)</span>,</span>
 <span>  axis.title.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span></span>
 <span>    face <span class="op">=</span> <span class="st">"italic"</span>,</span>
 <span>    angle <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>    hjust <span class="op">=</span> <span class="fl">.5</span>,</span>
-<span>    vjust <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    hjust <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>    vjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="va">signs_centered</span>,</span>
 <span>                     limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">signs</span><span class="fu">::</span><span class="va"><a href="https://benjaminwolfe.github.io/signs/reference/signs.html" class="external-link">signs</a></span>,</span>
@@ -322,12 +322,12 @@ t&amp;=[0,2\pi)\\
 <span>  <span class="op">{</span><span class="va">e1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_ellipse.html">ob_ellipse</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">2.8</span>, b <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
 <span>  <span class="op">{</span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="va">c1</span><span class="op">@</span><span class="va">point_at</span><span class="op">(</span><span class="va">theta</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="va">theta</span>, <span class="va">p1</span>, polar_just <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span><span class="va">theta</span>, r <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/ob_segment.html">ob_segment</a></span><span class="op">(</span><span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">p1</span>, linewidth <span class="op">=</span> <span class="fl">.2</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="op">{</span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="va">e1</span><span class="op">@</span><span class="va">point_at</span><span class="op">(</span><span class="va">theta</span>, definitional <span class="op">=</span> <span class="cn">T</span>, color <span class="op">=</span> <span class="st">"dodgerblue"</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_segment.html">ob_segment</a></span><span class="op">(</span><span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">p1</span>, linewidth <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="op">{</span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="va">e1</span><span class="op">@</span><span class="va">point_at</span><span class="op">(</span><span class="va">theta</span>, definitional <span class="op">=</span> <span class="cn">TRUE</span>, color <span class="op">=</span> <span class="st">"dodgerblue"</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/ob_segment.html">ob_segment</a></span><span class="op">(</span><span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">p2</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="va">theta</span><span class="op">@</span><span class="va">degree</span>, <span class="va">p2</span>, polar_just <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span><span class="va">theta</span>, r <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_void</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>expand <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expansion.html" class="external-link">expansion</a></span><span class="op">(</span><span class="fl">.12</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>expand <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expansion.html" class="external-link">expansion</a></span><span class="op">(</span><span class="fl">0.12</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Scale for x is already present.</span></span>
 <span><span class="co">#&gt; Adding another scale for x, which will replace the existing scale.</span></span></code></pre></div>
 </details><div class="cell-output-display">
@@ -552,8 +552,8 @@ Figure 15: The separation distance between ellipses is along the path that conn
 <span><span class="co"># Colors</span></span>
 <span><span class="va">e_fills</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/hsv.html" class="external-link">hsv</a></span><span class="op">(</span></span>
 <span>  h <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span> <span class="op">-</span> <span class="fl">1</span> <span class="op">/</span> <span class="va">k</span>, length.out <span class="op">=</span> <span class="va">k</span><span class="op">)</span>, </span>
-<span>  s <span class="op">=</span> <span class="fl">.4</span>, </span>
-<span>  v <span class="op">=</span> <span class="fl">.6</span><span class="op">)</span></span>
+<span>  s <span class="op">=</span> <span class="fl">0.4</span>, </span>
+<span>  v <span class="op">=</span> <span class="fl">0.6</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">bp</span> <span class="op">+</span> </span>
 <span>  <span class="op">{</span><span class="va">e_0</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_ellipse.html">ob_ellipse</a></span><span class="op">(</span></span>
@@ -569,8 +569,8 @@ Figure 15: The separation distance between ellipses is along the path that conn
 <span>  <span class="op">)</span><span class="op">}</span> <span class="op">+</span> </span>
 <span>  <span class="op">{</span><span class="va">e_x</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/place.html">place</a></span><span class="op">(</span></span>
 <span>    x <span class="op">=</span> <span class="fu"><a href="../reference/ob_ellipse.html">ob_ellipse</a></span><span class="op">(</span></span>
-<span>      a <span class="op">=</span> <span class="fl">.4</span>,</span>
-<span>      b <span class="op">=</span> <span class="fl">.4</span>,</span>
+<span>      a <span class="op">=</span> <span class="fl">0.4</span>,</span>
+<span>      b <span class="op">=</span> <span class="fl">0.4</span>,</span>
 <span>      m1 <span class="op">=</span> <span class="fl">6</span>,</span>
 <span>      label <span class="op">=</span> <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"*e*~"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="va">k</span><span class="op">)</span>, <span class="st">"~"</span><span class="op">)</span>,</span>
@@ -728,7 +728,7 @@ Figure 17: A line placed 3 units and 45 degrees from a squircle.
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

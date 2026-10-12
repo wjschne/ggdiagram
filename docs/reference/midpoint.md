@@ -22,7 +22,7 @@ midpoint(x, y, position = 0.5, ...)
 
 - position:
 
-  numeric vector. 0 is start, 1 is end. Defaults to .5
+  numeric vector. 0 is start, 1 is end. Defaults to 0.5
 
 - ...:
 

@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Roboto_Condensed-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/Roboto_Condensed-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="bezier_files/libs/quarto-html/popper.min.js"></script><script src="bezier_files/libs/quarto-html/tippy.umd.min.js"></script><link href="bezier_files/libs/quarto-html/tippy.css" rel="stylesheet">
@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggdiagram</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -109,7 +109,7 @@
 <span><span class="va">my_font_size</span> <span class="op">&lt;-</span> <span class="fl">20</span></span>
 <span><span class="va">my_point_size</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
 <span></span>
-<span><span class="co"># my_colors &lt;- viridis::viridis(2, begin = .25, end = .5)</span></span>
+<span><span class="co"># my_colors &lt;- viridis::viridis(2, begin = 0.25, end = 0.5)</span></span>
 <span><span class="va">my_colors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#3B528B"</span>, <span class="st">"#21908C"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/get_theme.html" class="external-link">theme_set</a></span><span class="op">(</span></span>
@@ -122,14 +122,14 @@
 <span>  font_family <span class="op">=</span> <span class="va">my_font</span>,</span>
 <span>  font_size <span class="op">=</span> <span class="va">my_font_size</span>,</span>
 <span>  point_size <span class="op">=</span> <span class="va">my_point_size</span>,</span>
-<span>  linewidth <span class="op">=</span> <span class="fl">.5</span>,</span>
+<span>  linewidth <span class="op">=</span> <span class="fl">0.5</span>,</span>
 <span>  theme_function <span class="op">=</span> <span class="va">theme_minimal</span>,</span>
 <span>  axis.title.x <span class="op">=</span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>face <span class="op">=</span> <span class="st">"italic"</span><span class="op">)</span>,</span>
 <span>  axis.title.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span></span>
 <span>    face <span class="op">=</span> <span class="st">"italic"</span>,</span>
 <span>    angle <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>    hjust <span class="op">=</span> <span class="fl">.5</span>,</span>
-<span>    vjust <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    hjust <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>    vjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="va">signs_centered</span>,</span>
 <span>                     limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">signs</span><span class="fu">::</span><span class="va"><a href="https://benjaminwolfe.github.io/signs/reference/signs.html" class="external-link">signs</a></span>,</span>
@@ -144,7 +144,7 @@
 <span>  <span class="op">{</span><span class="va">control_points</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span></span>
 <span>    x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>,<span class="fl">4</span>,<span class="fl">4</span><span class="op">)</span>, </span>
 <span>    y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4</span>,<span class="op">-</span><span class="fl">4</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="../reference/ob_path.html">ob_path</a></span><span class="op">(</span><span class="va">control_points</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span>, linewidth <span class="op">=</span> <span class="fl">.25</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_path.html">ob_path</a></span><span class="op">(</span><span class="va">control_points</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span>, linewidth <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/ob_bezier.html">ob_bezier</a></span><span class="op">(</span><span class="va">control_points</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div id="fig-ob_bezier" class="quarto-float quarto-figure quarto-figure-center">
@@ -178,7 +178,7 @@ Figure 1: Bézier curve with contol points
 <span>  <span class="fu"><a href="../reference/ob_path.html">ob_path</a></span><span class="op">(</span><span class="va">p</span>, </span>
 <span>       linetype <span class="op">=</span> <span class="st">"dashed"</span>, </span>
 <span>       color <span class="op">=</span> <span class="st">"gray"</span>,</span>
-<span>       linewidth <span class="op">=</span> <span class="fl">.25</span><span class="op">)</span> <span class="op">+</span></span>
+<span>       linewidth <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="va">p</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/ob_bezier.html">ob_bezier</a></span><span class="op">(</span><span class="va">p</span>, </span>
 <span>          label <span class="op">=</span> <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span><span class="st">"Labels can follow the path of the bézier curve."</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
@@ -201,16 +201,16 @@ Figure 2: Bézier curve with contol points and label
 <code class="sourceCode R"><span><span class="va">control_point_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>      <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span></span>
 <span>        x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>, <span class="op">-</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span>, </span>
-<span>        y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.1</span>,  <span class="fl">4</span>, <span class="fl">.1</span><span class="op">)</span>, </span>
+<span>        y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>,  <span class="fl">4</span>, <span class="fl">0.1</span><span class="op">)</span>, </span>
 <span>        color <span class="op">=</span> <span class="va">my_colors</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>,</span>
 <span>      <span class="fu"><a href="../reference/ob_point.html">ob_point</a></span><span class="op">(</span></span>
 <span>        x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>, <span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span>, </span>
-<span>        y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">.1</span>, <span class="op">-</span><span class="fl">4</span>, <span class="op">-</span><span class="fl">.1</span><span class="op">)</span>, </span>
+<span>        y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.1</span>, <span class="op">-</span><span class="fl">4</span>, <span class="op">-</span><span class="fl">0.1</span><span class="op">)</span>, </span>
 <span>        color <span class="op">=</span> <span class="va">my_colors</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">)</span></span>
 <span>      <span class="op">)</span></span>
 <span><span class="va">bp</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="../reference/ob_bezier.html">ob_bezier</a></span><span class="op">(</span><span class="va">control_point_list</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="../reference/ob_path.html">ob_path</a></span><span class="op">(</span><span class="va">control_point_list</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span>, linewidth <span class="op">=</span> <span class="fl">.25</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="../reference/ob_path.html">ob_path</a></span><span class="op">(</span><span class="va">control_point_list</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span>, linewidth <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/bind.html">bind</a></span><span class="op">(</span><span class="va">control_point_list</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output-display">
 <div id="fig-multbz" class="quarto-float quarto-figure quarto-figure-center">
@@ -223,11 +223,30 @@ Figure 3: Multiple bézier paths
 </div>
 </div>
 </div>
+</section><section class="section level2"><h2 id="color-gradients">Color Gradients<a class="anchor" aria-label="anchor" href="#color-gradients"></a>
+</h2>
+<p>Gradients can be applied to an <code>ob_bezier</code> object.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">bp</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="../reference/ob_bezier.html">ob_bezier</a></span><span class="op">(</span><span class="va">control_point_list</span>, arrow_head <span class="op">=</span> <span class="fu"><a href="../reference/arrowhead.html">arrowhead</a></span><span class="op">(</span><span class="op">)</span>, linewidth <span class="op">=</span> <span class="fl">2</span>, gradient <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"blue"</span>, <span class="st">"gray"</span>, <span class="st">"red"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output-display">
+<div id="fig-gradient" class="quarto-float quarto-figure quarto-figure-center">
+<figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-gradient-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="bezier_files/figure-html/fig-gradient-1.png" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-gradient-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 4: Gradient colers on Bézier curves
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>At this time, gradients do not actually follow the curve but follow a straight line from the start to the end point. Thus, a complex path (e.g,. a loop) might not come out as expected.</p>
 </section><section class="section level2"><h2 id="curved-connectors">Curved Connectors<a class="anchor" aria-label="anchor" href="#curved-connectors"></a>
 </h2>
 <p>Drawing connectors between shapes is usually with straight line segments. However, a bezier curve with endpoints at the center of the objects can be drawn with a control point from the first object (<code>from_offset</code>) and/or a control point from second object (<code>to_offset</code>). These control points are relative to the endpoints, so <code>from_offset = ob_point(1, 0)</code> would be one unit to the right of the <code>from</code> endpoint, and <code>to_offset = ob_polar("north", 1)</code> would be one unit above the <code>to</code> endpoint.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggdiagram.html">ggdiagram</a></span><span class="op">(</span>font_family <span class="op">=</span> <span class="st">"Roboto Condensed"</span>, </span>
 <span>          font_size <span class="op">=</span> <span class="fl">18</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="op">{</span><span class="va">A</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_rectangle.html">ob_rectangle</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">pi</span><span class="op">)</span>, </span>
@@ -252,14 +271,14 @@ Figure 3: Multiple bézier paths
 <img src="bezier_files/figure-html/fig-connect-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-connect-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 4: Connecting shapes with offset control points creates bezier curves instead of straight lines.
+Figure 5: Connecting shapes with offset control points creates bezier curves instead of straight lines.
 </figcaption></figure>
 </div>
 </div>
 </div>
 <p>Of course, if you want the endpoints to be placed on some part of the shapes other than their centers, you can specify them directly. Here we specify that the curve start the south anchor point of a rectangle and end at the southwest point of a circle.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggdiagram.html">ggdiagram</a></span><span class="op">(</span>font_family <span class="op">=</span> <span class="st">"Roboto Condensed"</span>, </span>
 <span>          font_size <span class="op">=</span> <span class="fl">18</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="op">{</span><span class="va">A</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_ngon.html">ob_ngon</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">3</span>, </span>
@@ -269,7 +288,7 @@ Figure 4: Connecting shapes with offset control points creates bezier curves in
 <span>                color <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span> </span>
 <span>  <span class="op">{</span><span class="va">B</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ob_circle.html">ob_circle</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">5</span>, </span>
 <span>                  y <span class="op">=</span> <span class="op">-</span><span class="fl">2</span>, </span>
-<span>                  radius <span class="op">=</span> <span class="va">pi</span> <span class="op">*</span> <span class="fl">.5</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span> </span>
+<span>                  radius <span class="op">=</span> <span class="va">pi</span> <span class="op">*</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">}</span> <span class="op">+</span> </span>
 <span>  <span class="op">{</span><span class="va">AB</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/connect.html">connect</a></span><span class="op">(</span><span class="va">A</span><span class="op">@</span><span class="va">south</span>,</span>
 <span>                 <span class="va">B</span><span class="op">@</span><span class="va">southwest</span>, </span>
 <span>                 from_offset <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span><span class="st">"south"</span>, <span class="fl">2</span><span class="op">)</span>, </span>
@@ -281,7 +300,7 @@ Figure 4: Connecting shapes with offset control points creates bezier curves in
 <img src="bezier_files/figure-html/fig-connect2-1.png" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-connect2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure 5: Connecting points with offset control points
+Figure 6: Connecting points with offset control points
 </figcaption></figure>
 </div>
 </div>
@@ -378,7 +397,7 @@ Figure 5: Connecting points with offset control points
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

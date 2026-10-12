@@ -825,3 +825,56 @@ geom_arrow_maybe_gradient <- function(..., gradient = NULL) {
     ggarrow::geom_arrow(...)
   }
 }
+
+# connect colors ----
+
+#' Color used for one end of a connector: color, else fill, else black
+#' @keywords internal
+#' @noRd
+connect_end_color <- function(x, n) {
+  get_chr <- function(prop) {
+    v <- if (S7::prop_exists(x, prop)) {
+      as.character(S7::prop(x, prop))
+    } else {
+      character(0)
+    }
+    if (length(v) == 0L) NA_character_ else v
+  }
+  col <- rep_len(get_chr("color"), n)
+  fill <- rep_len(get_chr("fill"), n)
+  dplyr::if_else(!is.na(col), col, dplyr::if_else(!is.na(fill), fill, "black"))
+}
+
+#' Default color or gradient for connectors
+#'
+#' If the `from` and `to` objects have different colors, the connector gets a gradient from the `from` color to the `to` color. Otherwise it gets the common color. The color of each object is its `color`, or its `fill` if `color` is `NA`, or black if both are `NA`.
+#' Nothing is changed if the user specified `color`, `gradient`, or a style with a color.
+#' @keywords internal
+#' @noRd
+connect_default_gradient <- function(s, from, to, color_given, style, dots) {
+  if (color_given || "gradient" %in% names(dots)) {
+    return(s)
+  }
+  if (S7::S7_inherits(style, ob_style) && length(style@color) > 0L) {
+    return(s)
+  }
+  if (
+    !S7::S7_inherits(s, has_style) ||
+      !S7::prop_exists(s, "gradient") ||
+      !S7::S7_inherits(from, has_style) ||
+      !S7::S7_inherits(to, has_style)
+  ) {
+    return(s)
+  }
+  n <- s@length
+  from_color <- connect_end_color(from, n)
+  to_color <- connect_end_color(to, n)
+  same <- from_color == to_color
+  s@color <- from_color
+  if (!all(same)) {
+    s@gradient <- purrr::map(seq_len(n), \(i) {
+      if (same[i]) character(0) else c(from_color[i], to_color[i])
+    })
+  }
+  s
+}

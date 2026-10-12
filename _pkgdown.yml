@@ -91,6 +91,8 @@ reference:
     contents:
       - ggdiagram
       - as.geom
+      - geom_arrow_gradient
+      - geom_arrow_segment_gradient
   - title: "Other functions"
     desc: "Helper functions"
     contents:

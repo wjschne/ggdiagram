@@ -280,6 +280,20 @@ bp +
                position = 0)
 ```
 
+# Arcs with color gradients
+
+A gradient can be applied to an `ob_arc` object.
+
+```{r}
+#| label: fig-arcgradient
+#| fig-cap: An arc with a color gradient
+
+ggdiagram() + 
+  ob_arc(start = 0, end = 90, gradient = c("blue", "yellow"), linewidth = 3)
+
+```
+
+
 # Arcs with arrows
 
 The arc object is plotted using `ggarrow::arrow`. This means that arrows can be placed on either end of an arc.
@@ -323,6 +337,7 @@ bp +
   connect(B, C, arc_bend = -1) +
   connect(A, C@south, arc_bend = 0.6)
 ```
+
 
 # Wedges
 
@@ -408,10 +423,20 @@ bp +
     vjust = 0,
     angle = cs@sagitta@line@angle,
     size = 18,
-    fill = NA, 
+    fill = NA,
     color = "white"
   ) +
-  connect(cs@center, cs@point_at(degree(225)), color = "black", label = ob_label("Radius = 3", angle = degree(45), size = 18, vjust = 0))
+  connect(
+    cs@center,
+    cs@point_at(degree(225)),
+    color = "black",
+    label = ob_label(
+      "Radius = 3",
+      angle = degree(45),
+      size = 18,
+      vjust = 0
+    )
+  )
   
 
 ```

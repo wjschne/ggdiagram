@@ -45,7 +45,7 @@ theta_list <- lapply(list(turn, radian, degree), \(.a) .a(theta))
 p <- ob_polar(theta, r = 1)
 
 
-r <- seq(1, .5, length.out = length(angle_types))
+r <- seq(1, 0.5, length.out = length(angle_types))
 my_shades <- (tinter::tinter("royalblue", 
                             steps = 7, 
                             direction = "tints")[seq_along(angle_types)])
@@ -58,9 +58,9 @@ ggplot() +
     radius = r,
     fill = my_shades,
     color = NA,
-    linewidth = .25
+    linewidth = 0.25
   ) +
-  ob_segment(ob_point(), p, linewidth = .25) +
+  ob_segment(ob_point(), p, linewidth = 0.25) +
   purrr::pmap(
     .l = list(r, theta_list, my_shades), 
     .f = \(rs, ts, ss) {
@@ -108,11 +108,11 @@ degree(180)@turn
 degree(180)@radian
 #> [1] 3.141593
 
-turn(.5)
+turn(0.5)
 #> [1] ".50"
-turn(.5)@radian
+turn(0.5)@radian
 #> [1] 3.141593
-turn(.5)@degree
+turn(0.5)@degree
 #> [1] 180
 ```
 
@@ -124,9 +124,9 @@ For labeling, sometimes is convenient to convert angles to text:
 
 as.character(degree(90))
 #> [1] "90°"
-as.character(turn(.25))
+as.character(turn(0.25))
 #> [1] ".25"
-as.character(radian(.5 * pi))
+as.character(radian(0.5 * pi))
 #> [1] "0.5π"
 ```
 
@@ -159,7 +159,7 @@ Code
 ``` r
 
 make_angles <- function(a = c(80, 300), 
-                        r = c(.1, .2, .3), 
+                        r = c(0.1, 0.2, 0.3), 
                         label_adjust = c(0,0,0), 
                         multiplier = c(1.4,1.4,1.4)) {
 start_angles <- degree(c(0,a[1], 0))
@@ -182,12 +182,10 @@ arcs <- ob_arc(radius = r,
       label = ob_label(arc_labels, 
                        color = mycolors, 
                        family = my_font),
-      linewidth = .25,
+      linewidth = 0.25,
       length_head = 10,
       arrow_head =  arrowhead(),
       color = mycolors)
-
-
 
 ggplot() +
   theme_void() +
@@ -197,7 +195,7 @@ ggplot() +
     p1 = ob_point(), 
     p2 = ob_polar(theta = degree(c(0,a[1],sum(a))), r = 1), 
     length_head = 5,
-    linewidth = .75,
+    linewidth = 0.75,
     arrow_head =  arrowhead(),
     color = c("firebrick", "firebrick", "royalblue")) 
 }
@@ -208,8 +206,8 @@ Code
 ``` r
 
 make_angles(a = c(30, 60), 
-            r = c(.12,.24, .36), 
-            multiplier = c(1.5,1.5,1.5)) 
+            r = c(0.12, 0.24, 0.36), 
+            multiplier = c(1.5, 1.5, 1.5)) 
 ```
 
 ![](angles_files/figure-html/fig-3060-1.png)
@@ -244,7 +242,7 @@ Turns work the same way:
 
 ``` r
 
-turn(.1) + .2
+turn(0.1) + 0.2
 #> [1] ".30"
 ```
 
@@ -358,9 +356,12 @@ Code
 o <- ob_point(0, 0)
 p <- ob_polar(theta, 1)
 
-# col <- purrr::map2_chr(scico::scico(6, palette = "hawaii"),
-#                        c(0.01,0.01,0.01,0.01,.15, .4), 
-#                        tinter::darken)
+# # colors made this way:
+# my_colors <- purrr::map2_chr(
+#   scico::scico(6, palette = "hawaii"),
+#   c(0.01, 0.01, 0.01, 0.01, 0.15, 0.4),
+#   tinter::darken
+# )
 
 my_colors <- c("#8C0172", "#944046", "#9B7424", 
                "#8EB63B", "#53BD91", "#6C939A")
@@ -369,16 +370,16 @@ ggdiagram() +
   # axes
   ob_line(intercept = 0,
        color = "gray",
-       linewidth = .25) +
+       linewidth = 0.25) +
   ob_line(xintercept = 0,
        color = "gray",
-       linewidth = .25) +
+       linewidth = 0.25) +
   # degree arc
   ob_arc(
     end = theta,
-    radius = .25,
+    radius = 0.25,
     label = theta,
-    linewidth = .2
+    linewidth = 0.2
   ) +
   # angle arrow
   connect(o, p, label = "*r* = 1", resect_head = 1) +
@@ -391,7 +392,7 @@ ggdiagram() +
                    ") = ", 
                    round(sin(theta), 2)),
     color = my_colors[1],
-    linewidth = .5
+    linewidth = 0.5
   ) +
   # cos(theta)
   ob_segment(
@@ -404,7 +405,7 @@ ggdiagram() +
         ") = ",
         round(cos(theta), 2)), vjust = 1),
     color = my_colors[2],
-    linewidth = .5
+    linewidth = 0.5
   ) +
   # tan(theta)
   ob_segment(
@@ -416,7 +417,7 @@ ggdiagram() +
       ") = ",
       round(tan(theta), 2)),
     color = my_colors[3],
-    linewidth = .5
+    linewidth = 0.5
   ) +
   # sec(theta)
   ob_segment(
@@ -442,7 +443,7 @@ ggdiagram() +
       ") = ",
       round(1 / tan(theta), 2)),
     color = my_colors[4],
-    linewidth = .5
+    linewidth = 0.5
   ) +
   # csc(theta)
   ob_segment(

@@ -30,7 +30,7 @@ d <- data.frame(
   y = 1:2,
   fill = c("blue", "forestgreen"),
   color = NA,
-  radius = c(.25,0.5))
+  radius = c(0.25, 0.5))
 
 data2shape(d, ob_circle)
 #> 

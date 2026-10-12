@@ -37,14 +37,14 @@ bp <- ggdiagram(
   font_family = my_font,
   font_size = my_font_size,
   point_size = my_point_size,
-  linewidth = .5,
+  linewidth = 0.5,
   theme_function = theme_minimal,
   axis.title.x =  element_text(face = "italic"),
   axis.title.y = element_text(
     face = "italic",
     angle = 0,
-    hjust = .5,
-    vjust = .5)) +
+    hjust = 0.5,
+    vjust = 0.5)) +
   scale_x_continuous(labels = signs_centered,
                      limits = c(-4, 4)) +
   scale_y_continuous(labels = signs::signs,
@@ -75,7 +75,7 @@ and thus will curve if the path is curved.
 
 ``` r
 
-p_curve <- tibble(x = seq(-4, 4, .1), 
+p_curve <- tibble(x = seq(-4, 4, 0.1), 
                   y = (pnorm(x) * 8 - 4)) |>
   ob_point()
 
@@ -86,7 +86,7 @@ bp +
     p = p_curve,
     label = ob_label(
       "A path label will curve along the path.",
-      vjust = -.1,
+      vjust = -0.1,
       size = 20,
       color = "dodgerblue4"
     ),
@@ -109,10 +109,10 @@ bp +
     p = p_curve,
     label = ob_label(
       "A path label will curve along the path.",
-      vjust = -.1,
+      vjust = -0.1,
       size = 20,
       color = "dodgerblue4",
-      position = .1
+      position = 0.1
     ),
     arrowhead_length = 8,
     arrow_head = arrowhead()
@@ -132,8 +132,8 @@ objects.
 
 bp +
   ob_path(c(p_curve, 
-         p_curve * .5 + ob_point(2,-2),
-         p_curve * .5 + ob_point(-2,2)), 
+         p_curve * 0.5 + ob_point(2,-2),
+         p_curve * 0.5 + ob_point(-2,2)), 
        color = c("orchid4",
                  "dodgerblue3",
                  "firebrick4"),
@@ -144,16 +144,36 @@ bp +
 
 Figure 4: Multiple paths
 
-## Segments
+## Color Gradients
 
-It is possible to create color gradients along a path using the paths’
-segments.
+It is possible to create color gradients along a path with the
+`gradient` parameter. The gradient runs in a straight line from the
+first point to the last point of the path, so it follows the path
+closely only when the path does not double back on itself.
+
+You can use a vector of two or more colors.
 
 ``` r
 
 ggdiagram() +
-  ob_path(p_curve)@segment |> 
-  set_props(color = viridis::viridis(p_curve@length - 1))
+  ob_path(
+    p_curve, 
+    gradient = c("red", "yellow", "blue"),
+    linewidth = 3)
 ```
 
-![](paths_files/figure-html/segmentgradient-1.png)
+![](paths_files/figure-html/unnamed-chunk-1-1.png)
+
+The colors can come from any palette function (here, with some
+transparency).
+
+``` r
+
+ggdiagram() +
+  ob_path(
+    p_curve, 
+    gradient = viridis::viridis(10, alpha = .5),
+    linewidth = 3)
+```
+
+![](paths_files/figure-html/unnamed-chunk-2-1.png)

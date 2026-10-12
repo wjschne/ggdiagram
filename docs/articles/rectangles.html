@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Roboto_Condensed-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/Roboto_Condensed-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="rectangles_files/libs/quarto-html/popper.min.js"></script><script src="rectangles_files/libs/quarto-html/tippy.umd.min.js"></script><link href="rectangles_files/libs/quarto-html/tippy.css" rel="stylesheet">
@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggdiagram</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -134,14 +134,14 @@
 <span>  font_family <span class="op">=</span> <span class="va">my_font</span>,</span>
 <span>  font_size <span class="op">=</span> <span class="va">my_font_size</span>,</span>
 <span>  point_size <span class="op">=</span> <span class="va">my_point_size</span>,</span>
-<span>  linewidth <span class="op">=</span> <span class="fl">.5</span>,</span>
+<span>  linewidth <span class="op">=</span> <span class="fl">0.5</span>,</span>
 <span>  theme_function <span class="op">=</span> <span class="va">theme_minimal</span>,</span>
 <span>  axis.title.x <span class="op">=</span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>face <span class="op">=</span> <span class="st">"italic"</span><span class="op">)</span>,</span>
 <span>  axis.title.y <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span></span>
 <span>    face <span class="op">=</span> <span class="st">"italic"</span>,</span>
 <span>    angle <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>    hjust <span class="op">=</span> <span class="fl">.5</span>,</span>
-<span>    vjust <span class="op">=</span> <span class="fl">.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>    hjust <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>    vjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="va">signs_centered</span>,</span>
 <span>                     limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">signs</span><span class="fu">::</span><span class="va"><a href="https://benjaminwolfe.github.io/signs/reference/signs.html" class="external-link">signs</a></span>,</span>
@@ -185,7 +185,7 @@
 <span>  height <span class="op">=</span> <span class="va">h</span>,</span>
 <span>  center <span class="op">=</span> <span class="va">cent</span>,</span>
 <span>  color <span class="op">=</span> <span class="va">my_colors</span><span class="op">$</span><span class="va">primary</span>,</span>
-<span>  fill <span class="op">=</span> <span class="va">my_colors</span><span class="op">$</span><span class="va">primary</span><span class="op">@</span><span class="va">transparentize</span><span class="op">(</span><span class="fl">.15</span><span class="op">)</span>,</span>
+<span>  fill <span class="op">=</span> <span class="va">my_colors</span><span class="op">$</span><span class="va">primary</span><span class="op">@</span><span class="va">transparentize</span><span class="op">(</span><span class="fl">0.15</span><span class="op">)</span>,</span>
 <span>  linewidth <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">r1</span></span>
@@ -204,10 +204,10 @@
 <span>  color <span class="op">=</span> <span class="va">my_colors</span><span class="op">$</span><span class="va">secondar</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">s_east</span> <span class="op">&lt;-</span> <span class="va">r1</span><span class="op">@</span><span class="va">side</span><span class="op">@</span><span class="va">east</span><span class="op">@</span><span class="va">nudge</span><span class="op">(</span>x <span class="op">=</span> <span class="fl">.1</span><span class="op">)</span></span>
+<span><span class="va">s_east</span> <span class="op">&lt;-</span> <span class="va">r1</span><span class="op">@</span><span class="va">side</span><span class="op">@</span><span class="va">east</span><span class="op">@</span><span class="va">nudge</span><span class="op">(</span>x <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span>
 <span><span class="va">s_east</span><span class="op">@</span><span class="va">style</span> <span class="op">&lt;-</span> <span class="va">double_arrowstyle</span></span>
 <span></span>
-<span><span class="va">s_north</span> <span class="op">&lt;-</span> <span class="va">r1</span><span class="op">@</span><span class="va">side</span><span class="op">@</span><span class="va">north</span><span class="op">@</span><span class="va">nudge</span><span class="op">(</span>y <span class="op">=</span> <span class="fl">.1</span><span class="op">)</span></span>
+<span><span class="va">s_north</span> <span class="op">&lt;-</span> <span class="va">r1</span><span class="op">@</span><span class="va">side</span><span class="op">@</span><span class="va">north</span><span class="op">@</span><span class="va">nudge</span><span class="op">(</span>y <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span>
 <span><span class="va">s_north</span><span class="op">@</span><span class="va">style</span> <span class="op">&lt;-</span> <span class="va">double_arrowstyle</span></span>
 <span></span>
 <span><span class="va">rc_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
@@ -218,8 +218,8 @@
 <span><span class="va">rc_center</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  <span class="va">r1</span><span class="op">@</span><span class="va">center</span>,</span>
 <span>  <span class="va">r1</span><span class="op">@</span><span class="va">center</span><span class="op">@</span><span class="va">label</span><span class="op">(</span></span>
-<span>    fill <span class="op">=</span> <span class="va">my_colors</span><span class="op">$</span><span class="va">primary</span><span class="op">@</span><span class="va">lighten</span><span class="op">(</span><span class="fl">.15</span><span class="op">)</span>,</span>
-<span>    vjust <span class="op">=</span> <span class="op">-</span><span class="fl">.15</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    fill <span class="op">=</span> <span class="va">my_colors</span><span class="op">$</span><span class="va">primary</span><span class="op">@</span><span class="va">lighten</span><span class="op">(</span><span class="fl">0.15</span><span class="op">)</span>,</span>
+<span>    vjust <span class="op">=</span> <span class="op">-</span><span class="fl">0.15</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/bind.html">bind</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">rc_width</span> <span class="op">&lt;-</span> <span class="va">s_north</span> <span class="op">|&gt;</span></span>
@@ -244,28 +244,28 @@
 <span>  plot_point <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  vjust <span class="op">=</span> <span class="fl">1.1</span>,</span>
 <span>  hjust <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  fill <span class="op">=</span> <span class="va">my_colors</span><span class="op">$</span><span class="va">primary</span><span class="op">@</span><span class="va">lighten</span><span class="op">(</span><span class="fl">.15</span><span class="op">)</span></span>
+<span>  fill <span class="op">=</span> <span class="va">my_colors</span><span class="op">$</span><span class="va">primary</span><span class="op">@</span><span class="va">lighten</span><span class="op">(</span><span class="fl">0.15</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">rc_ne</span> <span class="op">&lt;-</span> <span class="va">r1</span><span class="op">@</span><span class="va">northeast</span><span class="op">@</span><span class="va">label</span><span class="op">(</span></span>
 <span>  plot_point <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  vjust <span class="op">=</span> <span class="fl">1.1</span>,</span>
 <span>  hjust <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  fill <span class="op">=</span> <span class="va">my_colors</span><span class="op">$</span><span class="va">primary</span><span class="op">@</span><span class="va">lighten</span><span class="op">(</span><span class="fl">.15</span><span class="op">)</span></span>
+<span>  fill <span class="op">=</span> <span class="va">my_colors</span><span class="op">$</span><span class="va">primary</span><span class="op">@</span><span class="va">lighten</span><span class="op">(</span><span class="fl">0.15</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">rc_sw</span> <span class="op">&lt;-</span> <span class="va">r1</span><span class="op">@</span><span class="va">southwest</span><span class="op">@</span><span class="va">label</span><span class="op">(</span></span>
 <span>  plot_point <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  vjust <span class="op">=</span> <span class="op">-</span><span class="fl">.1</span>,</span>
+<span>  vjust <span class="op">=</span> <span class="op">-</span><span class="fl">0.1</span>,</span>
 <span>  hjust <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  fill <span class="op">=</span> <span class="va">my_colors</span><span class="op">$</span><span class="va">primary</span><span class="op">@</span><span class="va">lighten</span><span class="op">(</span><span class="fl">.15</span><span class="op">)</span></span>
+<span>  fill <span class="op">=</span> <span class="va">my_colors</span><span class="op">$</span><span class="va">primary</span><span class="op">@</span><span class="va">lighten</span><span class="op">(</span><span class="fl">0.15</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">rc_se</span> <span class="op">&lt;-</span> <span class="va">r1</span><span class="op">@</span><span class="va">southeast</span><span class="op">@</span><span class="va">label</span><span class="op">(</span></span>
 <span>  plot_point <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  vjust <span class="op">=</span> <span class="op">-</span><span class="fl">.1</span>,</span>
+<span>  vjust <span class="op">=</span> <span class="op">-</span><span class="fl">0.1</span>,</span>
 <span>  hjust <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>  fill <span class="op">=</span> <span class="va">my_colors</span><span class="op">$</span><span class="va">primary</span><span class="op">@</span><span class="va">lighten</span><span class="op">(</span><span class="fl">.15</span><span class="op">)</span></span>
+<span>  fill <span class="op">=</span> <span class="va">my_colors</span><span class="op">$</span><span class="va">primary</span><span class="op">@</span><span class="va">lighten</span><span class="op">(</span><span class="fl">0.15</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">rc_plot</span> <span class="op">+</span> <span class="va">rc_center</span> <span class="op">+</span> <span class="va">rc_width</span> <span class="op">+</span> <span class="va">rc_height</span></span></code></pre></div>
@@ -439,26 +439,26 @@ Figure 6: Specify a rectangle with the height and the top corners
 <span>        <span class="fl">1.1</span>,</span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span></span>
 <span>          <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, <span class="st">"south|center"</span><span class="op">)</span>,</span>
-<span>          <span class="op">-</span><span class="fl">.1</span>,</span>
-<span>          <span class="fl">.5</span><span class="op">)</span><span class="op">)</span></span>
+<span>          <span class="op">-</span><span class="fl">0.1</span>,</span>
+<span>          <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span>
 <span>      </span>
 <span>      <span class="va">h</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, <span class="st">"east"</span><span class="op">)</span>,</span>
 <span>        <span class="fl">1.1</span>,</span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, <span class="st">"west"</span><span class="op">)</span>, <span class="op">-</span><span class="fl">.1</span>, <span class="fl">.5</span><span class="op">)</span><span class="op">)</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, <span class="st">"west"</span><span class="op">)</span>, <span class="op">-</span><span class="fl">0.1</span>, <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span>
 <span>      <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>        <span class="fu"><a href="../reference/as.geom.html">as.geom</a></span><span class="op">(</span></span>
 <span>          <span class="fu"><a href="https://rconsortium.github.io/S7/reference/prop.html" class="external-link">prop</a></span><span class="op">(</span><span class="va">r1</span>, <span class="va">x</span><span class="op">)</span><span class="op">@</span><span class="va">label</span><span class="op">(</span></span>
 <span>            label <span class="op">=</span> <span class="va">x</span>,</span>
 <span>            hjust <span class="op">=</span> <span class="va">h</span>,</span>
 <span>            vjust <span class="op">=</span> <span class="va">v</span>,</span>
-<span>            fill <span class="op">=</span> <span class="va">my_colors</span><span class="op">$</span><span class="va">primary</span><span class="op">@</span><span class="va">lighten</span><span class="op">(</span><span class="fl">.15</span><span class="op">)</span></span>
+<span>            fill <span class="op">=</span> <span class="va">my_colors</span><span class="op">$</span><span class="va">primary</span><span class="op">@</span><span class="va">lighten</span><span class="op">(</span><span class="fl">0.15</span><span class="op">)</span></span>
 <span>          <span class="op">)</span></span>
 <span>        <span class="op">)</span>,</span>
 <span>        <span class="fu"><a href="../reference/as.geom.html">as.geom</a></span><span class="op">(</span></span>
 <span>          <span class="fu"><a href="https://rconsortium.github.io/S7/reference/prop.html" class="external-link">prop</a></span><span class="op">(</span><span class="va">r1</span>, <span class="va">x</span><span class="op">)</span><span class="op">@</span><span class="va">label</span><span class="op">(</span>hjust <span class="op">=</span> <span class="fl">1</span> <span class="op">-</span> <span class="va">h</span>, vjust <span class="op">=</span> <span class="fl">1</span> <span class="op">-</span> <span class="va">v</span><span class="op">)</span>,</span>
 <span>          fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">x</span> <span class="op">==</span> <span class="st">"center"</span>,</span>
-<span>                        <span class="va">my_colors</span><span class="op">$</span><span class="va">primary</span><span class="op">@</span><span class="va">lighten</span><span class="op">(</span><span class="fl">.15</span><span class="op">)</span>,</span>
+<span>                        <span class="va">my_colors</span><span class="op">$</span><span class="va">primary</span><span class="op">@</span><span class="va">lighten</span><span class="op">(</span><span class="fl">0.15</span><span class="op">)</span>,</span>
 <span>                        <span class="st">"white"</span><span class="op">)</span></span>
 <span>        <span class="op">)</span>,</span>
 <span>        <span class="fu"><a href="../reference/as.geom.html">as.geom</a></span><span class="op">(</span><span class="fu"><a href="https://rconsortium.github.io/S7/reference/prop.html" class="external-link">prop</a></span><span class="op">(</span><span class="va">r1</span>, <span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
@@ -466,8 +466,8 @@ Figure 6: Specify a rectangle with the height and the top corners
 <span>    <span class="op">}</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_fixed.html" class="external-link">coord_equal</a></span><span class="op">(</span></span>
-<span>    xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">.25</span>, <span class="fl">4.25</span><span class="op">)</span>,</span>
-<span>    ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">.25</span>, <span class="fl">2.25</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>    xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.25</span>, <span class="fl">4.25</span><span class="op">)</span>,</span>
+<span>    ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.25</span>, <span class="fl">2.25</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </details><div class="cell-output-display">
 <div id="fig-points" class="quarto-float quarto-figure quarto-figure-center">
 <figure class="quarto-float quarto-float-fig"><div aria-describedby="fig-points-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -501,11 +501,11 @@ Figure 7: The named points of a rectangle
 <span>    polar_just <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span><span class="va">theta</span>, <span class="fl">1.5</span><span class="op">)</span>,</span>
 <span>    plot_point <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="../reference/ob_arc.html">ob_arc</a></span><span class="op">(</span>center <span class="op">=</span> <span class="va">r1</span><span class="op">@</span><span class="va">center</span>,</span>
-<span>      radius <span class="op">=</span> <span class="fl">.5</span>,</span>
+<span>      radius <span class="op">=</span> <span class="fl">0.5</span>,</span>
 <span>      end <span class="op">=</span> <span class="va">theta</span>,</span>
 <span>      label <span class="op">=</span> <span class="fu"><a href="../reference/ob_label.html">ob_label</a></span><span class="op">(</span></span>
 <span>        <span class="va">theta</span>,</span>
-<span>        fill <span class="op">=</span> <span class="va">my_colors</span><span class="op">$</span><span class="va">primary</span><span class="op">@</span><span class="va">lighten</span><span class="op">(</span><span class="fl">.15</span><span class="op">)</span>,</span>
+<span>        fill <span class="op">=</span> <span class="va">my_colors</span><span class="op">$</span><span class="va">primary</span><span class="op">@</span><span class="va">lighten</span><span class="op">(</span><span class="fl">0.15</span><span class="op">)</span>,</span>
 <span>        color <span class="op">=</span> <span class="va">my_colors</span><span class="op">$</span><span class="va">primary</span><span class="op">@</span><span class="va">color</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </details><div class="cell-output-display">
 <div id="fig-theta60" class="quarto-float quarto-figure quarto-figure-center">
@@ -527,9 +527,9 @@ Figure 8: The point on a rectangle at angle θ = 60°
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── &lt;ob_segment&gt;</span></span>
 <span><span class="co">#&gt; # A tibble: 1 × 8</span></span>
-<span><span class="co">#&gt;       x     y  xend  yend arrow_head    arrowhead_length color     linewidth</span></span>
-<span><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;                   &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1     0     2     4     2 &lt;dbl [2 × 2]&gt;                7 #27408BFF         1</span></span></code></pre></div>
+<span><span class="co">#&gt;       x     y  xend  yend arrow_head     arrowhead_length color     linewidth</span></span>
+<span><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;                    &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1     0     2     4     2 &lt;ggdgr::_ [1]&gt;                7 #27408BFF         1</span></span></code></pre></div>
 </div>
 <div class="cell">
 <details class="code-fold"><summary>Code</summary><div class="sourceCode cell-code" id="cb21"><pre class="downlit sourceCode r">
@@ -537,7 +537,7 @@ Figure 8: The point on a rectangle at angle θ = 60°
 <span>  <span class="va">r1</span><span class="op">@</span><span class="va">side</span><span class="op">@</span><span class="va">north</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu"><a href="https://rconsortium.github.io/S7/reference/props.html" class="external-link">set_props</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">my_colors</span><span class="op">$</span><span class="va">secondary</span><span class="op">@</span><span class="va">color</span>, linewidth <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="va">r1</span><span class="op">@</span><span class="va">north</span><span class="op">@</span><span class="va">label</span><span class="op">(</span>label <span class="op">=</span> <span class="st">"North Side"</span>,</span>
-<span>                 vjust <span class="op">=</span> <span class="op">-</span><span class="fl">.1</span>,</span>
+<span>                 vjust <span class="op">=</span> <span class="op">-</span><span class="fl">0.1</span>,</span>
 <span>                 size <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>                 color <span class="op">=</span> <span class="va">my_colors</span><span class="op">$</span><span class="va">secondary</span><span class="op">)</span></span></code></pre></div>
 </details><div class="cell-output-display">
@@ -619,7 +619,7 @@ Figure 11: A rectangle rotated by 30°
 <span>  <span class="fu"><a href="../reference/ob_rectangle.html">ob_rectangle</a></span><span class="op">(</span></span>
 <span>    center <span class="op">=</span> <span class="fu"><a href="../reference/ob_point.html">ob_polar</a></span><span class="op">(</span>theta <span class="op">=</span> <span class="va">th</span>, r <span class="op">=</span> <span class="va">w</span> <span class="op">/</span> <span class="fl">2</span> <span class="op">+</span> <span class="va">r_middle</span><span class="op">)</span>,</span>
 <span>    width <span class="op">=</span> <span class="va">w</span>,</span>
-<span>    height <span class="op">=</span> <span class="fl">.15</span>,</span>
+<span>    height <span class="op">=</span> <span class="fl">0.15</span>,</span>
 <span>    angle <span class="op">=</span> <span class="va">th</span>,</span>
 <span>    color <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>    fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/hcl.html" class="external-link">hcl</a></span><span class="op">(</span><span class="va">th</span><span class="op">@</span><span class="va">degree</span><span class="op">)</span></span>
@@ -728,7 +728,7 @@ Figure 12: Many rotated rectangles
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

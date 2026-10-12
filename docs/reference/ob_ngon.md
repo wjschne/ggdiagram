@@ -215,7 +215,7 @@ ob_ngon(
 ``` r
 ob_ngon(center = ob_point(x = 3:8, y = 0),
         n = 3:8,
-        radius = .4)
+        radius = 0.4)
 #> 
 #> ── <ob_ngon> 
 #> # A tibble: 6 × 5

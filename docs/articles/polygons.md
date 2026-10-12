@@ -38,14 +38,14 @@ bp <- ggdiagram(
   font_family = my_font,
   font_size = my_font_size,
   point_size = my_point_size,
-  linewidth = .5,
+  linewidth = 0.5,
   theme_function = theme_minimal,
   axis.title.x =  element_text(face = "italic"),
   axis.title.y = element_text(
     face = "italic",
     angle = 0,
-    hjust = .5,
-    vjust = .5)) +
+    hjust = 0.5,
+    vjust = 0.5)) +
   scale_x_continuous(labels = signs_centered,
                      limits = c(-4, 4)) +
   scale_y_continuous(labels = signs::signs,
@@ -104,9 +104,9 @@ towards the polygons’ centroids.
 ``` r
 
 bp +
-  {p1 <- ob_polygon(.5 * p - ob_point(1.9, 1.9),
+  {p1 <- ob_polygon(0.5 * p - ob_point(1.9, 1.9),
                     fill = "dodgerblue4")} +
-  {p2 <- ob_polygon(.5 * p + ob_point(1.9, 1.9),
+  {p2 <- ob_polygon(0.5 * p + ob_point(1.9, 1.9),
                     fill = "orchid4")} +
   connect(p1, p2,
           resect = 1,
@@ -153,9 +153,9 @@ n <- 10
 bp +
   ob_ngon(
     n = n:1 + 2,
-    radius = 4 * seq(1, .1, length.out = n) ^ .7,
-    fill = viridis::viridis(n = n, begin = .2, end = .8) %>%
-      tinter::lighten(.6),
+    radius = 4 * seq(1, 0.1, length.out = n) ^ 0.7,
+    fill = viridis::viridis(n = n, begin = 0.2, end = 0.8) %>%
+      tinter::lighten(0.6),
     color = "white",
     linewidth = 1,
     angle = 90
@@ -194,7 +194,7 @@ bp +
     color = "white",
     label = ob_label(
       paste0("Apothem = ", round(ng@apothem, 2)),
-      vjust = -.2,
+      vjust = -0.2,
       fill = NA,
       family = my_font
     )
@@ -244,12 +244,12 @@ ranging from 3 to 13.
 ggdiagram() +
   ob_reuleaux(
     n = seq(13, 3, -2),
-    radius = seq(2, 1, -.2),
+    radius = seq(2, 1, -0.2),
     fill = viridis::viridis(
       n = 6,
-      begin = .2,
-      end = .8) %>%
-      tinter::lighten(.6),
+      begin = 0.2,
+      end = 0.8) %>%
+      tinter::lighten(0.6),
     color = "white",
     linewidth = 1
   )

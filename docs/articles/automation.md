@@ -188,7 +188,7 @@ theta <- degree(seq(90, 360, 120))
 ggdiagram() + 
   {p_3 <- ob_polar(
         theta = theta,
-        r = .5,
+        r = 0.5,
         fill = "black",
         shape = "triangle down filled",
         size = 15)} +
@@ -197,13 +197,13 @@ ggdiagram() +
       \(p_i) {
         p_i + ob_polar(
           theta = theta, 
-          r = .15, 
+          r = 0.15, 
           color = "orchid", 
           fill = "orchid", 
           size = 15, 
           shape = "triangle filled")}) %>% 
   bind() +
-  scale_x_continuous(NULL, expand = expansion(.15))
+  scale_x_continuous(NULL, expand = expansion(0.15))
 ```
 
 ![](automation_files/figure-html/fig-unbind-1.png)
@@ -224,7 +224,7 @@ ggdiagram() +
     lapply(\(pp) {
       p2 <- pp + ob_polar(
         theta = degree(seq(0, 330, 30)),
-        r = .5)
+        r = 0.5)
       
       s <- connect(pp, p2)
         
@@ -275,7 +275,7 @@ ggdiagram() +
     center = ob_polar(
       theta = theta, 
       r = 60),
-    m1 = .5,
+    m1 = 0.5,
     a = 8,
     b = 4,
     angle = theta + degree(90),
@@ -307,7 +307,7 @@ In a more practical example, every variable in the left column of
 ``` r
 
 k <- 5
-clr <- viridis::viridis(k, begin = .3, end = .7)
+clr <- viridis::viridis(k, begin = 0.3, end = 0.7)
 ggdiagram() +
   {t1 <- ob_array(ob_circle(), k = k, where = "north", 
                   fill = clr,
@@ -349,7 +349,7 @@ with one command rather than 12.
 ``` r
 
 theta <- degree(seq(0,330,30))
-clr <- hsv(theta@degree / 360, s = .4, v = .6)
+clr <- hsv(theta@degree / 360, s = 0.4, v = 0.6)
 ggdiagram() +
   {c12 <- ob_circle(
     center = ob_polar(theta, r = 6),
@@ -400,7 +400,7 @@ k <- 8L
 x <- ob_rectangle(ob_point(rep(0, k), rep(0, k)),
                   label = ob_label(
                     label = paste0("*X*~", 1:k, "~"),
-                    vjust = .6,
+                    vjust = 0.6,
                     size = 20,
                     family = "Roboto Condensed"
                   ))
@@ -455,8 +455,8 @@ a sequence of regular polygons was quickly and efficiently.
 d <- tibble(
   x = 3:10,
   y = x,
-  alpha = x * .1,
-  radius = .6,
+  alpha = x * 0.1,
+  radius = 0.6,
   angle = 90,
   fill = "dodgerblue4",
   n = x
@@ -541,7 +541,7 @@ l_names <- lavaan::lavNames(fit, "lv")
 # Make colors
 latent_colors <- l_names %>% 
   length() %>% 
-  viridis::viridis(alpha = .5, begin = .2, end = .75) %>% 
+  viridis::viridis(alpha = 0.5, begin = 0.2, end = 0.75) %>% 
   `names<-`(rev(l_names))
 
 # Make data for creating objects
@@ -613,7 +613,7 @@ walk(d$id, \(v) {
     s[v] <<- place(s[v], 
                    s@bounding_box, 
                    "right", 
-                   sep = .2)
+                   sep = 0.2)
   } else {
     s[v] <<- place(s[v], 
                    s[children]@bounding_box@north, 
@@ -637,7 +637,7 @@ e <- d %>%
     connect(from = s[id], 
             to = s[children], 
             # to_offset = ob_point(0,4),
-            label = ob_label(ll, angle = 0, position = .47), 
+            label = ob_label(ll, angle = 0, position = 0.47), 
             label_sloped = F,
             resect = 1, 
             color = class_color(data$fill)@lighten(.8)
