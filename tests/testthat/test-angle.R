@@ -37,7 +37,7 @@ test_that("equality with ob_angle", {
     .f = list(degree, radian, turn, ob_angle),
     ratio = c(360, 2 * pi, 1, 1)
   ),
-  .g = list(base::`>`, base::`<`, base::`<=`, base::`>=`, base::`==`, base::`!=`)) |>
+  .g = list(`>`, `<`, `<=`, `>=`, `==`, `!=`)) |>
     dplyr::mutate(
       t1 = 0.2,
       t2 = 0.3,

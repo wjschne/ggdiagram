@@ -299,7 +299,7 @@ ob_path <- S7::new_class(
       }
 
       purrr::map(unbind(x), \(xx) xx@style) |>
-        purrr::reduce(base::`+`)
+        purrr::reduce(`+`)
     })
 
     p_style <- bind(p_style)

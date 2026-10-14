@@ -10,11 +10,11 @@ test_that("constructor defaults", {
 test_that("point arithmetic retains each operator", {
   p1 <- ob_point(x = 2, y = 4)
   p2 <- ob_point(x = 1, y = 2)
-  for (operator in list(base::`+`, base::`-`, base::`*`, base::`/`, base::`^`)) {
-    expect_equal(operator(p1, p2)@x, operator(2, 1))
-    expect_equal(operator(p1, p2)@y, operator(4, 2))
-    expect_equal(operator(p1, 2)@x, operator(2, 2))
-    expect_equal(operator(2, p1)@y, operator(2, 4))
+  for (.f in list(`+`, `-`, `*`, `/`, `^`)) {
+    expect_equal(.f(p1, p2)@x, .f(2, 1))
+    expect_equal(.f(p1, p2)@y, .f(4, 2))
+    expect_equal(.f(p1, 2)@x, .f(2, 2))
+    expect_equal(.f(2, p1)@y, .f(2, 4))
   }
 })
 

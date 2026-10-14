@@ -171,6 +171,6 @@ S7::method(str, ob_shape_list) <- function(
   omit = ""
 ) {
   cli::cli_h1("<ob_shape_list>")
-  lapply(S7::S7_data(object), base::print)
+  lapply(S7::S7_data(object), print)
   invisible(object)
 }

@@ -333,7 +333,7 @@ S7::method(length, shape) <- function(x) {
 
 
 S7::method(unique, ob_shape_list) <- function(x, incomparables = FALSE, ...) {
-  purrr::map(x, base::unique) |>
+  purrr::map(x, unique) |>
     ob_shape_list()
 }
 

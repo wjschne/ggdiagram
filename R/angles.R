@@ -196,20 +196,20 @@ turn <- S7::new_class(
 )
 
 # arithmetic ----
-purrr::walk(list(base::`+`, base::`-`, base::`*`, base::`/`, base::`^`), \(.f) {
-  operator <- .f
-  S7::method(.f, list(ob_angle, ob_angle)) <- function(e1, e2) {
+purrr::walk(list(base::`+`, `-`, `*`, `/`, `^`), \(.f) {
+  .generic <- .f
+  S7::method(.generic, list(ob_angle, ob_angle)) <- function(e1, e2) {
     # nocov start
-    d <- operator(c(e1), c(e2))
+    d <- .f(c(e1), c(e2))
     S7::S7_data(e2) <- d
     e2
     # nocov end
   }
 
-  S7::method(.f, list(ob_angle, S7::class_numeric)) <- function(e1, e2) {
+  S7::method(.generic, list(ob_angle, S7::class_numeric)) <- function(e1, e2) {
     # nocov start
     d <- num2turn(
-      operator(
+      .f(
         S7::prop(
           e1,
           S7::S7_class(e1)@name
@@ -224,10 +224,10 @@ purrr::walk(list(base::`+`, base::`-`, base::`*`, base::`/`, base::`^`), \(.f) {
     # nocov end
   }
 
-  S7::method(.f, list(S7::class_numeric, ob_angle)) <- function(e1, e2) {
+  S7::method(.generic, list(S7::class_numeric, ob_angle)) <- function(e1, e2) {
     # nocov start
     d <- num2turn(
-      operator(
+      .f(
         e1,
         S7::prop(
           e2,
@@ -262,18 +262,18 @@ S7::method(`!=`, list(ob_angle, ob_angle)) <- function(e1, e2) {
 }
 
 purrr::walk(
-  list(base::`<`, base::`<=`, base::`>`, base::`>=`),
+  list(`<`, `<=`, `>`, `>=`),
   \(.f) {
-    operator <- .f
+    .generic <- .f
     # nocov start
-    S7::method(.f, list(ob_angle, ob_angle)) <- function(e1, e2) {
-      operator(c(e1), c(e2))
+    S7::method(.generic, list(ob_angle, ob_angle)) <- function(e1, e2) {
+      .f(c(e1), c(e2))
     }
-    S7::method(.f, list(ob_angle, S7::class_numeric)) <- function(e1, e2) {
-      operator(c(e1), num2turn(e2, e1))
+    S7::method(.generic, list(ob_angle, S7::class_numeric)) <- function(e1, e2) {
+      .f(c(e1), num2turn(e2, e1))
     }
-    S7::method(.f, list(S7::class_numeric, ob_angle)) <- function(e1, e2) {
-      operator(num2turn(e1, e2), c(e2))
+    S7::method(.generic, list(S7::class_numeric, ob_angle)) <- function(e1, e2) {
+      .f(num2turn(e1, e2), c(e2))
     }
   } # nocov end
 )

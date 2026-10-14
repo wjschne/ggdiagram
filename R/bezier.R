@@ -465,7 +465,7 @@ ob_bezier <- S7::new_class(
 
     p_style <- purrr::map(p, \(x) {
       purrr::map(unbind(x), \(xx) xx@style) |>
-        purrr::reduce(base::`+`)
+        purrr::reduce(`+`)
     }) |>
       bind()
 
