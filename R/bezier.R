@@ -465,7 +465,7 @@ ob_bezier <- S7::new_class(
 
     p_style <- purrr::map(p, \(x) {
       purrr::map(unbind(x), \(xx) xx@style) |>
-        purrr::reduce(`+`)
+        purrr::reduce(base::`+`)
     }) |>
       bind()
 
@@ -528,7 +528,7 @@ ob_bezier <- S7::new_class(
     }
 
     S7::new_object(
-      .parent = S7::S7_object(),
+      S7::S7_object(),
       p = d$p,
       label = label,
       label_sloped = label_sloped,

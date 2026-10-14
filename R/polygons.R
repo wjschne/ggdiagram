@@ -306,7 +306,7 @@ ob_polygon <- S7::new_class(
     }
 
     S7::new_object(
-      .parent = S7::S7_object(),
+      S7::S7_object(),
       p = d$p,
       label = label,
       vertex_radius = vertex_radius,
@@ -1041,7 +1041,7 @@ ob_ngon <- S7::new_class(
     }
 
     S7::new_object(
-      .parent = S7::S7_object(),
+      centerpoint(center = center, label = label),
       center = center,
       n = d$n %||% n,
       radius = d$radius %||% radius,
@@ -1498,7 +1498,7 @@ ob_intercept <- S7::new_class(
     }
 
     S7::new_object(
-      .parent = ob_ngon(
+      ob_ngon(
         center = center,
         n = d$n %||% n,
         radius = d$radius %||% radius,
@@ -1800,7 +1800,7 @@ ob_reuleaux <- S7::new_class(
     }
 
     S7::new_object(
-      .parent = S7::S7_object(),
+      centerpoint(center = center, label = label),
       center = center,
       n = d$n %||% n,
       radius = d$radius %||% radius,

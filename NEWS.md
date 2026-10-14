@@ -1,5 +1,7 @@
 # ggdiagram 0.3.0 _2026-10-12_
 
+* Updates for compatibility with S7 > 0.2.2.
+
 ## New features
 
 * Color gradients for arrows. `ob_segment`, `ob_path`, `ob_bezier`, and `ob_arc` gain a `gradient` property: a vector of 2 or more colors (or a list of such vectors, one per object) that makes a smooth gradient from the arrow's fins to its head. Gradients are drawn as grid gradient fills, so they require a graphics device that supports them (e.g., ragg, svg, or pdf). For paths, beziers, and arcs, the gradient follows a straight line from start to end, not the curve.
