@@ -151,7 +151,7 @@ degree <- S7::new_class(
     if (S7::S7_inherits(degree, ob_angle)) {
       degree <- c(degree) * 360
     }
-    S7::new_object(ob_angle(.data = degree / 360))
+    S7::new_object(ob_angle(degree / 360))
   }
 )
 
@@ -171,7 +171,7 @@ radian <- S7::new_class(
     if (S7::S7_inherits(radian, ob_angle)) {
       radian <- c(radian) * 2 * pi
     }
-    S7::new_object(ob_angle(.data = radian / (2 * pi)))
+    S7::new_object(ob_angle(radian / (2 * pi)))
   }
 )
 
@@ -191,7 +191,7 @@ turn <- S7::new_class(
     if (S7::S7_inherits(turn, ob_angle)) {
       turn <- c(turn)
     }
-    S7::new_object(ob_angle(.data = turn))
+    S7::new_object(ob_angle(turn))
   }
 )
 
