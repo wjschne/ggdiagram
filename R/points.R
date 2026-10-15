@@ -420,29 +420,31 @@ S7::method(`==`, list(ob_point, ob_point)) <- function(e1, e2) {
 
 
 # arithmetic ----
-purrr::walk(list(base::`+`, `-`, `*`, `/`, `^`), \(.f) {
-  .generic <- .f
+purrr::walk(list(base::`+`, `-`, `*`, `/`, `^`), \(operator) {
+  # method<- replaces this binding; keep operator callable in the methods.
+  generic <- operator
+
   # nocov start
-  S7::method(.generic, list(ob_point, ob_point)) <- function(e1, e2) {
-    x <- .f(e1@x, e2@x)
-    y <- .f(e1@y, e2@y)
+  S7::method(generic, list(ob_point, ob_point)) <- function(e1, e2) {
+    x <- operator(e1@x, e2@x)
+    y <- operator(e1@y, e2@y)
     e2@x <- x
     e2@y <- y
     e2@style <- e1@style + e2@style
     e2
   } # nocov end
 
-  S7::method(.generic, list(ob_point, S7::class_numeric)) <- function(e1, e2) {
+  S7::method(generic, list(ob_point, S7::class_numeric)) <- function(e1, e2) {
     # nocov start
-    e1@x <- .f(e1@x, e2)
-    e1@y <- .f(e1@y, e2)
+    e1@x <- operator(e1@x, e2)
+    e1@y <- operator(e1@y, e2)
     e1
     # nocov end
   }
-  S7::method(.generic, list(S7::class_numeric, ob_point)) <- function(e1, e2) {
+  S7::method(generic, list(S7::class_numeric, ob_point)) <- function(e1, e2) {
     # nocov start
-    e2@x <- .f(e1, e2@x)
-    e2@y <- .f(e1, e2@y)
+    e2@x <- operator(e1, e2@x)
+    e2@y <- operator(e1, e2@y)
     e2
     # nocov end
   }
