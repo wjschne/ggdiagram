@@ -1,6 +1,6 @@
 .onLoad <- function(...) {
   if ("S7_on_load" %in% getNamespaceExports("S7")) {
-    suppressMessages(S7::S7_on_load()) # nocov
+    suppressMessages(getExportedValue("S7", "S7_on_load")()) # nocov
   } else {
     suppressMessages(S7::methods_register()) # nocov
   }
@@ -12,10 +12,10 @@ NULL
 
 .onUnload <- function(...) {
   if ("S7_on_unload" %in% getNamespaceExports("S7")) {
-    S7::S7_on_unload()
+    getExportedValue("S7", "S7_on_unload")()
   }
 }
 
 if ("S7_on_build" %in% getNamespaceExports("S7")) {
-  S7::S7_on_build()
+  getExportedValue("S7", "S7_on_build")()
 }
