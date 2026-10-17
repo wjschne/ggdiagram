@@ -515,11 +515,14 @@ ob_segment <- S7::new_class(
 )
 
 # arithmetic ----
-purrr::walk(list(`+`, `-`, `*`, `/`, `^`), \(.f) {
-  S7::method(.f, list(ob_segment, ob_segment)) <- function(e1, e2) {
+purrr::walk(list(base::`+`, `-`, `*`, `/`, `^`), \(operator) {
+  # method<- replaces this binding; keep operator callable in the methods.
+  generic <- operator
+
+  S7::method(generic, list(ob_segment, ob_segment)) <- function(e1, e2) {
     # nocov start
-    e2@p1 <- .f(e1@p1, e2@p1)
-    e2@p2 <- .f(e1@p2, e2@p2)
+    e2@p1 <- operator(e1@p1, e2@p1)
+    e2@p2 <- operator(e1@p2, e2@p2)
     e2@style <- e1@style + e2@style
     e2
   } # nocov end

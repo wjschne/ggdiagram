@@ -7,6 +7,17 @@ test_that("constructor defaults", {
   expect_identical(p@y, 0)
 })
 
+test_that("point arithmetic retains each operator", {
+  p1 <- ob_point(x = 2, y = 4)
+  p2 <- ob_point(x = 1, y = 2)
+  for (.f in list(`+`, `-`, `*`, `/`, `^`)) {
+    expect_equal(.f(p1, p2)@x, .f(2, 1))
+    expect_equal(.f(p1, p2)@y, .f(4, 2))
+    expect_equal(.f(p1, 2)@x, .f(2, 2))
+    expect_equal(.f(2, p1)@y, .f(2, 4))
+  }
+})
+
 test_that("constructor with style arguments", {
   p <- ob_point(1, 2, color = "red", size = 3)
   expect_identical(p@color, "red")

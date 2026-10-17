@@ -151,7 +151,7 @@ degree <- S7::new_class(
     if (S7::S7_inherits(degree, ob_angle)) {
       degree <- c(degree) * 360
     }
-    S7::new_object(degree / 360)
+    S7::new_object(ob_angle(degree / 360))
   }
 )
 
@@ -171,7 +171,7 @@ radian <- S7::new_class(
     if (S7::S7_inherits(radian, ob_angle)) {
       radian <- c(radian) * 2 * pi
     }
-    S7::new_object(radian / (2 * pi))
+    S7::new_object(ob_angle(radian / (2 * pi)))
   }
 )
 
@@ -191,24 +191,27 @@ turn <- S7::new_class(
     if (S7::S7_inherits(turn, ob_angle)) {
       turn <- c(turn)
     }
-    S7::new_object(turn)
+    S7::new_object(ob_angle(turn))
   }
 )
 
 # arithmetic ----
-purrr::walk(list(`+`, `-`, `*`, `/`, `^`), \(.f) {
-  S7::method(.f, list(ob_angle, ob_angle)) <- function(e1, e2) {
+purrr::walk(list(base::`+`, `-`, `*`, `/`, `^`), \(operator) {
+  # method<- replaces this binding; keep operator callable in the methods.
+  generic <- operator
+
+  S7::method(generic, list(ob_angle, ob_angle)) <- function(e1, e2) {
     # nocov start
-    d <- .f(c(e1), c(e2))
+    d <- operator(c(e1), c(e2))
     S7::S7_data(e2) <- d
     e2
     # nocov end
   }
 
-  S7::method(.f, list(ob_angle, S7::class_numeric)) <- function(e1, e2) {
+  S7::method(generic, list(ob_angle, S7::class_numeric)) <- function(e1, e2) {
     # nocov start
     d <- num2turn(
-      .f(
+      operator(
         S7::prop(
           e1,
           S7::S7_class(e1)@name
@@ -223,10 +226,10 @@ purrr::walk(list(`+`, `-`, `*`, `/`, `^`), \(.f) {
     # nocov end
   }
 
-  S7::method(.f, list(S7::class_numeric, ob_angle)) <- function(e1, e2) {
+  S7::method(generic, list(S7::class_numeric, ob_angle)) <- function(e1, e2) {
     # nocov start
     d <- num2turn(
-      .f(
+      operator(
         e1,
         S7::prop(
           e2,
@@ -262,16 +265,19 @@ S7::method(`!=`, list(ob_angle, ob_angle)) <- function(e1, e2) {
 
 purrr::walk(
   list(`<`, `<=`, `>`, `>=`),
-  \(.f) {
+  \(operator) {
+    # method<- replaces this binding; keep operator callable in the methods.
+    generic <- operator
+
     # nocov start
-    S7::method(.f, list(ob_angle, ob_angle)) <- function(e1, e2) {
-      .f(c(e1), c(e2))
+    S7::method(generic, list(ob_angle, ob_angle)) <- function(e1, e2) {
+      operator(c(e1), c(e2))
     }
-    S7::method(.f, list(ob_angle, S7::class_numeric)) <- function(e1, e2) {
-      .f(c(e1), num2turn(e2, e1))
+    S7::method(generic, list(ob_angle, S7::class_numeric)) <- function(e1, e2) {
+      operator(c(e1), num2turn(e2, e1))
     }
-    S7::method(.f, list(S7::class_numeric, ob_angle)) <- function(e1, e2) {
-      .f(num2turn(e1, e2), c(e2))
+    S7::method(generic, list(S7::class_numeric, ob_angle)) <- function(e1, e2) {
+      operator(num2turn(e1, e2), c(e2))
     }
   } # nocov end
 )

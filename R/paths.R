@@ -365,7 +365,7 @@ ob_path <- S7::new_class(
     }
 
     S7::new_object(
-      .parent = S7::S7_object(),
+      S7::S7_object(),
       p = d$p,
       label = label,
       label_sloped = label_sloped,

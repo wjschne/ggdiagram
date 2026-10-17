@@ -141,6 +141,18 @@ test_that("cross-unit conversions", {
   expect_equal(turn(0.5)@radian, pi)
 })
 
+test_that("angle wrappers construct numeric, cardinal, and angle inputs", {
+  expect_equal(c(degree(degree = c(0, 90, 360))), c(0, 0.25, 1))
+  expect_equal(c(radian(radian = c(0, pi / 2, 2 * pi))), c(0, 0.25, 1))
+  expect_equal(c(turn(turn = c(0, 0.25, 1))), c(0, 0.25, 1))
+  expect_equal(c(degree(degree = "north")), 0.25)
+  expect_equal(c(radian(radian = "north")), 0.25)
+  expect_equal(c(turn(turn = "north")), 0.25)
+  expect_equal(c(degree(degree = ob_angle(0.25))), 0.25)
+  expect_equal(c(radian(radian = ob_angle(0.25))), 0.25)
+  expect_equal(c(turn(turn = ob_angle(0.25))), 0.25)
+})
+
 test_that("ob_angle subclasses accept each other as input", {
   expect_equal(degree(radian(pi))@degree, 180)
   expect_equal(radian(degree(180))@radian, pi)
