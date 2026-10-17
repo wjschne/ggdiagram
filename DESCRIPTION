@@ -20,7 +20,7 @@ Imports:
     bezier,
     cli,
     dplyr,
-    farver,
+    farver (>= 2.1.0),
     geomtextpath,
     ggarrow (>= 0.2.0),
     ggforce (>= 0.5.0),
