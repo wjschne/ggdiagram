@@ -215,7 +215,7 @@ ob_latex <- S7::new_class(
         if (tinytex::is_tinytex()) {
           try(tinytex::xelatex(f_tex)) # nocov
         } else {
-          try(system2(paste0("xelatex ", f_tex))) # nocov
+          try(system2("xelatex", c("-interaction=nonstopmode", f_tex))) # nocov
         }
       }
 

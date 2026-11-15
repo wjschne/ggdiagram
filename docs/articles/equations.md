@@ -172,7 +172,7 @@ ggdiagram() +
 
 Figure 5: Latex Colors
 
-As a convenience, the `latex-color` function will surround the
+As a convenience, the `latex_color` function will surround the
 expression with the right LaTeX expression to change the color.
 
 ``` r

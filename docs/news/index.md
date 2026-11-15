@@ -2,6 +2,8 @@
 
 ## ggdiagram 0.3.0 *2026-10-12*
 
+- Updates for compatibility with S7 \> 0.2.2.
+
 ### New features
 
 - Color gradients for arrows. `ob_segment`, `ob_path`, `ob_bezier`, and

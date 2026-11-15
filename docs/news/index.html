@@ -53,7 +53,8 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.0" id="ggdiagram-030-2026-10-12">ggdiagram 0.3.0 <em>2026-10-12</em>
 <a class="anchor" aria-label="anchor" href="#ggdiagram-030-2026-10-12"></a></h2>
-<div class="section level3">
+<ul><li>Updates for compatibility with S7 &gt; 0.2.2.</li>
+</ul><div class="section level3">
 <h3 id="new-features-0-3-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-3-0"></a></h3>
 <ul><li>Color gradients for arrows. <code>ob_segment</code>, <code>ob_path</code>, <code>ob_bezier</code>, and <code>ob_arc</code> gain a <code>gradient</code> property: a vector of 2 or more colors (or a list of such vectors, one per object) that makes a smooth gradient from the arrow’s fins to its head. Gradients are drawn as grid gradient fills, so they require a graphics device that supports them (e.g., ragg, svg, or pdf). For paths, beziers, and arcs, the gradient follows a straight line from start to end, not the curve.</li>
 <li>New functions <code><a href="../reference/geom_arrow_segment_gradient.html">geom_arrow_segment_gradient()</a></code> and <code><a href="../reference/geom_arrow_gradient.html">geom_arrow_gradient()</a></code> apply the gradients in ordinary ggplot2 code (ggarrow does not accept gradient colors). The approach was inspired by <code><a href="https://ggforce.data-imaginist.com/reference/geom_link.html" class="external-link">ggforce::geom_link()</a></code> and its color gradients along segments, by Thomas Lin Pedersen, the author of ggforce.</li>

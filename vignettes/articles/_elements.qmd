@@ -1,7 +1,18 @@
 ---
 title: "Recreating Figures form Byrne's *Elements of Euclid*"
+execute:
+  cache: true
+knitr:
+  opts_chunk: 
+    collapse: true
+    dev: ragg_png
+    dev-args: 
+      background: "#fcf3d9"
+    comment: "#>"
 format: 
   html:
+    fig-height: 7
+    fig-width: 7
     toc: true
     toc-location: left
     code-fold: false
@@ -35,7 +46,7 @@ library(dplyr)
 ```
 
 
-```{r setup}
+```{r setup, cache=FALSE}
 library(ggdiagram)
 library(ggplot2)
 library(tibble)
@@ -46,14 +57,7 @@ blue <- "#0C7AA5"
 black <- "#000000"
 bg <- "#fcf3d9"
 my_font <- "Libre Caslon Text"
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  dev = "ragg_png",
-  dev.args = list(background = bg),
-  comment = "#>",
-  fig.width = 7,
-  fig.height = 7
-)
+
 
 ggplot2::update_geom_defaults(ggforce::GeomCircle, list(linewidth = 2))
 baseplot <- ggdiagram(
@@ -66,7 +70,7 @@ baseplot <- ggdiagram(
 
 # Book I
 
-## Definition IX
+## IX
 
 A plane rectilinear angle is the inclination of two straight lines to one another, which meet together, but are not in the same straight line.
 
@@ -80,10 +84,10 @@ baseplot +
   ob_wedge(end = theta[2],
            radius = 0.6,
            fill = yellow) +
-  ob_segment(o, ob_polar(theta, r = 1, color = c(red, blue))) 
+  ob_segment(o, ob_polar(theta, r = 1), color = c(red, blue)) 
 ```
 
-## Definition X
+## X
 
 When one straight line standing on another straight line makes the adjacent angles equal, each of these angles is called a *right angle*, and each of these lines is said to be *perpendicular* to the other.
 
@@ -112,7 +116,47 @@ baseplot +
   )
 ```
 
-## Definition XV
+
+## XI
+
+An obtuse angle is an angle greater than a right angle.
+
+```{r}
+#| label: fig-obtuseangle
+#| fig-height: 2.5
+#| fig-width: 5
+#| fig-cap: "Illustration of an obtuse angle"
+
+
+theta <- degree(c(0,135))
+baseplot +
+  ob_wedge(end = theta[2],
+           radius = 0.6,
+           fill = red) +
+  ob_segment(o, ob_polar(theta, r = 1, color = c(blue, yellow))) 
+```
+
+
+## XII
+
+An acute angle is less than a right angle.
+
+```{r}
+#| label: fig-acuteangle
+#| fig-height: 2.5
+#| fig-width: 5
+#| fig-cap: "Illustration of an obtuse angle"
+
+
+theta <- degree(c(0,30))
+baseplot +
+  ob_wedge(end = theta[2],
+           radius = 0.6,
+           fill = blue) +
+  ob_segment(o, ob_polar(theta, r = 1, color = c(red, yellow))) 
+```
+
+## XV
 
 A *circle* is a plane figure, bounded by one continued line, called its *circumference* or *periphery*; and having a certain point within it, from which all straight lines drawn to its circumference are equal.
 
@@ -132,6 +176,240 @@ baseplot +
   s@hatch(linewidth = 1) +
   ob_circle(color = red)
 ```
+
+
+## XVII
+
+A diameter of a circle is a straight line drawn through the center, terminated both ways in the circumference.
+
+```{r}
+#| label: fig-diameter
+#| fig-cap: Illustration of a circle's diameter
+#| fig-width: 4
+#| fig-height: 4
+baseplot +
+  {
+    A <- ob_circle(color = red)
+    
+    ob_segment(A@point_at(c(0, 180)), color = yellow)
+  } +
+  A
+```
+
+
+## XVIII
+
+A semicircle is the figure contained by the diameter, and the part of the circle cut off by the diameter.
+
+```{r}
+#| label: fig-semicircle
+#| fig-cap: Illustration of a semicircle
+#| fig-width: 4
+#| fig-height: 4
+baseplot +
+  {
+    A <- ob_arc(start = 0,
+                end = degree(180),
+                color = yellow)
+    
+    B <- ob_arc(
+      start = degree(180),
+      end = degree(360),
+      color = yellow,
+      linetype = "22"
+    )
+  } +
+  ob_segment(A@point_at(c(0, 180)), color = blue) +
+  A + 
+  B
+```
+
+
+## XIX
+
+A semicircle is the figure contained by the diameter, and the part of the circle cut off by the diameter.
+
+```{r}
+#| label: fig-segcircle
+#| fig-cap: Illustration of an arc segment
+#| fig-width: 4
+#| fig-height: 4
+baseplot +
+  {
+    A <- ob_arc(start = degree(40),
+                end = degree(140),
+                color = blue)
+    
+    B <- ob_arc(
+      start = degree(140),
+      end = degree(410),
+      color = blue,
+      linetype = "22"
+    )
+  } +
+  ob_segment(A@point_at(c(40, 140)), color = red) +
+  A + 
+  B
+```
+
+## XXII
+
+A quadrilateral figure is one which is bounded by four sides. The straight lines [**&#9473;&#9473;**]{style="color:`r blue`"} and [**&#9473;&#9473;**]{style="color:`r red`"} connecting the vertices of the opposite angles of a quadrilateral figure, are called its diagonal.
+
+```{r}
+#| label: fig-quadrilateral
+#| fig-cap: An illustration of a quadrilateral figure
+#| fig-height: 5
+#| fig-width: 4
+p <- ob_point(c(0,1,3,4), c(0,4,5,1))
+baseplot + 
+  ob_segment(p[c(1,3)], color = red) + 
+  ob_segment(p[c(2,4)], color = blue) +
+  ob_polygon(p, color = yellow, fill = NA)
+```
+
+## XXIV
+
+A triangle whose three sides are equal, is said to be equilateral.
+
+```{r}
+#| label: fig-equilateraldef
+#| fig-cap: An illustration of an equilateral triangle
+#| fig-height: 4
+#| fig-width: 4
+baseplot +
+  {
+    A <- ob_segment(
+      ob_polar(
+        degree(
+          c(90, 210, 330, 450)), 1),
+                    lineend = "round",
+                    color = c(red, blue, yellow))
+  } +
+  A@hatch()
+
+```
+
+## XXV
+
+A triangle which has only two sides equal is called an isosceles triangle.
+
+```{r}
+#| label: fig-isosceles
+#| fig-cap: An illustration of an isosceles triangle
+#| fig-height: 4
+#| fig-width: 4
+
+baseplot + 
+  {A <- ob_segment(ob_polar(degree(c(90,210, 330, 450)), c(1.5,1,1, 1.5)), lineend = "round", color = c(red,blue, red))} + 
+  A[c(1,3)]@hatch()
+
+```
+
+
+## XXVII
+A right angled triangle is that which has a right angle.
+
+```{r}
+#| label: fig-right
+#| fig-cap: An illustration of a right triangle
+#| fig-height: 4
+#| fig-width: 4
+
+baseplot + 
+  ob_segment(
+    ob_polar(
+      degree(c(0,90, 180, 0)), 
+      c(0,1,2, 0)), 
+    lineend = "round", 
+    color = c(blue,yellow, red))
+
+```
+
+# XXVIII
+
+An obtuse angled triangle is that which has an obtuse angle.
+
+```{r}
+#| label: fig-obtuse
+#| fig-cap: An illustration of an obtuse triangle
+#| fig-height: 4
+#| fig-width: 4
+
+baseplot + 
+  ob_segment(ob_point(c(0, 1, -1, 0), c(0, 2, 0, 0)), lineend = "round", color = c(yellow, blue, red))
+
+```
+
+
+# XXIX
+
+An acute angled triangle is that which has three acute angles.
+
+```{r}
+#| label: fig-acute
+#| fig-cap: An illustration of an acute triangle
+#| fig-height: 4
+#| fig-width: 4
+
+baseplot + 
+  ob_segment(ob_point(c(0, -.1, -1, 0), c(0, .7, .1, 0)), lineend = "round", color = c(red, yellow, blue))
+
+```
+
+# XXX
+
+Of four-sided figures, a square is that which has all its sides equal, and all its angles right angles.
+
+```{r}
+#| label: fig-square
+#| fig-cap: An illustration of a square
+#| fig-height: 4
+#| fig-width: 4
+
+baseplot + 
+  ob_segment(ob_point(c(1, 1, -1, -1, 1), c(-1, 1, 1, -1, -1)), lineend = "round", color = c(yellow, black, blue, red))
+
+```
+
+# XXXI
+
+A rhombus is that which has all its sides equal, but its angles are not right angles.
+
+```{r}
+#| label: fig-rhombus
+#| fig-cap: An illustration of a rhombus
+#| fig-height: 4
+#| fig-width: 4
+
+baseplot + 
+  ob_segment(ob_point(c(1, 1.3, -.7, -1, 1), c(-1, 1, 1, -1, -1)), lineend = "round", color = c(yellow, black, blue, red))
+
+```
+
+XXXII.
+An oblong is that which has all its angles right angles, but has not all its sides equal.
+
+```{r}
+#| label: fig-oblong
+#| fig-cap: An illustration of an oblong
+#| fig-height: 2
+#| fig-width: 4
+
+baseplot + 
+  ob_segment(ob_point(c(2, 2, -2, -2, 2), c(-1, 1, 1, -1, -1)), lineend = "round", color = c(red, blue, red, blue))
+
+```
+
+XXXIII.
+A rhomboid is that which has its opposite sides equal to one another, but all its sides are not equal, nor its angles right angles.
+
+XXXIV.
+All other quadrilateral figures are called trapeziums.
+
+XXXV.
+Parallel straight lines are such as are in the same plane, and which being produced continually in both directions, would never meet.
+
 
 ## Proposition 1
 
@@ -437,7 +715,7 @@ baseplot +
 
 # Book IV
 
-## Definition III
+## III
 
 A rectilinear figure is said to be inscribed in a circle, when the vertex of each angle of the figure is in the circumference of the circle.
 
@@ -460,7 +738,7 @@ baseplot +
 ```
 
 
-## Definition IV
+## IV
 
 A rectilinear figure is said to be circumscribed about a circle, when each of its sides is a tangent to the circle.
 
@@ -473,7 +751,7 @@ baseplot +
 ```
 
 
-## Definition V
+## V
 
 A circle is said to be inscribed in a rectilinear figure, when each side of the figure is a tangent to the circle.
 
@@ -487,7 +765,7 @@ baseplot +
 ```
 
 
-## Definition VI
+## VI
 
 A circle is said to be circumscribed about a rectilinear figure, when the circumference passes through the vertex of each angle of the figure.
 
@@ -525,7 +803,7 @@ node <- redefault(
 ct <- redefault(
   connect,
   resect = 1,
-  color = black,
+  # color = black,
   alpha = 0.3,
   linewidth = 0.75,
   length_head = 5
@@ -541,26 +819,56 @@ transition <- redefault(
   linewidth = 0.75
 )
 ggdiagram(font_family = "Roboto Condensed", font_size = 20) +
-  {waiting <- node()} +
-  {critical <- node() %>% place(waiting, "below", d)} +
-  {s <- node() %>% place(critical, "below", d)
-    s1 <- node(fill = red, color = red) %>% place(s, "left", 0)} +
-  {s2 <- node(fill = red, color = red) %>% place(s, "right", 0)} +
-  {leave <- transition() %>% place(critical, "right", d)} +
-  {enter <- transition() %>% place(critical, "left", d)} +
-  {s3 <- node() %>% place(s, "below", d)} +
-  {e2 <- transition() %>% place(s3, "left", d)} +
-  {l2 <- transition() %>% place(s3, "right", d)} +
-  {s4 <- node() %>% place(s3, "below", d)} +
-  bind(c(waiting@center, s4@center, s2@center + ob_polar(degree(c(
-    90, 210, 330
-  )), 0.2))) %>%
-  set_props(
-    color = black,
-    fill = NA_character_,
-    size = 4,
-    alpha = 1
-  ) +
+  {
+    waiting <- node()
+  } +
+  {
+    critical <- node() %>% place(waiting, "below", d)
+  } +
+  {
+    s <- node() %>% place(critical, "below", d)
+    s1 <- node(fill = red, color = red) %>% place(s, "left", 0)
+  } +
+  {
+    s2 <- node(fill = red, color = red) %>% place(s, "right", 0)
+  } +
+  {
+    leave <- transition() %>% place(critical, "right", d)
+  } +
+  {
+    enter <- transition() %>% place(critical, "left", d)
+  } +
+  {
+    s3 <- node() %>% place(s, "below", d)
+  } +
+  {
+    e2 <- transition() %>% place(s3, "left", d)
+  } +
+  {
+    l2 <- transition() %>% place(s3, "right", d)
+  } +
+  {
+    s4 <- node() %>% place(s3, "below", d)
+  } +
+  bind(c(
+    waiting@center,
+    s4@center,
+    s2@center +
+      ob_polar(
+        degree(c(
+          90,
+          210,
+          330
+        )),
+        0.2
+      )
+  )) %>%
+    set_props(
+      color = black,
+      fill = NA_character_,
+      size = 4,
+      alpha = 1
+    ) +
   bind(c(
     ct(enter, bind(c(critical, s1))),
     ct(critical, leave),
@@ -572,15 +880,20 @@ ggdiagram(font_family = "Roboto Condensed", font_size = 20) +
     ct(s3, l2)
   )) +
   ob_bezier(
-    c(bind(
-      c(waiting@west, waiting@center %-|% enter@center, enter@north)
-    ), bind(
-      c(s4@west, s4@center %-|% e2@center, e2@south)
-    ), bind(
-      c(l2@south, l2@center %|-% s4@center, s4@east)
-    ), bind(
-      c(leave@north, leave@center %|-% waiting@center, waiting@east)
-    )),
+    c(
+      bind(
+        c(waiting@west, waiting@center %-|% enter@center, enter@north)
+      ),
+      bind(
+        c(s4@west, s4@center %-|% e2@center, e2@south)
+      ),
+      bind(
+        c(l2@south, l2@center %|-% s4@center, s4@east)
+      ),
+      bind(
+        c(leave@north, leave@center %|-% waiting@center, waiting@east)
+      )
+    ),
     resect = 2,
     arrow_head = arrowhead(),
     linewidth = 0.75,
@@ -757,7 +1070,5 @@ ggdiagram() +
   ob_path(color = "blue", linewidth = 1)
 ```
 
-```{r}
-my_fill <- grid::radialGradient(c("gold", "white")) 
-```
+
 

@@ -292,12 +292,30 @@ Figure 9: Adjusting the arc’s autolabel
 
 ## Arcs with color gradients
 
-A gradient can be applied to an `ob_arc` object.
+A gradient can be applied to any `ob_arc` object by setting the
+`gradient` parameter to a vector of colors. Here, the arc is created
+with the `connect` function with `arc_bend = -1`. The gradient is
+created by default when connecting two objects of different colors or
+fills.
 
 ``` r
 
-ggdiagram() + 
-  ob_arc(start = 0, end = 90, gradient = c("blue", "yellow"), linewidth = 3)
+ggdiagram() +
+  {a <- ob_circle(fill = "dodgerblue",
+                   color = NA)} +
+  {b <- ob_circle(fill = "orchid1",
+                   color = NA,
+                   center = ob_point(3, 0))} +
+  connect(
+    a,
+    b,
+    arc_bend = -1,
+    resect = 2,
+    linewidth = 2,
+    arrowhead_length = 3,
+    arrow_head = arrowhead(),
+    arrow_fins = arrowhead()
+  )
 ```
 
 ![](arcwedges_files/figure-html/fig-arcgradient-1.png)

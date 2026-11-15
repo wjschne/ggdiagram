@@ -74,9 +74,9 @@ aes_injection <- function(bare_mapping, identity_mapping, omit_mapping = NULL) {
 #' @keywords internal
 #' @noRd
 get_tibble_defaults_helper <- function(
-    x,
-    default_style,
-    required_aes = c("x", "y")
+  x,
+  default_style,
+  required_aes = c("x", "y")
 ) {
   d <- get_tibble(x) |>
     dplyr::select(-dplyr::any_of("id"))
@@ -161,12 +161,12 @@ na2zero <- function(x) {
 #' @keywords internal
 #' @noRd
 ob_array_helper <- function(
-    x,
-    k = 2,
-    sep = 1,
-    where = "east",
-    anchor = "center",
-    ...
+  x,
+  k = 2,
+  sep = 1,
+  where = "east",
+  anchor = "center",
+  ...
 ) {
   if (x@length > 1) {
     stop("The shape must start with an object of length 1.")
@@ -241,9 +241,9 @@ ob_array_helper <- function(
 #' subscript("X", 1)
 #' superscript("A", 2)
 subscript <- function(
-    x,
-    subscript = seq_along(x),
-    output = c("markdown", "latex")
+  x,
+  subscript = seq_along(x),
+  output = c("markdown", "latex")
 ) {
   output <- match.arg(output)
   if (output == "markdown") {
@@ -263,9 +263,9 @@ subscript <- function(
 #' @rdname subscript
 #' @export
 superscript <- function(
-    x,
-    superscript = seq_along(x),
-    output = c("markdown", "latex")
+  x,
+  superscript = seq_along(x),
+  output = c("markdown", "latex")
 ) {
   output <- match.arg(output)
   if (output == "markdown") {
@@ -313,14 +313,14 @@ signs_centered <- function(x, space = NULL, encoding = "UTF-8", ...) {
 #' @examples
 #' round_probability(c(0, 0.0012, 0.012, 0.12, 0.99, 0.992, 0.9997, 1), digits = 2)
 round_probability <- function(
-    p,
-    accuracy = 0.01,
-    digits = NULL,
-    max_digits = NULL,
-    remove_leading_zero = TRUE,
-    round_zero_one = TRUE,
-    phantom_text = NULL,
-    phantom_color = NULL
+  p,
+  accuracy = 0.01,
+  digits = NULL,
+  max_digits = NULL,
+  remove_leading_zero = TRUE,
+  round_zero_one = TRUE,
+  phantom_text = NULL,
+  phantom_color = NULL
 ) {
   if (is.null(digits)) {
     l <- scales::number(p, accuracy = accuracy)
@@ -573,7 +573,7 @@ get_depth_helper <- function(x, model, depth = 0L, max_depth = 20) {
 #'
 #' Gradients require a graphics device that supports them (e.g., ragg, svg, pdf, or cairo png). The `gradient` colors apply to all arrows in the layer. The gradient replaces the `colour` of the arrow body; the stroke is unchanged (set `stroke_colour = NA` to hide it).
 #'
-#' @section Acknowledgements:
+#' @section Acknowledgments:
 #' The idea of drawing color gradients along arrows was inspired by [ggforce::geom_link()] by Thomas Lin Pedersen. Sampling gradients in a perceptual color space was inspired by Matt DesLauriers' post [Perceptually Smooth Multi-Color Linear Gradients](https://observablehq.com/@mattdesl/perceptually-smooth-multi-color-linear-gradients).
 #'
 #' @inheritParams ggarrow::geom_arrow_segment
@@ -710,15 +710,24 @@ expand_gradient <- function(colors, stops, space = NULL, n = 32L) {
   colors <- colors[o]
   stops <- stops[o]
   pos <- sort(unique(c(stops, seq(min(stops), max(stops), length.out = n))))
-  m <- farver::decode_colour(colors, alpha = TRUE, to = space, na_value = "transparent")
+  m <- farver::decode_colour(
+    colors,
+    alpha = TRUE,
+    to = space,
+    na_value = "transparent"
+  )
   alpha <- m[, "alpha"]
   m <- m[, setdiff(colnames(m), "alpha"), drop = FALSE]
   # interval of the user's stops containing each position
-  k <- pmin(findInterval(pos, stops, rightmost.closed = TRUE), length(stops) - 1L)
+  k <- pmin(
+    findInterval(pos, stops, rightmost.closed = TRUE),
+    length(stops) - 1L
+  )
   k <- pmax(k, 1L)
   width <- stops[k + 1L] - stops[k]
   t <- ifelse(width > 0, (pos - stops[k]) / width, 0)
-  out <- m[k, , drop = FALSE] + t * (m[k + 1L, , drop = FALSE] - m[k, , drop = FALSE])
+  out <- m[k, , drop = FALSE] +
+    t * (m[k + 1L, , drop = FALSE] - m[k, , drop = FALSE])
   if (space %in% c("oklch", "lch")) {
     # hue is the 3rd channel, in degrees; take the shorter arc
     h1 <- m[k, 3]
@@ -778,7 +787,7 @@ gradient_arrows <- function(x, colors, stops, space = NULL) {
 #'
 #' Like [geom_arrow_segment_gradient()], but for [ggarrow::geom_arrow()], which draws paths and curves. The gradient runs in a straight line from each path's first point (fin) to its last point (head), so it follows the curve only approximately for strongly curved paths.
 #'
-#' @section Acknowledgements:
+#' @section Acknowledgments:
 #' The idea of drawing color gradients along arrows was inspired by [ggforce::geom_link()] by Thomas Lin Pedersen. Sampling gradients in a perceptual color space was inspired by Matt DesLauriers' post [Perceptually Smooth Multi-Color Linear Gradients](https://observablehq.com/@mattdesl/perceptually-smooth-multi-color-linear-gradients).
 #'
 #' @inheritParams ggarrow::geom_arrow
