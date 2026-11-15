@@ -40,6 +40,7 @@ Sewall
 Superellipses
 TikZ
 TikZ's
+TinyTeX
 XY
 YX
 YY
@@ -78,6 +79,7 @@ ij
 intercorrelate
 intraclass
 ish
+jarl
 lavaan
 linetype
 linewidth
@@ -97,13 +99,16 @@ resect
 resected
 reuleaux
 rgb
+rmarkdown
 roundedness
 sagitta
 semptools
+snakecase
 squircle
 superellipse
 superellipses
 svg
+svglite
 tex
 tibble
 tibbles

@@ -24,7 +24,7 @@ Imports:
     geomtextpath,
     ggarrow (>= 0.2.1),
     ggforce (>= 0.5.0),
-    ggplot2 (>= 4.4.0),
+    ggplot2 (>= 4.0.4),
     ggtext,
     grDevices,
     grid,
