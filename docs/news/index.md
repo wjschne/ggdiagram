@@ -1,8 +1,20 @@
 # Changelog
 
-## ggdiagram 0.3.0 *2026-10-12*
+## ggdiagram 0.3.0 *2026-11-16*
 
-- Updates for compatibility with S7 \> 0.2.2.
+- Updates for compatibility with S7 \> 0.2.2
+  ([@t-kalinowski](https://github.com/t-kalinowski),
+  [\#9](https://github.com/wjschne/ggdiagram/issues/9)).
+
+### Breaking changes
+
+- `ob_segment` now defaults to black when no color is specified (or
+  inherited) unless `color = NA` is set explicitly. Objects derived from
+  segments, such as `@midpoint()`, therefore carry `color = "black"`.
+- The `connect` color now comes from the `from` object. Previously the
+  `to` object’s color overrode it.
+- `ob_path@segment` no longer carries arrowheads or fins, and each
+  segment keeps the style of its own path.
 
 ### New features
 
@@ -41,15 +53,15 @@
   e.g., `"sinewave"`) and `force_arrow` (draw the arrowhead even if the
   segment is too short). `ob_path` gains `force_arrow`.
 
-### Changes in behavior
+### Bug fixes
 
-- `ob_segment` now defaults to black when no color is specified (or
-  inherited) unless `color = NA` is set explicitly. Objects derived from
-  segments, such as `@midpoint()`, therefore carry `color = "black"`.
-- The `connect` color now comes from the `from` object. Previously the
-  `to` object’s color overrode it.
-- `ob_path@segment` no longer carries arrowheads or fins, and each
-  segment keeps the style of its own path.
+- [`ob_latex()`](https://wjschne.github.io/ggdiagram/reference/ob_latex.md)
+  now calls `xelatex` correctly when TinyTeX is not installed (the old
+  [`system2()`](https://rdrr.io/r/base/system2.html) call was
+  malformed). It also runs in non-stop mode so a LaTeX error can’t hang
+  the R session.
+- Fixed bug in `round_probability` so that `NA` does not throw an error
+  when digits are specified.
 
 ### Documentation and internal changes
 
@@ -57,14 +69,18 @@
   arc/wedge articles.
 - Reorganized source files: generics moved to `R/generics.R` and helper
   functions to `R/helpers.R`.
-- Minimum R version is now 4.4.0.
 - Added copyright holder (`cph`) role to the maintainer in
   `DESCRIPTION`.
+- Code linted with jarl (e.g., `||` instead of `|` in scalar conditions,
+  leading zeros on decimals).
 
-## ggdiagram 0.2.1 *2026-06-12*
+### Dependency changes
 
-- Fixed bug in `round_probability` so that `NA` does not throw an error
-  when digits are specified.
+- Now requires ggarrow \>= 0.2.0 and farver \>= 2.1.0 (needed for
+  gradients).
+- Minimum R version is now 4.4.0 (ggdiagram now uses base R’s `%||%`).
+- stats is now declared in Imports. Removed unused Suggests (marquee,
+  rmarkdown, svglite); added snakecase (used in articles).
 
 ## ggdiagram 0.2.0 *2026-05-04*
 
