@@ -1,3 +1,5 @@
+# ggdiagram (development version)
+
 # ggdiagram 0.3.0 _2026-11-16_
 
 * Updates for compatibility with S7 > 0.2.2 (@t-kalinowski, #9).
