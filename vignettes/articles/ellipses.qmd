@@ -424,7 +424,7 @@ e_fills <- hsv(
 
 bp + 
   {e_0 <- ob_ellipse(
-    m1 = 6,
+    m1 = 8,
     label = ob_label(
       "*e*~0~",
       size = 40,
@@ -438,7 +438,7 @@ bp +
     x = ob_ellipse(
       a = 0.4,
       b = 0.4,
-      m1 = 6,
+      m1 = 8,
       label = ob_label(
         paste0("*e*~", seq(k), "~"),
         color = "white",
@@ -451,7 +451,7 @@ bp +
     where = degree(seq(0, 360 - 360 / k, 360 / k)),
     sep = 2
   )} +
-  connect(e_0, e_x, resect = 2, color = e_fills) + 
+  connect(e_0, e_x, resect = 2, linewidth = .75) + 
   theme_void()
 ```
 

@@ -119,7 +119,7 @@ the default plot specification, e.g. \code{\link[ggplot2:annotation_borders]{ann
 A ggplot2 layer
 }
 \description{
-ggarrow does not accept \link[grid:linearGradient]{grid::linearGradient} patterns as colors. This geom lets ggarrow draw each arrow and then replaces the arrow's fill with a gradient running from its first point (fin) to its last point (head).
+ggarrow does not accept \link[grid:linearGradient]{grid::linearGradient} patterns as colors. This geom lets ggarrow draw each arrow and then replaces the arrow's fill with a gradient running from its first point (fin) to its last point (head). The colors change along the shaft only, so arrowheads and fins stay solid.
 }
 \details{
 Gradients require a graphics device that supports them (e.g., ragg, svg, pdf, or cairo png). The \code{gradient} colors apply to all arrows in the layer. The gradient replaces the \code{colour} of the arrow body; the stroke is unchanged (set \code{stroke_colour = NA} to hide it).

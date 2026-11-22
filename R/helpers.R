@@ -569,7 +569,7 @@ get_depth_helper <- function(x, model, depth = 0L, max_depth = 20) {
 
 #' Arrow segments with a color gradient
 #'
-#' ggarrow does not accept [grid::linearGradient] patterns as colors. This geom lets ggarrow draw each arrow and then replaces the arrow's fill with a gradient running from its first point (fin) to its last point (head).
+#' ggarrow does not accept [grid::linearGradient] patterns as colors. This geom lets ggarrow draw each arrow and then replaces the arrow's fill with a gradient running from its first point (fin) to its last point (head). The colors change along the shaft only, so arrowheads and fins stay solid.
 #'
 #' Gradients require a graphics device that supports them (e.g., ragg, svg, pdf, or cairo png). The `gradient` colors apply to all arrows in the layer. The gradient replaces the `colour` of the arrow body; the stroke is unchanged (set `stroke_colour = NA` to hide it).
 #'
@@ -706,10 +706,28 @@ expand_gradient <- function(colors, stops, space = NULL, n = 32L) {
   if (space == "rgb" || length(colors) < 2L) {
     return(list(colours = colors, stops = stops))
   }
+  pos <- sort(unique(c(stops, seq(min(stops), max(stops), length.out = n))))
+  list(
+    colours = gradient_colours_at(colors, stops, pos, space),
+    stops = pos
+  )
+}
+
+#' Colors of a gradient at given positions
+#'
+#' Interpolates the gradient defined by `colors` and `stops` at `pos`, in the given color space.
+#' @param colors character vector of colors
+#' @param stops numeric vector of stop positions, same length as `colors`
+#' @param pos numeric vector of positions at which to evaluate the gradient
+#' @param space one of "oklab", "oklch", "lab", "lch", "rgb"
+#' @return character vector of colors, same length as `pos`
+#' @keywords internal
+#' @noRd
+gradient_colours_at <- function(colors, stops, pos, space = "oklab") {
   o <- order(stops)
   colors <- colors[o]
   stops <- stops[o]
-  pos <- sort(unique(c(stops, seq(min(stops), max(stops), length.out = n))))
+  pos <- pmin(pmax(pos, min(stops)), max(stops))
   m <- farver::decode_colour(
     colors,
     alpha = TRUE,
@@ -734,13 +752,173 @@ expand_gradient <- function(colors, stops, space = NULL, n = 32L) {
     dh <- ((m[k + 1L, 3] - h1 + 180) %% 360) - 180
     out[, 3] <- (h1 + t * dh) %% 360
   }
+  farver::encode_colour(
+    out,
+    alpha = alpha[k] + t * (alpha[k + 1L] - alpha[k]),
+    from = space
+  )
+}
+
+#' Gradient stops that follow a path's length rather than its chord
+#'
+#' A linear gradient colors each point by its projection onto the line from the path's first point to its last point. On a curved path, the ends run nearly perpendicular to that line, so the color barely changes there and changes abruptly in the middle. This function places the gradient's stops along the chord so that, along the path itself, the color changes in proportion to the distance traveled.
+#'
+#' If `start` or `end` are positive, the gradient runs only over the part of the path between them, and the ends of the path keep the first and last colors. This keeps arrowheads (and fins) solid.
+#' @param x,y numeric vectors of path coordinates
+#' @param colors,stops,space gradient specification (see [expand_gradient()])
+#' @param n number of sampled stops
+#' @param start,end distances along the path (in the units of `x` and `y`) from the first and last points to where the gradient starts and ends
+#' @return list with `colours` and `stops`, or `NULL` if no remapping is needed or possible
+#' @keywords internal
+#' @noRd
+path_gradient_stops <- function(
+  x,
+  y,
+  colors,
+  stops,
+  space = NULL,
+  n = 64L,
+  start = 0,
+  end = 0
+) {
+  space <- space %||% getOption("ggdiagram.gradient_space", "oklab")
+  space <- match.arg(space, c("oklab", "oklch", "lab", "lch", "rgb"))
+  np <- length(x)
+  if (np < 2L || length(colors) < 2L) {
+    return(NULL)
+  }
+  dx <- x[np] - x[1]
+  dy <- y[np] - y[1]
+  chord2 <- dx^2 + dy^2
+  seg <- sqrt(diff(x)^2 + diff(y)^2)
+  total <- sum(seg)
+  if (!is.finite(chord2) || chord2 <= 0 || !is.finite(total) || total <= 0) {
+    return(NULL)
+  }
+  # part of the path (as fractions of its length) over which colors change
+  a <- max(start, 0, na.rm = TRUE) / total
+  b <- 1 - max(end, 0, na.rm = TRUE) / total
+  if (b - a < 0.1) {
+    # too little shaft left: spread the gradient over the whole path
+    a <- 0
+    b <- 1
+  }
+  # fraction of path length traveled at each point
+  s <- c(0, cumsum(seg)) / total
+  # position of each point along the chord (the gradient's axis)
+  t <- ((x - x[1]) * dx + (y - y[1]) * dy) / chord2
+  straight <- max(abs(t - s)) < 1e-3
+  if (straight && a == 0 && b == 1) {
+    # the linear gradient already follows the path
+    return(NULL)
+  }
+  pos <- seq(0, 1, length.out = n)
+  if (straight) {
+    s_at <- pos
+  } else {
+    t <- pmin(pmax(cummax(t), 0), 1)
+    keep <- !duplicated(t)
+    if (sum(keep) < 2L) {
+      return(NULL)
+    }
+    s_at <- stats::approx(t[keep], s[keep], xout = pos, rule = 2)$y
+  }
+  u <- pmin(pmax((s_at - a) / (b - a), 0), 1)
   list(
-    colours = farver::encode_colour(
-      out,
-      alpha = alpha[k] + t * (alpha[k + 1L] - alpha[k]),
-      from = space
-    ),
+    colours = gradient_colours_at(colors, stops, u, space),
     stops = pos
+  )
+}
+
+#' How far an arrow ornament sets back the arrow's shaft
+#'
+#' Mirrors how ggarrow sizes arrowheads and fins: the shaft ends where the ornament begins. Returns 0 if the ornament is absent or cannot be measured.
+#' @param ornament an ornament matrix, function, or list of them (one per arrow), or `NULL`
+#' @param length ornament length (unit or mm)
+#' @param width shaft width at that end, in mm
+#' @param resect resection at that end, in mm
+#' @param i which arrow
+#' @return setback in mm
+#' @keywords internal
+#' @noRd
+ornament_setback <- function(ornament, length, width, resect, i = 1L) {
+  tryCatch(
+    {
+      if (is.list(ornament) && !is.matrix(ornament)) {
+        ornament <- ornament[[min(i, length(ornament))]]
+      }
+      if (is.null(ornament)) {
+        return(0)
+      }
+      len <- if (grid::is.unit(length)) {
+        grid::convertWidth(length, "mm", valueOnly = TRUE)
+      } else {
+        as.numeric(length)
+      }
+      len <- len[min(i, length(len))]
+      if (is.function(ornament)) {
+        o <- ornament(length = len, width = width, resect = resect)
+        return(attr(o, "resect") %||% 0)
+      }
+      if (is.matrix(ornament)) {
+        y_range <- diff(range(ornament[, "y"]))
+        len <- max(len, if (y_range > 0) width / y_range else 0)
+        len <- len * (attr(ornament, "length") %||% max(ornament[, "x"]))
+        return((attr(ornament, "resect") %||% 1) * len)
+      }
+      0
+    },
+    error = function(e) 0
+  )
+}
+
+#' Distance from each end of an arrow's path to where its shaft is drawn
+#'
+#' @param x an `arrow_path` grob
+#' @param i which arrow
+#' @param first,last indices of the arrow's first and last points
+#' @return numeric vector with `start` and `end`, in mm
+#' @keywords internal
+#' @noRd
+shaft_setbacks <- function(x, i, first, last) {
+  tryCatch(
+    {
+      mm <- function(u, k = i) {
+        if (is.null(u)) {
+          return(0)
+        }
+        v <- if (grid::is.unit(u)) {
+          grid::convertWidth(u, "mm", valueOnly = TRUE)
+        } else {
+          as.numeric(u)
+        }
+        if (length(v) == 0L) 0 else v[min(k, length(v))]
+      }
+      width <- grid::convertWidth(x$shaft_width, "mm", valueOnly = TRUE)
+      justify <- x$justify %||% 0
+      justify <- justify[min(i, length(justify))]
+      r_head <- mm(x$resect$head)
+      r_fins <- mm(x$resect$fins)
+      head <- ornament_setback(
+        x$arrow_head,
+        x$length_head,
+        width[min(last, length(width))],
+        r_head,
+        i
+      )
+      fins <- ornament_setback(
+        x$arrow_fins,
+        x$length_fins,
+        width[min(first, length(width))],
+        r_fins,
+        i
+      )
+      c(
+        start = r_fins + fins * (1 - justify),
+        end = r_head + head * (1 - justify)
+      )
+    },
+    error = function(e) c(start = 0, end = 0)
   )
 }
 
@@ -749,26 +927,12 @@ expand_gradient <- function(colors, stops, space = NULL, n = 32L) {
 #' @noRd
 gradient_arrows <- function(x, colors, stops, space = NULL) {
   if (inherits(x, "arrow_path")) {
-    gs <- expand_gradient(colors, stops, space)
-    len <- vctrs::field(x$id_rle, "length")
-    id <- rep(seq_along(len), len)
-    px <- as.numeric(x$x)
-    py <- as.numeric(x$y)
-    first <- match(unique(id), id)
-    last <- length(id) + 1L - match(unique(id), rev(id))
-    x$gp$fill <- lapply(seq_along(first), function(i) {
-      grid::linearGradient(
-        colours = gs$colours,
-        stops = gs$stops,
-        x1 = grid::unit(px[first[i]], "native"),
-        y1 = grid::unit(py[first[i]], "native"),
-        x2 = grid::unit(px[last[i]], "native"),
-        y2 = grid::unit(py[last[i]], "native"),
-        default.units = "native",
-        extend = "pad",
-        group = TRUE
-      )
-    })
+    # The gradient is built at draw time (see makeContent method below),
+    # because grid resolves a pattern's coordinates relative to the bounding
+    # box of the shape it fills, which is known only after ggarrow has
+    # turned the path into polygons.
+    x$ggdiagram_gradient <- list(colors = colors, stops = stops, space = space)
+    class(x) <- unique(c("ggdiagram_gradient_arrow", class(x)))
     return(x)
   }
   if (inherits(x, "gTree")) {
@@ -783,9 +947,78 @@ gradient_arrows <- function(x, colors, stops, space = NULL) {
   x
 }
 
+#' Draw a ggarrow path with a fin-to-head gradient fill
+#'
+#' Lets ggarrow build the arrow polygons, then fills each arrow with a linear gradient from its first point to its last point. Grid places a pattern relative to the bounding box of the shape it fills, so the gradient's end points are given in npc of each arrow's bounding box. Stops are placed so that the color changes evenly along the visible shaft, from where the fins (or resection) end to where the arrowhead begins, leaving arrowheads and fins solid (see [path_gradient_stops()]).
+#' @param x an `arrow_path` grob with a `ggdiagram_gradient` element
+#' @keywords internal
+#' @noRd
+#' @exportS3Method grid::makeContent
+makeContent.ggdiagram_gradient_arrow <- function(x) {
+  spec <- x$ggdiagram_gradient
+  x <- NextMethod()
+  if (length(x$children) != 1L || !inherits(x$children[[1]], "pathgrob")) {
+    return(x)
+  }
+  poly <- x$children[[1]]
+  len <- vctrs::field(x$id_rle, "length")
+  id <- rep(seq_along(len), len)
+  px <- grid::convertX(x$x, "mm", valueOnly = TRUE)
+  py <- grid::convertY(x$y, "mm", valueOnly = TRUE)
+  first <- match(unique(id), id)
+  last <- length(id) + 1L - match(unique(id), rev(id))
+
+  # bounding box of each arrow polygon, in mm
+  qx <- grid::convertX(poly$x, "mm", valueOnly = TRUE)
+  qy <- grid::convertY(poly$y, "mm", valueOnly = TRUE)
+  path_len <- poly$pathId.lengths %||% length(qx)
+  path_id <- rep(seq_along(path_len), path_len)
+  n_path <- length(path_len)
+  if (n_path > length(first)) {
+    return(x)
+  }
+
+  gs <- expand_gradient(spec$colors, spec$stops, spec$space)
+  to_npc <- function(v, r) {
+    w <- r[2] - r[1]
+    if (w > 0) (v - r[1]) / w else 0.5
+  }
+  poly$gp$fill <- lapply(seq_len(n_path), function(i) {
+    rx <- range(qx[path_id == i])
+    ry <- range(qy[path_id == i])
+    idx <- first[i]:last[i]
+    setback <- shaft_setbacks(x, i, first[i], last[i])
+    gi <- path_gradient_stops(
+      px[idx],
+      py[idx],
+      spec$colors,
+      spec$stops,
+      spec$space,
+      start = setback[["start"]],
+      end = setback[["end"]]
+    ) %||%
+      gs
+    grid::linearGradient(
+      colours = gi$colours,
+      stops = gi$stops,
+      x1 = to_npc(px[first[i]], rx),
+      y1 = to_npc(py[first[i]], ry),
+      x2 = to_npc(px[last[i]], rx),
+      y2 = to_npc(py[last[i]], ry),
+      default.units = "npc",
+      extend = "pad",
+      group = FALSE
+    )
+  })
+  if (n_path == 1L) {
+    poly$gp$fill <- poly$gp$fill[[1]]
+  }
+  grid::setChildren(x, grid::gList(poly))
+}
+
 #' Arrows and paths with a color gradient
 #'
-#' Like [geom_arrow_segment_gradient()], but for [ggarrow::geom_arrow()], which draws paths and curves. The gradient runs in a straight line from each path's first point (fin) to its last point (head), so it follows the curve only approximately for strongly curved paths.
+#' Like [geom_arrow_segment_gradient()], but for [ggarrow::geom_arrow()], which draws paths and curves. The gradient runs in a straight line from each path's first point (fin) to its last point (head), with its stops placed so that the color changes evenly along the length of the shaft, leaving arrowheads and fins solid. Paths that double back on themselves (e.g., arcs of more than 180 degrees) are colored only approximately.
 #'
 #' @section Acknowledgments:
 #' The idea of drawing color gradients along arrows was inspired by [ggforce::geom_link()] by Thomas Lin Pedersen. Sampling gradients in a perceptual color space was inspired by Matt DesLauriers' post [Perceptually Smooth Multi-Color Linear Gradients](https://observablehq.com/@mattdesl/perceptually-smooth-multi-color-linear-gradients).

@@ -119,7 +119,7 @@ the default plot specification, e.g. \code{\link[ggplot2:annotation_borders]{ann
 A ggplot2 layer
 }
 \description{
-Like \code{\link[=geom_arrow_segment_gradient]{geom_arrow_segment_gradient()}}, but for \code{\link[ggarrow:geom_arrow]{ggarrow::geom_arrow()}}, which draws paths and curves. The gradient runs in a straight line from each path's first point (fin) to its last point (head), so it follows the curve only approximately for strongly curved paths.
+Like \code{\link[=geom_arrow_segment_gradient]{geom_arrow_segment_gradient()}}, but for \code{\link[ggarrow:geom_arrow]{ggarrow::geom_arrow()}}, which draws paths and curves. The gradient runs in a straight line from each path's first point (fin) to its last point (head), with its stops placed so that the color changes evenly along the length of the shaft, leaving arrowheads and fins solid. Paths that double back on themselves (e.g., arcs of more than 180 degrees) are colored only approximately.
 }
 \section{Acknowledgments}{
 

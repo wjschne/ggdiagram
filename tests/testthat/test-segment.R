@@ -361,7 +361,72 @@ test_that("gradient property works", {
     NULL
   }
   ap <- find_arrow(gt)
-  expect_true(inherits(ap$gp$fill[[1]], "GridLinearGradient"))
+  expect_s3_class(ap, "ggdiagram_gradient_arrow")
+  # the gradient is built at draw time, in npc of the arrow's bounding box
+  grDevices::pdf(NULL)
+  on.exit(grDevices::dev.off(), add = TRUE)
+  grid::pushViewport(grid::viewport(
+    width = grid::unit(10, "cm"),
+    height = grid::unit(10, "cm"),
+    xscale = c(0, 1),
+    yscale = c(0, 1)
+  ))
+  on.exit(grid::popViewport(), add = TRUE, after = FALSE)
+  ap$x <- grid::unit(c(0.1, 0.9), "native")
+  ap$y <- grid::unit(c(0.2, 0.2), "native")
+  drawn <- grid::makeContent(ap)
+  fill <- drawn$children[[1]]$gp$fill
+  expect_s3_class(fill, "GridLinearGradient")
+  # fin and head lie at the left and right edges of the bounding box
+  expect_lt(abs(as.numeric(fill$x1)), 0.05)
+  expect_gt(as.numeric(fill$x2), 0.95)
+})
+
+test_that("gradient stops follow the length of curved paths", {
+  # straight path: no remapping needed
+  expect_null(path_gradient_stops(
+    c(0, 1, 2),
+    c(0, 0, 0),
+    c("white", "black"),
+    c(0, 1)
+  ))
+  # quarter circle: the ends run nearly perpendicular to the chord, so the
+  # remapped stops change color quickly near the ends of the chord
+  th <- seq(0, pi / 2, length.out = 200)
+  g <- path_gradient_stops(cos(th), sin(th), c("white", "black"), c(0, 1))
+  expect_equal(range(g$stops), c(0, 1))
+  even <- expand_gradient(c("white", "black"), c(0, 1), n = length(g$stops))
+  lum <- function(x) farver::decode_colour(x, to = "lab")[, "l"]
+  # setbacks keep the ends solid: straight path from 0 to 10 with the
+  # gradient running from 2 to 7
+  g2 <- path_gradient_stops(
+    c(0, 10),
+    c(0, 0),
+    c("white", "black"),
+    c(0, 1),
+    start = 2,
+    end = 3
+  )
+  expect_true(all(g2$colours[g2$stops <= 0.2] == "#FFFFFF"))
+  expect_true(all(g2$colours[g2$stops >= 0.7] == "#000000"))
+  expect_false(any(
+    g2$colours[g2$stops > 0.25 & g2$stops < 0.65] %in% c("#FFFFFF", "#000000")
+  ))
+  # setbacks too long for the path are ignored
+  expect_null(path_gradient_stops(
+    c(0, 10),
+    c(0, 0),
+    c("white", "black"),
+    c(0, 1),
+    start = 6,
+    end = 6
+  ))
+  # matrix arrowheads set back the shaft by their length
+  expect_equal(ornament_setback(NULL, 4, 1, 0), 0)
+  expect_gt(ornament_setback(ggarrow::arrow_head_wings(), grid::unit(4, "mm"), 0.5, 0), 0)
+  # near the start of the chord, more of the path is done than of the chord
+  i <- which.min(abs(g$stops - 0.1))
+  expect_lt(lum(g$colours[i]), lum(even$colours[i]) - 1)
 })
 
 test_that("gradient geom accepts all ggarrow parameters", {
