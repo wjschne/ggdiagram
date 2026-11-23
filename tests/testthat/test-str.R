@@ -224,3 +224,21 @@ test_that("str ob_reuleaux: output contains class header", {
   expect_no_error(out)
 })
 
+
+test_that("str() and print() write only to standard output", {
+  # IDE variable panes capture str() output; messages would leak into the
+  # console as stray headers
+  objs <- list(
+    class_color(c("red", "blue")),
+    ob_circle(),
+    ob_polygon(ob_point(c(0, 1, 0), c(0, 0, 1))),
+    arrowhead(),
+    ob_shape_list(list(ob_circle(), ob_point()))
+  )
+  for (o in objs) {
+    expect_no_message(utils::capture.output(str(o)))
+    expect_no_message(utils::capture.output(print(o)))
+    # the header is captured along with everything else
+    expect_true(any(grepl("<", utils::capture.output(str(o)), fixed = TRUE)))
+  }
+})

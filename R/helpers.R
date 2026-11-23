@@ -765,7 +765,7 @@ gradient_colours_at <- function(colors, stops, pos, space = "oklab") {
 #'
 #' If `start` or `end` are positive, the gradient runs only over the part of the path between them, and the ends of the path keep the first and last colors. This keeps arrowheads (and fins) solid.
 #' @param x,y numeric vectors of path coordinates
-#' @param colors,stops,space gradient specification (see [expand_gradient()])
+#' @param colors,stops,space gradient specification (see `expand_gradient()`)
 #' @param n number of sampled stops
 #' @param start,end distances along the path (in the units of `x` and `y`) from the first and last points to where the gradient starts and ends
 #' @return list with `colours` and `stops`, or `NULL` if no remapping is needed or possible
@@ -949,7 +949,7 @@ gradient_arrows <- function(x, colors, stops, space = NULL) {
 
 #' Draw a ggarrow path with a fin-to-head gradient fill
 #'
-#' Lets ggarrow build the arrow polygons, then fills each arrow with a linear gradient from its first point to its last point. Grid places a pattern relative to the bounding box of the shape it fills, so the gradient's end points are given in npc of each arrow's bounding box. Stops are placed so that the color changes evenly along the visible shaft, from where the fins (or resection) end to where the arrowhead begins, leaving arrowheads and fins solid (see [path_gradient_stops()]).
+#' Lets ggarrow build the arrow polygons, then fills each arrow with a linear gradient from its first point to its last point. Grid places a pattern relative to the bounding box of the shape it fills, so the gradient's end points are given in npc of each arrow's bounding box. Stops are placed so that the color changes evenly along the visible shaft, from where the fins (or resection) end to where the arrowhead begins, leaving arrowheads and fins solid (see `path_gradient_stops()`).
 #' @param x an `arrow_path` grob with a `ggdiagram_gradient` element
 #' @keywords internal
 #' @noRd

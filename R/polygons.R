@@ -333,7 +333,7 @@ S7::method(str, ob_polygon) <- function(
     nest.lev = nest.lev,
     additional = additional
   )
-  cli::cli_h1("<points>")
+  str_h1("<points>")
   purrr::walk(object@p, \(o) {
     str_properties(
       o,

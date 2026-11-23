@@ -1,3 +1,15 @@
+# Headers for str() and print() methods. These write to standard output with
+# cat() rather than using cli::cli_h1() etc., which emit messages. Messages
+# escape capture.output(), so IDEs that inspect objects with str() (e.g., the
+# Positron and RStudio variable panes) would print stray headers in the console.
+str_h1 <- function(x) {
+  cat("\n", cli::rule(left = x), "\n", sep = "")
+}
+
+str_h3 <- function(x) {
+  cat(cli::rule(left = x, width = cli::ansi_nchar(x) + 4L), "\n", sep = "")
+}
+
 # from S7
 obj_type <- function(x) { # nocov start
   if (identical(x, quote(expr = ))) {
@@ -84,7 +96,7 @@ str_properties <- function(
 ) {
   p_names <- S7::prop_names(object)
   cat(if (nest.lev > 0) " ")
-  cli::cli_h1(obj_desc(object))
+  str_h1(obj_desc(object))
 
   p_display <- p_names[!(p_names %in% omit)]
   props_display <- lapply(p_display, prop, object = object) |>
@@ -114,16 +126,16 @@ S7::method(str, class_arrowhead) <- function(
   additional = TRUE,
   omit = omit_props(object, include = c("x", "y"))
 ) {
-  cli::cli_h3("<class_arrowhead>")
+  str_h3("<class_arrowhead>")
 
   for (i in S7::S7_data(object)) {
-    cli::cli_text(
-      paste0(
-        "A matrix with 2 columns and ",
-        nrow(i),
-        " rows.",
-        ifelse(nrow(i) > 6, " First 6 rows:", "")
-      )
+    cat(
+      "A matrix with 2 columns and ",
+      nrow(i),
+      " rows.",
+      ifelse(nrow(i) > 6, " First 6 rows:", ""),
+      "\n",
+      sep = ""
     )
     print(round(head(i), 2))
   }
@@ -136,7 +148,7 @@ S7::method(str, class_margin) <- function(
   additional = FALSE,
   omit = ""
 ) {
-  cli::cli_h3("<class_margin>")
+  str_h3("<class_margin>")
 
   for (i in S7::S7_data(object)) {
     print(i)
@@ -170,7 +182,7 @@ S7::method(str, ob_shape_list) <- function(
   additional = TRUE,
   omit = ""
 ) {
-  cli::cli_h1("<ob_shape_list>")
+  str_h1("<ob_shape_list>")
   lapply(S7::S7_data(object), print)
   invisible(object)
 }

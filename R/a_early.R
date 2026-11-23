@@ -223,7 +223,7 @@ has_style <- S7::new_class(
 )
 S7::S4_register(has_style)
 S7::method(print, has_style) <- function(x, ...) {
-  cli::cli_h3("{.cls {S7::S7_class(x)@name}}")
+  str_h3(paste0("<", S7::S7_class(x)@name, ">"))
   print(x@tibble)
   invisible(x)
 }
